@@ -10,10 +10,13 @@
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  IN THE SOFTWARE.
 -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-  <module name="HawkSearch_EsIndexing">
-    <sequence>
-      <module name="HawkSearch_Connector"/>
-    </sequence>
-  </module>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="HawkSearch_EsIndexing">
+        <sequence>
+            <module name="HawkSearch_Connector"/>
+            <module name="Magento_Catalog"/>
+            <module name="Magento_Review"/>
+        </sequence>
+    </module>
 </config>

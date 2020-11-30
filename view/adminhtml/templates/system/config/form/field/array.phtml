@@ -1,0 +1,246 @@
+<?php
+/**
+ *  Copyright (c) 2020 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ *  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ *  IN THE SOFTWARE.
+ */
+
+use HawkSearch\EsIndexing\Block\Adminhtml\System\Config\Product\CustomAttributes;
+?>
+
+<?php
+/** @var CustomAttributes $block */
+$_htmlId = $block->getHtmlId() ? $block->getHtmlId() : '_' . uniqid();
+$_colspan = $block->isAddAfter() ? 2 : 1;
+?>
+
+<div class="design_theme_ua_regexp" id="grid<?= $block->escapeHtmlAttr($_htmlId) ?>">
+    <div class="admin__control-table-wrapper">
+        <table class="admin__control-table" id="<?= $block->escapeHtmlAttr($block->getElement()->getId()) ?>">
+            <thead>
+            <tr>
+                <?php foreach ($block->getColumns() as $columnName => $column) : ?>
+                    <th><?= $block->escapeHtml($column['label']) ?></th>
+                <?php endforeach; ?>
+                <th class="col-actions" colspan="<?= (int)$_colspan ?>"><?= $block->escapeHtml(__('Action')) ?></th>
+            </tr>
+            </thead>
+            <tfoot>
+            <tr>
+                <td colspan="<?= count($block->getColumns())+$_colspan ?>" class="col-actions-add">
+                    <button id="addToEndBtn<?= $block->escapeHtmlAttr($_htmlId) ?>" class="action-add" title="<?= $block->escapeHtmlAttr(__('Add')) ?>" type="button">
+                        <span><?= $block->escapeHtml($block->getAddButtonLabel()) ?></span>
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="<?= count($block->getColumns())+$_colspan ?>" class="col-actions-sync">
+                    <button id="syncBtn<?= $block->escapeHtmlAttr($_htmlId) ?>" class="action-sync" title="<?= $block->escapeHtmlAttr(__('Pull Fields from HawkSearch')) ?>" type="button">
+                        <span><?= $block->escapeHtmlAttr(__('Pull Fields from HawkSearch')) ?></span>
+                    </button>
+                </td>
+            </tr>
+            </tfoot>
+            <tbody id="addRow<?= $block->escapeHtmlAttr($_htmlId) ?>"></tbody>
+        </table>
+    </div>
+    <input type="hidden" name="<?= $block->escapeHtmlAttr($block->getElement()->getName()) ?>[__empty]" value="" />
+
+    <script>
+        require([
+            'mage/template',
+            'mage/translate',
+            'Magento_Ui/js/modal/alert',
+            'prototype'
+        ], function (mageTemplate, $t, alert) {
+        // create row creator
+        window.arrayRow<?= $block->escapeJs($_htmlId) ?> = {
+
+            // define row prototypeJS template
+            template: mageTemplate(
+                    '<tr id="<%- _id %>">'
+                    <?php foreach ($block->getColumns() as $columnName => $column) : ?>
+                        + '<td>'
+                        + '<?= $block->escapeJs($block->renderCellTemplate($columnName)) ?>'
+                        + '<\/td>'
+                    <?php endforeach; ?>
+
+                    <?php if ($block->isAddAfter()) : ?>
+                        + '<td><button class="action-add" type="button" id="addAfterBtn<%- _id %>"><span>'
+                        + '<?= $block->escapeJs($block->escapeHtml(__('Add after'))) ?>'
+                        + '<\/span><\/button><\/td>'
+                    <?php endif; ?>
+
+                    + '<td class="col-actions"><\/td>'
+                    + '<\/tr>'
+            ),
+
+            // define row prototypeJS template
+            templateNewRow: mageTemplate(
+                '<tr id="<%- _id %>">'
+                <?php foreach ($block->getColumns() as $columnName => $column) : ?>
+                + '<td>'
+                + '<?= $block->escapeJs($block->renderCellTemplate($columnName, true)) ?>'
+                + '<\/td>'
+                <?php endforeach; ?>
+
+                <?php if ($block->isAddAfter()) : ?>
+                + '<td><button class="action-add" type="button" id="addAfterBtn<%- _id %>"><span>'
+                + '<?= $block->escapeJs($block->escapeHtml(__('Add after'))) ?>'
+                + '<\/span><\/button><\/td>'
+                <?php endif; ?>
+
+                + '<td class="col-actions"><button '
+                + 'onclick="arrayRow<?= $block->escapeJs($_htmlId) ?>.del(\'<%- _id %>\')" '
+                + 'class="action-delete" type="button">'
+                + '<span><?= $block->escapeJs($block->escapeHtml(__('Delete'))) ?><\/span><\/button><\/td>'
+                + '<\/tr>'
+            ),
+
+            add: function(rowData, insertAfterId, newRow = false) {
+                // generate default template data
+                var templateValues;
+
+                // Prepare template values
+                if (rowData) {
+                    templateValues = rowData;
+                } else {
+                    var d = new Date();
+                    templateValues = {
+                        <?php foreach ($block->getColumns() as $columnName => $column) : ?>
+                            <?= $block->escapeJs($columnName) ?>: '',
+                                'option_extra_attrs': {},
+                        <?php endforeach; ?>
+                        _id: '_' + d.getTime() + '_' + d.getMilliseconds()
+                    };
+                }
+
+            // Insert new row after specified row or at the bottom
+            if (insertAfterId) {
+                if (newRow === true) {
+                    Element.insert($(insertAfterId), {after: this.templateNewRow(templateValues)});
+                } else {
+                    Element.insert($(insertAfterId), {after: this.template(templateValues)});
+                }
+            } else {
+                if (newRow === true) {
+                    Element.insert($('addRow<?= $block->escapeJs($_htmlId) ?>'), {bottom: this.templateNewRow(templateValues)});
+                } else {
+                    Element.insert($('addRow<?= $block->escapeJs($_htmlId) ?>'), {bottom: this.template(templateValues)});
+                }
+            }
+
+            // Fill controls with data
+            if (rowData) {
+                var rowInputElementNames = Object.keys(rowData.column_values);
+                for (var i = 0; i < rowInputElementNames.length; i++) {
+                    if ($(rowInputElementNames[i])) {
+                        $(rowInputElementNames[i]).setValue(rowData.column_values[rowInputElementNames[i]]);
+                    }
+                }
+            }
+
+            // Add event for {addAfterBtn} button
+            <?php if ($block->isAddAfter()) : ?>
+            Event.observe('addAfterBtn' + templateValues._id, 'click', this.add.bind(this, false, templateValues._id));
+            <?php endif; ?>
+            },
+
+            del: function(rowId) {
+                $(rowId).remove();
+            },
+
+            syncFields: function () {
+                jQuery.ajax({
+                    type: 'GET',
+                    url: '/rest/V1/hawksearch/syncProductAttributes',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    showLoader: true
+                }).done(function (response) {
+                    if (response.length > 0) {
+                        //clear table data
+                        document.getElementById('addRow<?= $block->escapeHtmlAttr($_htmlId) ?>').innerHTML = "";
+                        //add new data from response
+                        response.forEach(function (value) {
+                            arrayRow<?= $block->escapeJs($_htmlId) ?>.add(JSON.parse(value), false);
+                        });
+                    }
+                }).fail(function (response) {
+                    var expr = /([%])\w+/g,
+                        message,
+                        messageObj = JSON.parse(response.responseText);
+
+
+                    if (!messageObj.hasOwnProperty('parameters')) {
+                        message = messageObj.message;
+                    } else {
+                        message = messageObj.message.replace(expr, function (varName) {
+                            varName = varName.substr(1);
+
+                            if (messageObj.parameters.hasOwnProperty(varName)) {
+                                return messageObj.parameters[varName];
+                            }
+
+                            return messageObj.parameters.shift();
+                        });
+                    }
+
+                    /*var failed = JSON.parse(response.responseText);
+                    alert(failed.message);*/
+
+                    alert({
+                        title: 'Error',
+                        content: message,
+                        clickableOverlay: false,
+                        actions: {
+                            always: function () {}
+                        }
+                    });
+                    /*var error;
+                    try {
+                        error = JSON.parse(response.responseText);
+                    } catch (exception) {
+                        error = {
+                            message: $t('Something went wrong with your request. Please try again later.')
+                        };
+                    }
+                    globalMessageList.addErrorMessage(error);*/
+                })
+            }
+        }
+
+        // bind add action to "Add" button in last row
+        Event.observe('addToEndBtn<?= $block->escapeJs($_htmlId) ?>',
+            'click',
+            arrayRow<?= $block->escapeJs($_htmlId) ?>.add.bind(
+                arrayRow<?= $block->escapeJs($_htmlId) ?>, false, false, true
+            )
+        );
+
+        // bind Sync action to "Sync data with HawkSearch" button
+        Event.observe('syncBtn<?= $block->escapeJs($_htmlId) ?>',
+            'click',
+            arrayRow<?= $block->escapeJs($_htmlId) ?>.syncFields.bind()
+        );
+
+        // add existing rows
+        <?php
+        foreach ($block->getArrayRows() as $_rowId => $_row) {
+            echo /** @noEscape */ "arrayRow{$block->escapeJs($_htmlId)}.add(" . /** @noEscape */ $_row->toJson() . ");\n";
+        }
+        ?>
+
+        // Toggle the grid availability, if element is disabled (depending on scope)
+        <?php if ($block->getElement()->getDisabled()) : ?>
+        toggleValueElements({checked: true}, $('grid<?= $block->escapeJs($_htmlId) ?>').parentNode);
+        <?php endif; ?>
+        });
+    </script>
+</div>
