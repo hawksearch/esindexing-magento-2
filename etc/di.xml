@@ -17,6 +17,8 @@
                 type="HawkSearch\EsIndexing\Model\FieldsManagement"/>
     <preference for="HawkSearch\EsIndexing\Model\Indexing\ItemsProviderPoolInterface"
                 type="HawkSearch\EsIndexing\Model\Indexing\ItemsProviderPool"/>
+    <preference for="HawkSearch\EsIndexing\Model\Indexing\EntityIndexerPoolInterface"
+                type="HawkSearch\EsIndexing\Model\Indexing\EntityIndexerPool"/>
     <preference for="HawkSearch\EsIndexing\Api\Data\IndexItemsContextInterface"
                 type="HawkSearch\EsIndexing\Model\IndexItemsContext"/>
     <preference for="HawkSearch\EsIndexing\Api\Data\IndexItemsInterface" type="HawkSearch\EsIndexing\Model\IndexItem"/>
