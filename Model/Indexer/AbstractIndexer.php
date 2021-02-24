@@ -17,15 +17,20 @@ namespace HawkSearch\EsIndexing\Model\Indexer;
 use HawkSearch\EsIndexing\Model\Config\General;
 use HawkSearch\EsIndexing\Model\Config\Indexing;
 use HawkSearch\EsIndexing\Model\Indexing\EntityIndexerPoolInterface;
+use HawkSearch\EsIndexing\Model\Indexing\IndexManagementInterface;
+use HawkSearch\EsIndexing\Model\Indexing\ItemsProviderPoolInterface;
+use Magento\Framework\DataObject;
+use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\MessageQueue\BulkPublisherInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
+use HawkSearch\EsIndexing\Model\MessageQueue\PublisherInterface;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
 abstract class AbstractIndexer
 {
     /**
-     * @var BulkPublisherInterface
+     * @var PublisherInterface
      */
     private $publisher;
 
@@ -50,36 +55,50 @@ abstract class AbstractIndexer
     private $entityIndexerPool;
 
     /**
+     * @var ItemsProviderPoolInterface
+     */
+    private $itemsProviderPool;
+
+    /**
+     * @var Magento\Framework\Event\ManagerInterface
+     */
+    private $eventManager;
+
+    /**
      * AbstractIndexer constructor.
-     * @param BulkPublisherInterface $publisher
+     * @param PublisherInterface $publisher
      * @param StoreManagerInterface $storeManager
      * @param Indexing $indexingConfig
      * @param General $generalConfig
      * @param EntityIndexerPoolInterface $entityIndexerPool
+     * @param ItemsProviderPoolInterface $itemsProviderPool
+     * @param ManagerInterface $eventManager
      */
     public function __construct(
-        BulkPublisherInterface $publisher,
+        PublisherInterface $publisher,
         StoreManagerInterface $storeManager,
         Indexing $indexingConfig,
         General $generalConfig,
-        EntityIndexerPoolInterface $entityIndexerPool
+        EntityIndexerPoolInterface $entityIndexerPool,
+        ItemsProviderPoolInterface $itemsProviderPool,
+        ManagerInterface $eventManager
     ) {
         $this->publisher = $publisher;
         $this->storeManager = $storeManager;
         $this->indexingConfig = $indexingConfig;
         $this->generalConfig = $generalConfig;
         $this->entityIndexerPool = $entityIndexerPool;
+        $this->itemsProviderPool = $itemsProviderPool;
+        $this->eventManager = $eventManager;
     }
 
     /**
      * @param array $ids
-     * @param StoreInterface $store
-     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
-    protected function rebuildPartial($ids)
+    protected function rebuildDelta($ids)
     {
         $stores = $this->storeManager->getStores();
-        $operations = [];
 
         foreach ($stores as $store) {
             if (!$this->generalConfig->isIndexingEnabled($store->getId())) {
@@ -111,16 +130,68 @@ abstract class AbstractIndexer
                 $dataToUpdate
             );
         }
-
-
-
-
     }
 
     protected function rebuildFull()
     {
-        $this->publisher->publish('test', []);
+        $stores = $this->storeManager->getStores();
+
+        foreach ($stores as $store) {
+            if (!$this->generalConfig->isIndexingEnabled($store->getId())) {
+                continue;
+            }
+
+            $dataToUpdate[] = [
+                'class' => IndexManagementInterface::class,
+                'method' => 'initializeFullReindex'
+            ];
+
+            $transport = new DataObject($dataToUpdate);
+            $this->eventManager->dispatch(
+                'hawksearch_esindexing_rebuild_full_index_items_before',
+                ['store' => $store, 'indexer' => $this, 'transport' => $transport]
+            );
+            $dataToUpdate = $transport->getData();
+
+            $items = $this->itemsProviderPool->get($this->getEntityIndexerCode())->getItems($store->getId());
+            $batchSize = $this->indexingConfig->getItemsBatchSize($store->getId());
+            $batches = ceil(count($items) / $batchSize);
+
+            for ($page = 1; $page <= $batches; $page++) {
+                $dataToUpdate[] = [
+                    'class' => get_class($this->entityIndexerPool->getIndexerByCode($this->getEntityIndexerCode())),
+                    'method' => 'rebuildEntityIndexBatch',
+                    'method_arguments' => [
+                        'storeId' => $store->getId(),
+                        'currentPage' => $page,
+                        'pageSize' => $batchSize
+                    ],
+                    'full_reindex' => false,
+                ];
+            }
+
+            $transport = new DataObject($dataToUpdate);
+            $this->eventManager->dispatch(
+                'hawksearch_esindexing_rebuild_full_index_items_after',
+                ['store' => $store, 'indexer' => $this, 'transport' => $transport]
+            );
+            $dataToUpdate = $transport->getData();
+
+            $dataToUpdate[] = [
+                'class' => IndexManagementInterface::class,
+                'method' => 'switchIndices'
+            ];
+        }
+
+        $this->publisher->publish(
+            __(
+                'Update full index for %1 items of "%2" entity',
+                count($items),
+                $this->entityIndexerPool->getIndexerByCode($this->getEntityIndexerCode())
+            ),
+            $dataToUpdate
+        );
     }
 
-    abstract protected function getEntityIndexerCode();
+    abstract public function getEntityIndexerCode();
 }

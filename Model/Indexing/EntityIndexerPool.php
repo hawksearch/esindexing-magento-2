@@ -15,28 +15,37 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexing;
 
-
-use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Exception\NotFoundException;
+use Magento\Framework\ObjectManager\TMap;
+use Magento\Framework\ObjectManager\TMapFactory;
 
 class EntityIndexerPool implements EntityIndexerPoolInterface
 {
     /**
-     * @var EntityIndexerInterface[]
+     * @var EntityIndexerInterface[] | TMap
      */
-    private $indexers = [];
+    private $indexers;
 
     /**
      * EntityIndexerPool constructor.
+     * @param TMapFactory $tmapFactory
      * @param array $indexers
      */
     public function __construct(
-        $indexers = []
+        TMapFactory $tmapFactory,
+        array $indexers = []
     ) {
-        $this->indexers = $indexers;
+        $this->indexers = $tmapFactory->createSharedObjectsMap(
+            [
+                'array' => $indexers,
+                'type' => EntityIndexerInterface::class
+            ]
+        );
     }
 
     /**
      * @inheritDoc
+     * @throws NotFoundException
      */
     public function getIndexerByCode($code)
     {
@@ -47,7 +56,7 @@ class EntityIndexerPool implements EntityIndexerPoolInterface
             }
         }
 
-        throw new NoSuchEntityException(__('Unknown Entity Indexer %1', $code));
+        throw new NotFoundException(__('Unknown Entity Indexer %1', $code));
     }
 
     /**

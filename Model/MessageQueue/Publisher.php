@@ -10,7 +10,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-namespace HawkSearch\EsIndexing\Model\Message;
+namespace HawkSearch\EsIndexing\Model\MessageQueue;
 
 use Magento\AsynchronousOperations\Api\Data\OperationInterface;
 use Magento\AsynchronousOperations\Api\Data\OperationInterfaceFactory;
@@ -18,10 +18,9 @@ use Magento\Authorization\Model\UserContextInterface;
 use Magento\Framework\Bulk\BulkManagementInterface;
 use Magento\Framework\DataObject\IdentityGeneratorInterface;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\MessageQueue\BulkPublisherInterface;
 use Magento\Framework\Serialize\SerializerInterface;
 
-class Publisher implements BulkPublisherInterface
+class Publisher implements PublisherInterface
 {
     public const TOPIC_NAME = 'hawksearch.indexing';
 

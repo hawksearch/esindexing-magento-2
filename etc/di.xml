@@ -15,18 +15,22 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="HawkSearch\EsIndexing\Api\FieldsManagementInterface"
                 type="HawkSearch\EsIndexing\Model\FieldsManagement"/>
+    <preference for="HawkSearch\EsIndexing\Api\Data\IndexItemsContextInterface"
+                type="HawkSearch\EsIndexing\Model\IndexItemsContext"/>
+    <preference for="HawkSearch\EsIndexing\Api\Data\IndexListInterface"
+                type="HawkSearch\EsIndexing\Model\IndexList"/>
+    <preference for="HawkSearch\EsIndexing\Api\Data\IndexItemsInterface"
+                type="HawkSearch\EsIndexing\Model\IndexItem"/>
+    <preference for="HawkSearch\EsIndexing\Api\Data\EsIndexInterface"
+                type="HawkSearch\EsIndexing\Model\EsIndex"/>
     <preference for="HawkSearch\EsIndexing\Model\Indexing\ItemsProviderPoolInterface"
                 type="HawkSearch\EsIndexing\Model\Indexing\ItemsProviderPool"/>
     <preference for="HawkSearch\EsIndexing\Model\Indexing\EntityIndexerPoolInterface"
                 type="HawkSearch\EsIndexing\Model\Indexing\EntityIndexerPool"/>
-    <preference for="HawkSearch\EsIndexing\Api\Data\IndexItemsContextInterface"
-                type="HawkSearch\EsIndexing\Model\IndexItemsContext"/>
-    <preference for="HawkSearch\EsIndexing\Api\Data\IndexItemsInterface" type="HawkSearch\EsIndexing\Model\IndexItem"/>
-    <preference for="HawkSearch\EsIndexing\Api\Data\IndexListInterface" type="HawkSearch\EsIndexing\Model\IndexList"/>
     <preference for="HawkSearch\EsIndexing\Model\Indexing\IndexManagementInterface"
                 type="HawkSearch\EsIndexing\Model\Indexing\IndexManagement"/>
-    <preference for="HawkSearch\EsIndexing\Api\Data\EsIndexInterface"
-                type="HawkSearch\EsIndexing\Model\EsIndex"/>
+    <preference for="HawkSearch\EsIndexing\Model\MessageQueue\PublisherInterface"
+                type="HawkSearch\EsIndexing\Model\MessageQueue\Publisher"/>
 
 
     <!-- Configs -->
@@ -355,37 +359,36 @@
             <argument name="customJoins" xsi:type="array">
                 <item name="price" xsi:type="object">HawkSearch\EsIndexing\Model\Api\SearchCriteria\JoinProcessor\ProductPrices</item>
                 <item name="review_summary" xsi:type="object">HawkSearch\EsIndexing\Model\Api\SearchCriteria\JoinProcessor\ReviewRatingSummary</item>
-<!--                <item name="main_attributes" xsi:type="object">HawkSearch\EsIndexing\Model\Api\SearchCriteria\JoinProcessor\ProductMainAttributes</item>-->
             </argument>
         </arguments>
     </virtualType>
     <!-- END Product indexing repository -->
 
+    <!-- Types -->
     <type name="HawkSearch\EsIndexing\Model\Indexing\ProductItemsProvider">
         <arguments>
             <argument name="productRepository" xsi:type="object">HawkSearch\EsIndexing\Model\ProductRepository</argument>
         </arguments>
-        <!--<plugin name="hawksearch_extend_product_items" type=""/>-->
     </type>
 
-    <!--  TEMP  -->
-
-    <virtualType name="IndexingItemsProviderPool" type="HawkSearch\EsIndexing\Model\Indexing\ItemsProviderPool">
+    <type name="HawkSearch\EsIndexing\Model\Indexing\ItemsProviderPool">
         <arguments>
             <argument name="providers" xsi:type="array">
-                <item name="products" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\ProductItemsProvider</item>
+                <item name="product" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\ProductItemsProvider</item>
             </argument>
-        </arguments>
-    </virtualType>
-    <type name="HawkSearch\EsIndexing\Controller\Test\IndexItems">
-        <arguments>
-            <argument name="itemsProviderPool" xsi:type="object">IndexingItemsProviderPool</argument>
-        </arguments>
-    </type>
-    <type name="HawkSearch\EsIndexing\Model\Indexing\ProductEntityIndexer">
-        <arguments>
-            <argument name="itemsProviderPool" xsi:type="object">IndexingItemsProviderPool</argument>
         </arguments>
     </type>
 
+    <type name="HawkSearch\EsIndexing\Model\Indexing\EntityIndexerPool">
+        <arguments>
+            <argument name="indexers" xsi:type="array">
+                <item name="product" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\ProductEntityIndexer</item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- END Types -->
+
+    <!-- Plugins -->
+
+    <!-- END Plugins -->
 </config>

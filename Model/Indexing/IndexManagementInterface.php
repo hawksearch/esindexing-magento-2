@@ -54,4 +54,18 @@ interface IndexManagementInterface
      * @return void
      */
     public function switchIndices();
+
+    /**
+     * @param array $items
+     * @param string $indexName
+     * @return void
+     */
+    public function indexItems(array $items, string $indexName);
+
+    /**
+     * @param array $ids
+     * @param string $indexName
+     * @return void
+     */
+    public function deleteItems(array $ids, string $indexName);
 }
