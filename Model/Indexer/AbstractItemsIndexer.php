@@ -19,15 +19,14 @@ use HawkSearch\EsIndexing\Model\Config\Indexing;
 use HawkSearch\EsIndexing\Model\Indexing\EntityIndexerPoolInterface;
 use HawkSearch\EsIndexing\Model\Indexing\IndexManagementInterface;
 use HawkSearch\EsIndexing\Model\Indexing\ItemsProviderPoolInterface;
+use HawkSearch\EsIndexing\Model\MessageQueue\PublisherInterface;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\ManagerInterface;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use HawkSearch\EsIndexing\Model\MessageQueue\PublisherInterface;
-use Magento\Store\Api\Data\StoreInterface;
+use Magento\Framework\Exception\NotFoundException;
 use Magento\Store\Model\StoreManagerInterface;
 
-abstract class AbstractIndexer
+abstract class AbstractItemsIndexer
 {
     /**
      * @var PublisherInterface
@@ -60,7 +59,7 @@ abstract class AbstractIndexer
     private $itemsProviderPool;
 
     /**
-     * @var Magento\Framework\Event\ManagerInterface
+     * @var ManagerInterface
      */
     private $eventManager;
 
@@ -93,6 +92,7 @@ abstract class AbstractIndexer
     }
 
     /**
+     * Rebuild delta items index
      * @param array $ids
      * @throws NoSuchEntityException
      */
@@ -132,6 +132,11 @@ abstract class AbstractIndexer
         }
     }
 
+    /**
+     * Rebuild full items index
+     * @throws NoSuchEntityException
+     * @throws NotFoundException
+     */
     protected function rebuildFull()
     {
         $stores = $this->storeManager->getStores();
@@ -153,21 +158,24 @@ abstract class AbstractIndexer
             );
             $dataToUpdate = $transport->getData();
 
-            $items = $this->itemsProviderPool->get($this->getEntityIndexerCode())->getItems($store->getId());
             $batchSize = $this->indexingConfig->getItemsBatchSize($store->getId());
-            $batches = ceil(count($items) / $batchSize);
 
-            for ($page = 1; $page <= $batches; $page++) {
-                $dataToUpdate[] = [
-                    'class' => get_class($this->entityIndexerPool->getIndexerByCode($this->getEntityIndexerCode())),
-                    'method' => 'rebuildEntityIndexBatch',
-                    'method_arguments' => [
-                        'storeId' => $store->getId(),
-                        'currentPage' => $page,
-                        'pageSize' => $batchSize
-                    ],
-                    'full_reindex' => false,
-                ];
+            foreach ($this->entityIndexerPool->getIndexerList() as $indexerCode => $entityIndexer) {
+                $items = $this->itemsProviderPool->get($indexerCode)->getItems($store->getId());
+                $batches = ceil(count($items) / $batchSize);
+
+                for ($page = 1; $page <= $batches; $page++) {
+                    $dataToUpdate[] = [
+                        'class' => get_class($this->entityIndexerPool->getIndexerByCode($indexerCode)),
+                        'method' => 'rebuildEntityIndexBatch',
+                        'method_arguments' => [
+                            'storeId' => $store->getId(),
+                            'currentPage' => $page,
+                            'pageSize' => $batchSize
+                        ],
+                        'full_reindex' => false,
+                    ];
+                }
             }
 
             $transport = new DataObject($dataToUpdate);
@@ -193,5 +201,8 @@ abstract class AbstractIndexer
         );
     }
 
+    /**
+     * @return string
+     */
     abstract public function getEntityIndexerCode();
 }

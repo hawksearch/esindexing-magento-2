@@ -375,6 +375,7 @@
         <arguments>
             <argument name="providers" xsi:type="array">
                 <item name="product" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\ProductItemsProvider</item>
+                <item name="content_page" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\ContentPageItemsProvider</item>
             </argument>
         </arguments>
     </type>
@@ -383,6 +384,7 @@
         <arguments>
             <argument name="indexers" xsi:type="array">
                 <item name="product" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\ProductEntityIndexer</item>
+                <item name="content_page" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\ContentPageEntityIndexer</item>
             </argument>
         </arguments>
     </type>

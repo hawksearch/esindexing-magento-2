@@ -17,4 +17,10 @@
             Rebuild products index.
         </description>
     </indexer>
+    <indexer id="hawksearch_content_pages" view_id="hawksearch_content_pages" class="HawkSearch\EsIndexing\Model\Indexer\ContentPage">
+        <title translate="true">Hawksearch Content Pages</title>
+        <description translate="true">
+            Rebuild content pages index.
+        </description>
+    </indexer>
 </config>

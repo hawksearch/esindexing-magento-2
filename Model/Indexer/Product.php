@@ -22,11 +22,13 @@ use HawkSearch\EsIndexing\Model\Indexing\ItemsProviderPoolInterface;
 use HawkSearch\EsIndexing\Model\MessageQueue\PublisherInterface;
 use HawkSearch\EsIndexing\Model\Product as ProductDataProvider;
 use Magento\Framework\Event\ManagerInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Exception\NotFoundException;
 use Magento\Framework\Indexer\ActionInterface as IndexerActionInterface;
 use Magento\Framework\Mview\ActionInterface as MviewActionInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
-class Product extends AbstractIndexer implements IndexerActionInterface, MviewActionInterface
+class Product extends AbstractItemsIndexer implements IndexerActionInterface, MviewActionInterface
 {
     public const ENTITY_INDEXER_CODE = 'product';
 
@@ -94,6 +96,8 @@ class Product extends AbstractIndexer implements IndexerActionInterface, MviewAc
 
     /**
      * @inheritDoc
+     * @throws NoSuchEntityException
+     * @throws NotFoundException
      */
     public function execute($ids)
     {
