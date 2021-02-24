@@ -65,6 +65,10 @@ class Product
         return $this->compositeTypes;
     }
 
+    /**
+     * @param array $ids
+     * @return array
+     */
     public function getParentProductIds(array $ids)
     {
         $parentIds = [];

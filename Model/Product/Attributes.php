@@ -83,11 +83,12 @@ class Attributes
     public function getMandatoryAttributes()
     {
         return [
-            'entity_id',
+            //'entity_id',
             'type_id',
             'thumbnail_url',
             'image_url',
-            'name'
+            'name',
+            //'group_id'
         ];
     }
 
