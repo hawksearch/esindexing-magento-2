@@ -28,4 +28,9 @@
             <table name="catalog_category_product" entity_column="product_id" />
         </subscriptions>
     </view>
+    <view id="hawksearch_content_pages" class="HawkSearch\EsIndexing\Model\Indexer\ContentPage" group="indexer">
+        <subscriptions>
+            <table name="cms_page" entity_column="page_id" />
+        </subscriptions>
+    </view>
 </config>

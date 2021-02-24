@@ -20,7 +20,6 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\Product\Visibility;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Framework\Event\ManagerInterface;
 
 class ProductItemsProvider implements ItemsProviderInterface
 {
@@ -45,30 +44,22 @@ class ProductItemsProvider implements ItemsProviderInterface
     private $filterBuilder;
 
     /**
-     * @var ManagerInterface
-     */
-    private $eventManager;
-
-    /**
      * ProductItemsProvider constructor.
      * @param ProductRepositoryInterface $productRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param Visibility $visibility
      * @param FilterBuilder $filterBuilder
-     * @param ManagerInterface $eventManager
      */
     public function __construct(
         ProductRepositoryInterface $productRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         Visibility $visibility,
-        FilterBuilder $filterBuilder,
-        ManagerInterface $eventManager
+        FilterBuilder $filterBuilder
     ) {
         $this->productRepository = $productRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->visibility = $visibility;
         $this->filterBuilder = $filterBuilder;
-        $this->eventManager = $eventManager;
     }
 
     /**
@@ -77,9 +68,7 @@ class ProductItemsProvider implements ItemsProviderInterface
      */
     public function getItems($storeId, $entityIds = null, $currentPage = 1, $pageSize = 0)
     {
-        $items = $this->getProductCollection($storeId, $entityIds, $currentPage, $pageSize);
-
-        return $items;
+        return $this->getProductCollection($storeId, $entityIds, $currentPage, $pageSize);
     }
 
     /**
@@ -111,16 +100,6 @@ class ProductItemsProvider implements ItemsProviderInterface
         $searchCriteria->setCurrentPage($currentPage)
             ->setPageSize($pageSize);
 
-        $items =  $this->productRepository->getList($searchCriteria)->getItems();
-
-        $this->eventManager->dispatch(
-            'hawksearch_esindexing_after_products_collection_build',
-            [
-                'store' => $storeId,
-                'products' => $items
-            ]
-        );
-
-        return $items;
+        return $this->productRepository->getList($searchCriteria)->getItems();
     }
 }
