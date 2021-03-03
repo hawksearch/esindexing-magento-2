@@ -141,6 +141,7 @@ abstract class AbstractItemsIndexer
     {
         $stores = $this->storeManager->getStores();
 
+        $dataToUpdate = [];
         foreach ($stores as $store) {
             if (!$this->generalConfig->isIndexingEnabled($store->getId())) {
                 continue;
@@ -192,11 +193,7 @@ abstract class AbstractItemsIndexer
         }
 
         $this->publisher->publish(
-            __(
-                'Update full index for %1 items of "%2" entity',
-                count($items),
-                $this->entityIndexerPool->getIndexerByCode($this->getEntityIndexerCode())
-            ),
+            __('Update full items index'),
             $dataToUpdate
         );
     }
