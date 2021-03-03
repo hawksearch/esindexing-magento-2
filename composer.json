@@ -5,10 +5,8 @@
     "type": "magento2-module",
     "version": "0.0.1",
     "require": {
-        "php": "^7.2|^7.3|^7.4",
-        "magento/magento2-base": "^2.3.5|2.4.*",
-        "magento/magento-composer-installer": "*",
-        "magento/module-catalog": "^103.0"
+        "magento/framework": "~102.0|~103.0",
+        "magento/magento-composer-installer": "*"
     },
     "autoload": {
         "psr-4": {
