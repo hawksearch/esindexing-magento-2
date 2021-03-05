@@ -84,8 +84,6 @@ class IndexManagement implements IndexManagementInterface
         }
 
         $this->createIndex();
-
-        $this->indicesListCache = null;
     }
 
     /**
@@ -121,7 +119,9 @@ class IndexManagement implements IndexManagementInterface
             EsIndexInterface::INDEX_NAME => $indexName
         ];
         $this->instructionManagerPool->get('hawksearch-esindexing')
-            ->executeByCode('deleteIndex', $data)->get();
+            ->executeByCode('deleteIndex', $data);
+
+        $this->removeIndexFromCache($indexName);
     }
 
     /**
@@ -132,6 +132,8 @@ class IndexManagement implements IndexManagementInterface
         /** @var EsIndexInterface $result */
         $result = $this->instructionManagerPool->get('hawksearch-esindexing')
             ->executeByCode('createIndex')->get();
+
+        $this->addIndexToCache($result->getIndexName());
 
         return $result;
     }
@@ -144,8 +146,7 @@ class IndexManagement implements IndexManagementInterface
         $indexName = $this->getIndexName();
         if ($indexName) {
             $this->setCurrentIndex($indexName);
-            $this->currentIndexCache = null;
-            $this->indicesListCache = null;
+            $this->resetIndexCache();
         }
     }
 
@@ -162,7 +163,7 @@ class IndexManagement implements IndexManagementInterface
             $result = $this->instructionManagerPool->get('hawksearch-esindexing')
                 ->executeByCode('getCurrentIndex')->get();
 
-            $this->currentIndexCache = $result->getIndexName();
+            $this->addIndexToCache($result->getIndexName(), true);
         }
 
         return $this->currentIndexCache;
@@ -180,7 +181,9 @@ class IndexManagement implements IndexManagementInterface
             $indexList = $this->instructionManagerPool->get('hawksearch-esindexing')
                 ->executeByCode('getIndexList')->get();
 
-            $this->indicesListCache = $indexList->getIndexNames();
+            foreach ($indexList->getIndexNames() as $indexName) {
+                $this->addIndexToCache($indexName);
+            }
         }
 
         return (array)$this->indicesListCache;
@@ -198,5 +201,71 @@ class IndexManagement implements IndexManagementInterface
         ];
         $this->instructionManagerPool->get('hawksearch-esindexing')
             ->executeByCode('setCurrentIndex', $data)->get();
+
+        $this->addIndexToCache($indexName, true);
+    }
+
+    /**
+     * Reset cached values
+     */
+    private function resetIndexCache()
+    {
+        $this->indicesListCache = null;
+        $this->currentIndexCache = null;
+    }
+
+    /**
+     * @param string $index
+     * @param bool $isCurrent
+     */
+    private function addIndexToCache(string $index, bool $isCurrent = false)
+    {
+        $this->indicesListCache[$index] = $index;
+        if ($isCurrent) {
+            $this->currentIndexCache = $index;
+        }
+    }
+
+    /**
+     * @param string $index
+     */
+    private function removeIndexFromCache(string $index)
+    {
+        unset($this->indicesListCache[$index]);
+        if ($this->currentIndexCache === $index) {
+            $this->currentIndexCache = null;
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function indexItems(array $items, string $indexName)
+    {
+        $data = [
+            'IndexName' => $indexName,
+            'Items' => array_values($items)
+        ];
+
+        $response = $this->instructionManagerPool
+            ->get('hawksearch-esindexing')->executeByCode('indexItems', $data)->get();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function deleteItems(array $ids, string $indexName)
+    {
+        if (!$ids) {
+            return;
+        }
+
+        $data = [
+            'IndexName' => $indexName,
+            'Ids' => array_values($ids)
+        ];
+
+        $response = $this->instructionManagerPool
+            ->get('hawksearch-esindexing')->executeByCode('deleteItems', $data)->get();
     }
 }

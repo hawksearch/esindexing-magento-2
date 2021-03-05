@@ -17,6 +17,7 @@
             <module name="HawkSearch_Connector"/>
             <module name="Magento_Catalog"/>
             <module name="Magento_Review"/>
+            <module name="Magento_Indexer"/>
         </sequence>
     </module>
 </config>

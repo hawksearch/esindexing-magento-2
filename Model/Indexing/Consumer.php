@@ -17,6 +17,9 @@ namespace HawkSearch\EsIndexing\Model\Indexing;
 
 use HawkSearch\EsIndexing\Model\Indexing\IndexManagementInterface;
 use Magento\AsynchronousOperations\Api\Data\OperationInterface;
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Data\ObjectFactory;
+use Magento\Framework\DataObject;
 use Magento\Framework\Serialize\SerializerInterface;
 
 class Consumer
@@ -32,16 +35,23 @@ class Consumer
     private $serializer;
 
     /**
+     * @var ObjectFactory
+     */
+    private $objectFactory;
+
+    /**
      * InitFullReindex constructor.
      * @param IndexManagementInterface $indexManagement
      * @param SerializerInterface $serializer
      */
     public function __construct(
         IndexManagementInterface $indexManagement,
-        SerializerInterface $serializer
+        SerializerInterface $serializer,
+        ObjectFactory $objectFactory
     ) {
         $this->indexManagement = $indexManagement;
         $this->serializer = $serializer;
+        $this->objectFactory = $objectFactory;
     }
 
     /**
@@ -56,7 +66,8 @@ class Consumer
         try {
             $serializedData = $operation->getSerializedData();
             $data = $this->serializer->unserialize($serializedData);
-            $this->execute($data);
+            $dataObject = $this->objectFactory->create(DataObject::class, ['data' => $data]);
+            $this->execute($dataObject);
         } catch (\Exception $e) {
 
         }
@@ -65,12 +76,23 @@ class Consumer
     /**
      * Execute
      *
-     * @param array $data
+     * @param DataObject $data
      *
      * @return void
      */
     private function execute($data): void
     {
+        $class = $data->getClass();
+        $method = $data->getMethod();
+        $arguments = $data->getData('method_arguments') ?? [];
 
+        if (!$class) {
+            return;
+        }
+        $object = $this->objectFactory->create($class, []);
+
+        if (is_callable([$object, $method])) {
+            call_user_func_array([$object, $method], $arguments);
+        }
     }
 }
