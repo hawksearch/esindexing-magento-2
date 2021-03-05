@@ -268,4 +268,49 @@ class IndexManagement implements IndexManagementInterface
         $response = $this->instructionManagerPool
             ->get('hawksearch-esindexing')->executeByCode('deleteItems', $data)->get();
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function upsertHierarchy(array $items, string $indexName)
+    {
+        $data = [
+            'IndexName' => $indexName,
+            'Hierarchies' => array_values($items)
+        ];
+
+        $response = $this->instructionManagerPool
+            ->get('hawksearch-esindexing')->executeByCode('upsertHierarchy', $data)->get();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rebuildHierarchy(string $indexName)
+    {
+        $data = [
+            'IndexName' => $indexName
+        ];
+
+        $response = $this->instructionManagerPool
+            ->get('hawksearch-esindexing')->executeByCode('rebuildHierarchy', $data)->get();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function deleteHierarchyItems(array $ids, string $indexName)
+    {
+        if (!$ids) {
+            return;
+        }
+
+        $data = [
+            'IndexName' => $indexName,
+            'Ids' => array_values($ids)
+        ];
+
+        $response = $this->instructionManagerPool
+            ->get('hawksearch-esindexing')->executeByCode('deleteHierarchyItems', $data)->get();
+    }
 }

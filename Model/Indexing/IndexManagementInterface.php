@@ -68,4 +68,27 @@ interface IndexManagementInterface
      * @return void
      */
     public function deleteItems(array $ids, string $indexName);
+
+    /**
+     * Upseart Hierarchy
+     * @param array $items
+     * @param string $indexName
+     * @return void
+     */
+    public function upsertHierarchy(array $items, string $indexName);
+
+    /**
+     * Rebuild index hierarchy
+     * @param string $indexName
+     * @return void
+     */
+    public function rebuildHierarchy(string $indexName);
+
+    /**
+     * Removes multiple documents from a specific hierarchy based on ids
+     * @param array $ids
+     * @param string $indexName
+     * @return void
+     */
+    public function deleteHierarchyItems(array $ids, string $indexName);
 }
