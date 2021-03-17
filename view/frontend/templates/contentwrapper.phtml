@@ -1,5 +1,77 @@
+<?php
+/* @var $block \Magento\Catalog\Block\Product\AbstractProduct */
+/* @var \Magento\Framework\Escaper $escaper */
+
+use Magento\Framework\App\ActionInterface;
+
+$om = \Magento\Framework\App\ObjectManager::getInstance();
+$escaper = $om->get(\Magento\Framework\Escaper::class);
+$urlHelper = $om->get(\Magento\Framework\Url\Helper\Data::class);
+$urlBuilder = $om->get(\Magento\Framework\UrlInterface::class);
+$request = $om->get(\Magento\Framework\App\RequestInterface::class);
+
+$getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
+{
+    $currentUrl = $urlHelper->getEncodedUrl($urlBuilder->getCurrentUrl());
+    $urlParamName = ActionInterface::PARAM_NAME_URL_ENCODED;
+
+    $routeParams = [
+        $urlParamName => $currentUrl,
+        '_secure' => $request->isSecure(),
+    ];
+    $additional = ['_escape' => false];
+    $routeParams = array_merge($routeParams, $additional);
+
+
+    return $urlBuilder->getUrl('checkout/cart/add', $routeParams);
+};
+?>
+
+<div id="koexample-container"></div>
+<div data-bind="scope: 'koexample'">
+    <!-- ko foreach: getProducts() -->
+    <div><span>Product: </span><strong data-bind="text: $data.sku"></strong></div>
+    <!--data-bind="attr: {'action': $data.url}"-->
+    <form data-role="tocart-form"
+          data-bind="attr: {'data-product-sku': $data.sku, 'action': $data.url}"
+          method="post">
+        <input type="hidden"
+               name="product"
+               data-bind="value: $data.sku">
+        <input type="hidden"
+               name="<?= /* @noEscape */ ActionInterface::PARAM_NAME_URL_ENCODED ?>"
+               data-bind="value: $data.url">
+        <?= $block->getBlockHtml('formkey') ?>
+        <button type="submit"
+                title="<?= $escaper->escapeHtmlAttr(__('Add to Cart')) ?>"
+                class="action tocart primary">
+            <span><?= $escaper->escapeHtml(__('Add to Cart')) ?></span>
+        </button>
+    </form>
+    <!-- /ko -->
+
+</div>
+<script type="text/x-magento-init">
+{
+    "*": {
+        "Magento_Ui/js/core/app": {
+            "components": {
+                "koexample": {
+                    "component": "HawkSearch_EsIndexing/js/koexample",
+                    "template": "koexample-content",
+                    "urlPart": "<?= $getAddTocartUrl(); ?>"
+                }
+            }
+        }
+    }
+}
+</script>
+
+<!-- HawkSearch Vue SDK part -->
+
 <script src="/media/build.js"></script>
 <link rel="stylesheet" href="/media/css/main.css" />
+
 <div data-component="vue-app"
      data-client-guid="f51060e1c38446f0bacdf283390c37e8"
      data-client-guid-my="fc799c1399824b6f958c2f7251160ddb"
@@ -17,5 +89,5 @@
 
             <results></results>
         </div>
-
     </div>
+
