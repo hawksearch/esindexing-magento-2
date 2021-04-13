@@ -1,12 +1,16 @@
 {
-    "name": "hawksearch/esindexing",
+    "name": "hawksearch/esindexing-magento-2",
     "license": "proprietary",
     "description": "Hawksearch ES Indexing module for Magento 2",
     "type": "magento2-module",
     "version": "0.0.1",
     "require": {
         "magento/framework": "~102.0|~103.0",
-        "magento/magento-composer-installer": "*"
+        "hawksearch/connector": "^2.4",
+        "ext-json": "*",
+        "ext-PDO": "*",
+        "ext-mbstring": "*",
+        "ext-dom": "*"
     },
     "autoload": {
         "psr-4": {
