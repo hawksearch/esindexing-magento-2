@@ -13,7 +13,7 @@ If you have any questions please read our [Support FAQ](https://hawksearch.atlas
 
 ## Documentation
 
-Check out our [Getting Started]() guide and start using [HawkSearch](https://www.hawksearch.com/ ) for Magento 2.
+Check out our [Getting Started](https://hawksearch.atlassian.net/wiki/spaces/CON/pages/1626112046/Magento+2+Elastic+Getting+Started) guide and start using [HawkSearch](https://www.hawksearch.com/ ) for Magento 2.
 
 ## Magento Version Support
 
