@@ -30,6 +30,7 @@ use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\CatalogInventory\Model\Configuration;
 use Magento\Framework\DataObject;
+use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\Serializer\Json;
@@ -91,6 +92,11 @@ class ProductEntityIndexer extends AbstractEntityIndexer
      */
     private $imageHelper;
 
+    /**
+     * @var ProductDataProvider\PriceManagementInterface
+     */
+    private $priceManagement;
+
     public function __construct(
         GeneralConfig $generalConfig,
         IndexingConfig $indexingConfig,
@@ -98,6 +104,7 @@ class ProductEntityIndexer extends AbstractEntityIndexer
         ItemsProviderPoolInterface $itemsProviderPool,
         EntityIndexerPoolInterface $entityIndexerPool,
         IndexManagementInterface $indexManagement,
+        EventManagerInterface $eventManager,
         Visibility $visibility,
         Configuration $catalogInventoryConfiguration,
         StockRegistryInterface $stockRegistry,
@@ -106,7 +113,8 @@ class ProductEntityIndexer extends AbstractEntityIndexer
         ProductAttributes $productAttributes,
         StoreManagerInterface $storeManager,
         ProductDataProvider $productDataProvider,
-        ImageHelper $imageHelper
+        ImageHelper $imageHelper,
+        ProductDataProvider\PriceManagementInterface $priceManagement
     ) {
         parent::__construct(
             $generalConfig,
@@ -114,7 +122,8 @@ class ProductEntityIndexer extends AbstractEntityIndexer
             $emulation,
             $itemsProviderPool,
             $entityIndexerPool,
-            $indexManagement
+            $indexManagement,
+            $eventManager
         );
 
         $this->visibility = $visibility;
@@ -126,12 +135,13 @@ class ProductEntityIndexer extends AbstractEntityIndexer
         $this->storeManager = $storeManager;
         $this->productDataProvider = $productDataProvider;
         $this->imageHelper = $imageHelper;
+        $this->priceManagement = $priceManagement;
     }
 
     /**
      * @inheritdoc
      */
-    protected function getIndexedAttributes()
+    protected function getIndexedAttributes(): array
     {
         $currentAttributesConfig = $this->jsonSerializer->unserialize(
             $this->attributesConfigProvider->getAttributes()
@@ -202,7 +212,7 @@ class ProductEntityIndexer extends AbstractEntityIndexer
      * @param ProductInterface|Product|DataObject $entityItem
      * @inheritdoc
      */
-    protected function getEntityId($entityItem): ?int
+    protected function getEntityId(DataObject $entityItem): ?int
     {
         return (int)$entityItem->getId();
     }
@@ -211,7 +221,7 @@ class ProductEntityIndexer extends AbstractEntityIndexer
      * @param ProductInterface|Product|DataObject $item
      * @inheritdoc
      */
-    protected function canItemBeIndexed(DataObject $item)
+    protected function canItemBeIndexed(DataObject $item): bool
     {
         if ($item->isDeleted()) {
             return false;

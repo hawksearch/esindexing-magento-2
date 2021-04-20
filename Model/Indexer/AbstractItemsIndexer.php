@@ -21,7 +21,7 @@ use HawkSearch\EsIndexing\Model\Indexing\IndexManagementInterface;
 use HawkSearch\EsIndexing\Model\Indexing\ItemsProviderPoolInterface;
 use HawkSearch\EsIndexing\Model\MessageQueue\PublisherInterface;
 use Magento\Framework\DataObject;
-use Magento\Framework\Event\ManagerInterface;
+use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\NotFoundException;
 use Magento\Store\Model\StoreManagerInterface;
@@ -59,7 +59,7 @@ abstract class AbstractItemsIndexer
     private $itemsProviderPool;
 
     /**
-     * @var ManagerInterface
+     * @var EventManagerInterface
      */
     private $eventManager;
 
@@ -71,7 +71,7 @@ abstract class AbstractItemsIndexer
      * @param General $generalConfig
      * @param EntityIndexerPoolInterface $entityIndexerPool
      * @param ItemsProviderPoolInterface $itemsProviderPool
-     * @param ManagerInterface $eventManager
+     * @param EventManagerInterface $eventManager
      */
     public function __construct(
         PublisherInterface $publisher,
@@ -80,7 +80,7 @@ abstract class AbstractItemsIndexer
         General $generalConfig,
         EntityIndexerPoolInterface $entityIndexerPool,
         ItemsProviderPoolInterface $itemsProviderPool,
-        ManagerInterface $eventManager
+        EventManagerInterface $eventManager
     ) {
         $this->publisher = $publisher;
         $this->storeManager = $storeManager;
@@ -141,6 +141,7 @@ abstract class AbstractItemsIndexer
     {
         $stores = $this->storeManager->getStores();
 
+        $dataToUpdate = [];
         foreach ($stores as $store) {
             if (!$this->generalConfig->isIndexingEnabled($store->getId())) {
                 continue;
@@ -192,11 +193,7 @@ abstract class AbstractItemsIndexer
         }
 
         $this->publisher->publish(
-            __(
-                'Update full index for %1 items of "%2" entity',
-                count($items),
-                $this->entityIndexerPool->getIndexerByCode($this->getEntityIndexerCode())
-            ),
+            __('Update full items index'),
             $dataToUpdate
         );
     }

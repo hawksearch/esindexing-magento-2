@@ -31,7 +31,10 @@
                 type="HawkSearch\EsIndexing\Model\Indexing\IndexManagement"/>
     <preference for="HawkSearch\EsIndexing\Model\MessageQueue\PublisherInterface"
                 type="HawkSearch\EsIndexing\Model\MessageQueue\Publisher"/>
-
+    <preference for="HawkSearch\EsIndexing\Model\Product\PriceManagementInterface"
+                type="HawkSearch\EsIndexing\Model\Product\PriceManagement"/>
+    <preference for="HawkSearch\EsIndexing\Model\Product\Price\ProductTypePoolInterface"
+                type="HawkSearch\EsIndexing\Model\Product\Price\ProductTypePool"/>
 
     <!-- Configs -->
     <type name="HawkSearch\EsIndexing\Model\Config\Products">
@@ -466,6 +469,19 @@
                 <item name="hierarchy" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\HierarchyEntityIndexer</item>
                 <item name="product" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\ProductEntityIndexer</item>
                 <item name="content_page" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\ContentPageEntityIndexer</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="HawkSearch\EsIndexing\Model\Product\Price\ProductTypePool">
+        <arguments>
+            <argument name="types" xsi:type="array">
+                <item name="simple" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Price\ProductType\Simple</item>
+                <item name="virtual" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Price\ProductType\Virtual</item>
+                <item name="downloadable" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Price\ProductType\Downloadable</item>
+                <item name="configurable" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Price\ProductType\Configurable</item>
+                <item name="bundle" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Price\ProductType\Bundle</item>
+                <item name="grouped" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Price\ProductType\Grouped</item>
             </argument>
         </arguments>
     </type>
