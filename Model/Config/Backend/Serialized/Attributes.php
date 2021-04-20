@@ -139,8 +139,9 @@ class Attributes extends ArraySerialized
                         $data[FieldInterface::IS_COMPARE] = (bool)$attribute->getIsComparable();
                         $data[FieldInterface::IS_QUERY] = (bool)$attribute->getIsSearchable();
                     } catch (NoSuchEntityException $e) {
-                        $this->_logger->error($e->getMessage());
-                        $errors[] = $e->getMessage();
+                        $data[FieldInterface::IS_SORT] = false;
+                        $data[FieldInterface::IS_COMPARE] = false;
+                        $data[FieldInterface::IS_QUERY] = false;
                     }
                 }
 
