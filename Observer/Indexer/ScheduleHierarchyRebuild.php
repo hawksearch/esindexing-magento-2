@@ -46,7 +46,7 @@ class HierarchyRebuild implements ObserverInterface
         $transport = $observer->getData('transport');
 
         //Get non-current index name for full reindexing process
-        $indexName = $this->indexManagement->getIndexName();
-        $this->indexManagement->rebuildHierarchy($indexName);
+        //$indexName = $this->indexManagement->getIndexName();
+        //$this->indexManagement->rebuildHierarchy($indexName);
     }
 }
