@@ -56,4 +56,12 @@ class HierarchyManagement implements HierarchyManagementInterface
     {
         // TODO: Implement deleteHierarchyItems() method.
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function initializeHierarchyIndexing(bool $useCurrentIndex)
+    {
+        // TODO: Implement initializeHierarchyIndexing() method.
+    }
 }
