@@ -18,6 +18,7 @@ use Exception;
 use HawkSearch\EsIndexing\Model\Config\General as GeneralConfig;
 use HawkSearch\EsIndexing\Model\Config\Indexing as IndexingConfig;
 use Magento\Framework\DataObject;
+use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NotFoundException;
 use Magento\Store\Model\App\Emulation;
@@ -65,6 +66,11 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
     private $indexManagement;
 
     /**
+     * @var EventManagerInterface
+     */
+    private $eventManager;
+
+    /**
      * AbstractEntityIndexer constructor.
      * @param GeneralConfig $generalConfig
      * @param IndexingConfig $indexingConfig
@@ -72,6 +78,7 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
      * @param ItemsProviderPoolInterface $itemsProviderPool
      * @param EntityIndexerPoolInterface $entityIndexerPool
      * @param IndexManagementInterface $indexManagement
+     * @param EventManagerInterface $eventManager
      */
     public function __construct(
         GeneralConfig $generalConfig,
@@ -79,7 +86,8 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
         Emulation $emulation,
         ItemsProviderPoolInterface $itemsProviderPool,
         EntityIndexerPoolInterface $entityIndexerPool,
-        IndexManagementInterface $indexManagement
+        IndexManagementInterface $indexManagement,
+        EventManagerInterface $eventManager
     )
     {
         $this->generalConfig = $generalConfig;
@@ -88,10 +96,12 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
         $this->itemsProviderPool = $itemsProviderPool;
         $this->entityIndexerPool = $entityIndexerPool;
         $this->indexManagement = $indexManagement;
+        $this->eventManager = $eventManager;
     }
 
     /**
      * @inheritDoc
+     * @throws Exception
      */
     public function rebuildEntityIndex(int $storeId, $entityIds = null)
     {
@@ -146,7 +156,7 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
      * @return array
      * @throws NotFoundException
      */
-    protected function getItemsToRemove(array $fullItemsList, ?array $entityIds = null)
+    protected function getItemsToRemove(array $fullItemsList, ?array $entityIds = null): array
     {
         $idsToRemove = is_array($entityIds) ? array_combine($entityIds, $entityIds) : [];
         $itemsToRemove = [];
@@ -181,7 +191,7 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
      * @return array
      * @throws LocalizedException
      */
-    protected function getItemsToIndex(array $fullItemsList, ?array $entityIds = null)
+    protected function getItemsToIndex(array $fullItemsList, ?array $entityIds = null): array
     {
         $itemsToIndex = [];
 
@@ -207,29 +217,43 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
      * @return array
      * @throws LocalizedException
      */
-    protected function convertEntityToIndexDataArray(DataObject $item)
+    protected function convertEntityToIndexDataArray(DataObject $item): array
     {
         $itemData = [];
-        $itemData['__uid'] = $this->castAttributeValue($this->getEntityUniqueId($item));
-        $itemData['__type'] = $this->castAttributeValue($this->getEntityType());
+        $itemData[$this->getEntityIdField()] = $this->getEntityUniqueId($item);
+        $itemData[$this->getEntityTypeField()] = $this->getEntityType();
         foreach ($this->getIndexedAttributes() as $attribute) {
             if (!$attribute) {
                 continue;
             }
-            $attributeValues = $this->castAttributeValue($this->getAttributeValue($item, $attribute));
-            if ($attributeValues === null) {
+            $itemData[$attribute] = $this->getAttributeValue($item, $attribute);
+        }
+
+        $transport = new DataObject($itemData);
+        $this->eventManager->dispatch(
+            'hawksearch_esindexing_convert_entity_item_after',
+            ['item' => $item, 'item_data' => $transport]
+        );
+        $itemData = $transport->getData();
+
+        $itemDataResult = [];
+        foreach ($itemData as $dataKey => $value) {
+            $value = $this->castAttributeValue($value);
+            if ($value === null) {
                 continue;
             }
-            $itemData[$attribute] = $attributeValues;
+            $itemDataResult[$dataKey] = $value;
         }
-        return $itemData;
+
+        return $itemDataResult;
     }
 
     /**
      * @param mixed $value
      * @return array|null
      */
-    private function castAttributeValue($value) {
+    private function castAttributeValue($value): ?array
+    {
         if ($value === '') {
             $value = null;
         }
@@ -240,7 +264,7 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
     /**
      * @return array
      */
-    protected function getIndexedAttributes()
+    protected function getIndexedAttributes(): array
     {
         return [];
     }
@@ -248,7 +272,7 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
     /**
      * @param DataObject $item
      * @param string $attribute
-     * @return array
+     * @return mixed
      */
     abstract protected function getAttributeValue(DataObject $item, string $attribute);
 
@@ -256,7 +280,7 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
      * @param DataObject $item
      * @return bool
      */
-    abstract protected function canItemBeIndexed(DataObject $item);
+    abstract protected function canItemBeIndexed(DataObject $item): bool;
 
     /**
      * @return string
@@ -277,12 +301,12 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
      * @param DataObject $entityItem
      * @return int
      */
-    abstract protected function getEntityId($entityItem): ?int;
+    abstract protected function getEntityId(DataObject $entityItem): ?int;
 
     /**
      * @return string
      */
-    private function getEntityIdField()
+    private function getEntityIdField(): string
     {
         return '__uid';
     }
@@ -290,7 +314,7 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
     /**
      * @return string
      */
-    private function getEntityTypeField()
+    private function getEntityTypeField(): string
     {
         return '__type';
     }
@@ -300,7 +324,7 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
      * @return string
      * @throws NotFoundException
      */
-    private function getEntityUniqueId($entityItem)
+    private function getEntityUniqueId(DataObject $entityItem): string
     {
         return $this->getEntityType() . '_' . $this->getEntityId($entityItem);
     }

@@ -33,7 +33,7 @@ class ContentPageEntityIndexer extends AbstractEntityIndexer
      * @param PageInterface|Page|DataObject $item
      * @inheritDoc
      */
-    protected function canItemBeIndexed(DataObject $item)
+    protected function canItemBeIndexed(DataObject $item): bool
     {
         if (!$item->isActive()) {
             return false;
@@ -46,7 +46,7 @@ class ContentPageEntityIndexer extends AbstractEntityIndexer
      * @param PageInterface|Page|DataObject $entityItem
      * @inheritDoc
      */
-    protected function getEntityId($entityItem): ?int
+    protected function getEntityId(DataObject $entityItem): ?int
     {
         return (int)$entityItem->getId();
     }
@@ -54,7 +54,7 @@ class ContentPageEntityIndexer extends AbstractEntityIndexer
     /**
      * @return array
      */
-    protected function getIndexedAttributes()
+    protected function getIndexedAttributes(): array
     {
         return [
             'title',
