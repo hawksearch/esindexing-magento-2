@@ -18,7 +18,10 @@ use Magento\Authorization\Model\UserContextInterface;
 use Magento\Framework\Bulk\BulkManagementInterface;
 use Magento\Framework\DataObject\IdentityGeneratorInterface;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\SerializerInterface;
+use Magento\Store\Model\StoreManagerInterface;
+use Psr\Log\LoggerInterface;
 
 class Publisher implements PublisherInterface
 {
@@ -50,25 +53,41 @@ class Publisher implements PublisherInterface
     private $userContext;
 
     /**
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * Publisher constructor.
      * @param SerializerInterface $serializer
      * @param OperationInterfaceFactory $operationFactory
      * @param IdentityGeneratorInterface $identityService
      * @param BulkManagementInterface $bulkManagement
      * @param UserContextInterface $userContext
+     * @param StoreManagerInterface $storeManager
+     * @param LoggerInterface $logger
      */
     public function __construct(
         SerializerInterface $serializer,
         OperationInterfaceFactory $operationFactory,
         IdentityGeneratorInterface $identityService,
         BulkManagementInterface $bulkManagement,
-        UserContextInterface $userContext
+        UserContextInterface $userContext,
+        StoreManagerInterface $storeManager,
+        LoggerInterface $logger
     ) {
         $this->serializer = $serializer;
         $this->operationFactory = $operationFactory;
         $this->identityService = $identityService;
         $this->bulkManagement = $bulkManagement;
         $this->userContext = $userContext;
+        $this->storeManager = $storeManager;
+        $this->logger = $logger;
     }
 
     /**
@@ -84,6 +103,7 @@ class Publisher implements PublisherInterface
         $operations = [];
 
         foreach ($data as $dataToUpdate) {
+            $this->updateApplicationHeaders($dataToUpdate);
             $operations[] = $this->makeOperation(
                 $bulkUuid,
                 static::TOPIC_NAME,
@@ -118,5 +138,30 @@ class Publisher implements PublisherInterface
         ];
 
         return $this->operationFactory->create($data);
+    }
+
+    /**
+     * Set current store_id in messageData['application_headers']
+     * so consumer may check store_id and execute operation in correct store scope.
+     * Prevent publishing inconsistent messages because of store_id not defined or wrong.
+     * @param array $data
+     */
+    private function updateApplicationHeaders(array &$data)
+    {
+        try {
+            $storeId = $this->storeManager->getStore()->getId();
+        } catch (NoSuchEntityException $e) {
+            $errorMessage = sprintf(
+                "Can't get current storeId and inject to the message queue. Error %s.",
+                $e->getMessage()
+            );
+            $this->logger->error($errorMessage);
+            throw new \LogicException($errorMessage);
+        }
+
+        if (!isset($data['application_headers'])) {
+            $data['application_headers'] = [];
+        }
+        $data['application_headers']['store_id'] = $storeId;
     }
 }
