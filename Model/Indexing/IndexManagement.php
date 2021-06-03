@@ -286,7 +286,7 @@ class IndexManagement implements IndexManagementInterface
     /**
      * @inheritdoc
      */
-    public function rebuildHierarchy(string $indexName)
+    public function rebuildHierarchy(string $indexName = null)
     {
         $data = [
             'IndexName' => $indexName

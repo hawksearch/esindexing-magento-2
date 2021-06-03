@@ -17,19 +17,16 @@ namespace HawkSearch\EsIndexing\Observer\Indexer;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 
-class HierarchyDelete implements ObserverInterface
+class ScheduleHierarchyDelete implements ObserverInterface
 {
-
     /**
      * The observer is used for deleting the whole hierarchy structure before full items reindexing
-     * Currently deleting all items is not needed because we have a new empty index
-     * when each reindexing process starts
+     * Currently the deletion of all items is not needed because we have a new empty index
+     * when each reindexing process starts. So that the observer is not used yet.
      * @inheritDoc
      */
     public function execute(Observer $observer)
     {
-        $store = $observer->getData('store');
-        $indexer = $observer->getData('indexer');
-        $transport = $observer->getData('transport');
+        //It is not used yet
     }
 }

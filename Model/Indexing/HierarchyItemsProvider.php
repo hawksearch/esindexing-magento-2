@@ -17,17 +17,17 @@ namespace HawkSearch\EsIndexing\Model\Indexing;
 
 use Magento\Catalog\Api\Data\CategoryInterface;
 use Magento\Catalog\Model\Category as CategoryModel;
-use Magento\Catalog\Model\Category as ModelCategory;
 use Magento\Catalog\Model\CategoryFactory;
+use Magento\Catalog\Model\ResourceModel\Category as CategoryResource;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Catalog\Helper\Category as CategoryHelper;
 
 class HierarchyItemsProvider implements ItemsProviderInterface
 {
     /**
-     * @var CategoryModel
+     * @var CategoryResource
      */
-    private $categoryModel;
+    private $categoryResource;
 
     /**
      * @var CategoryHelper
@@ -47,17 +47,18 @@ class HierarchyItemsProvider implements ItemsProviderInterface
 
     /**
      * HierarchyItemsProvider constructor.
-     * @param CategoryModel $categoryModel
+     * @param CategoryResource $categoryResource
      * @param CategoryHelper $categoryHelper
      * @param StoreManagerInterface $storeManager
+     * @param CategoryFactory $categoryFactory
      */
     public function __construct(
-        CategoryModel $categoryModel,
+        CategoryResource $categoryResource,
         CategoryHelper $categoryHelper,
         StoreManagerInterface $storeManager,
         CategoryFactory $categoryFactory
     ) {
-        $this->categoryModel = $categoryModel;
+        $this->categoryResource = $categoryResource;
         $this->storeManager = $storeManager;
         $this->categoryHelper = $categoryHelper;
         $this->categoryFactory = $categoryFactory;
@@ -65,7 +66,7 @@ class HierarchyItemsProvider implements ItemsProviderInterface
 
     /**
      * @inheritDoc
-     * @return ProductInterface[]
+     * @return CategoryInterface[]
      */
     public function getItems($storeId, $entityIds = null, $currentPage = 1, $pageSize = 0)
     {
@@ -81,30 +82,33 @@ class HierarchyItemsProvider implements ItemsProviderInterface
      */
     protected function getCategoryCollection($storeId, $entityIds = null, $currentPage = 1, $pageSize = 0): array
     {
-        $parentId = $this->storeManager->getStore($storeId)->getRootCategoryId();
+        $storeParentCategoryId = $this->storeManager->getStore($storeId)->getRootCategoryId();
 
         /**
          * Check if parent node of the store still exists
          */
+        /* @var $category CategoryModel */
         $category = $this->categoryFactory->create();
-        /* @var $category ModelCategory */
-        if (!$category->checkId($parentId)) {
+        $this->categoryResource->load($category, $storeParentCategoryId);
+
+        if (!$category->getId()) {
             return [];
         }
 
-        //$storeRootCategory =
-        $categories = $this->categoryModel->getCategories($parentId, 0, false, true, false);
-        $categories->addIdFilter($parentId);
+        $pathRegexGroups = [
+            $category->getPath() . "$",
+            $category->getPath() . "/"
+        ];
+        $pathFilterRegex = "(" . implode('|', $pathRegexGroups) . ")";
+        $categories = $category->getCategories($category->getParentId(), 0, false, true, false);
+        $categories->addPathFilter($pathFilterRegex);
 
-        /*if ($productIds && count($productIds) > 0) {
-            $this->searchCriteriaBuilder->addFilter('entity_id', $productIds, 'in');
-        }*/
-
-
-        /*$searchCriteria->setCurrentPage($currentPage)
-            ->setPageSize($pageSize);*/
+        if ($entityIds && count($entityIds) > 0) {
+            $categories->addIdFilter($entityIds);
+        }
+        $categories->setCurPage($currentPage)
+            ->setPageSize($pageSize);
 
         return $categories->getItems();
-        //return $this->productRepository->getList($searchCriteria)->getItems();
     }
 }
