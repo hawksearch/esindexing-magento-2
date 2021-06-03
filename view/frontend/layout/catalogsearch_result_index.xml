@@ -8,21 +8,25 @@ https://magento.test/catalogsearch/result/
         <referenceContainer name="content">
             <!-- Remove product listing block (including toolbar) from search results page -->
             <!--<referenceBlock name="search.result" remove="true" />-->
+
+            <block class="Magento\Framework\View\Element\Template" before="-" name="hawksearch.search.result" template="HawkSearch_EsIndexing::results.phtml"/>
+            <block class="Magento\Framework\View\Element\Template" before="-" name="hawksearch.search.box" template="HawkSearch_EsIndexing::searchbox.phtml"/>
+            <block class="Magento\Framework\View\Element\Template" before="-" name="hawksearch.leftnav" template="HawkSearch_EsIndexing::facets.phtml"/>
+        </referenceContainer>
+
+        <referenceContainer name="sidebar.main">
         </referenceContainer>
 
         <referenceBlock name="main.content">
             <!-- Add Hawksearch product listing block in page main container -->
-            <block class="Magento\Framework\View\Element\Template" before="-" name="hawksearch.search.result" template="HawkSearch_EsIndexing::results.phtml"/>
 
             <!-- This is the template for testing purposes. It can be enable as a testing playground -->
             <block class="Magento\Framework\View\Element\Template" before="-" name="hawksearch.content" template="HawkSearch_EsIndexing::contentwrapper.phtml"/>
         </referenceBlock>
 
         <!-- Remove Layered Navigation block from the left sidebar and replace it with Hawksearch facets -->
-        <referenceContainer name="catalogsearch.leftnav" remove="true" />
-        <referenceContainer name="sidebar.main">
-            <block class="Magento\Framework\View\Element\Template" before="-" name="hawksearch.leftnav" template="HawkSearch_EsIndexing::facets.phtml"/>
-        </referenceContainer>
+        <!-- <referenceContainer name="catalogsearch.leftnav" remove="true" /> -->
+
 
         <!-- After Enabling this the entire left sidebar block will be removed form the page -->
         <!--<referenceContainer name="sidebar.main" remove="true" />

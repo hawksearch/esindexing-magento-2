@@ -69,25 +69,56 @@ $getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
 
 <!-- HawkSearch Vue SDK part -->
 
-<script src="/media/build.js"></script>
-<link rel="stylesheet" href="/media/css/main.css" />
+<script src="/media/hawksearch/vue/vue-hawksearch-app.js"></script>
+<link rel="stylesheet" href="/media/hawksearch/vue/vue-hawksearch-app.css" />
 
-<div data-component="vue-app"
-     data-client-guid="f51060e1c38446f0bacdf283390c37e8"
-     data-client-guid-my="fc799c1399824b6f958c2f7251160ddb"
-     data-hawksearch-base-api="https://dev.hawksearch.net/v9/"
-     data-hawksearch-search-api="https://searchapi-dev.hawksearch.net/"
-     data-index-name="">
+<script id="hawksearch-config" type="application/json">
+    {
+        "clientGuid": "f51060e1c38446f0bacdf283390c37e8",
+        "apiUrl": "https://searchapi-dev.hawksearch.net/",
+        "tabConfig": {
+            "alwaysOn": false
+        },
+        "searchConfig": {
+            "scrollUpOnRefresh": false
+        },
+        "paramsMapping": {
+            "keyword": "q"
+        }
+    }
+</script>
 
-    <div class="hawk">
-        <div class="hawk__header">
-            <search-box></search-box>
+<script>
+    function addToCart(args) {
+        // console.log(args)
+
+        var hcParams = {
+            product: '24-MB01',
+            uenc: 'https://hawksearch-es-dev-m2.test/checkout/cart/add/uenc/aHR0cHM6Ly9oYXdrc2VhcmNoLWVzLWRldi1tMi50ZXN0L2NhdGFsb2dzZWFyY2gvcmVzdWx0Lz9xPXRlbnQ%2C/product/1/',
+            form_key: '<?php echo $block->getLayout()->getBlock('formkey')->getFormKey(); ?>'
+        }
+
+        console.log(hcParams)
+
+            fetch(hcParams.uenc, {
+                method: 'POST',
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(hcParams)
+            });
+        }
+</script>
+
+<script id="vue-hawksearch-result-item" type="x-template">
+    <div class="hawk-results__item" @click="onClick">
+        <result-image :imagePath="getField('image')"></result-image>
+
+        <div class="hawk-results__item-name">
+            <span>{{ getField('itemname') }}</span>
         </div>
 
-        <div class="hawk__body">
-            <facet-list></facet-list>
-
-            <results></results>
-        </div>
+        <add-to-cart :add-fn="addToCart" :add-args="{sku: getField('itemname'), url: '<?php print $getAddTocartUrl(); ?>'}" />
     </div>
-
+</script>
