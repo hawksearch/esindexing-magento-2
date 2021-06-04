@@ -51,27 +51,8 @@ $getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
     <!-- /ko -->
 
 </div>
-<script type="text/x-magento-init">
-{
-    "*": {
-        "Magento_Ui/js/core/app": {
-            "components": {
-                "koexample": {
-                    "component": "HawkSearch_EsIndexing/js/koexample",
-                    "template": "koexample-content",
-                    "urlPart": "<?= $getAddTocartUrl(); ?>"
-                }
-            }
-        }
-    }
-}
-</script>
 
 <!-- HawkSearch Vue SDK part -->
-
-<script src="/media/hawksearch/vue/vue-hawksearch-app.js"></script>
-<link rel="stylesheet" href="/media/hawksearch/vue/vue-hawksearch-app.css" />
-
 <script id="hawksearch-config" type="application/json">
     {
         "clientGuid": "f51060e1c38446f0bacdf283390c37e8",
@@ -84,12 +65,13 @@ $getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
         },
         "paramsMapping": {
             "keyword": "q"
-        }
+        },
+        "urlPart": "<?= $getAddTocartUrl(); ?>"
     }
 </script>
 
 <script>
-    function addToCart(args) {
+    /*function addToCart(args) {
         // console.log(args)
 
         var hcParams = {
@@ -108,7 +90,7 @@ $getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
                 },
                 body: JSON.stringify(hcParams)
             });
-        }
+        }*/
 </script>
 
 <script id="vue-hawksearch-result-item" type="x-template">
@@ -120,5 +102,49 @@ $getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
         </div>
 
         <add-to-cart :add-fn="addToCart" :add-args="{sku: getField('itemname'), url: '<?php print $getAddTocartUrl(); ?>'}" />
+
+        <form data-role="tocart-form"
+                         method="post"
+                         data-product-sku="24-MB01"
+                         action="<?= $getAddTocartUrl() . 'product/' . 1 . '/'; ?>">
+                    <input type="hidden"
+                           name="product"
+                           value="24-MB01">
+                    <input type="hidden"
+                           name="<?= /* @noEscape */ ActionInterface::PARAM_NAME_URL_ENCODED ?>"
+                           value="<?= $getAddTocartUrl() . 'product/' . 1 . '/'; ?>">
+                    <?= $block->getBlockHtml('formkey') ?>
+                    <button type="submit"
+                            title="<?= $escaper->escapeHtmlAttr(__('Add to Cart')) ?>"
+                            class="action tocart primary">
+                        <span><?= $escaper->escapeHtml(__('Add to Cart')) ?></span>
+                    </button>
+        </form>
     </div>
+</script>
+
+<div id="vue-test">
+    <h1>{{ message }}</h1>
+</div>
+
+
+<script type="text/x-magento-init">
+{
+    "*": {
+        "Magento_Ui/js/core/app": {
+            "components": {
+                "koexample": {
+                    "component": "HawkSearch_EsIndexing/js/koexample",
+                    "template": "koexample-content",
+                    "urlPart": "<?= $getAddTocartUrl(); ?>"
+                }
+            }
+        },
+        "hawksearchVueSDK": {}
+    },
+    "[data-role=tocart-form], .form.map.checkout": {
+        "catalogAddToCart": {
+        }
+    }
+}
 </script>

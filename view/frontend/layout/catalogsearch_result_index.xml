@@ -4,17 +4,20 @@ This layout XML file add custom changes to Search Results page only
 https://magento.test/catalogsearch/result/
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="HawkSearch_EsIndexing::css/vue-hawksearch-app.css"/>
+    </head>
     <body>
         <referenceContainer name="content">
             <!-- Remove product listing block (including toolbar) from search results page -->
             <!--<referenceBlock name="search.result" remove="true" />-->
 
-            <block class="Magento\Framework\View\Element\Template" before="-" name="hawksearch.search.result" template="HawkSearch_EsIndexing::results.phtml"/>
             <block class="Magento\Framework\View\Element\Template" before="-" name="hawksearch.search.box" template="HawkSearch_EsIndexing::searchbox.phtml"/>
-            <block class="Magento\Framework\View\Element\Template" before="-" name="hawksearch.leftnav" template="HawkSearch_EsIndexing::facets.phtml"/>
+            <block class="Magento\Framework\View\Element\Template" before="-" name="hawksearch.search.result" template="HawkSearch_EsIndexing::results.phtml"/>
         </referenceContainer>
 
         <referenceContainer name="sidebar.main">
+            <block class="Magento\Framework\View\Element\Template" before="-" name="hawksearch.leftnav" template="HawkSearch_EsIndexing::facets.phtml"/>
         </referenceContainer>
 
         <referenceBlock name="main.content">
