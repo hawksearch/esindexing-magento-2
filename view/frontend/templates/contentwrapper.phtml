@@ -27,40 +27,16 @@ $getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
 };
 ?>
 
-<div id="koexample-container"></div>
-<div data-bind="scope: 'koexample'">
-    <!-- ko foreach: getProducts() -->
-    <div><span>Product: </span><strong data-bind="text: $data.sku"></strong></div>
-    <!--data-bind="attr: {'action': $data.url}"-->
-    <form data-role="tocart-form"
-          data-bind="attr: {'data-product-sku': $data.sku, 'action': $data.url}"
-          method="post">
-        <input type="hidden"
-               name="product"
-               data-bind="value: $data.sku">
-        <input type="hidden"
-               name="<?= /* @noEscape */ ActionInterface::PARAM_NAME_URL_ENCODED ?>"
-               data-bind="value: $data.url">
-        <?= $block->getBlockHtml('formkey') ?>
-        <button type="submit"
-                title="<?= $escaper->escapeHtmlAttr(__('Add to Cart')) ?>"
-                class="action tocart primary">
-            <span><?= $escaper->escapeHtml(__('Add to Cart')) ?></span>
-        </button>
-    </form>
-    <!-- /ko -->
-
-</div>
-
 <!-- HawkSearch Vue SDK part -->
 <script id="hawksearch-config" type="application/json">
     {
-        "clientGuid": "f51060e1c38446f0bacdf283390c37e8",
+        "clientGuid": "fc799c1399824b6f958c2f7251160ddb",
         "apiUrl": "https://searchapi-dev.hawksearch.net/",
         "tabConfig": {
             "alwaysOn": false
         },
         "searchConfig": {
+            "initialSearch": true,
             "scrollUpOnRefresh": false
         },
         "paramsMapping": {
@@ -71,61 +47,67 @@ $getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
 </script>
 
 <script>
-    /*function addToCart(args) {
-        // console.log(args)
+    function addToCart(args) {
+        if (this.$parent && this.$parent.$refs.hasOwnProperty('add-to-cart-form')) {
+            var form = this.$parent.$refs['add-to-cart-form'];
 
-        var hcParams = {
-            product: '24-MB01',
-            uenc: 'https://hawksearch-es-dev-m2.test/checkout/cart/add/uenc/aHR0cHM6Ly9oYXdrc2VhcmNoLWVzLWRldi1tMi50ZXN0L2NhdGFsb2dzZWFyY2gvcmVzdWx0Lz9xPXRlbnQ%2C/product/1/',
-            form_key: '<?php echo $block->getLayout()->getBlock('formkey')->getFormKey(); ?>'
+            if (form.requestSubmit) {
+                form.requestSubmit();
+            }
+            else {
+                form.submit();
+            }
         }
+    }
 
-        console.log(hcParams)
-
-            fetch(hcParams.uenc, {
-                method: 'POST',
-                headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(hcParams)
-            });
-        }*/
+    function getID(uuid) {
+        if (uuid.includes('_')) {
+            return uuid.split('_').pop();
+        }
+    }
 </script>
+
 
 <script id="vue-hawksearch-result-item" type="x-template">
-    <div class="hawk-results__item" @click="onClick">
-        <result-image :imagePath="getField('image')"></result-image>
+    <div class="item product product-item">
+        <div class="product-item-info" data-container="product-grid">
+            <span class="product-image-container" style="width:215px;">
+                <span class="product-image-wrapper" style="padding-bottom: 125%;">
+                    <img class="product-image-photo" src="https://hawksearch-es-dev-m2.test/media/catalog/product/cache/" />
+                </span>
+            </span>
+            <div class="product details product-item-details">
+                <span class="product name product-item-name">
+                    {{ getField('name') }}
+                </span>
+                <div class="price-box price-final_price" data-role="priceBox" data-product-id="260" data-price-box="product-id-260">
+                    <span class="normal-price">
+                        <span class="price-container price-final_price tax weee">
+                            <span class="price-label">As low as</span>
+                            <span id="product-price-260" :data-price-amount="getField('price_final')" data-price-type="finalPrice" class="price-wrapper "><span class="price">{{getField('price_final_formatted')}}</span></span>
+                        </span>
+                    </span>
+                </div>
+                <div class="product-item-inner">
+                    <div class="product actions product-item-actions">
+                        <div class="actions-primary">
+                            <add-to-cart class="action tocart primary" :add-fn="addToCart" :add-args="{}" />
 
-        <div class="hawk-results__item-name">
-            <span>{{ getField('itemname') }}</span>
+                            <form ref="add-to-cart-form" style="display: none;" data-role="tocart-form" method="post" :data-product-sku="getField('sku')" :action="'<?= $getAddTocartUrl() ?>' + 'product/' + getID(getField('__uid')) + '/'">
+                                <input type="hidden" name="product" :value="getField('sku')">
+                                <input type="hidden" name="<?= /* @noEscape */ ActionInterface::PARAM_NAME_URL_ENCODED ?>" :value="'<?= $getAddTocartUrl() ?>' + 'product/' + getID(getField('__uid')) + '/'">
+                                <?= $block->getBlockHtml('formkey') ?>
+                                <button type="submit" title="<?= $escaper->escapeHtmlAttr(__('Add to Cart')) ?>" class="action tocart primary">
+                                    <span><?= $escaper->escapeHtml(__('Add to Cart')) ?></span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <add-to-cart :add-fn="addToCart" :add-args="{sku: getField('itemname'), url: '<?php print $getAddTocartUrl(); ?>'}" />
-
-        <form data-role="tocart-form"
-                         method="post"
-                         data-product-sku="24-MB01"
-                         action="<?= $getAddTocartUrl() . 'product/' . 1 . '/'; ?>">
-                    <input type="hidden"
-                           name="product"
-                           value="24-MB01">
-                    <input type="hidden"
-                           name="<?= /* @noEscape */ ActionInterface::PARAM_NAME_URL_ENCODED ?>"
-                           value="<?= $getAddTocartUrl() . 'product/' . 1 . '/'; ?>">
-                    <?= $block->getBlockHtml('formkey') ?>
-                    <button type="submit"
-                            title="<?= $escaper->escapeHtmlAttr(__('Add to Cart')) ?>"
-                            class="action tocart primary">
-                        <span><?= $escaper->escapeHtml(__('Add to Cart')) ?></span>
-                    </button>
-        </form>
     </div>
 </script>
-
-<div id="vue-test">
-    <h1>{{ message }}</h1>
-</div>
 
 
 <script type="text/x-magento-init">
