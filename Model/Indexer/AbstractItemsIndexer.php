@@ -13,7 +13,6 @@
 
 namespace HawkSearch\EsIndexing\Model\Indexer;
 
-
 use HawkSearch\EsIndexing\Model\Config\General;
 use HawkSearch\EsIndexing\Model\Config\Indexing;
 use HawkSearch\EsIndexing\Model\Indexing\EntityIndexerPoolInterface;
@@ -100,10 +99,13 @@ abstract class AbstractItemsIndexer
     {
         $stores = $this->storeManager->getStores();
 
+        $currentStore = $this->storeManager->getStore();
         foreach ($stores as $store) {
             if (!$this->generalConfig->isIndexingEnabled($store->getId())) {
                 continue;
             }
+
+            $this->storeManager->setCurrentStore($store->getId());
 
             $batchSize = $this->indexingConfig->getItemsBatchSize($store->getId());
             $chunks = array_chunk($ids, $batchSize);
@@ -130,6 +132,7 @@ abstract class AbstractItemsIndexer
                 $dataToUpdate
             );
         }
+        $this->storeManager->setCurrentStore($currentStore);
     }
 
     /**
@@ -140,12 +143,15 @@ abstract class AbstractItemsIndexer
     protected function rebuildFull()
     {
         $stores = $this->storeManager->getStores();
+        $currentStore = $this->storeManager->getStore();
 
-        $dataToUpdate = [];
         foreach ($stores as $store) {
             if (!$this->generalConfig->isIndexingEnabled($store->getId())) {
                 continue;
             }
+            $dataToUpdate = [];
+
+            $this->storeManager->setCurrentStore($store->getId());
 
             $dataToUpdate[] = [
                 'class' => IndexManagementInterface::class,
@@ -154,8 +160,12 @@ abstract class AbstractItemsIndexer
 
             $transport = new DataObject($dataToUpdate);
             $this->eventManager->dispatch(
-                'hawksearch_esindexing_rebuild_full_index_items_before',
-                ['store' => $store, 'indexer' => $this, 'transport' => $transport]
+                'hawksearch_esindexing_indexers_rebuild_full_before',
+                [
+                    'store' => $store,
+                    'indexer' => $this,
+                    'transport' => $transport
+                ]
             );
             $dataToUpdate = $transport->getData();
 
@@ -164,6 +174,19 @@ abstract class AbstractItemsIndexer
             foreach ($this->entityIndexerPool->getIndexerList() as $indexerCode => $entityIndexer) {
                 $items = $this->itemsProviderPool->get($indexerCode)->getItems($store->getId());
                 $batches = ceil(count($items) / $batchSize);
+
+                $transport = new DataObject($dataToUpdate);
+                $this->eventManager->dispatch(
+                    'hawksearch_esindexing_rebuild_full_index_items_before',
+                    [
+                        'store' => $store,
+                        'indexer' => $this,
+                        'items_indexer_code' => $indexerCode,
+                        'items' => $items,
+                        'transport' => $transport
+                    ]
+                );
+                $dataToUpdate = $transport->getData();
 
                 for ($page = 1; $page <= $batches; $page++) {
                     $dataToUpdate[] = [
@@ -177,12 +200,29 @@ abstract class AbstractItemsIndexer
                         'full_reindex' => false,
                     ];
                 }
+
+                $transport = new DataObject($dataToUpdate);
+                $this->eventManager->dispatch(
+                    'hawksearch_esindexing_rebuild_full_index_items_after',
+                    [
+                        'store' => $store,
+                        'indexer' => $this,
+                        'items_indexer_code' => $indexerCode,
+                        'items' => $items,
+                        'transport' => $transport
+                    ]
+                );
+                $dataToUpdate = $transport->getData();
             }
 
             $transport = new DataObject($dataToUpdate);
             $this->eventManager->dispatch(
-                'hawksearch_esindexing_rebuild_full_index_items_after',
-                ['store' => $store, 'indexer' => $this, 'transport' => $transport]
+                'hawksearch_esindexing_indexers_rebuild_full_after',
+                [
+                    'store' => $store,
+                    'indexer' => $this,
+                    'transport' => $transport
+                ]
             );
             $dataToUpdate = $transport->getData();
 
@@ -190,12 +230,13 @@ abstract class AbstractItemsIndexer
                 'class' => IndexManagementInterface::class,
                 'method' => 'switchIndices'
             ];
-        }
 
-        $this->publisher->publish(
-            __('Update full items index'),
-            $dataToUpdate
-        );
+            $this->publisher->publish(
+                __('Update full items index for store "%1"', $store->getCode()),
+                $dataToUpdate
+            );
+        }
+        $this->storeManager->setCurrentStore($currentStore);
     }
 
     /**

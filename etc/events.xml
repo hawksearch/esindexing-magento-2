@@ -15,6 +15,14 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
 
+    <event name="hawksearch_esindexing_rebuild_full_index_items_before">
+        <observer name="hawksearch_esindexng_hierarchy_delete"
+                  instance="HawkSearch\EsIndexing\Observer\Indexer\ScheduleHierarchyDelete" />
+    </event>
+    <event name="hawksearch_esindexing_rebuild_full_index_items_after">
+        <observer name="hawksearch_esindexng_hierarchy_rebuild"
+                  instance="HawkSearch\EsIndexing\Observer\Indexer\ScheduleHierarchyRebuild" />
+    </event>
     <event name="hawksearch_esindexing_convert_entity_item_after">
         <observer name="hawksearch_esindexing_add_pricing"
                   instance="HawkSearch\EsIndexing\Model\Product\EntityPriceObserver" />

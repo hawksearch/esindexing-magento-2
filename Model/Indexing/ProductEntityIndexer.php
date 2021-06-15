@@ -187,7 +187,7 @@ class ProductEntityIndexer extends AbstractEntityIndexer
                         $value = $item->getAttributeText($attribute);
                     }
 
-                    if (!$value) {
+                    if ($value === false) {
                         $value = $attributeResource->getFrontend()->getValue($item);
                     }
                 }

@@ -20,7 +20,10 @@ use Magento\AsynchronousOperations\Api\Data\OperationInterface;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Data\ObjectFactory;
 use Magento\Framework\DataObject;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\SerializerInterface;
+use Magento\Store\Model\StoreManagerInterface;
+use Psr\Log\LoggerInterface;
 
 class Consumer
 {
@@ -40,18 +43,35 @@ class Consumer
     private $objectFactory;
 
     /**
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * InitFullReindex constructor.
      * @param IndexManagementInterface $indexManagement
      * @param SerializerInterface $serializer
+     * @param ObjectFactory $objectFactory
+     * @param StoreManagerInterface $storeManager
+     * @param LoggerInterface $logger
      */
     public function __construct(
         IndexManagementInterface $indexManagement,
         SerializerInterface $serializer,
-        ObjectFactory $objectFactory
+        ObjectFactory $objectFactory,
+        StoreManagerInterface $storeManager,
+        LoggerInterface $logger
     ) {
         $this->indexManagement = $indexManagement;
         $this->serializer = $serializer;
         $this->objectFactory = $objectFactory;
+        $this->storeManager = $storeManager;
+        $this->logger = $logger;
     }
 
     /**
@@ -66,10 +86,36 @@ class Consumer
         try {
             $serializedData = $operation->getSerializedData();
             $data = $this->serializer->unserialize($serializedData);
+            /** @var DataObject $dataObject */
             $dataObject = $this->objectFactory->create(DataObject::class, ['data' => $data]);
-            $this->execute($dataObject);
-        } catch (\Exception $e) {
 
+            $applicationHeaders = $dataObject->getData('application_headers') ?? [];
+            if (isset($applicationHeaders['store_id'])) {
+                $storeId = $applicationHeaders['store_id'];
+                try {
+                    $currentStoreId = $this->storeManager->getStore()->getId();
+                } catch (NoSuchEntityException $e) {
+                    $errorMessage = sprintf(
+                        "Can't set currentStoreId during processing queue message. Message rejected. Error %s.",
+                        $e->getMessage()
+                    );
+                    $this->logger->error($errorMessage);
+                    throw new \LogicException($errorMessage);
+                }
+
+                if (isset($storeId) && $storeId !== $currentStoreId) {
+                    $this->storeManager->setCurrentStore($storeId);
+                }
+            }
+
+            $this->execute($dataObject);
+
+            if (isset($storeId, $currentStoreId) && $storeId !== $currentStoreId) {
+                //restore original store value
+                $this->storeManager->setCurrentStore($currentStoreId);
+            }
+        } catch (\Exception $e) {
+            //@TODO reject message
         }
     }
 
@@ -89,6 +135,7 @@ class Consumer
         if (!$class) {
             return;
         }
+
         $object = $this->objectFactory->create($class, []);
 
         if (is_callable([$object, $method])) {
