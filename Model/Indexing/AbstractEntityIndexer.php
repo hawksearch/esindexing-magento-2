@@ -136,11 +136,12 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
             $isFullReindex = $entityIds === null;
             $isCurrentIndex = !$isFullReindex;
 
+            $indexName = $this->indexManagement->getIndexName($isCurrentIndex);
             $itemsToRemove = $this->getItemsToRemove($items, $entityIds);
-            $this->indexManagement->deleteItems($itemsToRemove, $this->indexManagement->getIndexName($isCurrentIndex));
+            $this->deleteItemsFromIndex($itemsToRemove, $indexName);
 
             $itemsToIndex = $this->getItemsToIndex($items, $entityIds);
-            $this->indexManagement->indexItems($itemsToIndex, $this->indexManagement->getIndexName($isCurrentIndex));
+            $this->indexItems($itemsToIndex, $indexName);
 
 
         } catch (Exception $e) {
@@ -250,9 +251,9 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
 
     /**
      * @param mixed $value
-     * @return array|null
+     * @return mixed
      */
-    private function castAttributeValue($value): ?array
+    protected function castAttributeValue($value)
     {
         if ($value === '') {
             $value = null;
@@ -327,5 +328,23 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
     private function getEntityUniqueId(DataObject $entityItem): string
     {
         return $this->getEntityType() . '_' . $this->getEntityId($entityItem);
+    }
+
+    /**
+     * @param array $items
+     * @param string $indexName
+     */
+    protected function indexItems($items, $indexName)
+    {
+        $this->indexManagement->indexItems($items, $indexName);
+    }
+
+    /**
+     * @param array $ids
+     * @param string $indexName
+     */
+    protected function deleteItemsFromIndex($ids, $indexName)
+    {
+        $this->indexManagement->deleteItems($ids, $indexName);
     }
 }
