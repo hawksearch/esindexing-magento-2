@@ -29,6 +29,8 @@
                 type="HawkSearch\EsIndexing\Model\Indexing\EntityIndexerPool"/>
     <preference for="HawkSearch\EsIndexing\Model\Indexing\IndexManagementInterface"
                 type="HawkSearch\EsIndexing\Model\Indexing\IndexManagement"/>
+    <preference for="HawkSearch\EsIndexing\Model\Indexing\HierarchyManagementInterface"
+                type="HawkSearch\EsIndexing\Model\Indexing\HierarchyManagement"/>
     <preference for="HawkSearch\EsIndexing\Model\MessageQueue\PublisherInterface"
                 type="HawkSearch\EsIndexing\Model\MessageQueue\Publisher"/>
     <preference for="HawkSearch\EsIndexing\Model\Product\PriceManagementInterface"

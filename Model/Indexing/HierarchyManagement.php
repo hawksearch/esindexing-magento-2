@@ -14,6 +14,8 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexing;
 
+use HawkSearch\Connector\Gateway\Instruction\InstructionManagerPool;
+
 class HierarchyManagement implements HierarchyManagementInterface
 {
     /**
@@ -22,23 +24,34 @@ class HierarchyManagement implements HierarchyManagementInterface
     private $indexManagement;
 
     /**
+     * @var InstructionManagerPool
+     */
+    private $instructionManagerPool;
+
+    /**
      * HierarchyManagement constructor.
      * @param IndexManagementInterface $indexManagement
      */
     public function __construct(
-        IndexManagementInterface $indexManagement
+        IndexManagementInterface $indexManagement,
+        InstructionManagerPool $instructionManagerPool
     ){
         $this->indexManagement = $indexManagement;
+        $this->instructionManagerPool = $instructionManagerPool;
     }
-
-
 
     /**
      * @inheritDoc
      */
     public function upsertHierarchy(array $items, string $indexName)
     {
-        // TODO: Implement upsertHierarchy() method.
+        $data = [
+            'IndexName' => $indexName,
+            'Hierarchies' => array_values($items)
+        ];
+
+        $response = $this->instructionManagerPool
+            ->get('hawksearch-esindexing')->executeByCode('upsertHierarchy', $data)->get();
     }
 
     /**
@@ -46,7 +59,12 @@ class HierarchyManagement implements HierarchyManagementInterface
      */
     public function rebuildHierarchy(string $indexName = null)
     {
-        // TODO: Implement rebuildHierarchy() method.
+        $data = [
+            'IndexName' => $indexName
+        ];
+
+        $response = $this->instructionManagerPool
+            ->get('hawksearch-esindexing')->executeByCode('rebuildHierarchy', $data)->get();
     }
 
     /**
@@ -54,7 +72,17 @@ class HierarchyManagement implements HierarchyManagementInterface
      */
     public function deleteHierarchyItems(array $ids, string $indexName)
     {
-        // TODO: Implement deleteHierarchyItems() method.
+        if (!$ids) {
+            return;
+        }
+
+        $data = [
+            'IndexName' => $indexName,
+            'Ids' => array_values($ids)
+        ];
+
+        $response = $this->instructionManagerPool
+            ->get('hawksearch-esindexing')->executeByCode('deleteHierarchyItems', $data)->get();
     }
 
     /**

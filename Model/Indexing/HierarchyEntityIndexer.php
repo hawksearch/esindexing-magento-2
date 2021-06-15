@@ -40,6 +40,11 @@ class HierarchyEntityIndexer extends AbstractEntityIndexer
     private $indexManagement;
 
     /**
+     * @var HierarchyManagementInterface
+     */
+    private $hierarchyManagement;
+
+    /**
      * HierarchyEntityIndexer constructor.
      * @param GeneralConfig $generalConfig
      * @param IndexingConfig $indexingConfig
@@ -48,6 +53,7 @@ class HierarchyEntityIndexer extends AbstractEntityIndexer
      * @param EntityIndexerPoolInterface $entityIndexerPool
      * @param IndexManagementInterface $indexManagement
      * @param EventManagerInterface $eventManager
+     * @param HierarchyManagementInterface $hierarchyManagement
      */
     public function __construct(
         GeneralConfig $generalConfig,
@@ -56,7 +62,8 @@ class HierarchyEntityIndexer extends AbstractEntityIndexer
         ItemsProviderPoolInterface $itemsProviderPool,
         EntityIndexerPoolInterface $entityIndexerPool,
         IndexManagementInterface $indexManagement,
-        EventManagerInterface $eventManager
+        EventManagerInterface $eventManager,
+        HierarchyManagementInterface $hierarchyManagement
     ) {
         parent::__construct(
             $generalConfig,
@@ -67,8 +74,8 @@ class HierarchyEntityIndexer extends AbstractEntityIndexer
             $indexManagement,
             $eventManager
         );
-
         $this->indexManagement = $indexManagement;
+        $this->hierarchyManagement = $hierarchyManagement;
     }
 
     /**
@@ -136,7 +143,7 @@ class HierarchyEntityIndexer extends AbstractEntityIndexer
      */
     protected function indexItems($items, $indexName)
     {
-        $this->indexManagement->upsertHierarchy($items, $indexName);
+        $this->hierarchyManagement->upsertHierarchy($items, $indexName);
     }
 
     /**
@@ -144,7 +151,7 @@ class HierarchyEntityIndexer extends AbstractEntityIndexer
      */
     protected function deleteItemsFromIndex($ids, $indexName)
     {
-        $this->indexManagement->deleteHierarchyItems($ids, $indexName);
+        $this->hierarchyManagement->deleteHierarchyItems($ids, $indexName);
     }
 
     /**

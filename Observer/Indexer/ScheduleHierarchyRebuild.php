@@ -16,6 +16,7 @@ namespace HawkSearch\EsIndexing\Observer\Indexer;
 
 use HawkSearch\EsIndexing\Model\Indexing\EntityIndexerPoolInterface;
 use HawkSearch\EsIndexing\Model\Indexing\HierarchyEntityIndexer;
+use HawkSearch\EsIndexing\Model\Indexing\HierarchyManagementInterface;
 use HawkSearch\EsIndexing\Model\Indexing\IndexManagementInterface;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\Observer;
@@ -71,7 +72,7 @@ class ScheduleHierarchyRebuild implements ObserverInterface
         $indexName = $this->indexManagement->getIndexName($store->getId(), $isCurrentIndex);
 
         $dataToUpdate[] = [
-            'class' => IndexManagementInterface::class,
+            'class' => HierarchyManagementInterface::class,
             'method' => 'rebuildHierarchy',
             'method_arguments' => [
                 'indexName' => $indexName,
