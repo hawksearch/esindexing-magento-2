@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="HawkSearch_EsIndexing::css/vue-hawksearch-app.css"/>
+    </head>
+    <body>
+        <referenceBlock name="top.search">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">HawkSearch_EsIndexing::top-search.phtml</argument>
+            </action>
+        </referenceBlock>
+    </body>
+</page>

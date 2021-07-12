@@ -1,0 +1,32 @@
+<div data-vue-hawksearch-component="searchbox" data-vue-hawksearch-config="hawksearch-config" style="width: 500px; float: right;">
+    <div class="hawk">
+        <div class="hawk__header">
+            <search-box search-page="/catalogsearch/result"></search-box>
+        </div>
+    </div>
+</div>
+
+<script type="text/x-magento-init">
+{
+    "*": {
+        "hawksearchVueSDK": {}
+    }
+}
+</script>
+
+<script id="hawksearch-config" type="application/json">
+    {
+        "clientGuid": "fc799c1399824b6f958c2f7251160ddb",
+        "apiUrl": "https://searchapi-dev.hawksearch.net/",
+        "tabConfig": {
+            "alwaysOn": false
+        },
+        "searchConfig": {
+            "initialSearch": true,
+            "scrollUpOnRefresh": false
+        },
+        "paramsMapping": {
+            "keyword": "q"
+        }
+    }
+</script>
