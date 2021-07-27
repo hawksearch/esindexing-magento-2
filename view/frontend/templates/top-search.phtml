@@ -1,4 +1,4 @@
-<div data-vue-hawksearch-component="searchbox" data-vue-hawksearch-config="hawksearch-config" style="width: 500px; float: right;">
+<div data-vue-hawksearch-component="searchbox" data-vue-hawksearch-config="hawksearch-config" style="width: 600px; float: right;">
     <div class="hawk">
         <div class="hawk__header">
             <search-box search-page="/catalogsearch/result"></search-box>
@@ -29,4 +29,11 @@
             "keyword": "q"
         }
     }
+</script>
+
+<script id="vue-hawksearch-suggestion-item" type="x-template">
+    <li @click="onClick">
+        <img class="hawk-sqItemImage-thumb" src="https://hawksearch-es-dev-m2.test/media/catalog/product/cache/" />
+        <span class="p-name">{{ getTitle() }}</span>
+    </li>
 </script>
