@@ -17,6 +17,9 @@ use HawkSearch\EsIndexing\Api\Data\LandingPageInterface;
 use HawkSearch\EsIndexing\Api\Data\LandingPageInterfaceFactory;
 use HawkSearch\EsIndexing\Api\LandingPageManagementInterface;
 use Magento\Catalog\Model\Category;
+use Magento\Catalog\Model\Category as CategoryModel;
+use Magento\Catalog\Model\CategoryFactory;
+use Magento\Catalog\Model\ResourceModel\Category as CategoryResource;
 use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCollectionFactory;
 use Magento\CatalogUrlRewrite\Model\CategoryUrlRewriteGenerator;
 use Magento\Framework\App\Area;
@@ -70,6 +73,16 @@ class SyncCategories extends Command
     private $landingPageInterfaceFactory;
 
     /**
+     * @var CategoryFactory
+     */
+    private $categoryFactory;
+
+    /**
+     * @var CategoryResource
+     */
+    private $categoryResource;
+
+    /**
      * @param State $state
      * @param StoreManagerInterface $storeManager
      * @param string|null $name
@@ -82,6 +95,8 @@ class SyncCategories extends Command
         CategoryCollectionFactory $categoryCollectionFactory,
         UrlFinderInterface $urlFinder,
         LandingPageInterfaceFactory $landingPageInterfaceFactory,
+        CategoryFactory $categoryFactory,
+        CategoryResource $categoryResource,
         string $name = null
     ) {
         parent::__construct($name);
@@ -93,6 +108,8 @@ class SyncCategories extends Command
         $this->categoryCollectionFactory = $categoryCollectionFactory;
         $this->urlFinder = $urlFinder;
         $this->landingPageInterfaceFactory = $landingPageInterfaceFactory;
+        $this->categoryFactory = $categoryFactory;
+        $this->categoryResource = $categoryResource;
     }
 
     /**
@@ -100,7 +117,7 @@ class SyncCategories extends Command
      */
     protected function configure() : void
     {
-        $this->setName('hawksearch:proxy:sync-categories')
+        $this->setName('hawksearch:sync-categories')
             ->setDescription('Run the HawkSearch Category Sync Task');
         parent::configure();
     }
@@ -166,7 +183,7 @@ class SyncCategories extends Command
         $hawkList = $this->landingPageManagement->getLandingPages();
         $existingCustom = $this->createExistingCustomFieldMap($hawkList);
 
-        $mageList = $this->getMagentoLandingPages();
+        $mageList = $this->getMagentoLandingPages($store);
 
         usort(
             $hawkList,
@@ -285,11 +302,38 @@ class SyncCategories extends Command
     }
 
     /**
+     * @param Store $store
      * @return array
      * @throws LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getMagentoLandingPages()
+    public function getMagentoLandingPages(Store $store)
     {
+        $storeParentCategoryId = $this->storeManager->getStore($store->getId())->getRootCategoryId();
+
+        /**
+         * Check if parent node of the store still exists
+         */
+        /* @var $category CategoryModel */
+        $category = $this->categoryFactory->create();
+        $this->categoryResource->load($category, $storeParentCategoryId);
+
+        if (!$category->getId()) {
+            return [];
+        }
+
+        $pathRegexGroups = [
+            //$category->getPath() . "$",
+            $category->getPath() . "/"
+        ];
+        $pathFilterRegex = "(" . implode('|', $pathRegexGroups) . ")";
+        $categories = $category->getCategories($category->getParentId(), 0, false, true, false);
+        $categories->addPathFilter($pathFilterRegex)
+            ->addAttributeToSort('entity_id')
+            ->addAttributeToSort('parent_id')
+            ->addAttributeToSort('position');
+
+
         /** @var \Magento\Catalog\Model\ResourceModel\Category\Collection  $collection */
         $collection = $this->categoryCollectionFactory->create();
 
@@ -302,29 +346,30 @@ class SyncCategories extends Command
                 'include_in_menu'
             ]
         );
-        $collection
-            ->addUrlRewriteToResult()
-            ->addIsActiveFilter()
-            ->addAttributeToFilter('level', ['gteq' => '2'])
-            ->addAttributeToSort('entity_id')
+        //$collection
+            //->addUrlRewriteToResult()
+            //->addIsActiveFilter()
+            //->addAttributeToFilter('level', ['gteq' => '2'])
+            /*->addAttributeToSort('entity_id')
             ->addAttributeToSort('parent_id')
             ->addAttributeToSort('position')
             ->setPageSize(1000)
+            ->setStoreId($this->storeManager->getStore()->getId())*/
         ;
 
         /*if (!$this->proxyConfigProvider->isManageAllCategories()) {
             $collection->addAttributeToFilter('hawk_landing_page', 1);
         }*/
 
-        $pages = $collection->getLastPageNumber();
+        $pages = $categories->getLastPageNumber();
         $currentPage = 1;
         $cats = [];
 
         do {
-            $collection->clear();
-            $collection->setCurPage($currentPage);
-            $collection->load();
-            foreach ($collection as $cat) {
+            $categories->clear();
+            $categories->setCurPage($currentPage);
+            $categories->load();
+            foreach ($categories as $cat) {
                 $cats[] = [
                     'hawkurl' => sprintf("/%s", $this->getRequestPath($cat)),
                     'name' => $cat->getName(),

@@ -17,6 +17,7 @@ namespace HawkSearch\EsIndexing\Model\Indexing;
 use Exception;
 use HawkSearch\EsIndexing\Model\Config\General as GeneralConfig;
 use HawkSearch\EsIndexing\Model\Config\Indexing as IndexingConfig;
+use Magento\Framework\App\Area;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
 use Magento\Framework\Exception\LocalizedException;
@@ -127,7 +128,7 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
         }
         //TODO: add logging
 
-        $this->emulation->startEnvironmentEmulation($storeId);
+        $this->emulation->startEnvironmentEmulation($storeId, Area::AREA_FRONTEND, true);
 
         try {
             $items = $this->itemsProviderPool->get($this->getEntityType())

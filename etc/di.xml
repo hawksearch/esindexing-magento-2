@@ -61,6 +61,12 @@
             <argument name="configGroup" xsi:type="string">indexing</argument>
         </arguments>
     </type>
+    <type name="HawkSearch\EsIndexing\Model\Config\Advanced">
+        <arguments>
+            <argument name="configRootPath" xsi:type="string">hawksearch_advanced_settings</argument>
+            <argument name="configGroup" xsi:type="string">advanced</argument>
+        </arguments>
+    </type>
     <!-- Configs -->
 
     <!-- Instructions infrastructure -->

@@ -28,7 +28,7 @@
             </group>
         </section>
         <section id="hawksearch_product_settings" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Product Settings</label>
+            <label>Product</label>
             <tab>hawksearch</tab>
             <resource>HawkSearch_EsIndexing::config</resource>
             <group id="products" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -47,7 +47,7 @@
             </group>
         </section>
         <section id="hawksearch_indexing_settings" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Indexing Settings</label>
+            <label>Indexing</label>
             <tab>hawksearch</tab>
             <resource>HawkSearch_EsIndexing::config</resource>
             <group id="indexing" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -62,6 +62,25 @@
                     </comment>
                 </field>
 
+            </group>
+        </section>
+        <section id="hawksearch_advanced_settings" translate="label" type="text" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Advanced</label>
+            <tab>hawksearch</tab>
+            <group id="advanced" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="remove_pub_assets_url" translate="label comment" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Remove pub/ folder from assets url</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                                Enable this setting if you want to remove pub/ from assets urls which are exporting to
+                                Hawksearch index. It is needed if your server is configured to serve files from
+                                Magento’s pub/ directory.</br>
+                                <strong>Example</strong>: http://example.com/pub/media/catalog/product/image.jpg
+                                is transformed to http://example.com/media/catalog/product/image.jpg
+                            ]]>
+                    </comment>
+                </field>
             </group>
         </section>
 
