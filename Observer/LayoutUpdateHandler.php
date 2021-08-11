@@ -10,14 +10,20 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+namespace HawkSearch\EsIndexing\Observer;
 
-declare(strict_types=1);
+use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
 
-namespace HawkSearch\EsIndexing\Api\Data;
-
-use Magento\Framework\Api\CustomAttributesDataInterface;
-
-interface FacetSelectionsInterface extends CustomAttributesDataInterface
+class LayoutUpdateHandler implements ObserverInterface
 {
-
+    /**
+     * @inheritdoc
+     */
+    public function execute(Observer $observer)
+    {
+        //@TODO add switching login according to configurations
+        $layout = $observer->getData('layout');
+        $layout->getUpdate()->addHandle('hawksearch_esindexing_handler');
+    }
 }

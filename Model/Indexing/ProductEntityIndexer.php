@@ -15,6 +15,8 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexing;
 
+use HawkSearch\Connector\Helper\Url as UrlHelper;
+use HawkSearch\EsIndexing\Model\Config\Advanced as AdvancedConfig;
 use HawkSearch\EsIndexing\Model\Config\General as GeneralConfig;
 use HawkSearch\EsIndexing\Model\Config\Indexing as IndexingConfig;
 use HawkSearch\EsIndexing\Model\Config\Products as ProductsConfig;
@@ -45,6 +47,7 @@ class ProductEntityIndexer extends AbstractEntityIndexer
         'group_id' => 'getGroupId',
         'thumbnail_url' => 'getThumbnailUrl',
         'image_url' => 'getImageUrl',
+        'category' => 'getCategories'
     ];
 
     /**
@@ -97,6 +100,38 @@ class ProductEntityIndexer extends AbstractEntityIndexer
      */
     private $priceManagement;
 
+    /**
+     * @var UrlHelper
+     */
+    private $urlHelper;
+
+    /**
+     * @var AdvancedConfig
+     */
+    private $advancedConfig;
+
+    /**
+     * ProductEntityIndexer constructor.
+     * @param GeneralConfig $generalConfig
+     * @param IndexingConfig $indexingConfig
+     * @param Emulation $emulation
+     * @param ItemsProviderPoolInterface $itemsProviderPool
+     * @param EntityIndexerPoolInterface $entityIndexerPool
+     * @param IndexManagementInterface $indexManagement
+     * @param EventManagerInterface $eventManager
+     * @param Visibility $visibility
+     * @param Configuration $catalogInventoryConfiguration
+     * @param StockRegistryInterface $stockRegistry
+     * @param Json $jsonSerializer
+     * @param ProductsConfig $attributesConfigProvider
+     * @param ProductAttributes $productAttributes
+     * @param StoreManagerInterface $storeManager
+     * @param ProductDataProvider $productDataProvider
+     * @param ImageHelper $imageHelper
+     * @param ProductDataProvider\PriceManagementInterface $priceManagement
+     * @param UrlHelper $urlHelper
+     * @param AdvancedConfig $advancedConfig
+     */
     public function __construct(
         GeneralConfig $generalConfig,
         IndexingConfig $indexingConfig,
@@ -114,7 +149,9 @@ class ProductEntityIndexer extends AbstractEntityIndexer
         StoreManagerInterface $storeManager,
         ProductDataProvider $productDataProvider,
         ImageHelper $imageHelper,
-        ProductDataProvider\PriceManagementInterface $priceManagement
+        ProductDataProvider\PriceManagementInterface $priceManagement,
+        UrlHelper $urlHelper,
+        AdvancedConfig $advancedConfig
     ) {
         parent::__construct(
             $generalConfig,
@@ -136,6 +173,8 @@ class ProductEntityIndexer extends AbstractEntityIndexer
         $this->productDataProvider = $productDataProvider;
         $this->imageHelper = $imageHelper;
         $this->priceManagement = $priceManagement;
+        $this->urlHelper = $urlHelper;
+        $this->advancedConfig = $advancedConfig;
     }
 
     /**
@@ -277,24 +316,46 @@ class ProductEntityIndexer extends AbstractEntityIndexer
      */
     private function getThumbnailUrl(ProductInterface $product)
     {
-        $store = $this->storeManager->getStore($product->getStoreId());
-        return substr(
-            $this->imageHelper->init($product, 'product_thumbnail_image')->getUrl(),
-            strlen($store->getBaseUrl())
-        );
+        return $this->getImageIdUrl($product, 'product_thumbnail_image');
     }
 
     /**
      * @param ProductInterface|Product $product
-     * @return false|string
+     * @return string
      * @throws NoSuchEntityException
      */
     private function getImageUrl(ProductInterface $product)
     {
+        return $this->getImageIdUrl($product, 'product_base_image');
+    }
+
+    /**
+     * Get product image URL by image_id
+     * @param ProductInterface|Product $product
+     * @param string $imageId
+     * @return string
+     * @throws NoSuchEntityException
+     */
+    private function getImageIdUrl(ProductInterface $product, string $imageId)
+    {
+        $imageUrl = $this->imageHelper->init($product, $imageId)->getUrl();
+        $uri = $this->urlHelper->getUriInstance($imageUrl);
+
         $store = $this->storeManager->getStore($product->getStoreId());
-        return substr(
-            $this->imageHelper->init($product, 'product_base_image')->getUrl(),
-            strlen($store->getBaseUrl())
-        );
+        if ($this->advancedConfig->isRemovePubFromAssetsUrl($store)) {
+            /** @link  https://github.com/magento/magento2/issues/9111 */
+            $uri = $this->urlHelper->removeFromUriPath($uri, ['pub']);
+        }
+
+        return (string)$uri->withScheme('');
+    }
+
+    /**
+     * @param ProductInterface $product
+     * @return array|null
+     */
+    private function getCategories(ProductInterface $product): ?array
+    {
+        return $product->getCategoryIds();
     }
 }

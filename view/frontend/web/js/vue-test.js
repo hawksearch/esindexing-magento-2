@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright (c) 2021 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
@@ -11,13 +10,19 @@
  * IN THE SOFTWARE.
  */
 
-declare(strict_types=1);
+define(
+    [
+        'vue'
+    ],
+    function(Vue) {
+    'use strict';
 
-namespace HawkSearch\EsIndexing\Api\Data;
-
-use Magento\Framework\Api\CustomAttributesDataInterface;
-
-interface FacetSelectionsInterface extends CustomAttributesDataInterface
-{
-
-}
+    return function(config, element) {
+        return new Vue({
+            el: '#' + element.id,
+            data: {
+                message: 'This is a test'
+            }
+        });
+    }
+});

@@ -1,0 +1,132 @@
+<?php
+/* @var $block \Magento\Catalog\Block\Product\AbstractProduct */
+/* @var \Magento\Framework\Escaper $escaper */
+
+use Magento\Framework\App\ActionInterface;
+
+$om = \Magento\Framework\App\ObjectManager::getInstance();
+$escaper = $om->get(\Magento\Framework\Escaper::class);
+$urlHelper = $om->get(\Magento\Framework\Url\Helper\Data::class);
+$urlBuilder = $om->get(\Magento\Framework\UrlInterface::class);
+$request = $om->get(\Magento\Framework\App\RequestInterface::class);
+
+$getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
+{
+    $currentUrl = $urlHelper->getEncodedUrl($urlBuilder->getCurrentUrl());
+    $urlParamName = ActionInterface::PARAM_NAME_URL_ENCODED;
+
+    $routeParams = [
+        $urlParamName => $currentUrl,
+        '_secure' => $request->isSecure(),
+    ];
+    $additional = ['_escape' => false];
+    $routeParams = array_merge($routeParams, $additional);
+
+
+    return $urlBuilder->getUrl('checkout/cart/add', $routeParams);
+};
+?>
+
+<!-- HawkSearch Vue SDK part -->
+<script id="hawksearch-config" type="application/json">
+    {
+        "clientGuid": "fc799c1399824b6f958c2f7251160ddb",
+        "apiUrl": "https://searchapi-dev.hawksearch.net/",
+        "tabConfig": {
+            "alwaysOn": false
+        },
+        "searchConfig": {
+            "initialSearch": true,
+            "scrollUpOnRefresh": false
+        },
+        "paramsMapping": {
+            "keyword": "q"
+        },
+        "urlPart": "<?= $getAddTocartUrl(); ?>"
+    }
+</script>
+
+<script>
+    function addToCart(args) {
+        if (this.$parent && this.$parent.$refs.hasOwnProperty('add-to-cart-form')) {
+            var form = this.$parent.$refs['add-to-cart-form'];
+
+            if (form.requestSubmit) {
+                form.requestSubmit();
+            }
+            else {
+                form.submit();
+            }
+        }
+    }
+
+    function getID(uuid) {
+        if (uuid.includes('_')) {
+            return uuid.split('_').pop();
+        }
+    }
+</script>
+
+
+<script id="vue-hawksearch-result-item" type="x-template">
+    <div class="item product product-item">
+        <div class="product-item-info" data-container="product-grid">
+            <span class="product-image-container" style="width:215px;">
+                <span class="product-image-wrapper" style="padding-bottom: 125%;">
+                    <img class="product-image-photo" src="https://hawksearch-es-dev-m2.test/media/catalog/product/cache/" />
+                </span>
+            </span>
+            <div class="product details product-item-details">
+                <span class="product name product-item-name">
+                    {{ getField('name') }}
+                </span>
+                <div class="price-box price-final_price" data-role="priceBox" data-product-id="260" data-price-box="product-id-260">
+                    <span class="normal-price">
+                        <span class="price-container price-final_price tax weee">
+                            <span class="price-label">As low as</span>
+                            <span id="product-price-260" :data-price-amount="getField('price_final')" data-price-type="finalPrice" class="price-wrapper "><span class="price">{{getField('price_final_formatted')}}</span></span>
+                        </span>
+                    </span>
+                </div>
+                <div class="product-item-inner">
+                    <div class="product actions product-item-actions">
+                        <div class="actions-primary">
+                            <add-to-cart class="action tocart primary" :add-fn="addToCart" :add-args="{}" />
+
+                            <form ref="add-to-cart-form" style="display: none;" data-role="tocart-form" method="post" :data-product-sku="getField('sku')" :action="'<?= $getAddTocartUrl() ?>' + 'product/' + getID(getField('__uid')) + '/'">
+                                <input type="hidden" name="product" :value="getField('sku')">
+                                <input type="hidden" name="<?= /* @noEscape */ ActionInterface::PARAM_NAME_URL_ENCODED ?>" :value="'<?= $getAddTocartUrl() ?>' + 'product/' + getID(getField('__uid')) + '/'">
+                                <?= $block->getBlockHtml('formkey') ?>
+                                <button type="submit" title="<?= $escaper->escapeHtmlAttr(__('Add to Cart')) ?>" class="action tocart primary">
+                                    <span><?= $escaper->escapeHtml(__('Add to Cart')) ?></span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+
+<script type="text/x-magento-init">
+{
+    "*": {
+        "Magento_Ui/js/core/app": {
+            "components": {
+                "koexample": {
+                    "component": "HawkSearch_EsIndexing/js/koexample",
+                    "template": "koexample-content",
+                    "urlPart": "<?= $getAddTocartUrl(); ?>"
+                }
+            }
+        },
+        "hawksearchVueSDK": {}
+    },
+    "[data-role=tocart-form], .form.map.checkout": {
+        "catalogAddToCart": {
+        }
+    }
+}
+</script>

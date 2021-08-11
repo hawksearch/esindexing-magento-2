@@ -69,7 +69,7 @@ class ScheduleHierarchyRebuild implements ObserverInterface
 
         $isFullReindex = true;
         $isCurrentIndex = !$isFullReindex;
-        $indexName = $this->indexManagement->getIndexName($store->getId(), $isCurrentIndex);
+        $indexName = $this->indexManagement->getIndexName($isCurrentIndex);
 
         $dataToUpdate[] = [
             'class' => HierarchyManagementInterface::class,

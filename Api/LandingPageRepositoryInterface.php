@@ -10,14 +10,27 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+namespace HawkSearch\EsIndexing\Api;
 
-declare(strict_types=1);
-
-namespace HawkSearch\EsIndexing\Api\Data;
-
-use Magento\Framework\Api\CustomAttributesDataInterface;
-
-interface FacetSelectionsInterface extends CustomAttributesDataInterface
+interface LandingPageRepositoryInterface
 {
+    /**
+     * Get Landing Page by URL part
+     * @param string $url
+     * @return mixed
+     */
+    public function getByUrl(string $url);
 
+    /**
+     * Get Landing Page by id
+     * @param int $id
+     * @return mixed
+     */
+    public function get(int $id);
+
+    /**
+     * Get Landing Pages list
+     * @return mixed
+     */
+    public function getList();
 }

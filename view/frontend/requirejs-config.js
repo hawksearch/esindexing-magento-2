@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright (c) 2021 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
@@ -10,14 +9,11 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-
-declare(strict_types=1);
-
-namespace HawkSearch\EsIndexing\Api\Data;
-
-use Magento\Framework\Api\CustomAttributesDataInterface;
-
-interface FacetSelectionsInterface extends CustomAttributesDataInterface
-{
-
-}
+var config = {
+    "map": {
+        "*": {
+            "hawksearchVueSDK": "HawkSearch_EsIndexing/js/vue-hawksearch-app",
+            "vue": "HawkSearch_EsIndexing/js/vue.min",
+        }
+    }
+};
