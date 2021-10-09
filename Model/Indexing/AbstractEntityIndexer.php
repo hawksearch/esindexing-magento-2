@@ -15,7 +15,6 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Indexing;
 
 use Exception;
-use HawkSearch\EsIndexing\Model\Config\General as GeneralConfig;
 use HawkSearch\EsIndexing\Model\Config\Indexing as IndexingConfig;
 use Magento\Framework\App\Area;
 use Magento\Framework\DataObject;
@@ -35,11 +34,6 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
      * @var array
      */
     private $itemsToIndexCache = [];
-
-    /**
-     * @var GeneralConfig
-     */
-    private $generalConfig;
 
     /**
      * @var IndexingConfig
@@ -73,7 +67,6 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
 
     /**
      * AbstractEntityIndexer constructor.
-     * @param GeneralConfig $generalConfig
      * @param IndexingConfig $indexingConfig
      * @param Emulation $emulation
      * @param ItemsProviderPoolInterface $itemsProviderPool
@@ -82,7 +75,6 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
      * @param EventManagerInterface $eventManager
      */
     public function __construct(
-        GeneralConfig $generalConfig,
         IndexingConfig $indexingConfig,
         Emulation $emulation,
         ItemsProviderPoolInterface $itemsProviderPool,
@@ -91,7 +83,6 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
         EventManagerInterface $eventManager
     )
     {
-        $this->generalConfig = $generalConfig;
         $this->indexingConfig = $indexingConfig;
         $this->emulation = $emulation;
         $this->itemsProviderPool = $itemsProviderPool;
@@ -106,7 +97,7 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
      */
     public function rebuildEntityIndex(int $storeId, $entityIds = null)
     {
-        if (!$this->generalConfig->isIndexingEnabled($storeId)) {
+        if (!$this->indexingConfig->isIndexingEnabled($storeId)) {
             return;
         }
 
@@ -123,7 +114,7 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
      */
     public function rebuildEntityIndexBatch(int $storeId, int $currentPage, int $pageSize, ?array $entityIds = null)
     {
-        if (!$this->generalConfig->isIndexingEnabled($storeId)) {
+        if (!$this->indexingConfig->isIndexingEnabled($storeId)) {
             return;
         }
         //TODO: add logging
@@ -260,7 +251,7 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
             $value = null;
         }
 
-        return $value !== null ? array($value) : $value;
+        return $value !== null && !is_array($value) ? array($value) : $value;
     }
 
     /**

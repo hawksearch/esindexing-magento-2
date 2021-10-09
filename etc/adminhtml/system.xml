@@ -15,25 +15,54 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
-        <!-- Additional settings on hawksearch_connector tab of HawkSearch_Connector module -->
-        <section id="hawksearch_connector">
-            <group id="indexing_general_settings" translate="label" type="text" sortOrder="20"
-                   showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Indexing settings</label>
-                <field id="enable_indexing" translate="label" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+        <section id="hawksearch_indexing_settings" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Indexing</label>
+            <tab>hawksearch</tab>
+            <resource>HawkSearch_EsIndexing::config</resource>
+            <group id="indexing" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Indexing</label>
+                <field id="enable_indexing" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable Indexing</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Enables indexing of your data by Hawksearch.</comment>
                 </field>
+                <field id="items_batch_size" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Maximal number of items per iteration</label>
+                    <comment>Default value is 500.</comment>
+                    <comment>
+                        <![CDATA[
+                            Specify product attributes.
+                        ]]>
+                    </comment>
+                </field>
+
             </group>
         </section>
-        <section id="hawksearch_product_settings" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Product</label>
+        <section id="hawksearch_search_settings" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Search</label>
             <tab>hawksearch</tab>
             <resource>HawkSearch_EsIndexing::config</resource>
-            <group id="products" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="search" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Search</label>
+                <field id="enable_search" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Search</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Enable <a href="https://www.hawksearch.com/" target="_blank">Hawksearch</a> to Power Search on Your Terms.
+                        ]]>
+                    </comment>
+                </field>
+            </group>
+        </section>
+
+        <section id="hawksearch_product_settings" translate="label" type="text" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Products</label>
+            <tab>hawksearch</tab>
+            <resource>HawkSearch_EsIndexing::config</resource>
+            <group id="products" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Products</label>
-                <field id="custom_attributes" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="custom_attributes" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Attributes</label>
                     <frontend_model>HawkSearch\EsIndexing\Block\Adminhtml\System\Config\Product\CustomAttributes</frontend_model>
                     <backend_model>HawkSearch\EsIndexing\Model\Config\Backend\Serialized\Attributes</backend_model>
@@ -46,30 +75,13 @@
 
             </group>
         </section>
-        <section id="hawksearch_indexing_settings" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Indexing</label>
-            <tab>hawksearch</tab>
-            <resource>HawkSearch_EsIndexing::config</resource>
-            <group id="indexing" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Indexing</label>
-                <field id="items_batch_size" translate="label comment" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Maximal number of items per iteration</label>
-                    <comment>Default value is 500.</comment>
-                    <comment>
-                        <![CDATA[
-                            Specify product attributes.
-                        ]]>
-                    </comment>
-                </field>
-
-            </group>
-        </section>
-        <section id="hawksearch_advanced_settings" translate="label" type="text" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
+        <section id="hawksearch_advanced_settings" translate="label" type="text" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Advanced</label>
             <tab>hawksearch</tab>
-            <group id="advanced" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
-                <field id="remove_pub_assets_url" translate="label comment" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Remove pub/ folder from assets url</label>
+            <resource>HawkSearch_EsIndexing::config</resource>
+            <group id="advanced" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="remove_pub_assets_url" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Remove pub folder from assets url</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>
                         <![CDATA[
@@ -83,6 +95,5 @@
                 </field>
             </group>
         </section>
-
     </system>
 </config>

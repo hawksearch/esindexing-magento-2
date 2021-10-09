@@ -49,16 +49,16 @@
             <argument name="configGroup" xsi:type="string">products</argument>
         </arguments>
     </type>
-    <type name="HawkSearch\EsIndexing\Model\Config\General">
-        <arguments>
-            <argument name="configRootPath" xsi:type="string">hawksearch_connector</argument>
-            <argument name="configGroup" xsi:type="string">indexing_general_settings</argument>
-        </arguments>
-    </type>
     <type name="HawkSearch\EsIndexing\Model\Config\Indexing">
         <arguments>
             <argument name="configRootPath" xsi:type="string">hawksearch_indexing_settings</argument>
             <argument name="configGroup" xsi:type="string">indexing</argument>
+        </arguments>
+    </type>
+    <type name="HawkSearch\EsIndexing\Model\Config\Search">
+        <arguments>
+            <argument name="configRootPath" xsi:type="string">hawksearch_search_settings</argument>
+            <argument name="configGroup" xsi:type="string">search</argument>
         </arguments>
     </type>
     <type name="HawkSearch\EsIndexing\Model\Config\Advanced">

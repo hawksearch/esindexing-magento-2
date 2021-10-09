@@ -17,22 +17,21 @@ namespace HawkSearch\EsIndexing\Model\Config;
 
 use HawkSearch\Connector\Model\ConfigProvider;
 
-class General extends ConfigProvider
+class Search extends ConfigProvider
 {
     /**#@+
      * Configuration paths
      */
-    public const CONFIG_ENABLE_INDEXING = 'enable_indexing';
+    public const CONFIG_ENABLE_SEARCH = 'enable_search';
     /**#@-*/
 
     /**
-     * Check if backend indexing is enabled for selected store
+     * Check if search is enabled for selected store
      * @param null|int|string $store
      * @return bool
      */
-    public function isIndexingEnabled($store = null): bool
+    public function isSearchEnabled($store = null): bool
     {
-        return !!$this->getConfig(self::CONFIG_ENABLE_INDEXING, $store);
+        return !!$this->getConfig(self::CONFIG_ENABLE_SEARCH, $store);
     }
-
 }

@@ -17,7 +17,6 @@ namespace HawkSearch\EsIndexing\Model\Indexing;
 
 use HawkSearch\Connector\Helper\Url as UrlHelper;
 use HawkSearch\EsIndexing\Model\Config\Advanced as AdvancedConfig;
-use HawkSearch\EsIndexing\Model\Config\General as GeneralConfig;
 use HawkSearch\EsIndexing\Model\Config\Indexing as IndexingConfig;
 use HawkSearch\EsIndexing\Model\Config\Products as ProductsConfig;
 use HawkSearch\EsIndexing\Model\Product as ProductDataProvider;
@@ -112,7 +111,6 @@ class ProductEntityIndexer extends AbstractEntityIndexer
 
     /**
      * ProductEntityIndexer constructor.
-     * @param GeneralConfig $generalConfig
      * @param IndexingConfig $indexingConfig
      * @param Emulation $emulation
      * @param ItemsProviderPoolInterface $itemsProviderPool
@@ -133,7 +131,6 @@ class ProductEntityIndexer extends AbstractEntityIndexer
      * @param AdvancedConfig $advancedConfig
      */
     public function __construct(
-        GeneralConfig $generalConfig,
         IndexingConfig $indexingConfig,
         Emulation $emulation,
         ItemsProviderPoolInterface $itemsProviderPool,
@@ -154,7 +151,6 @@ class ProductEntityIndexer extends AbstractEntityIndexer
         AdvancedConfig $advancedConfig
     ) {
         parent::__construct(
-            $generalConfig,
             $indexingConfig,
             $emulation,
             $itemsProviderPool,

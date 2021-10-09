@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexing;
 
-use HawkSearch\EsIndexing\Model\Config\General as GeneralConfig;
 use HawkSearch\EsIndexing\Model\Config\Indexing as IndexingConfig;
 use Magento\Catalog\Api\Data\CategoryInterface;
 use Magento\Catalog\Model\Category;
@@ -46,7 +45,6 @@ class HierarchyEntityIndexer extends AbstractEntityIndexer
 
     /**
      * HierarchyEntityIndexer constructor.
-     * @param GeneralConfig $generalConfig
      * @param IndexingConfig $indexingConfig
      * @param Emulation $emulation
      * @param ItemsProviderPoolInterface $itemsProviderPool
@@ -56,7 +54,6 @@ class HierarchyEntityIndexer extends AbstractEntityIndexer
      * @param HierarchyManagementInterface $hierarchyManagement
      */
     public function __construct(
-        GeneralConfig $generalConfig,
         IndexingConfig $indexingConfig,
         Emulation $emulation,
         ItemsProviderPoolInterface $itemsProviderPool,
@@ -66,7 +63,6 @@ class HierarchyEntityIndexer extends AbstractEntityIndexer
         HierarchyManagementInterface $hierarchyManagement
     ) {
         parent::__construct(
-            $generalConfig,
             $indexingConfig,
             $emulation,
             $itemsProviderPool,

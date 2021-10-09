@@ -15,7 +15,6 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexer;
 
-use HawkSearch\EsIndexing\Model\Config\General;
 use HawkSearch\EsIndexing\Model\Config\Indexing;
 use HawkSearch\EsIndexing\Model\Indexing\EntityIndexerPoolInterface;
 use HawkSearch\EsIndexing\Model\Indexing\ItemsProviderPoolInterface;
@@ -42,7 +41,6 @@ class Product extends AbstractItemsIndexer implements IndexerActionInterface, Mv
      * @param PublisherInterface $publisher
      * @param StoreManagerInterface $storeManager
      * @param Indexing $indexingConfig
-     * @param General $generalConfig
      * @param EntityIndexerPoolInterface $entityIndexerPool
      * @param ProductDataProvider $productDataProvider
      * @param ItemsProviderPoolInterface $itemsProviderPool
@@ -52,7 +50,6 @@ class Product extends AbstractItemsIndexer implements IndexerActionInterface, Mv
         PublisherInterface $publisher,
         StoreManagerInterface $storeManager,
         Indexing $indexingConfig,
-        General $generalConfig,
         EntityIndexerPoolInterface $entityIndexerPool,
         ProductDataProvider $productDataProvider,
         ItemsProviderPoolInterface $itemsProviderPool,
@@ -62,7 +59,6 @@ class Product extends AbstractItemsIndexer implements IndexerActionInterface, Mv
             $publisher,
             $storeManager,
             $indexingConfig,
-            $generalConfig,
             $entityIndexerPool,
             $itemsProviderPool,
             $eventManager

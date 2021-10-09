@@ -13,7 +13,6 @@
 
 namespace HawkSearch\EsIndexing\Model\Indexer;
 
-use HawkSearch\EsIndexing\Model\Config\General;
 use HawkSearch\EsIndexing\Model\Config\Indexing;
 use HawkSearch\EsIndexing\Model\Indexing\EntityIndexerPoolInterface;
 use HawkSearch\EsIndexing\Model\Indexing\IndexManagementInterface;
@@ -43,11 +42,6 @@ abstract class AbstractItemsIndexer
     private $indexingConfig;
 
     /**
-     * @var General
-     */
-    private $generalConfig;
-
-    /**
      * @var EntityIndexerPoolInterface
      */
     private $entityIndexerPool;
@@ -67,7 +61,6 @@ abstract class AbstractItemsIndexer
      * @param PublisherInterface $publisher
      * @param StoreManagerInterface $storeManager
      * @param Indexing $indexingConfig
-     * @param General $generalConfig
      * @param EntityIndexerPoolInterface $entityIndexerPool
      * @param ItemsProviderPoolInterface $itemsProviderPool
      * @param EventManagerInterface $eventManager
@@ -76,7 +69,6 @@ abstract class AbstractItemsIndexer
         PublisherInterface $publisher,
         StoreManagerInterface $storeManager,
         Indexing $indexingConfig,
-        General $generalConfig,
         EntityIndexerPoolInterface $entityIndexerPool,
         ItemsProviderPoolInterface $itemsProviderPool,
         EventManagerInterface $eventManager
@@ -84,7 +76,6 @@ abstract class AbstractItemsIndexer
         $this->publisher = $publisher;
         $this->storeManager = $storeManager;
         $this->indexingConfig = $indexingConfig;
-        $this->generalConfig = $generalConfig;
         $this->entityIndexerPool = $entityIndexerPool;
         $this->itemsProviderPool = $itemsProviderPool;
         $this->eventManager = $eventManager;
@@ -101,7 +92,7 @@ abstract class AbstractItemsIndexer
 
         $currentStore = $this->storeManager->getStore();
         foreach ($stores as $store) {
-            if (!$this->generalConfig->isIndexingEnabled($store->getId())) {
+            if (!$this->indexingConfig->isIndexingEnabled($store->getId())) {
                 continue;
             }
 
@@ -146,7 +137,7 @@ abstract class AbstractItemsIndexer
         $currentStore = $this->storeManager->getStore();
 
         foreach ($stores as $store) {
-            if (!$this->generalConfig->isIndexingEnabled($store->getId())) {
+            if (!$this->indexingConfig->isIndexingEnabled($store->getId())) {
                 continue;
             }
             $dataToUpdate = [];
