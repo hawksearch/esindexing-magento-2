@@ -17,7 +17,9 @@ namespace HawkSearch\EsIndexing\Model\Api\SearchCriteria\JoinProcessor;
 
 use Magento\Catalog\Model\ResourceModel\Product\Collection as ProductCollection;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessor\JoinProcessor\CustomJoinInterface;
+use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Review\Model\ResourceModel\Review\SummaryFactory;
 use Magento\Store\Model\StoreManagerInterface;
 
@@ -34,28 +36,42 @@ class ReviewRatingSummary implements CustomJoinInterface
     private $storeManager;
 
     /**
+     * @var ProductMetadataInterface
+     */
+    private $productMetadata;
+
+    /**
      * ReviewRatingSummary constructor.
      * @param SummaryFactory $sumResourceFactory
      * @param StoreManagerInterface $storeManager
+     * @param ProductMetadataInterface $productMetadata
      */
     public function __construct(
         SummaryFactory $sumResourceFactory,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        ProductMetadataInterface $productMetadata
     ) {
         $this->sumResourceFactory = $sumResourceFactory;
         $this->storeManager = $storeManager;
+        $this->productMetadata = $productMetadata;
     }
 
     /**
      * @inheritDoc
      * @param ProductCollection $collection
+     * @throws LocalizedException
      */
     public function apply(AbstractDb $collection)
     {
+        $storeId = $collection->getStoreId();
+        if (version_compare($this->productMetadata->getVersion(), '2.4.0', '<')) {
+            $storeId = (string)$storeId;
+        }
+
         //TODO: check if review_summary attribute is selected for indexing
         $this->sumResourceFactory->create()->appendSummaryFieldsToCollection(
             $collection,
-            (string)$this->storeManager->getStore()->getId(),
+            $storeId,
             \Magento\Review\Model\Review::ENTITY_PRODUCT_CODE
         );
     }

@@ -29,4 +29,17 @@ class Bundle extends CompositeType
             $product
         )->getItems();
     }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getMinMaxPrice(Product $product)
+    {
+        /** @var \Magento\Bundle\Model\Product\Price $priceModel */
+        $priceModel = $product->getPriceModel();
+        list($min, $max) = $priceModel->getTotalPrices($product, null, true, true);
+
+        return [(float)$min, (float)$max];
+    }
+
 }
