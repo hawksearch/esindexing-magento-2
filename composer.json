@@ -6,7 +6,7 @@
     "version": "0.0.1",
     "require": {
         "magento/framework": "~102.0|~103.0",
-        "hawksearch/connector": "^2.4",
+        "hawksearch/connector": "^2.5",
         "ext-json": "*",
         "ext-PDO": "*",
         "ext-mbstring": "*",
