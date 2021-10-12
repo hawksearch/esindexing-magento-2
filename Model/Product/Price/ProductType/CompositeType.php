@@ -36,10 +36,19 @@ abstract class CompositeType extends DefaultType
         $min      = PHP_INT_MAX;
         $max      = 0;
 
-        foreach ($this->getChildProducts($product) as $subProduct) {
-            $price     = $this->handleTax($product, (float)$subProduct->getFinalPrice());
-            $min = min($min, $price);
-            $max = max($max, $price);
+        if ($this->getChildProducts($product)) {
+            foreach ($this->getChildProducts($product) as $subProduct) {
+                if ($subProduct->isDisabled()) {
+                    continue;
+                }
+                $price     = $this->handleTax($product, (float)$subProduct->getFinalPrice());
+                $min = min($min, $price);
+                $max = max($max, $price);
+            }
+        }
+
+        if ($min === PHP_INT_MAX) {
+            $min = $max;
         }
 
         return [(float)$min, (float)$max];
@@ -52,7 +61,7 @@ abstract class CompositeType extends DefaultType
     {
         $groupPrices = [];
         foreach ($this->getCustomerGroups() as $group) {
-            $groupId = $group['value'];
+            $groupId = (string)$group['value'];
             $groupPrices[$groupId] = [];
         }
 
@@ -60,6 +69,12 @@ abstract class CompositeType extends DefaultType
         foreach ($this->getChildProducts($product) as $subProduct) {
 
             $childGroupPrices[$subProduct->getId()] = parent::getCustomerGroupPrices($subProduct);
+            $childGroupPrices[$subProduct->getId()] = array_filter(
+                $childGroupPrices[$subProduct->getId()],
+                function($v) {
+                    return !(null === $v || '' === $v);
+                }
+            );
 
             foreach ($childGroupPrices[$subProduct->getId()] as $groupId => $price) {
                 if (isset($groupPrices[$groupId])) {
@@ -69,7 +84,7 @@ abstract class CompositeType extends DefaultType
         }
 
         foreach ($groupPrices as $groupId => $price) {
-            $groupPrices[$groupId] = min($price);
+            $groupPrices[$groupId] = !empty($price) ? min($price) : null;
         }
 
         return $groupPrices;
