@@ -5,7 +5,8 @@
     "type": "magento2-module",
     "version": "0.0.1",
     "require": {
-        "magento/framework": "~102.0|~103.0",
+        "php": "^7.2|^7.3|^7.4",
+        "magento/magento2-base": "^2.3.5|2.4.*",
         "hawksearch/connector": "^2.5",
         "ext-json": "*",
         "ext-PDO": "*",
