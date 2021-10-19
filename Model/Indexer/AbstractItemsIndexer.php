@@ -116,9 +116,12 @@ abstract class AbstractItemsIndexer
 
             $this->publisher->publish(
                 __(
-                    'Update delta index for %1 items of %2 entity',
-                    count($ids),
-                    $this->entityIndexerPool->getIndexerByCode($this->getEntityIndexerCode())
+                    'Update delta index for %1 items of %2 entity on "%3" store',
+                    [
+                        count($ids),
+                        $this->entityIndexerPool->getIndexerByCode($this->getEntityIndexerCode()),
+                        $store->getCode()
+                    ]
                 ),
                 $dataToUpdate
             );
