@@ -655,6 +655,15 @@
     <!-- END Types -->
 
     <!-- Plugins -->
+    <type name="Magento\Catalog\Model\ResourceModel\Product">
+        <plugin name="hawksearchProduct" type="HawkSearch\EsIndexing\Model\Indexer\Product\Plugin\Product"/>
+    </type>
+    <type name="Magento\Catalog\Model\Product\Action">
+        <plugin name="hawksearchProductMassAction" type="HawkSearch\EsIndexing\Model\Indexer\Product\Plugin\Product\Action"/>
+    </type>
+    <type name="Magento\Cms\Model\ResourceModel\Page">
+        <plugin name="hawksearchPage" type="HawkSearch\EsIndexing\Model\Indexer\ContentPage\Plugin\Page"/>
+    </type>
 
     <!-- END Plugins -->
 </config>
