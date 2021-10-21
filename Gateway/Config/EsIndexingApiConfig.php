@@ -44,6 +44,6 @@ class EsIndexingApiConfig extends ApiConfigDefault
      */
     public function getApiUrl(): string
     {
-        return $this->apiSettingsProvider->getApiUrl();
+        return $this->apiSettingsProvider->getIndexingApiUrl();
     }
 }
