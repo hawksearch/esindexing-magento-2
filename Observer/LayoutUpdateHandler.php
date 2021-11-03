@@ -12,18 +12,38 @@
  */
 namespace HawkSearch\EsIndexing\Observer;
 
+use HawkSearch\EsIndexing\Model\Config\Search as SearchConfig;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\View\Layout;
 
 class LayoutUpdateHandler implements ObserverInterface
 {
+    /**
+     * @var SearchConfig
+     */
+    private $searchConfig;
+
+    /**
+     * LayoutUpdateHandler constructor.
+     * @param SearchConfig $searchConfig
+     */
+    public function __construct(
+        SearchConfig $searchConfig
+    ) {
+        $this->searchConfig = $searchConfig;
+    }
+
     /**
      * @inheritdoc
      */
     public function execute(Observer $observer)
     {
-        //@TODO add switching login according to configurations
-        $layout = $observer->getData('layout');
-        $layout->getUpdate()->addHandle('hawksearch_esindexing_handler');
+        if ($this->searchConfig->isSearchEnabled()) {
+            /** @var Layout $layout */
+            $layout = $observer->getData('layout');
+            $layout->getUpdate()->addHandle('hawksearch_esindexing_default_handle');
+            $layout->getUpdate()->addHandle('hawksearch_esindexing_components');
+        }
     }
 }

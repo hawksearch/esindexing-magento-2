@@ -1,4 +1,16 @@
 <?php
+/**
+ * Copyright (c) 2021 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ */
+
 /* @var $block \Magento\Catalog\Block\Product\AbstractProduct */
 /* @var \Magento\Framework\Escaper $escaper */
 
@@ -73,7 +85,7 @@ $getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
         <div class="product-item-info" data-container="product-grid">
             <span class="product-image-container" style="width:215px;">
                 <span class="product-image-wrapper" style="padding-bottom: 125%;">
-                    <img class="product-image-photo" src="https://hawksearch-es-dev-m2.test/media/catalog/product/cache/" />
+                    <img class="product-image-photo" v-bind:src="getField('image_url')" />
                 </span>
             </span>
             <div class="product details product-item-details">

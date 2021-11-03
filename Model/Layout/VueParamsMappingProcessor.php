@@ -14,8 +14,26 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Layout;
 
+use Magento\Search\Helper\Data as SearchHelper;
+
 class VueParamsMappingProcessor implements LayoutConfigProcessorInterface
 {
+    /**
+     * @var SearchHelper
+     */
+    private $searchHelper;
+
+    /**
+     * VueParamsMappingProcessor constructor.
+     * @param SearchHelper $searchHelper
+     */
+    public function __construct(
+        SearchHelper $searchHelper
+    )
+    {
+        $this->searchHelper = $searchHelper;
+    }
+
     /**
      * @inheritDoc
      */
@@ -23,7 +41,7 @@ class VueParamsMappingProcessor implements LayoutConfigProcessorInterface
     {
         $jsConfig = $jsConfig ?? [];
         $jsConfig['paramsMapping'] = [
-            'keyword' => 'q'
+            'keyword' => $this->searchHelper->getQueryParamName()
         ];
 
         return $jsConfig;

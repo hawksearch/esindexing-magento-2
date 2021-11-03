@@ -1,8 +1,50 @@
-<div data-vue-hawksearch-component="searchbox" data-vue-hawksearch-config="hawksearch-config" style="width: 600px; float: right;">
-    <div class="hawk">
-        <div class="hawk__header">
-            <search-box search-page="/catalogsearch/result"></search-box>
-        </div>
+<?php
+/**
+ * Copyright (c) 2021 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ */
+
+/** @var $block \Magento\Framework\View\Element\Template */
+/** @var $helper \Magento\Search\Helper\Data */
+$helper = $this->helper(\Magento\Search\Helper\Data::class);
+?>
+<div class="block block-search">
+    <div class="block block-title"><strong><?= $block->escapeHtml(__('Search')) ?></strong></div>
+    <div class="block block-content">
+        <form class="form minisearch" id="search_mini_form"
+              action="<?= $block->escapeUrl($helper->getResultUrl()) ?>" method="get">
+            <div class="field search">
+                <label class="label" for="search" data-role="minisearch-label">
+                    <span><?= $block->escapeHtml(__('Search')) ?></span>
+                </label>
+                <div class="control">
+                    <div data-vue-hawksearch-component="searchbox" data-vue-hawksearch-config="hawksearch-config">
+                        <div class="hawk">
+                            <div class="hawk__header">
+                                <search-box search-page="/catalogsearch/result"></search-box>
+                            </div>
+                        </div>
+                    </div>
+                    <?= $block->getChildHtml() ?>
+                </div>
+            </div>
+            <div class="actions">
+                <button type="submit"
+                        title="<?= $block->escapeHtmlAttr(__('Search')) ?>"
+                        class="action search"
+                        aria-label="Search"
+                >
+                    <span><?= $block->escapeHtml(__('Search')) ?></span>
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -12,28 +54,4 @@
         "hawksearchVueSDK": {}
     }
 }
-</script>
-
-<script id="hawksearch-config" type="application/json">
-    {
-        "clientGuid": "fc799c1399824b6f958c2f7251160ddb",
-        "apiUrl": "https://searchapi-dev.hawksearch.net/",
-        "tabConfig": {
-            "alwaysOn": false
-        },
-        "searchConfig": {
-            "initialSearch": true,
-            "scrollUpOnRefresh": false
-        },
-        "paramsMapping": {
-            "keyword": "q"
-        }
-    }
-</script>
-
-<script id="vue-hawksearch-suggestion-item" type="x-template">
-    <li @click="onClick">
-        <img class="hawk-sqItemImage-thumb" src="https://hawksearch-es-dev-m2.test/media/catalog/product/cache/" />
-        <span class="p-name">{{ getTitle() }}</span>
-    </li>
 </script>
