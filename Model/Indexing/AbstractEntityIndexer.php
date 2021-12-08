@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Indexing;
 
 use Exception;
+use HawkSearch\EsIndexing\Logger\LoggerFactoryInterface;
 use HawkSearch\EsIndexing\Model\Config\Indexing as IndexingConfig;
 use Magento\Framework\App\Area;
 use Magento\Framework\DataObject;
@@ -22,6 +23,7 @@ use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NotFoundException;
 use Magento\Store\Model\App\Emulation;
+use Psr\Log\LoggerInterface;
 
 abstract class AbstractEntityIndexer implements EntityIndexerInterface
 {
@@ -66,6 +68,11 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
     private $eventManager;
 
     /**
+     * @var LoggerInterface
+     */
+    private $hawkLogger;
+
+    /**
      * AbstractEntityIndexer constructor.
      * @param IndexingConfig $indexingConfig
      * @param Emulation $emulation
@@ -73,6 +80,7 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
      * @param EntityIndexerPoolInterface $entityIndexerPool
      * @param IndexManagementInterface $indexManagement
      * @param EventManagerInterface $eventManager
+     * @param LoggerFactoryInterface $loggerFactory
      */
     public function __construct(
         IndexingConfig $indexingConfig,
@@ -80,7 +88,8 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
         ItemsProviderPoolInterface $itemsProviderPool,
         EntityIndexerPoolInterface $entityIndexerPool,
         IndexManagementInterface $indexManagement,
-        EventManagerInterface $eventManager
+        EventManagerInterface $eventManager,
+        LoggerFactoryInterface $loggerFactory
     )
     {
         $this->indexingConfig = $indexingConfig;
@@ -89,6 +98,7 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
         $this->entityIndexerPool = $entityIndexerPool;
         $this->indexManagement = $indexManagement;
         $this->eventManager = $eventManager;
+        $this->hawkLogger = $loggerFactory->create();
     }
 
     /**
@@ -117,22 +127,61 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
         if (!$this->indexingConfig->isIndexingEnabled($storeId)) {
             return;
         }
-        //TODO: add logging
 
         $this->emulation->startEnvironmentEmulation($storeId, Area::AREA_FRONTEND, true);
+
+        $this->hawkLogger->debug(
+            sprintf(
+                "Starting indexing for Entity type %s, Store %d, Page %d, Page size %d, IDs %s",
+                $this->getEntityType(),
+                $storeId,
+                $currentPage,
+                $pageSize,
+                implode(',', $entityIds ?? [])
+            )
+        );
 
         try {
             $items = $this->itemsProviderPool->get($this->getEntityType())
                 ->getItems($storeId, $entityIds, $currentPage, $pageSize);
 
+            $this->hawkLogger->debug(
+                sprintf(
+                    "Collected %d items",
+                    count($items)
+                )
+            );
+
             $isFullReindex = $entityIds === null;
             $isCurrentIndex = !$isFullReindex;
 
             $indexName = $this->indexManagement->getIndexName($isCurrentIndex);
+
+            $this->hawkLogger->debug(
+                sprintf(
+                    "Picked index: %s",
+                    $indexName
+                )
+            );
+
             $itemsToRemove = $this->getItemsToRemove($items, $entityIds);
+            $this->hawkLogger->debug(
+                sprintf(
+                    "Items to be removed from the index: %s",
+                    implode(',', $itemsToRemove)
+                )
+            );
             $this->deleteItemsFromIndex($itemsToRemove, $indexName);
 
             $itemsToIndex = $this->getItemsToIndex($items, $entityIds);
+            $this->hawkLogger->debug(
+                sprintf(
+                    "Items to be indexed: %s",
+                    implode(',', array_keys($itemsToIndex))
+                )
+            );
+
+            $this->deleteItemsFromIndex($itemsToRemove, $indexName);
             $this->indexItems($itemsToIndex, $indexName);
 
 

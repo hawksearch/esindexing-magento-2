@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexing;
 
+use HawkSearch\EsIndexing\Logger\LoggerFactoryInterface;
 use HawkSearch\EsIndexing\Model\Config\Indexing as IndexingConfig;
 use Magento\Catalog\Api\Data\CategoryInterface;
 use Magento\Catalog\Model\Category;
@@ -52,6 +53,7 @@ class HierarchyEntityIndexer extends AbstractEntityIndexer
      * @param IndexManagementInterface $indexManagement
      * @param EventManagerInterface $eventManager
      * @param HierarchyManagementInterface $hierarchyManagement
+     * @param LoggerFactoryInterface $loggerFactory
      */
     public function __construct(
         IndexingConfig $indexingConfig,
@@ -60,7 +62,8 @@ class HierarchyEntityIndexer extends AbstractEntityIndexer
         EntityIndexerPoolInterface $entityIndexerPool,
         IndexManagementInterface $indexManagement,
         EventManagerInterface $eventManager,
-        HierarchyManagementInterface $hierarchyManagement
+        HierarchyManagementInterface $hierarchyManagement,
+        LoggerFactoryInterface $loggerFactory
     ) {
         parent::__construct(
             $indexingConfig,
@@ -68,7 +71,8 @@ class HierarchyEntityIndexer extends AbstractEntityIndexer
             $itemsProviderPool,
             $entityIndexerPool,
             $indexManagement,
-            $eventManager
+            $eventManager,
+            $loggerFactory
         );
         $this->indexManagement = $indexManagement;
         $this->hierarchyManagement = $hierarchyManagement;

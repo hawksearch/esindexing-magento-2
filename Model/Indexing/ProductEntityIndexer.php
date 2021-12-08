@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Indexing;
 
 use HawkSearch\Connector\Helper\Url as UrlHelper;
+use HawkSearch\EsIndexing\Logger\LoggerFactoryInterface;
 use HawkSearch\EsIndexing\Model\Config\Advanced as AdvancedConfig;
 use HawkSearch\EsIndexing\Model\Config\Indexing as IndexingConfig;
 use HawkSearch\EsIndexing\Model\Config\Products as ProductsConfig;
@@ -129,6 +130,7 @@ class ProductEntityIndexer extends AbstractEntityIndexer
      * @param ProductDataProvider\PriceManagementInterface $priceManagement
      * @param UrlHelper $urlHelper
      * @param AdvancedConfig $advancedConfig
+     * @param LoggerFactoryInterface $loggerFactory
      */
     public function __construct(
         IndexingConfig $indexingConfig,
@@ -148,7 +150,8 @@ class ProductEntityIndexer extends AbstractEntityIndexer
         ImageHelper $imageHelper,
         ProductDataProvider\PriceManagementInterface $priceManagement,
         UrlHelper $urlHelper,
-        AdvancedConfig $advancedConfig
+        AdvancedConfig $advancedConfig,
+        LoggerFactoryInterface $loggerFactory
     ) {
         parent::__construct(
             $indexingConfig,
@@ -156,7 +159,8 @@ class ProductEntityIndexer extends AbstractEntityIndexer
             $itemsProviderPool,
             $entityIndexerPool,
             $indexManagement,
-            $eventManager
+            $eventManager,
+            $loggerFactory
         );
 
         $this->visibility = $visibility;
