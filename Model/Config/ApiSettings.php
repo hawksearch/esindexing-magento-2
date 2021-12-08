@@ -16,47 +16,47 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Config;
 
 use HawkSearch\Connector\Model\Config\ApiSettings as ConnectorApiSettings;
-use HawkSearch\Connector\Model\ConfigProvider;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 
-class ApiSettings extends ConfigProvider
+class ApiSettings extends ConnectorApiSettings
 {
     /**#@+
      * Configuration paths
      */
-    const API_URL = 'hawk_url';
+    const INDEXING_API_URL = 'indexing_api_url';
+    const SEARCH_API_URL = 'search_api_url';
     /**#@-*/
-
-    /**
-     * @var ConnectorApiSettings
-     */
-    private $connectorApiSettings;
 
     /**
      * ApiSettings constructor.
      * @param ScopeConfigInterface $scopeConfig
-     * @param ConnectorApiSettings $connectorApiSettings
      * @param null $configRootPath
      * @param null $configGroup
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
-        ConnectorApiSettings $connectorApiSettings,
         $configRootPath = null,
         $configGroup = null
     )
     {
         parent::__construct($scopeConfig, $configRootPath, $configGroup);
-        $this->connectorApiSettings = $connectorApiSettings;
     }
 
     /**
      * @param null|int|string $store
      * @return string | null
      */
-    public function getApiUrl($store = null) : ?string
+    public function getIndexingApiUrl($store = null) : ?string
     {
-        return 'https://indexing-dev.hawksearch.net/';
-//        return $this->getConfig(self::API_URL . '/' . $this->connectorApiSettings->getApiMode(), $store);
+        return $this->getConfig(self::INDEXING_API_URL . '/' . $this->getApiMode(), $store);
+    }
+
+    /**
+     * @param null|int|string $store
+     * @return string | null
+     */
+    public function getSearchApiUrl($store = null) : ?string
+    {
+        return $this->getConfig(self::SEARCH_API_URL . '/' . $this->getApiMode(), $store);
     }
 }

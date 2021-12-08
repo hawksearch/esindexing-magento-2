@@ -1,0 +1,40 @@
+<!-- Results component -->
+<script id="vue-hawksearch-results" type="x-template">
+    <div class="hawk-results" @click="onClick">
+        <!-- AutocorrectSuggestions component -->
+        <autocorrect-suggestions />
+        <!-- SearchResultsLabel component -->
+        <search-results-label />
+        <!-- Banner component-->
+        <banner />
+        <!-- Selections component -->
+        <selections />
+
+        <template v-if="searchError">
+            <span>{{ $t('response_error_generic') }}</span>
+        </template>
+        <template v-else-if="results && results.length == 0">
+            <span>{{ $t('No Results') }}</span>
+        </template>
+        <template v-else-if="!waitingForInitialSearch">
+            <!-- Tabs component -->
+            <tabs />
+
+            <div class="hawk-results__top-tool-row">
+                <!-- ToolRow component -->
+                <tool-row />
+            </div>
+
+            <listing-type :listing-types="['grid', 'list']" @typeChanged="onListingChange" />
+
+            <!-- ResultListing component -->
+            <result-listing :type="listingType" />
+
+            <div class="hawk-results__bottom-tool-row">
+                <!-- ToolRow component -->
+                <tool-row />
+            </div>
+        </template>
+
+    </div>
+</script>

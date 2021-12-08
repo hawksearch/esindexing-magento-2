@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="before.body.end">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="hawksearch.component.results.results"
+                   template="HawkSearch_EsIndexing::hawk-components/results/results.phtml"/>
+            <block class="Magento\Framework\View\Element\Template"
+                   name="hawksearch.component.results.result-listing"
+                   template="HawkSearch_EsIndexing::hawk-components/results/result-listing.phtml"/>
+            <block class="Magento\Framework\View\Element\Template"
+                   name="hawksearch.component.results.listing-type"
+                   template="HawkSearch_EsIndexing::hawk-components/results/listing-type.phtml"/>
+            <block class="Magento\Framework\View\Element\Template"
+                   name="hawksearch.component.search-box.suggestion-item"
+                   template="HawkSearch_EsIndexing::hawk-components/search-box/suggestion-item.phtml"/>
+            <block class="Magento\Framework\View\Element\Template"
+                   name="hawksearch.component.search-box.search-box"
+                   template="HawkSearch_EsIndexing::hawk-components/search-box/search-box.phtml"/>
+        </referenceBlock>
+    </body>
+</page>

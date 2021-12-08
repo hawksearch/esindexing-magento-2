@@ -1,0 +1,42 @@
+<?php
+/**
+ * Copyright (c) 2021 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ */
+?>
+<?php
+/** @var $block \Magento\Framework\View\Element\Template */
+/** @var $searchHelper \Magento\Search\Helper\Data */
+$searchHelper = $this->helper(\Magento\Search\Helper\Data::class);
+?>
+
+<!-- SearchBox component -->
+<script id="vue-hawksearch-search-box" type="x-template">
+    <div class="hawk__searchBox" @click="onClick">
+        <div class="hawk__searchBox__searchInput">
+            <input id="search"
+                   type="text"
+                   value="<?= /* @noEscape */ $searchHelper->getEscapedQueryText() ?>"
+                   name="<?=  /* @noEscape */  $block->escapeHtml($searchHelper->getQueryParamName()) ?>"
+                   class="input-text"
+                   autocomplete="off"
+                   :placeholder="$t('Enter a search term')"
+                   v-model="keyword"
+                   @input="onInput"
+                   @keydown="onKeyDown"
+                   @blur="onBlur" />
+        </div>
+        <search-suggestions :field-focused="fieldFocused"></search-suggestions>
+    </div>
+</script>
+
+
+
+
