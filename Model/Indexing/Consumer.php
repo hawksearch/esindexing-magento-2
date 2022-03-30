@@ -15,11 +15,11 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexing;
 
-use HawkSearch\EsIndexing\Model\Indexing\IndexManagementInterface;
+use HawkSearch\EsIndexing\Api\Data\QueueOperationDataInterface;
 use Magento\AsynchronousOperations\Api\Data\OperationInterface;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Data\ObjectFactory;
 use Magento\Framework\DataObject;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Store\Model\StoreManagerInterface;
@@ -80,42 +80,40 @@ class Consumer
      * @param OperationInterface $operation
      *
      * @return void
+     * @throws LocalizedException
      */
-    public function process(OperationInterface $operation)
+    public function process(QueueOperationDataInterface $operation)
     {
-        try {
-            $serializedData = $operation->getSerializedData();
-            $data = $this->serializer->unserialize($serializedData);
-            /** @var DataObject $dataObject */
-            $dataObject = $this->objectFactory->create(DataObject::class, ['data' => $data]);
+        $data = $this->serializer->unserialize($operation->getData());
+        $dataObject = $this->objectFactory->create(DataObject::class, ['data' => $data]);
 
-            $applicationHeaders = $dataObject->getData('application_headers') ?? [];
-            if (isset($applicationHeaders['store_id'])) {
-                $storeId = $applicationHeaders['store_id'];
-                try {
-                    $currentStoreId = $this->storeManager->getStore()->getId();
-                } catch (NoSuchEntityException $e) {
-                    $errorMessage = sprintf(
-                        "Can't set currentStoreId during processing queue message. Message rejected. Error %s.",
+        $applicationHeaders = $dataObject->getData('application_headers') ?? [];
+        if (isset($applicationHeaders['store_id'])) {
+            $storeId = $applicationHeaders['store_id'];
+            try {
+                $currentStoreId = $this->storeManager->getStore()->getId();
+            } catch (NoSuchEntityException $e) {
+                throw new LocalizedException(
+                    __(
+                        "Can't set currentStoreId during processing queue operation. Error %1.",
                         $e->getMessage()
-                    );
-                    $this->logger->error($errorMessage);
-                    throw new \LogicException($errorMessage);
-                }
-
-                if (isset($storeId) && $storeId !== $currentStoreId) {
-                    $this->storeManager->setCurrentStore($storeId);
-                }
+                    ),
+                    $e,
+                    //@TODO Add error codes mapping
+                    110
+                );
             }
 
-            $this->execute($dataObject);
-
-            if (isset($storeId, $currentStoreId) && $storeId !== $currentStoreId) {
-                //restore original store value
-                $this->storeManager->setCurrentStore($currentStoreId);
+            if (isset($storeId) && $storeId !== $currentStoreId) {
+                $this->storeManager->setCurrentStore($storeId);
             }
-        } catch (\Exception $e) {
-            //@TODO reject message
+        }
+
+        $this->execute($dataObject);
+
+        if (isset($storeId, $currentStoreId) && $storeId !== $currentStoreId) {
+            //restore original store value
+            $this->storeManager->setCurrentStore($currentStoreId);
         }
     }
 

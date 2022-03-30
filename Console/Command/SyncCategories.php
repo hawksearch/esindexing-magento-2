@@ -34,7 +34,11 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-
+/**
+ * Class SyncCategories
+ * @package HawkSearch\EsIndexing\Console\Command
+ * @TODO Refactor the class
+ */
 class SyncCategories extends Command
 {
     /**
@@ -135,7 +139,7 @@ class SyncCategories extends Command
         try {
             $results = $this->syncCategories();
         } catch (\Exception $exception) {
-            $output->writeln('An error occurred: ' . $exception->getMessage());
+            $output->writeln(__('An error occurred: %1', $exception->getMessage()));
         }
 
         if ($results) {
@@ -145,6 +149,9 @@ class SyncCategories extends Command
         }
     }
 
+    /**
+     * @return array Errors if occure
+     */
     protected function syncCategories()
     {
         $stores = $this->storeManager->getStores();
@@ -156,8 +163,8 @@ class SyncCategories extends Command
             try {
                 $this->syncHawkLandingByStore($store);
             } catch (\Exception $e) {
-                $errors[] = sprintf("Error syncing category pages for store '%s'", $store->getCode());
-                $errors[] = sprintf("Exception message: %s", $e->getMessage());
+                $errors[] = __("Error syncing category pages for store '%1'", $store->getCode());
+                $errors[] = __("Exception message: %1", $e->getMessage());
                 continue;
             }
         }

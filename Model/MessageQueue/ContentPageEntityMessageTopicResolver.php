@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2021 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -14,9 +14,22 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\MessageQueue;
 
-use Magento\Framework\MessageQueue\BulkPublisherInterface;
+use HawkSearch\EsIndexing\Model\Indexing\Entity\Type\ContentPageEntityType;
 
-interface PublisherInterface extends BulkPublisherInterface
+class ContentPageEntityMessageTopicResolver implements MessageTopicResolverInterface
 {
+    const TOPIC = 'hawksearch.indexing.content_page.reindex';
 
+    /**
+     * @inheritDoc
+     * @param ContentPageEntityType $object
+     */
+    public function resolve($object)
+    {
+        if ($object instanceof ContentPageEntityType) {
+            return self::TOPIC;
+        }
+
+        return '';
+    }
 }

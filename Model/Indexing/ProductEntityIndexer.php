@@ -20,6 +20,7 @@ use HawkSearch\EsIndexing\Logger\LoggerFactoryInterface;
 use HawkSearch\EsIndexing\Model\Config\Advanced as AdvancedConfig;
 use HawkSearch\EsIndexing\Model\Config\Indexing as IndexingConfig;
 use HawkSearch\EsIndexing\Model\Config\Products as ProductsConfig;
+use HawkSearch\EsIndexing\Model\Indexing\Entity\EntityTypePoolInterface;
 use HawkSearch\EsIndexing\Model\Product as ProductDataProvider;
 use HawkSearch\EsIndexing\Model\Product\Attributes as ProductAttributes;
 use Magento\Catalog\Api\Data\ProductInterface;
@@ -114,8 +115,7 @@ class ProductEntityIndexer extends AbstractEntityIndexer
      * ProductEntityIndexer constructor.
      * @param IndexingConfig $indexingConfig
      * @param Emulation $emulation
-     * @param ItemsProviderPoolInterface $itemsProviderPool
-     * @param EntityIndexerPoolInterface $entityIndexerPool
+     * @param EntityTypePoolInterface $entityTypePool
      * @param IndexManagementInterface $indexManagement
      * @param EventManagerInterface $eventManager
      * @param Visibility $visibility
@@ -135,8 +135,7 @@ class ProductEntityIndexer extends AbstractEntityIndexer
     public function __construct(
         IndexingConfig $indexingConfig,
         Emulation $emulation,
-        ItemsProviderPoolInterface $itemsProviderPool,
-        EntityIndexerPoolInterface $entityIndexerPool,
+        EntityTypePoolInterface $entityTypePool,
         IndexManagementInterface $indexManagement,
         EventManagerInterface $eventManager,
         Visibility $visibility,
@@ -156,8 +155,7 @@ class ProductEntityIndexer extends AbstractEntityIndexer
         parent::__construct(
             $indexingConfig,
             $emulation,
-            $itemsProviderPool,
-            $entityIndexerPool,
+            $entityTypePool,
             $indexManagement,
             $eventManager,
             $loggerFactory

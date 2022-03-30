@@ -17,6 +17,8 @@ namespace HawkSearch\EsIndexing\Model\Indexing;
 use Exception;
 use HawkSearch\EsIndexing\Logger\LoggerFactoryInterface;
 use HawkSearch\EsIndexing\Model\Config\Indexing as IndexingConfig;
+use HawkSearch\EsIndexing\Model\Indexing\Entity\EntityTypeInterface;
+use HawkSearch\EsIndexing\Model\Indexing\Entity\EntityTypePoolInterface;
 use Magento\Framework\App\Area;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
@@ -48,14 +50,9 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
     private $emulation;
 
     /**
-     * @var ItemsProviderPoolInterface
+     * @var EntityTypePoolInterface
      */
-    private $itemsProviderPool;
-
-    /**
-     * @var EntityIndexerPoolInterface
-     */
-    private $entityIndexerPool;
+    private $entityTypePool;
 
     /**
      * @var IndexManagementInterface
@@ -76,8 +73,7 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
      * AbstractEntityIndexer constructor.
      * @param IndexingConfig $indexingConfig
      * @param Emulation $emulation
-     * @param ItemsProviderPoolInterface $itemsProviderPool
-     * @param EntityIndexerPoolInterface $entityIndexerPool
+     * @param EntityTypePoolInterface $entityTypePool
      * @param IndexManagementInterface $indexManagement
      * @param EventManagerInterface $eventManager
      * @param LoggerFactoryInterface $loggerFactory
@@ -85,8 +81,7 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
     public function __construct(
         IndexingConfig $indexingConfig,
         Emulation $emulation,
-        ItemsProviderPoolInterface $itemsProviderPool,
-        EntityIndexerPoolInterface $entityIndexerPool,
+        EntityTypePoolInterface $entityTypePool,
         IndexManagementInterface $indexManagement,
         EventManagerInterface $eventManager,
         LoggerFactoryInterface $loggerFactory
@@ -94,8 +89,7 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
     {
         $this->indexingConfig = $indexingConfig;
         $this->emulation = $emulation;
-        $this->itemsProviderPool = $itemsProviderPool;
-        $this->entityIndexerPool = $entityIndexerPool;
+        $this->entityTypePool = $entityTypePool;
         $this->indexManagement = $indexManagement;
         $this->eventManager = $eventManager;
         $this->hawkLogger = $loggerFactory->create();
@@ -121,6 +115,8 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
 
     /**
      * @inheritDoc
+     * @throws NotFoundException
+     * @throws LocalizedException
      */
     public function rebuildEntityIndexBatch(int $storeId, int $currentPage, int $pageSize, ?array $entityIds = null)
     {
@@ -133,7 +129,7 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
         $this->hawkLogger->debug(
             sprintf(
                 "Starting indexing for Entity type %s, Store %d, Page %d, Page size %d, IDs %s",
-                $this->getEntityType(),
+                $this->getEntityType()->getTypeName(),
                 $storeId,
                 $currentPage,
                 $pageSize,
@@ -142,7 +138,7 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
         );
 
         try {
-            $items = $this->itemsProviderPool->get($this->getEntityType())
+            $items = $this->getEntityType()->getItemsProvider()
                 ->getItems($storeId, $entityIds, $currentPage, $pageSize);
 
             $this->hawkLogger->debug(
@@ -263,7 +259,7 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
     {
         $itemData = [];
         $itemData[$this->getEntityIdField()] = $this->getEntityUniqueId($item);
-        $itemData[$this->getEntityTypeField()] = $this->getEntityType();
+        $itemData[$this->getEntityTypeField()] = $this->getEntityType()->getTypeName();
         foreach ($this->getIndexedAttributes() as $attribute) {
             if (!$attribute) {
                 continue;
@@ -325,14 +321,15 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
     abstract protected function canItemBeIndexed(DataObject $item): bool;
 
     /**
-     * @return string
+     * @return EntityTypeInterface
      * @throws NotFoundException
      */
-    protected function getEntityType(): string
+    protected function getEntityType(): EntityTypeInterface
     {
-        foreach ($this->entityIndexerPool->getIndexerList() as $code => $indexer) {
-            if ($this instanceof $indexer) {
-                return $code;
+        foreach ($this->entityTypePool->getList() as $typeName => $entityType) {
+            $entityIndexer = $entityType->getEntityIndexer();
+            if ($entityIndexer instanceof $this) {
+                return $entityType;
             }
         }
 
@@ -368,7 +365,7 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
      */
     private function getEntityUniqueId(DataObject $entityItem): string
     {
-        return $this->getEntityType() . '_' . $this->getEntityId($entityItem);
+        return $this->getEntityType()->getTypeName() . '_' . $this->getEntityId($entityItem);
     }
 
     /**

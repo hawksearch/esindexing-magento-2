@@ -97,7 +97,7 @@ class IndexManagement implements IndexManagementInterface
         }
 
         $newIndex = $this->createIndex();
-        $this->hawkLogger->debug(sprintf("New index created: %s", $newIndex,));
+        $this->hawkLogger->debug(sprintf("New index created: %s", $newIndex->getIndexName()));
 
         $this->hawkLogger->debug(sprintf("--- initializeFullReindex FINISHED ---"));
     }
