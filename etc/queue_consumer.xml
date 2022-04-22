@@ -15,6 +15,6 @@
               queue="hawksearch.indexing"
               connection="db"
               maxMessages="5000"
-              consumerInstance="Magento\Framework\MessageQueue\Consumer"
+              consumerInstance="Magento\AsynchronousOperations\Model\MassConsumer"
               handler="HawkSearch\EsIndexing\Model\Indexing\Consumer::process" />
 </config>

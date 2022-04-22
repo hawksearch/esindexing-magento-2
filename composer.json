@@ -7,6 +7,7 @@
     "require": {
         "php": "^7.2|^7.3|^7.4",
         "magento/magento2-base": "^2.3.5|2.4.*",
+        "magento/module-asynchronous-operations": "^100.3",
         "hawksearch/connector": "^2.5",
         "ext-json": "*",
         "ext-PDO": "*",

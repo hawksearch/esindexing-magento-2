@@ -11,7 +11,19 @@
   IN THE SOFTWARE.
   -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/publisher.xsd">
-    <publisher topic="hawksearch.indexing">
+    <publisher topic="hawksearch.indexing.fullreindex.start">
+        <connection name="db" exchange="magento-db" />
+    </publisher>
+    <publisher topic="hawksearch.indexing.fullreindex.finish">
+        <connection name="db" exchange="magento-db" />
+    </publisher>
+    <publisher topic="hawksearch.indexing.hierarchy.reindex">
+        <connection name="db" exchange="magento-db" />
+    </publisher>
+    <publisher topic="hawksearch.indexing.catalog.reindex">
+        <connection name="db" exchange="magento-db" />
+    </publisher>
+    <publisher topic="hawksearch.indexing.content_page.reindex">
         <connection name="db" exchange="magento-db" />
     </publisher>
 </config>

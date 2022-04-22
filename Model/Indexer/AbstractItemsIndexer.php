@@ -14,12 +14,14 @@
 namespace HawkSearch\EsIndexing\Model\Indexer;
 
 use HawkSearch\EsIndexing\Model\Config\Indexing;
-use HawkSearch\EsIndexing\Model\Indexing\EntityIndexerPoolInterface;
+use HawkSearch\EsIndexing\Model\Indexing\Entity\EntityTypeInterface;
+use HawkSearch\EsIndexing\Model\Indexing\Entity\EntityTypePoolInterface;
 use HawkSearch\EsIndexing\Model\Indexing\IndexManagementInterface;
-use HawkSearch\EsIndexing\Model\Indexing\ItemsProviderPoolInterface;
-use HawkSearch\EsIndexing\Model\MessageQueue\PublisherInterface;
+use HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisherInterface;
+use HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicResolverInterface;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
+use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\NotFoundException;
 use Magento\Store\Model\StoreManagerInterface;
@@ -27,7 +29,7 @@ use Magento\Store\Model\StoreManagerInterface;
 abstract class AbstractItemsIndexer
 {
     /**
-     * @var PublisherInterface
+     * @var BulkPublisherInterface
      */
     private $publisher;
 
@@ -42,14 +44,9 @@ abstract class AbstractItemsIndexer
     private $indexingConfig;
 
     /**
-     * @var EntityIndexerPoolInterface
+     * @var EntityTypePoolInterface
      */
-    private $entityIndexerPool;
-
-    /**
-     * @var ItemsProviderPoolInterface
-     */
-    private $itemsProviderPool;
+    private $entityTypePool;
 
     /**
      * @var EventManagerInterface
@@ -57,40 +54,46 @@ abstract class AbstractItemsIndexer
     private $eventManager;
 
     /**
+     * @var MessageTopicResolverInterface
+     */
+    private $messageTopicResolver;
+
+    /**
      * AbstractIndexer constructor.
-     * @param PublisherInterface $publisher
+     * @param BulkPublisherInterface $publisher
      * @param StoreManagerInterface $storeManager
      * @param Indexing $indexingConfig
-     * @param EntityIndexerPoolInterface $entityIndexerPool
-     * @param ItemsProviderPoolInterface $itemsProviderPool
+     * @param EntityTypePoolInterface $entityTypePool
      * @param EventManagerInterface $eventManager
+     * @param MessageTopicResolverInterface $messageTopicResolver
      */
     public function __construct(
-        PublisherInterface $publisher,
+        BulkPublisherInterface $publisher,
         StoreManagerInterface $storeManager,
         Indexing $indexingConfig,
-        EntityIndexerPoolInterface $entityIndexerPool,
-        ItemsProviderPoolInterface $itemsProviderPool,
-        EventManagerInterface $eventManager
+        EntityTypePoolInterface $entityTypePool,
+        EventManagerInterface $eventManager,
+        MessageTopicResolverInterface $messageTopicResolver
     ) {
         $this->publisher = $publisher;
         $this->storeManager = $storeManager;
         $this->indexingConfig = $indexingConfig;
-        $this->entityIndexerPool = $entityIndexerPool;
-        $this->itemsProviderPool = $itemsProviderPool;
+        $this->entityTypePool = $entityTypePool;
         $this->eventManager = $eventManager;
+        $this->messageTopicResolver = $messageTopicResolver;
     }
 
     /**
      * Rebuild delta items index
      * @param array $ids
      * @throws NoSuchEntityException
+     * @throws InputException
      */
     protected function rebuildDelta($ids)
     {
         $stores = $this->storeManager->getStores();
-
         $currentStore = $this->storeManager->getStore();
+
         foreach ($stores as $store) {
             if (!$this->indexingConfig->isIndexingEnabled($store->getId())) {
                 continue;
@@ -104,7 +107,8 @@ abstract class AbstractItemsIndexer
             $dataToUpdate = [];
             foreach ($chunks as $chunk) {
                 $dataToUpdate[] = [
-                    'class' => get_class($this->entityIndexerPool->getIndexerByCode($this->getEntityIndexerCode())),
+                    'topic' => $this->messageTopicResolver->resolve($this->getEntityType()),
+                    'class' => get_class($this->getEntityType()->getEntityIndexer()),
                     'method' => 'rebuildEntityIndex',
                     'method_arguments' => [
                         'storeId' => $store->getId(),
@@ -114,25 +118,16 @@ abstract class AbstractItemsIndexer
                 ];
             }
 
-            $this->publisher->publish(
-                __(
-                    'Update delta index for %1 items of %2 entity on "%3" store',
-                    [
-                        count($ids),
-                        $this->entityIndexerPool->getIndexerByCode($this->getEntityIndexerCode()),
-                        $store->getCode()
-                    ]
-                ),
-                $dataToUpdate
-            );
+            $this->publishData($dataToUpdate);
         }
+
         $this->storeManager->setCurrentStore($currentStore);
     }
 
     /**
      * Rebuild full items index
      * @throws NoSuchEntityException
-     * @throws NotFoundException
+     * @throws InputException
      */
     protected function rebuildFull()
     {
@@ -143,13 +138,15 @@ abstract class AbstractItemsIndexer
             if (!$this->indexingConfig->isIndexingEnabled($store->getId())) {
                 continue;
             }
-            $dataToUpdate = [];
 
             $this->storeManager->setCurrentStore($store->getId());
 
-            $dataToUpdate[] = [
-                'class' => IndexManagementInterface::class,
-                'method' => 'initializeFullReindex'
+            $dataToUpdate = [
+                [
+                    'topic' => 'hawksearch.indexing.fullreindex.start',
+                    'class' => IndexManagementInterface::class,
+                    'method' => 'initializeFullReindex'
+                ]
             ];
 
             $transport = new DataObject($dataToUpdate);
@@ -165,8 +162,8 @@ abstract class AbstractItemsIndexer
 
             $batchSize = $this->indexingConfig->getItemsBatchSize($store->getId());
 
-            foreach ($this->entityIndexerPool->getIndexerList() as $indexerCode => $entityIndexer) {
-                $items = $this->itemsProviderPool->get($indexerCode)->getItems($store->getId());
+            foreach ($this->entityTypePool->getList() as $entityTypeName => $entityType) {
+                $items = $entityType->getItemsProvider()->getItems($store->getId());
                 $batches = ceil(count($items) / $batchSize);
 
                 $transport = new DataObject($dataToUpdate);
@@ -175,7 +172,7 @@ abstract class AbstractItemsIndexer
                     [
                         'store' => $store,
                         'indexer' => $this,
-                        'items_indexer_code' => $indexerCode,
+                        'entity_type' => $entityType,
                         'items' => $items,
                         'transport' => $transport
                     ]
@@ -184,14 +181,15 @@ abstract class AbstractItemsIndexer
 
                 for ($page = 1; $page <= $batches; $page++) {
                     $dataToUpdate[] = [
-                        'class' => get_class($this->entityIndexerPool->getIndexerByCode($indexerCode)),
+                        'topic' => $this->messageTopicResolver->resolve($entityType),
+                        'class' => get_class($entityType->getEntityIndexer()),
                         'method' => 'rebuildEntityIndexBatch',
                         'method_arguments' => [
                             'storeId' => $store->getId(),
                             'currentPage' => $page,
                             'pageSize' => $batchSize
                         ],
-                        'full_reindex' => false,
+                        'full_reindex' => true,
                     ];
                 }
 
@@ -201,7 +199,7 @@ abstract class AbstractItemsIndexer
                     [
                         'store' => $store,
                         'indexer' => $this,
-                        'items_indexer_code' => $indexerCode,
+                        'entity_type' => $entityType,
                         'items' => $items,
                         'transport' => $transport
                     ]
@@ -221,20 +219,41 @@ abstract class AbstractItemsIndexer
             $dataToUpdate = $transport->getData();
 
             $dataToUpdate[] = [
+                'topic' => 'hawksearch.indexing.fullreindex.finish',
                 'class' => IndexManagementInterface::class,
                 'method' => 'switchIndices'
             ];
 
-            $this->publisher->publish(
-                __('Update full items index for store "%1"', $store->getCode()),
-                $dataToUpdate
-            );
+            $this->publishData($dataToUpdate);
         }
+
         $this->storeManager->setCurrentStore($currentStore);
+    }
+
+    /**
+     * @return EntityTypeInterface
+     * @throws NotFoundException
+     */
+    protected function getEntityType()
+    {
+        return $this->entityTypePool->get($this->getEntityTypeName());
+    }
+
+    /**
+     * @param array $dataToUpdate
+     */
+    private function publishData(array $dataToUpdate): void
+    {
+        foreach ($dataToUpdate as $data) {
+            $topic = $data['topic'] ?? '';
+            unset($data['topic']);
+            $this->publisher->addMessage($topic, $data);
+        }
+        $this->publisher->publish();
     }
 
     /**
      * @return string
      */
-    abstract public function getEntityIndexerCode();
+    abstract protected function getEntityTypeName();
 }

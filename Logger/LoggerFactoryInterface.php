@@ -12,11 +12,16 @@
  */
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\MessageQueue;
+namespace HawkSearch\EsIndexing\Logger;
 
-use Magento\Framework\MessageQueue\BulkPublisherInterface;
+use Psr\Log\LoggerInterface;
 
-interface PublisherInterface extends BulkPublisherInterface
+interface LoggerFactoryInterface
 {
-
+    /**
+     * Create logger instance
+     *
+     * @return LoggerInterface
+     */
+    public function create();
 }

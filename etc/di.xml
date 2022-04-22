@@ -25,22 +25,26 @@
                 type="HawkSearch\EsIndexing\Model\EsIndex"/>
     <preference for="HawkSearch\EsIndexing\Api\Data\LandingPageInterface"
                 type="HawkSearch\EsIndexing\Model\LandingPage"/>
-    <preference for="HawkSearch\EsIndexing\Model\Indexing\ItemsProviderPoolInterface"
-                type="HawkSearch\EsIndexing\Model\Indexing\ItemsProviderPool"/>
-    <preference for="HawkSearch\EsIndexing\Model\Indexing\EntityIndexerPoolInterface"
-                type="HawkSearch\EsIndexing\Model\Indexing\EntityIndexerPool"/>
+    <preference for="HawkSearch\EsIndexing\Api\Data\QueueOperationDataInterface"
+                type="HawkSearch\EsIndexing\Model\MessageQueue\QueueOperationData"/>
     <preference for="HawkSearch\EsIndexing\Model\Indexing\IndexManagementInterface"
                 type="HawkSearch\EsIndexing\Model\Indexing\IndexManagement"/>
     <preference for="HawkSearch\EsIndexing\Model\Indexing\HierarchyManagementInterface"
                 type="HawkSearch\EsIndexing\Model\Indexing\HierarchyManagement"/>
-    <preference for="HawkSearch\EsIndexing\Model\MessageQueue\PublisherInterface"
-                type="HawkSearch\EsIndexing\Model\MessageQueue\Publisher"/>
+    <preference for="HawkSearch\EsIndexing\Model\Indexing\Entity\EntityTypePoolInterface"
+                type="HawkSearch\EsIndexing\Model\Indexing\Entity\EntityTypePool"/>
+    <preference for="HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisherInterface"
+                type="HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher"/>
     <preference for="HawkSearch\EsIndexing\Model\Product\PriceManagementInterface"
                 type="HawkSearch\EsIndexing\Model\Product\PriceManagement"/>
     <preference for="HawkSearch\EsIndexing\Model\Product\Price\ProductTypePoolInterface"
                 type="HawkSearch\EsIndexing\Model\Product\Price\ProductTypePool"/>
     <preference for="HawkSearch\EsIndexing\Api\LandingPageManagementInterface"
                 type="HawkSearch\EsIndexing\Model\LandingPageManagement"/>
+    <preference for="HawkSearch\EsIndexing\Logger\LoggerFactoryInterface"
+                type="HawkSearch\EsIndexing\Logger\LoggerFactory"/>
+    <preference for="HawkSearch\EsIndexing\Logger\LoggerConfigInterface"
+                type="HawkSearch\EsIndexing\Logger\LoggerConfig"/>
 
     <!-- Configs -->
     <type name="HawkSearch\EsIndexing\Model\Config\Products">
@@ -606,28 +610,46 @@
     <!-- END Product indexing repository -->
 
     <!-- Types -->
+    <type name="HawkSearch\EsIndexing\Model\Indexing\Entity\EntityTypePool">
+        <arguments>
+            <argument name="types" xsi:type="array">
+                <item name="hierarchy" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\Entity\Type\HierarchyEntityType</item>
+                <item name="product" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\Entity\Type\ProductEntityType</item>
+                <item name="content_page" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\Entity\Type\ContentPageEntityType</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="HawkSearch\EsIndexing\Model\Indexing\Entity\Type\HierarchyEntityType">
+        <arguments>
+            <argument name="entityIndexer" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\HierarchyEntityIndexer\Proxy</argument>
+            <argument name="itemsProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\HierarchyItemsProvider\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="HawkSearch\EsIndexing\Model\Indexing\Entity\Type\ProductEntityType">
+        <arguments>
+            <argument name="entityIndexer" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ProductEntityIndexer\Proxy</argument>
+            <argument name="itemsProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ProductItemsProvider\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="HawkSearch\EsIndexing\Model\Indexing\Entity\Type\ContentPageEntityType">
+        <arguments>
+            <argument name="entityIndexer" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ContentPageEntityIndexer\Proxy</argument>
+            <argument name="itemsProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ContentPageItemsProvider\Proxy</argument>
+        </arguments>
+    </type>
+
     <type name="HawkSearch\EsIndexing\Model\Indexing\ProductItemsProvider">
         <arguments>
             <argument name="productRepository" xsi:type="object">HawkSearch\EsIndexing\Model\ProductRepository</argument>
         </arguments>
     </type>
 
-    <type name="HawkSearch\EsIndexing\Model\Indexing\ItemsProviderPool">
+    <type name="HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicResolverComposite">
         <arguments>
-            <argument name="providers" xsi:type="array">
-                <item name="hierarchy" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\HierarchyItemsProvider</item>
-                <item name="product" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\ProductItemsProvider</item>
-                <item name="content_page" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\ContentPageItemsProvider</item>
-            </argument>
-        </arguments>
-    </type>
-
-    <type name="HawkSearch\EsIndexing\Model\Indexing\EntityIndexerPool">
-        <arguments>
-            <argument name="indexers" xsi:type="array">
-                <item name="hierarchy" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\HierarchyEntityIndexer</item>
-                <item name="product" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\ProductEntityIndexer</item>
-                <item name="content_page" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\ContentPageEntityIndexer</item>
+            <argument name="resolvers" xsi:type="array">
+                <item name="content_page" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\ContentPageEntityMessageTopicResolver</item>
+                <item name="hierarchy" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\HierarchyEntityMessageTopicResolver</item>
+                <item name="product" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\ProductEntityMessageTopicResolver</item>
             </argument>
         </arguments>
     </type>
@@ -645,11 +667,55 @@
         </arguments>
     </type>
 
+    <type name="HawkSearch\EsIndexing\Model\Indexer\AbstractItemsIndexer">
+        <arguments>
+            <argument name="messageTopicResolver" xsi:type="object">
+                HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicResolverComposite
+            </argument>
+        </arguments>
+    </type>
+
     <type name="Magento\Framework\Console\CommandList">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="run_category_sync" xsi:type="object">HawkSearch\EsIndexing\Console\Command\SyncCategories</item>
+                <item name="hawksearch_run_category_sync" xsi:type="object">HawkSearch\EsIndexing\Console\Command\SyncCategories</item>
+                <item name="hawksearch_retry_bulk" xsi:type="object">HawkSearch\EsIndexing\Console\Command\RetryBulk</item>
             </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="HawkSearch\EsIndexing\Logger\Handler\Base" type="Magento\Framework\Logger\Handler\Base">
+        <arguments>
+            <argument name="fileName" xsi:type="string">/var/log/hawksearch_esindexing.log</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearch\EsIndexing\Logger\Logger" type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="debug" xsi:type="object">HawkSearch\EsIndexing\Logger\Handler\Base</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="HawkSearch\EsIndexing\Logger\LoggerFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">HawkSearch\EsIndexing\Logger\Logger</argument>
+        </arguments>
+    </type>
+
+    <type name="HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher">
+        <arguments>
+            <argument name="bulkManagement" xsi:type="object">Magento\AsynchronousOperations\Model\VirtualType\BulkManagement</argument>
+        </arguments>
+    </type>
+
+    <type name="HawkSearch\EsIndexing\Model\MessageQueue\RetryBulkManagement">
+        <arguments>
+            <argument name="publisher" xsi:type="object">Magento\AsynchronousOperations\Model\VirtualType\PublisherPool</argument>
+        </arguments>
+    </type>
+    <type name="HawkSearch\EsIndexing\Console\Command\RetryBulk">
+        <arguments>
+            <argument name="bulkManagement" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\RetryBulkManagement</argument>
         </arguments>
     </type>
     <!-- END Types -->
@@ -663,6 +729,9 @@
     </type>
     <type name="Magento\Cms\Model\ResourceModel\Page">
         <plugin name="hawksearchPage" type="HawkSearch\EsIndexing\Model\Indexer\ContentPage\Plugin\Page"/>
+    </type>
+    <type name="Magento\AsynchronousOperations\Model\OperationProcessor">
+        <plugin name="hawksearch" type="HawkSearch\EsIndexing\Plugin\AsynchronousOperationProcessorPlugin"/>
     </type>
 
     <!-- END Plugins -->

@@ -11,7 +11,19 @@
   IN THE SOFTWARE.
   -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Communication/etc/communication.xsd">
-    <topic name="hawksearch.indexing" request="Magento\AsynchronousOperations\Api\Data\OperationInterface">
-        <handler name="hawksearch.reindex" type="HawkSearch\EsIndexing\Model\Indexing\Consumer" method="process" />
+    <topic name="hawksearch.indexing.fullreindex.start"
+           request="HawkSearch\EsIndexing\Api\Data\QueueOperationDataInterface[]">
+    </topic>
+    <topic name="hawksearch.indexing.fullreindex.finish"
+           request="HawkSearch\EsIndexing\Api\Data\QueueOperationDataInterface[]">
+    </topic>
+    <topic name="hawksearch.indexing.hierarchy.reindex"
+           request="HawkSearch\EsIndexing\Api\Data\QueueOperationDataInterface[]">
+    </topic>
+    <topic name="hawksearch.indexing.catalog.reindex"
+           request="HawkSearch\EsIndexing\Api\Data\QueueOperationDataInterface[]">
+    </topic>
+    <topic name="hawksearch.indexing.content_page.reindex"
+           request="HawkSearch\EsIndexing\Api\Data\QueueOperationDataInterface[]">
     </topic>
 </config>

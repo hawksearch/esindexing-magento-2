@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexing;
 
+use HawkSearch\EsIndexing\Logger\LoggerFactoryInterface;
 use HawkSearch\EsIndexing\Model\Config\Indexing as IndexingConfig;
+use HawkSearch\EsIndexing\Model\Indexing\Entity\EntityTypePoolInterface;
 use Magento\Catalog\Api\Data\CategoryInterface;
 use Magento\Catalog\Model\Category;
 use Magento\Framework\DataObject;
@@ -47,28 +49,28 @@ class HierarchyEntityIndexer extends AbstractEntityIndexer
      * HierarchyEntityIndexer constructor.
      * @param IndexingConfig $indexingConfig
      * @param Emulation $emulation
-     * @param ItemsProviderPoolInterface $itemsProviderPool
-     * @param EntityIndexerPoolInterface $entityIndexerPool
+     * @param EntityTypePoolInterface $entityTypePool
      * @param IndexManagementInterface $indexManagement
      * @param EventManagerInterface $eventManager
      * @param HierarchyManagementInterface $hierarchyManagement
+     * @param LoggerFactoryInterface $loggerFactory
      */
     public function __construct(
         IndexingConfig $indexingConfig,
         Emulation $emulation,
-        ItemsProviderPoolInterface $itemsProviderPool,
-        EntityIndexerPoolInterface $entityIndexerPool,
+        EntityTypePoolInterface $entityTypePool,
         IndexManagementInterface $indexManagement,
         EventManagerInterface $eventManager,
-        HierarchyManagementInterface $hierarchyManagement
+        HierarchyManagementInterface $hierarchyManagement,
+        LoggerFactoryInterface $loggerFactory
     ) {
         parent::__construct(
             $indexingConfig,
             $emulation,
-            $itemsProviderPool,
-            $entityIndexerPool,
+            $entityTypePool,
             $indexManagement,
-            $eventManager
+            $eventManager,
+            $loggerFactory
         );
         $this->indexManagement = $indexManagement;
         $this->hierarchyManagement = $hierarchyManagement;

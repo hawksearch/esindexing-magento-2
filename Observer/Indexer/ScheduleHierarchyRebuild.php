@@ -14,8 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Observer\Indexer;
 
-use HawkSearch\EsIndexing\Model\Indexing\EntityIndexerPoolInterface;
-use HawkSearch\EsIndexing\Model\Indexing\HierarchyEntityIndexer;
+use HawkSearch\EsIndexing\Model\Indexing\Entity\Type\HierarchyEntityType;
 use HawkSearch\EsIndexing\Model\Indexing\HierarchyManagementInterface;
 use HawkSearch\EsIndexing\Model\Indexing\IndexManagementInterface;
 use Magento\Framework\DataObject;
@@ -31,21 +30,13 @@ class ScheduleHierarchyRebuild implements ObserverInterface
     private $indexManagement;
 
     /**
-     * @var EntityIndexerPoolInterface
-     */
-    private $entityIndexerPool;
-
-    /**
      * HierarchyRebuild constructor.
      * @param IndexManagementInterface $indexManagement
-     * @param EntityIndexerPoolInterface $entityIndexerPool
      */
     public function __construct(
-        IndexManagementInterface $indexManagement,
-        EntityIndexerPoolInterface $entityIndexerPool
+        IndexManagementInterface $indexManagement
     ) {
         $this->indexManagement = $indexManagement;
-        $this->entityIndexerPool = $entityIndexerPool;
     }
 
     /**
@@ -59,9 +50,10 @@ class ScheduleHierarchyRebuild implements ObserverInterface
         $store = $observer->getData('store');
         /** @var DataObject $transport */
         $transport = $observer->getData('transport');
-        $indexerCode = $observer->getData('items_indexer_code');
+        /** @var HierarchyEntityType $entityType */
+        $entityType = $observer->getData('entity_type');
 
-        if (!($this->entityIndexerPool->getIndexerByCode($indexerCode) instanceof HierarchyEntityIndexer)) {
+        if (!($entityType instanceof HierarchyEntityType)) {
             return;
         }
 
@@ -72,6 +64,7 @@ class ScheduleHierarchyRebuild implements ObserverInterface
         $indexName = $this->indexManagement->getIndexName($isCurrentIndex);
 
         $dataToUpdate[] = [
+            'topic' => 'hawksearch.indexing.hierarchy.reindex',
             'class' => HierarchyManagementInterface::class,
             'method' => 'rebuildHierarchy',
             'method_arguments' => [

@@ -12,7 +12,24 @@
   -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/topology.xsd">
     <exchange name="magento-db" type="topic" connection="db">
-        <binding id="indexingBinding" topic="hawksearch.indexing"
+        <binding id="HawksearchIndexingFullreindexStartBinding"
+                 topic="hawksearch.indexing.fullreindex.start"
+                 destinationType="queue"
+                 destination="hawksearch.indexing"/>
+        <binding id="HawksearchIndexingFullreindexFinishBinding"
+                 topic="hawksearch.indexing.fullreindex.finish"
+                 destinationType="queue"
+                 destination="hawksearch.indexing"/>
+        <binding id="HawksearchIndexingReindexHierarchyBinding"
+                 topic="hawksearch.indexing.hierarchy.reindex"
+                 destinationType="queue"
+                 destination="hawksearch.indexing"/>
+        <binding id="HawksearchIndexingReindexCatalogBinding"
+                 topic="hawksearch.indexing.catalog.reindex"
+                 destinationType="queue"
+                 destination="hawksearch.indexing"/>
+        <binding id="HawksearchIndexingReindexContentPageBinding"
+                 topic="hawksearch.indexing.content_page.reindex"
                  destinationType="queue"
                  destination="hawksearch.indexing"/>
     </exchange>

@@ -14,23 +14,14 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexer;
 
+use HawkSearch\EsIndexing\Model\Indexing\Entity\Type\ContentPageEntityType;
+use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Exception\NotFoundException;
 use Magento\Framework\Indexer\ActionInterface as IndexerActionInterface;
 use Magento\Framework\Mview\ActionInterface as MviewActionInterface;
 
 class ContentPage extends AbstractItemsIndexer implements IndexerActionInterface, MviewActionInterface
 {
-    public const ENTITY_INDEXER_CODE = 'content_page';
-
-    /**
-     * @inheritdoc
-     */
-    public function getEntityIndexerCode()
-    {
-        return self::ENTITY_INDEXER_CODE;
-    }
-
     /**
      * @inheritdoc
      */
@@ -59,7 +50,7 @@ class ContentPage extends AbstractItemsIndexer implements IndexerActionInterface
      * @inheritdoc
      * @param $ids
      * @throws NoSuchEntityException
-     * @throws NotFoundException
+     * @throws InputException
      */
     public function execute($ids)
     {
@@ -68,5 +59,13 @@ class ContentPage extends AbstractItemsIndexer implements IndexerActionInterface
         } else {
             $this->rebuildFull();
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getEntityTypeName()
+    {
+        return ContentPageEntityType::ENTITY_TYPE_NAME;
     }
 }

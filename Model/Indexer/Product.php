@@ -16,21 +16,20 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Indexer;
 
 use HawkSearch\EsIndexing\Model\Config\Indexing;
-use HawkSearch\EsIndexing\Model\Indexing\EntityIndexerPoolInterface;
-use HawkSearch\EsIndexing\Model\Indexing\ItemsProviderPoolInterface;
-use HawkSearch\EsIndexing\Model\MessageQueue\PublisherInterface;
+use HawkSearch\EsIndexing\Model\Indexing\Entity\EntityTypePoolInterface;
+use HawkSearch\EsIndexing\Model\Indexing\Entity\Type\ProductEntityType;
+use HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisherInterface;
+use HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicResolverInterface;
 use HawkSearch\EsIndexing\Model\Product as ProductDataProvider;
 use Magento\Framework\Event\ManagerInterface;
+use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Exception\NotFoundException;
 use Magento\Framework\Indexer\ActionInterface as IndexerActionInterface;
 use Magento\Framework\Mview\ActionInterface as MviewActionInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
 class Product extends AbstractItemsIndexer implements IndexerActionInterface, MviewActionInterface
 {
-    public const ENTITY_INDEXER_CODE = 'product';
-
     /**
      * @var ProductDataProvider
      */
@@ -38,30 +37,30 @@ class Product extends AbstractItemsIndexer implements IndexerActionInterface, Mv
 
     /**
      * Product constructor.
-     * @param PublisherInterface $publisher
+     * @param BulkPublisherInterface $publisher
      * @param StoreManagerInterface $storeManager
      * @param Indexing $indexingConfig
-     * @param EntityIndexerPoolInterface $entityIndexerPool
      * @param ProductDataProvider $productDataProvider
-     * @param ItemsProviderPoolInterface $itemsProviderPool
+     * @param EntityTypePoolInterface $entityTypePool
      * @param ManagerInterface $eventManager
+     * @param MessageTopicResolverInterface $messageTopicResolver
      */
     public function __construct(
-        PublisherInterface $publisher,
+        BulkPublisherInterface $publisher,
         StoreManagerInterface $storeManager,
         Indexing $indexingConfig,
-        EntityIndexerPoolInterface $entityIndexerPool,
         ProductDataProvider $productDataProvider,
-        ItemsProviderPoolInterface $itemsProviderPool,
-        ManagerInterface $eventManager
+        EntityTypePoolInterface $entityTypePool,
+        ManagerInterface $eventManager,
+        MessageTopicResolverInterface $messageTopicResolver
     ) {
         parent::__construct(
             $publisher,
             $storeManager,
             $indexingConfig,
-            $entityIndexerPool,
-            $itemsProviderPool,
-            $eventManager
+            $entityTypePool,
+            $eventManager,
+            $messageTopicResolver
         );
         $this->productDataProvider = $productDataProvider;
     }
@@ -93,7 +92,7 @@ class Product extends AbstractItemsIndexer implements IndexerActionInterface, Mv
     /**
      * @inheritDoc
      * @throws NoSuchEntityException
-     * @throws NotFoundException
+     * @throws InputException
      */
     public function execute($ids)
     {
@@ -109,10 +108,10 @@ class Product extends AbstractItemsIndexer implements IndexerActionInterface, Mv
     }
 
     /**
-     * @return string
+     * @inheritDoc
      */
-    public function getEntityIndexerCode()
+    protected function getEntityTypeName()
     {
-        return self::ENTITY_INDEXER_CODE;
+        return ProductEntityType::ENTITY_TYPE_NAME;
     }
 }
