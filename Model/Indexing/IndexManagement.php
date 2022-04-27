@@ -21,21 +21,19 @@ use HawkSearch\EsIndexing\Api\Data\EsIndexInterface;
 use HawkSearch\EsIndexing\Api\Data\IndexListInterface;
 use HawkSearch\EsIndexing\Logger\LoggerFactoryInterface;
 use Magento\Framework\App\Cache\Type\Config as ConfigCache;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\NotFoundException;
 use Magento\Framework\Serialize\SerializerInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 
 class IndexManagement implements IndexManagementInterface
 {
     /**
-     * @var string
-     */
-    private $indicesListCacheId = 'hawksearch_indices_list_cache_tag';
-
-    /**
+     *
      * @var array
      */
-    private $indicesListCache;
+    private $indicesListCache = [];
 
     /**
      * @var string
@@ -63,22 +61,30 @@ class IndexManagement implements IndexManagementInterface
     private $hawkLogger;
 
     /**
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
+
+    /**
      * IndexManagement constructor.
      * @param InstructionManagerPool $instructionManagerPool
      * @param ConfigCache $cache
      * @param SerializerInterface $serializer
      * @param LoggerFactoryInterface $loggerFactory
+     * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         InstructionManagerPool $instructionManagerPool,
         ConfigCache $cache,
         SerializerInterface $serializer,
-        LoggerFactoryInterface $loggerFactory
+        LoggerFactoryInterface $loggerFactory,
+        StoreManagerInterface $storeManager
     ) {
         $this->instructionManagerPool = $instructionManagerPool;
         $this->cache = $cache;
         $this->serializer = $serializer;
         $this->hawkLogger = $loggerFactory->create();
+        $this->storeManager = $storeManager;
     }
 
     /**
@@ -128,6 +134,10 @@ class IndexManagement implements IndexManagementInterface
 
     /**
      * @inheritDoc
+     * @param string $indexName
+     * @throws InstructionException
+     * @throws NoSuchEntityException
+     * @throws NotFoundException
      */
     public function removeIndex(string $indexName)
     {
@@ -142,6 +152,10 @@ class IndexManagement implements IndexManagementInterface
 
     /**
      * @inheritDoc
+     * @return EsIndexInterface
+     * @throws InstructionException
+     * @throws NoSuchEntityException
+     * @throws NotFoundException
      */
     public function createIndex()
     {
@@ -156,6 +170,9 @@ class IndexManagement implements IndexManagementInterface
 
     /**
      * @inheritDoc
+     * @throws InstructionException
+     * @throws NoSuchEntityException
+     * @throws NotFoundException
      */
     public function switchIndices()
     {
@@ -177,10 +194,11 @@ class IndexManagement implements IndexManagementInterface
      * @return string|null
      * @throws InstructionException
      * @throws NotFoundException
+     * @throws NoSuchEntityException
      */
     private function getCurrentIndex() : ?string
     {
-        if ($this->currentIndexCache === null) {
+        if ($this->getIndexFromCache(true) === null) {
             /** @var EsIndexInterface $result */
             $result = $this->instructionManagerPool->get('hawksearch-esindexing')
                 ->executeByCode('getCurrentIndex')->get();
@@ -188,17 +206,18 @@ class IndexManagement implements IndexManagementInterface
             $this->addIndexToCache($result->getIndexName(), true);
         }
 
-        return $this->currentIndexCache;
+        return $this->getIndexFromCache(true);
     }
 
     /**
      * @return array
      * @throws InstructionException
      * @throws NotFoundException
+     * @throws NoSuchEntityException
      */
     private function getIndices()
     {
-        if ($this->indicesListCache === null) {
+        if ($this->getIndexFromCache() === null) {
             /** @var IndexListInterface $indexList */
             $indexList = $this->instructionManagerPool->get('hawksearch-esindexing')
                 ->executeByCode('getIndexList')->get();
@@ -208,12 +227,13 @@ class IndexManagement implements IndexManagementInterface
             }
         }
 
-        return (array)$this->indicesListCache;
+        return (array)$this->getIndexFromCache();
     }
 
     /**
      * @param string $indexName
      * @throws InstructionException
+     * @throws NoSuchEntityException
      * @throws NotFoundException
      */
     private function setCurrentIndex(string $indexName)
@@ -229,34 +249,62 @@ class IndexManagement implements IndexManagementInterface
 
     /**
      * Reset cached values
+     * @throws NoSuchEntityException
+     * @TODO Replace with \Psr\Cache\CacheItemPoolInterface implementation
      */
     private function resetIndexCache()
     {
-        $this->indicesListCache = null;
-        $this->currentIndexCache = null;
+        $storeId = $this->storeManager->getStore()->getId();
+        $this->indicesListCache[$storeId] = null;
+        $this->currentIndexCache[$storeId] = null;
     }
 
     /**
      * @param string $index
      * @param bool $isCurrent
+     * @throws NoSuchEntityException
+     * @TODO Replace with \Psr\Cache\CacheItemPoolInterface implementation
      */
     private function addIndexToCache(string $index, bool $isCurrent = false)
     {
-        $this->indicesListCache[$index] = $index;
+        $storeId = $this->storeManager->getStore()->getId();
+
+        $this->indicesListCache[$storeId] = $this->indicesListCache[$storeId] ?? [];
+        $this->indicesListCache[$storeId][$index] = $index;
+
         if ($isCurrent) {
-            $this->currentIndexCache = $index;
+            $this->currentIndexCache[$storeId] = $index;
         }
     }
 
     /**
      * @param string $index
+     * @throws NoSuchEntityException
+     * @TODO Replace with \Psr\Cache\CacheItemPoolInterface implementation
      */
     private function removeIndexFromCache(string $index)
     {
-        unset($this->indicesListCache[$index]);
-        if ($this->currentIndexCache === $index) {
-            $this->currentIndexCache = null;
+        $storeId = $this->storeManager->getStore()->getId();
+
+        unset($this->indicesListCache[$storeId][$index]);
+        if (isset($this->currentIndexCache[$storeId]) && $this->currentIndexCache[$storeId] === $index) {
+            $this->currentIndexCache[$storeId] = null;
         }
+    }
+
+    /**
+     * @param bool $isCurrent
+     * @return array|string|null
+     * @throws NoSuchEntityException
+     * @TODO Replace with \Psr\Cache\CacheItemPoolInterface implementation
+     */
+    private function getIndexFromCache(bool $isCurrent = false)
+    {
+        $storeId = $this->storeManager->getStore()->getId();
+
+        return $isCurrent
+            ? ($this->currentIndexCache[$storeId] ?? null)
+            : ($this->indicesListCache[$storeId] ?? null);
     }
 
     /**

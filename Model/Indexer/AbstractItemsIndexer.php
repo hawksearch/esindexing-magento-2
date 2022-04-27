@@ -14,6 +14,7 @@
 namespace HawkSearch\EsIndexing\Model\Indexer;
 
 use HawkSearch\EsIndexing\Model\Config\Indexing;
+use HawkSearch\EsIndexing\Model\Indexing\ContextInterface;
 use HawkSearch\EsIndexing\Model\Indexing\Entity\EntityTypeInterface;
 use HawkSearch\EsIndexing\Model\Indexing\Entity\EntityTypePoolInterface;
 use HawkSearch\EsIndexing\Model\Indexing\IndexManagementInterface;
@@ -59,6 +60,16 @@ abstract class AbstractItemsIndexer
     private $messageTopicResolver;
 
     /**
+     * @var IndexManagementInterface
+     */
+    private $indexManagement;
+
+    /**
+     * @var ContextInterface
+     */
+    private $indexingContext;
+
+    /**
      * AbstractIndexer constructor.
      * @param BulkPublisherInterface $publisher
      * @param StoreManagerInterface $storeManager
@@ -66,6 +77,8 @@ abstract class AbstractItemsIndexer
      * @param EntityTypePoolInterface $entityTypePool
      * @param EventManagerInterface $eventManager
      * @param MessageTopicResolverInterface $messageTopicResolver
+     * @param IndexManagementInterface $indexManagement
+     * @param ContextInterface $indexingContext
      */
     public function __construct(
         BulkPublisherInterface $publisher,
@@ -73,7 +86,9 @@ abstract class AbstractItemsIndexer
         Indexing $indexingConfig,
         EntityTypePoolInterface $entityTypePool,
         EventManagerInterface $eventManager,
-        MessageTopicResolverInterface $messageTopicResolver
+        MessageTopicResolverInterface $messageTopicResolver,
+        IndexManagementInterface $indexManagement,
+        ContextInterface $indexingContext
     ) {
         $this->publisher = $publisher;
         $this->storeManager = $storeManager;
@@ -81,6 +96,8 @@ abstract class AbstractItemsIndexer
         $this->entityTypePool = $entityTypePool;
         $this->eventManager = $eventManager;
         $this->messageTopicResolver = $messageTopicResolver;
+        $this->indexManagement = $indexManagement;
+        $this->indexingContext = $indexingContext;
     }
 
     /**
@@ -111,7 +128,6 @@ abstract class AbstractItemsIndexer
                     'class' => get_class($this->getEntityType()->getEntityIndexer()),
                     'method' => 'rebuildEntityIndex',
                     'method_arguments' => [
-                        'storeId' => $store->getId(),
                         'entityIds' => $chunk
                     ],
                     'full_reindex' => false,
@@ -141,14 +157,9 @@ abstract class AbstractItemsIndexer
 
             $this->storeManager->setCurrentStore($store->getId());
 
-            $dataToUpdate = [
-                [
-                    'topic' => 'hawksearch.indexing.fullreindex.start',
-                    'class' => IndexManagementInterface::class,
-                    'method' => 'initializeFullReindex'
-                ]
-            ];
+            $this->indexManagement->initializeFullReindex();
 
+            $dataToUpdate = [];
             $transport = new DataObject($dataToUpdate);
             $this->eventManager->dispatch(
                 'hawksearch_esindexing_indexers_rebuild_full_before',
@@ -185,7 +196,6 @@ abstract class AbstractItemsIndexer
                         'class' => get_class($entityType->getEntityIndexer()),
                         'method' => 'rebuildEntityIndexBatch',
                         'method_arguments' => [
-                            'storeId' => $store->getId(),
                             'currentPage' => $page,
                             'pageSize' => $batchSize
                         ],

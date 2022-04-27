@@ -14,6 +14,7 @@
 namespace HawkSearch\EsIndexing\Model\MessageQueue;
 
 use HawkSearch\EsIndexing\Api\Data\QueueOperationDataInterfaceFactory;
+use HawkSearch\EsIndexing\Model\Indexing\IndexManagementInterface;
 use Magento\AsynchronousOperations\Api\SaveMultipleOperationsInterface;
 use Magento\AsynchronousOperations\Model\OperationRepositoryInterface;
 use Magento\Authorization\Model\UserContextInterface;
@@ -81,6 +82,11 @@ class BulkPublisher implements BulkPublisherInterface
     private $queueOperationDataFactory;
 
     /**
+     * @var IndexManagementInterface
+     */
+    private $indexManagement;
+
+    /**
      * @var string
      */
     private $bulkDescription;
@@ -108,6 +114,7 @@ class BulkPublisher implements BulkPublisherInterface
         LoggerInterface $logger,
         SaveMultipleOperationsInterface $saveMultipleOperations,
         QueueOperationDataInterfaceFactory $queueOperationDataFactory,
+        IndexManagementInterface $indexManagement,
         string $bulkDescription = null
     ) {
         $this->serializer = $serializer;
@@ -119,6 +126,7 @@ class BulkPublisher implements BulkPublisherInterface
         $this->logger = $logger;
         $this->saveMultipleOperations = $saveMultipleOperations;
         $this->queueOperationDataFactory = $queueOperationDataFactory;
+        $this->indexManagement = $indexManagement;
         $this->bulkDescription = $bulkDescription;
     }
 
@@ -131,7 +139,7 @@ class BulkPublisher implements BulkPublisherInterface
         $this->messages[] =
             [
                 'topic' => $topicName,
-                'data' => $data
+                'data' => $this->updateApplicationHeaders($data),
             ];
 
         return $this;
@@ -158,7 +166,6 @@ class BulkPublisher implements BulkPublisherInterface
         $operations = [];
         $bulkException = new BulkException();
         foreach (($this->messages ?? []) as $operationId => $topicMessage) {
-            $this->updateApplicationHeaders($topicMessage['data']);
             try {
                 $operationData = $this->queueOperationDataFactory->create(
                     [
@@ -203,12 +210,15 @@ class BulkPublisher implements BulkPublisherInterface
      * Set current store_id in messageData['application_headers']
      * so consumer may check store_id and execute operation in correct store scope.
      * Prevent publishing inconsistent messages because of store_id not defined or wrong.
+     * Set other operation global data
      * @param array $data
      */
-    private function updateApplicationHeaders(array &$data)
+    private function updateApplicationHeaders(array $data)
     {
         try {
             $storeId = $this->storeManager->getStore()->getId();
+            $isFullReindex = $data['full_reindex'] ?? false;
+            $indexName = $this->indexManagement->getIndexName(!$isFullReindex);
         } catch (NoSuchEntityException $e) {
             $errorMessage = sprintf(
                 "Can't get current storeId and inject to the message queue. Error %s.",
@@ -218,9 +228,10 @@ class BulkPublisher implements BulkPublisherInterface
             throw new \LogicException($errorMessage);
         }
 
-        if (!isset($data['application_headers'])) {
-            $data['application_headers'] = [];
-        }
+        $data['application_headers'] = $data['application_headers'] ?? [];
         $data['application_headers']['store_id'] = $storeId;
+        $data['application_headers']['index'] = $indexName;
+
+        return $data;
     }
 }

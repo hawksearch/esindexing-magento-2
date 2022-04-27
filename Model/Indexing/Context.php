@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2020 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -10,24 +10,30 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-
 declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexing;
 
-interface EntityIndexerInterface
+class Context implements ContextInterface
 {
     /**
-     * @param array|null $entityIds
-     * @return void
+     * @var array
      */
-    public function rebuildEntityIndex($entityIds = null);
+    private $indexNameCache = [];
 
     /**
-     * @param int $currentPage
-     * @param int $pageSize
-     * @param array|null $entityIds
-     * @return void
+     * @inheritDoc
      */
-    public function rebuildEntityIndexBatch(int $currentPage, int $pageSize, ?array $entityIds = null);
+    public function setIndexName(int $storeId, string $indexName)
+    {
+        $this->indexNameCache[$storeId] = $indexName;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getIndexName(int $storeId)
+    {
+        return $this->indexNameCache[$storeId] ?? '';
+    }
 }

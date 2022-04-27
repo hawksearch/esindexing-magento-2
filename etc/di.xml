@@ -33,6 +33,8 @@
                 type="HawkSearch\EsIndexing\Model\Indexing\HierarchyManagement"/>
     <preference for="HawkSearch\EsIndexing\Model\Indexing\Entity\EntityTypePoolInterface"
                 type="HawkSearch\EsIndexing\Model\Indexing\Entity\EntityTypePool"/>
+    <preference for="HawkSearch\EsIndexing\Model\Indexing\ContextInterface"
+                type="HawkSearch\EsIndexing\Model\Indexing\Context"/>
     <preference for="HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisherInterface"
                 type="HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher"/>
     <preference for="HawkSearch\EsIndexing\Model\Product\PriceManagementInterface"
@@ -732,6 +734,9 @@
     </type>
     <type name="Magento\AsynchronousOperations\Model\OperationProcessor">
         <plugin name="hawksearch" type="HawkSearch\EsIndexing\Plugin\AsynchronousOperationProcessorPlugin"/>
+    </type>
+    <type name="HawkSearch\EsIndexing\Model\Indexing\Consumer">
+        <plugin name="hawksearchConsumerProcessor" type="HawkSearch\EsIndexing\Plugin\ConsumerProcessorPlugin"/>
     </type>
 
     <!-- END Plugins -->

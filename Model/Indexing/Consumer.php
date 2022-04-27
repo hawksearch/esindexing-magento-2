@@ -16,22 +16,12 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Indexing;
 
 use HawkSearch\EsIndexing\Api\Data\QueueOperationDataInterface;
-use Magento\AsynchronousOperations\Api\Data\OperationInterface;
 use Magento\Framework\Data\ObjectFactory;
 use Magento\Framework\DataObject;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\SerializerInterface;
-use Magento\Store\Model\StoreManagerInterface;
-use Psr\Log\LoggerInterface;
 
 class Consumer
 {
-    /**
-     * @var IndexManagementInterface
-     */
-    private $indexManagement;
-
     /**
      * @var SerializerInterface
      */
@@ -43,92 +33,33 @@ class Consumer
     private $objectFactory;
 
     /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
      * InitFullReindex constructor.
-     * @param IndexManagementInterface $indexManagement
      * @param SerializerInterface $serializer
      * @param ObjectFactory $objectFactory
-     * @param StoreManagerInterface $storeManager
-     * @param LoggerInterface $logger
      */
     public function __construct(
-        IndexManagementInterface $indexManagement,
         SerializerInterface $serializer,
-        ObjectFactory $objectFactory,
-        StoreManagerInterface $storeManager,
-        LoggerInterface $logger
+        ObjectFactory $objectFactory
     ) {
-        $this->indexManagement = $indexManagement;
         $this->serializer = $serializer;
         $this->objectFactory = $objectFactory;
-        $this->storeManager = $storeManager;
-        $this->logger = $logger;
     }
 
     /**
      * Process
      *
-     * @param OperationInterface $operation
+     * @param QueueOperationDataInterface $operation
      *
      * @return void
-     * @throws LocalizedException
      */
     public function process(QueueOperationDataInterface $operation)
     {
         $data = $this->serializer->unserialize($operation->getData());
         $dataObject = $this->objectFactory->create(DataObject::class, ['data' => $data]);
 
-        $applicationHeaders = $dataObject->getData('application_headers') ?? [];
-        if (isset($applicationHeaders['store_id'])) {
-            $storeId = $applicationHeaders['store_id'];
-            try {
-                $currentStoreId = $this->storeManager->getStore()->getId();
-            } catch (NoSuchEntityException $e) {
-                throw new LocalizedException(
-                    __(
-                        "Can't set currentStoreId during processing queue operation. Error %1.",
-                        $e->getMessage()
-                    ),
-                    $e,
-                    //@TODO Add error codes mapping
-                    110
-                );
-            }
-
-            if (isset($storeId) && $storeId !== $currentStoreId) {
-                $this->storeManager->setCurrentStore($storeId);
-            }
-        }
-
-        $this->execute($dataObject);
-
-        if (isset($storeId, $currentStoreId) && $storeId !== $currentStoreId) {
-            //restore original store value
-            $this->storeManager->setCurrentStore($currentStoreId);
-        }
-    }
-
-    /**
-     * Execute
-     *
-     * @param DataObject $data
-     *
-     * @return void
-     */
-    private function execute($data): void
-    {
-        $class = $data->getClass();
-        $method = $data->getMethod();
-        $arguments = $data->getData('method_arguments') ?? [];
+        $class = $dataObject->getClass();
+        $method = $dataObject->getMethod();
+        $arguments = $dataObject->getData('method_arguments') ?? [];
 
         if (!$class) {
             return;
