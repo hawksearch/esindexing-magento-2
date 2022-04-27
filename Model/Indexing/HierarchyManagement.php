@@ -45,13 +45,17 @@ class HierarchyManagement implements HierarchyManagementInterface
      */
     public function upsertHierarchy(array $items, string $indexName)
     {
-        $data = [
-            'IndexName' => $indexName,
-            'Hierarchies' => array_values($items)
-        ];
+        $hierarchies = array_values($items);
 
-        $response = $this->instructionManagerPool
-            ->get('hawksearch-esindexing')->executeByCode('upsertHierarchy', $data)->get();
+        if ($hierarchies) {
+            $data = [
+                'IndexName' => $indexName,
+                'Hierarchies' => $hierarchies
+            ];
+
+            $response = $this->instructionManagerPool
+                ->get('hawksearch-esindexing')->executeByCode('upsertHierarchy', $data)->get();
+        }
     }
 
     /**

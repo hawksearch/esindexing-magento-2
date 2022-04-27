@@ -22,6 +22,7 @@ use Magento\Catalog\Model\Category;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
 use Magento\Store\Model\App\Emulation;
+use Magento\Store\Model\StoreManagerInterface;
 
 class HierarchyEntityIndexer extends AbstractEntityIndexer
 {
@@ -36,11 +37,6 @@ class HierarchyEntityIndexer extends AbstractEntityIndexer
     public const PARENT_HIERARCHY_NAME = 'category';
 
     /**
-     * @var IndexManagementInterface
-     */
-    private $indexManagement;
-
-    /**
      * @var HierarchyManagementInterface
      */
     private $hierarchyManagement;
@@ -48,31 +44,33 @@ class HierarchyEntityIndexer extends AbstractEntityIndexer
     /**
      * HierarchyEntityIndexer constructor.
      * @param IndexingConfig $indexingConfig
-     * @param Emulation $emulation
      * @param EntityTypePoolInterface $entityTypePool
      * @param IndexManagementInterface $indexManagement
      * @param EventManagerInterface $eventManager
-     * @param HierarchyManagementInterface $hierarchyManagement
      * @param LoggerFactoryInterface $loggerFactory
+     * @param StoreManagerInterface $storeManager
+     * @param ContextInterface $indexingContext
+     * @param HierarchyManagementInterface $hierarchyManagement
      */
     public function __construct(
         IndexingConfig $indexingConfig,
-        Emulation $emulation,
         EntityTypePoolInterface $entityTypePool,
         IndexManagementInterface $indexManagement,
         EventManagerInterface $eventManager,
-        HierarchyManagementInterface $hierarchyManagement,
-        LoggerFactoryInterface $loggerFactory
+        LoggerFactoryInterface $loggerFactory,
+        StoreManagerInterface $storeManager,
+        ContextInterface $indexingContext,
+        HierarchyManagementInterface $hierarchyManagement
     ) {
         parent::__construct(
             $indexingConfig,
-            $emulation,
             $entityTypePool,
             $indexManagement,
             $eventManager,
-            $loggerFactory
+            $loggerFactory,
+            $storeManager,
+            $indexingContext
         );
-        $this->indexManagement = $indexManagement;
         $this->hierarchyManagement = $hierarchyManagement;
     }
 
@@ -98,12 +96,19 @@ class HierarchyEntityIndexer extends AbstractEntityIndexer
      */
     protected function canItemBeIndexed(DataObject $item): bool
     {
-        if (!$item->getIsActive()) {
-            return false;
-        }
-        //@TODO Check if parent categories are active
+        $category = $item;
+        if ($category->getId()) {
+            while ($category->getLevel() != 0) {
+                if (!$category->getIsActive()) {
+                    return false;
+                }
+                $category = $category->getParentCategory();
+            }
 
-        return true;
+            return true;
+        }
+
+        return false;
     }
 
     /**
