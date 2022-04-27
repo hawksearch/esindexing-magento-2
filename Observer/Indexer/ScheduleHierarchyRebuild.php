@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Observer\Indexer;
 
+use HawkSearch\EsIndexing\Model\Indexing\ContextInterface;
 use HawkSearch\EsIndexing\Model\Indexing\Entity\Type\HierarchyEntityType;
 use HawkSearch\EsIndexing\Model\Indexing\HierarchyManagementInterface;
 use HawkSearch\EsIndexing\Model\Indexing\IndexManagementInterface;
@@ -30,19 +31,27 @@ class ScheduleHierarchyRebuild implements ObserverInterface
     private $indexManagement;
 
     /**
+     * @var ContextInterface
+     */
+    private $indexingContext;
+
+    /**
      * HierarchyRebuild constructor.
      * @param IndexManagementInterface $indexManagement
+     * @param ContextInterface $indexingContext
      */
     public function __construct(
-        IndexManagementInterface $indexManagement
+        IndexManagementInterface $indexManagement,
+        ContextInterface $indexingContext
     ) {
         $this->indexManagement = $indexManagement;
+        $this->indexingContext = $indexingContext;
     }
 
     /**
      * After hierarchy data is upserted the rebuild API request should follow after that
      * @inheritDoc
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @param Observer $observer
      */
     public function execute(Observer $observer)
     {

@@ -25,6 +25,7 @@ use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NotFoundException;
 use Magento\Store\Model\App\Emulation;
+use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 
 abstract class AbstractEntityIndexer implements EntityIndexerInterface
@@ -42,74 +43,82 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
     /**
      * @var IndexingConfig
      */
-    private $indexingConfig;
-
-    /**
-     * @var Emulation
-     */
-    private $emulation;
+    protected $indexingConfig;
 
     /**
      * @var EntityTypePoolInterface
      */
-    private $entityTypePool;
+    protected $entityTypePool;
 
     /**
      * @var IndexManagementInterface
      */
-    private $indexManagement;
+    protected $indexManagement;
 
     /**
      * @var EventManagerInterface
      */
-    private $eventManager;
+    protected $eventManager;
 
     /**
      * @var LoggerInterface
      */
-    private $hawkLogger;
+    protected $hawkLogger;
+
+    /**
+     * @var StoreManagerInterface
+     */
+    protected $storeManager;
+
+    /**
+     * @var ContextInterface
+     */
+    protected $indexingContext;
 
     /**
      * AbstractEntityIndexer constructor.
      * @param IndexingConfig $indexingConfig
-     * @param Emulation $emulation
      * @param EntityTypePoolInterface $entityTypePool
      * @param IndexManagementInterface $indexManagement
      * @param EventManagerInterface $eventManager
      * @param LoggerFactoryInterface $loggerFactory
+     * @param StoreManagerInterface $storeManager
+     * @param ContextInterface $indexingContext
      */
     public function __construct(
         IndexingConfig $indexingConfig,
-        Emulation $emulation,
         EntityTypePoolInterface $entityTypePool,
         IndexManagementInterface $indexManagement,
         EventManagerInterface $eventManager,
-        LoggerFactoryInterface $loggerFactory
+        LoggerFactoryInterface $loggerFactory,
+        StoreManagerInterface $storeManager,
+        ContextInterface $indexingContext
     )
     {
         $this->indexingConfig = $indexingConfig;
-        $this->emulation = $emulation;
         $this->entityTypePool = $entityTypePool;
         $this->indexManagement = $indexManagement;
         $this->eventManager = $eventManager;
         $this->hawkLogger = $loggerFactory->create();
+        $this->storeManager = $storeManager;
+        $this->indexingContext = $indexingContext;
     }
 
     /**
      * @inheritDoc
      * @throws Exception
      */
-    public function rebuildEntityIndex(int $storeId, $entityIds = null)
+    public function rebuildEntityIndex($entityIds = null)
     {
-        if (!$this->indexingConfig->isIndexingEnabled($storeId)) {
+        if (!$this->indexingConfig->isIndexingEnabled()) {
             return;
         }
 
-        $batchSize = $this->indexingConfig->getItemsBatchSize($storeId);
+        $batchSize = $this->indexingConfig->getItemsBatchSize();
         $batches = ceil(count($entityIds) / $batchSize);
 
         for ($page = 1; $page <= $batches; $page++) {
-            $this->rebuildEntityIndexBatch($storeId, $page, $batchSize, $entityIds);
+            $this->rebuildEntityIndexBatch($page, $batchSize, $entityIds);
         }
     }
 
@@ -118,13 +127,12 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
      * @throws NotFoundException
      * @throws LocalizedException
      */
-    public function rebuildEntityIndexBatch(int $storeId, int $currentPage, int $pageSize, ?array $entityIds = null)
+    public function rebuildEntityIndexBatch(int $currentPage, int $pageSize, ?array $entityIds = null)
     {
-        if (!$this->indexingConfig->isIndexingEnabled($storeId)) {
+        $storeId = (int)$this->storeManager->getStore()->getId();
+        if (!$this->indexingConfig->isIndexingEnabled()) {
             return;
         }
-
-        $this->emulation->startEnvironmentEmulation($storeId, Area::AREA_FRONTEND, true);
 
         $this->hawkLogger->debug(
             sprintf(
@@ -137,55 +145,46 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
             )
         );
 
-        try {
-            $items = $this->getEntityType()->getItemsProvider()
-                ->getItems($storeId, $entityIds, $currentPage, $pageSize);
+        $items = $this->getEntityType()->getItemsProvider()
+            ->getItems($storeId, $entityIds, $currentPage, $pageSize);
 
-            $this->hawkLogger->debug(
-                sprintf(
-                    "Collected %d items",
-                    count($items)
-                )
-            );
+        $this->hawkLogger->debug(
+            sprintf(
+                "Collected %d items",
+                count($items)
+            )
+        );
 
+        if (!($indexName = $this->indexingContext->getIndexName($storeId))) {
             $isFullReindex = $entityIds === null;
             $isCurrentIndex = !$isFullReindex;
-
             $indexName = $this->indexManagement->getIndexName($isCurrentIndex);
-
-            $this->hawkLogger->debug(
-                sprintf(
-                    "Picked index: %s",
-                    $indexName
-                )
-            );
-
-            $itemsToRemove = $this->getItemsToRemove($items, $entityIds);
-            $this->hawkLogger->debug(
-                sprintf(
-                    "Items to be removed from the index: %s",
-                    implode(',', $itemsToRemove)
-                )
-            );
-            $this->deleteItemsFromIndex($itemsToRemove, $indexName);
-
-            $itemsToIndex = $this->getItemsToIndex($items, $entityIds);
-            $this->hawkLogger->debug(
-                sprintf(
-                    "Items to be indexed: %s",
-                    implode(',', array_keys($itemsToIndex))
-                )
-            );
-
-            $this->deleteItemsFromIndex($itemsToRemove, $indexName);
-            $this->indexItems($itemsToIndex, $indexName);
-
-
-        } catch (Exception $e) {
-            $this->emulation->stopEnvironmentEmulation();
-            throw $e;
         }
-        $this->emulation->stopEnvironmentEmulation();
+
+        $this->hawkLogger->debug(
+            sprintf(
+                "Picked index: %s",
+                $indexName
+            )
+        );
+
+        $itemsToRemove = $this->getItemsToRemove($items, $entityIds);
+        $this->hawkLogger->debug(
+            sprintf(
+                "Items to be removed from the index: %s",
+                implode(',', $itemsToRemove)
+            )
+        );
+        $this->deleteItemsFromIndex($itemsToRemove, $indexName);
+
+        $itemsToIndex = $this->getItemsToIndex($items, $entityIds);
+        $this->hawkLogger->debug(
+            sprintf(
+                "Items to be indexed: %s",
+                implode(',', array_keys($itemsToIndex))
+            )
+        );
+        $this->indexItems($itemsToIndex, $indexName);
     }
 
     /**

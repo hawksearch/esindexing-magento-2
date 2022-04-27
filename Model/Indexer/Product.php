@@ -16,8 +16,10 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Indexer;
 
 use HawkSearch\EsIndexing\Model\Config\Indexing;
+use HawkSearch\EsIndexing\Model\Indexing\ContextInterface;
 use HawkSearch\EsIndexing\Model\Indexing\Entity\EntityTypePoolInterface;
 use HawkSearch\EsIndexing\Model\Indexing\Entity\Type\ProductEntityType;
+use HawkSearch\EsIndexing\Model\Indexing\IndexManagementInterface;
 use HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisherInterface;
 use HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicResolverInterface;
 use HawkSearch\EsIndexing\Model\Product as ProductDataProvider;
@@ -40,19 +42,23 @@ class Product extends AbstractItemsIndexer implements IndexerActionInterface, Mv
      * @param BulkPublisherInterface $publisher
      * @param StoreManagerInterface $storeManager
      * @param Indexing $indexingConfig
-     * @param ProductDataProvider $productDataProvider
      * @param EntityTypePoolInterface $entityTypePool
      * @param ManagerInterface $eventManager
      * @param MessageTopicResolverInterface $messageTopicResolver
+     * @param IndexManagementInterface $indexManagement
+     * @param ContextInterface $indexingContext
+     * @param ProductDataProvider $productDataProvider
      */
     public function __construct(
         BulkPublisherInterface $publisher,
         StoreManagerInterface $storeManager,
         Indexing $indexingConfig,
-        ProductDataProvider $productDataProvider,
         EntityTypePoolInterface $entityTypePool,
         ManagerInterface $eventManager,
-        MessageTopicResolverInterface $messageTopicResolver
+        MessageTopicResolverInterface $messageTopicResolver,
+        IndexManagementInterface $indexManagement,
+        ContextInterface $indexingContext,
+        ProductDataProvider $productDataProvider
     ) {
         parent::__construct(
             $publisher,
@@ -60,7 +66,9 @@ class Product extends AbstractItemsIndexer implements IndexerActionInterface, Mv
             $indexingConfig,
             $entityTypePool,
             $eventManager,
-            $messageTopicResolver
+            $messageTopicResolver,
+            $indexManagement,
+            $indexingContext
         );
         $this->productDataProvider = $productDataProvider;
     }

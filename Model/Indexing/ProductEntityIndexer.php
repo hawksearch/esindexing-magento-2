@@ -82,11 +82,6 @@ class ProductEntityIndexer extends AbstractEntityIndexer
     private $productAttributes;
 
     /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
-
-    /**
      * @var ProductDataProvider
      */
     private $productDataProvider;
@@ -134,31 +129,33 @@ class ProductEntityIndexer extends AbstractEntityIndexer
      */
     public function __construct(
         IndexingConfig $indexingConfig,
-        Emulation $emulation,
         EntityTypePoolInterface $entityTypePool,
         IndexManagementInterface $indexManagement,
         EventManagerInterface $eventManager,
+        LoggerFactoryInterface $loggerFactory,
+        StoreManagerInterface $storeManager,
+        ContextInterface $indexingContext,
         Visibility $visibility,
         Configuration $catalogInventoryConfiguration,
         StockRegistryInterface $stockRegistry,
         Json $jsonSerializer,
         ProductsConfig $attributesConfigProvider,
         ProductAttributes $productAttributes,
-        StoreManagerInterface $storeManager,
         ProductDataProvider $productDataProvider,
         ImageHelper $imageHelper,
         ProductDataProvider\PriceManagementInterface $priceManagement,
         UrlHelper $urlHelper,
-        AdvancedConfig $advancedConfig,
-        LoggerFactoryInterface $loggerFactory
+        AdvancedConfig $advancedConfig
+
     ) {
         parent::__construct(
             $indexingConfig,
-            $emulation,
             $entityTypePool,
             $indexManagement,
             $eventManager,
-            $loggerFactory
+            $loggerFactory,
+            $storeManager,
+            $indexingContext
         );
 
         $this->visibility = $visibility;
@@ -167,7 +164,6 @@ class ProductEntityIndexer extends AbstractEntityIndexer
         $this->jsonSerializer = $jsonSerializer;
         $this->attributesConfigProvider = $attributesConfigProvider;
         $this->productAttributes = $productAttributes;
-        $this->storeManager = $storeManager;
         $this->productDataProvider = $productDataProvider;
         $this->imageHelper = $imageHelper;
         $this->priceManagement = $priceManagement;
