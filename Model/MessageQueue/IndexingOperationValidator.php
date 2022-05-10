@@ -20,6 +20,7 @@ use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Exception\NotFoundException;
 
 class IndexingOperationValidator
 {
@@ -138,9 +139,20 @@ class IndexingOperationValidator
      * @param OperationInterface $operation
      * @return bool
      * @throws NoSuchEntityException
+     * @throws NotFoundException
      */
     public function isValidOperation(OperationInterface $operation)
     {
+        if ($operation->getStatus() == OperationInterface::STATUS_TYPE_COMPLETE) {
+            throw new NotFoundException(
+                __(
+                    'Operation was already processed Bulk UUID: %1, key: %2',
+                    $operation->getBulkUuid(),
+                    $operation->getId()
+                )
+            );
+        }
+
         return $this->isBulkConsistent($operation->getBulkUuid())
             && $this->isPrevOperationComplete($operation);
     }

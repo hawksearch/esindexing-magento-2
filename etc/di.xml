@@ -639,6 +639,21 @@
             <argument name="itemsProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ContentPageItemsProvider\Proxy</argument>
         </arguments>
     </type>
+    <type name="HawkSearch\EsIndexing\Model\Indexing\HierarchyEntityIndexer\Proxy">
+        <arguments>
+            <argument name="shared" xsi:type="boolean">false</argument>
+        </arguments>
+    </type>
+    <type name="HawkSearch\EsIndexing\Model\Indexing\ProductEntityIndexer\Proxy">
+        <arguments>
+            <argument name="shared" xsi:type="boolean">false</argument>
+        </arguments>
+    </type>
+    <type name="HawkSearch\EsIndexing\Model\Indexing\ContentPageEntityIndexer\Proxy">
+        <arguments>
+            <argument name="shared" xsi:type="boolean">false</argument>
+        </arguments>
+    </type>
 
     <type name="HawkSearch\EsIndexing\Model\Indexing\ProductItemsProvider">
         <arguments>
