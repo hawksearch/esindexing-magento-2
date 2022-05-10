@@ -312,13 +312,17 @@ class IndexManagement implements IndexManagementInterface
      */
     public function indexItems(array $items, string $indexName)
     {
-        $data = [
-            'IndexName' => $indexName,
-            'Items' => array_values($items)
-        ];
+        $items = array_values($items);
 
-        $response = $this->instructionManagerPool
-            ->get('hawksearch-esindexing')->executeByCode('indexItems', $data)->get();
+        if ($items) {
+            $data = [
+                'IndexName' => $indexName,
+                'Items' => $items
+            ];
+
+            $response = $this->instructionManagerPool
+                ->get('hawksearch-esindexing')->executeByCode('indexItems', $data)->get();
+        }
     }
 
     /**

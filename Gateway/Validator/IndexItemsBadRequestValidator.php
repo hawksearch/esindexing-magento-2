@@ -71,6 +71,10 @@ class IndexItemsBadRequestValidator extends AbstractValidator
                         $errors[] = $item['Message'];
                     }
                 }
+            } elseif (!is_array($response[ClientInterface::RESPONSE_DATA])
+                && !empty($response[ClientInterface::RESPONSE_DATA])
+            ) {
+                $errors[] = (string)$response[ClientInterface::RESPONSE_DATA];
             }
 
             return $this->createResult(
