@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Product;
 
-use HawkSearch\EsIndexing\Model\Product\Price\ProductTypePoolInterface;
+use HawkSearch\EsIndexing\Model\Product\ProductTypePoolInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\Exception\NotFoundException;
 
@@ -44,7 +44,6 @@ class PriceManagement implements PriceManagementInterface
 
     /**
      * @inheritDoc
-     * @throws NotFoundException
      */
     public function collectPrices(ProductInterface $product, array &$itemData)
     {

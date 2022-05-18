@@ -20,15 +20,6 @@ use Magento\Framework\DataObject;
 
 class ContentPageEntityIndexer extends AbstractEntityIndexer
 {
-
-    /**
-     * @inheritDoc
-     */
-    protected function getAttributeValue(DataObject $item, string $attribute)
-    {
-        return $item->getData($attribute);
-    }
-
     /**
      * @param PageInterface|Page|DataObject $item
      * @inheritDoc

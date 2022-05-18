@@ -12,9 +12,9 @@
  */
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Product\Price\ProductType;
+namespace HawkSearch\EsIndexing\Model\Product\ProductType;
 
-use HawkSearch\EsIndexing\Model\Product\Price\ProductTypeInterface;
+use HawkSearch\EsIndexing\Model\Product\ProductTypeInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Helper\Data as CatalogHelper;
 use Magento\Catalog\Model\Product;
@@ -119,6 +119,14 @@ abstract class DefaultType implements ProductTypeInterface
         }*/
 
         return $priceData;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getChildProducts(ProductInterface $product): array
+    {
+        return [];
     }
 
     /**

@@ -39,4 +39,9 @@ interface EntityTypeInterface
      * @return ItemsProviderInterface
      */
     public function getItemsProvider();
+
+    /**
+     * @return AttributeHandlerInterface
+     */
+    public function getAttributeHandler();
 }

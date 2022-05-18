@@ -10,11 +10,26 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-declare(strict_types=1);
+namespace HawkSearch\EsIndexing\Model\Product;
 
-namespace HawkSearch\EsIndexing\Model\Product\Price\ProductType;
+use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Model\Product;
 
-class Simple extends DefaultType
+/**
+ * Interface ProductTypeInterface
+ * @package HawkSearch\EsIndexing\Model\Product\Price
+ */
+interface ProductTypeInterface
 {
+    /**
+     * @param Product|ProductInterface $product
+     * @return array
+     */
+    public function getPriceData(ProductInterface $product): array;
 
+    /**
+     * @param Product|ProductInterface $product
+     * @return Product[]
+     */
+    public function getChildProducts(ProductInterface $product): array;
 }

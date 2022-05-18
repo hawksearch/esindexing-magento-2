@@ -15,6 +15,8 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Indexing;
 
 use HawkSearch\Connector\Gateway\Instruction\InstructionManagerPool;
+use HawkSearch\Connector\Gateway\InstructionException;
+use Magento\Framework\Exception\NotFoundException;
 
 class HierarchyManagement implements HierarchyManagementInterface
 {
@@ -31,6 +33,7 @@ class HierarchyManagement implements HierarchyManagementInterface
     /**
      * HierarchyManagement constructor.
      * @param IndexManagementInterface $indexManagement
+     * @param InstructionManagerPool $instructionManagerPool
      */
     public function __construct(
         IndexManagementInterface $indexManagement,
@@ -42,32 +45,38 @@ class HierarchyManagement implements HierarchyManagementInterface
 
     /**
      * @inheritDoc
+     * @throws NotFoundException
+     * @throws InstructionException
      */
     public function upsertHierarchy(array $items, string $indexName)
     {
         $hierarchies = array_values($items);
 
-        if ($hierarchies) {
-            $data = [
-                'IndexName' => $indexName,
-                'Hierarchies' => $hierarchies
-            ];
-
-            $response = $this->instructionManagerPool
-                ->get('hawksearch-esindexing')->executeByCode('upsertHierarchy', $data)->get();
+        if (!$hierarchies) {
+            return;
         }
+
+        $data = [
+            'IndexName' => $indexName,
+            'Hierarchies' => $hierarchies
+        ];
+
+        $this->instructionManagerPool
+            ->get('hawksearch-esindexing')->executeByCode('upsertHierarchy', $data)->get();
     }
 
     /**
      * @inheritDoc
+     * @throws NotFoundException
+     * @throws InstructionException
      */
-    public function rebuildHierarchy(string $indexName = null)
+    public function rebuildHierarchy(string $indexName)
     {
         $data = [
             'IndexName' => $indexName
         ];
 
-        $response = $this->instructionManagerPool
+        $this->instructionManagerPool
             ->get('hawksearch-esindexing')->executeByCode('rebuildHierarchy', $data)->get();
     }
 
@@ -85,7 +94,7 @@ class HierarchyManagement implements HierarchyManagementInterface
             'Ids' => array_values($ids)
         ];
 
-        $response = $this->instructionManagerPool
+        $this->instructionManagerPool
             ->get('hawksearch-esindexing')->executeByCode('deleteHierarchyItems', $data)->get();
     }
 

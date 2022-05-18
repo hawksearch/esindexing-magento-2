@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2021 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -12,9 +12,8 @@
  */
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Product\Price;
+namespace HawkSearch\EsIndexing\Model\Product;
 
-use Magento\Framework\Exception\NotFoundException;
 use Magento\Framework\ObjectManager\TMap;
 use Magento\Framework\ObjectManager\TMapFactory;
 
@@ -26,13 +25,21 @@ class ProductTypePool implements ProductTypePoolInterface
     private $types;
 
     /**
+     * @var ProductTypeInterfaceFactory
+     */
+    private $productTypeFactory;
+
+    /**
      * @param TMapFactory $tmapFactory
+     * @param ProductTypeInterfaceFactory $productTypeFactory
      * @param array $types
      */
     public function __construct(
         TMapFactory $tmapFactory,
+        ProductTypeInterfaceFactory $productTypeFactory,
         array $types = []
     ) {
+        $this->productTypeFactory = $productTypeFactory;
         $this->types = $tmapFactory->create(
             [
                 'array' => $types,
@@ -46,15 +53,6 @@ class ProductTypePool implements ProductTypePoolInterface
      */
     public function get(string $typeCode): ProductTypeInterface
     {
-        if (!isset($this->types[$typeCode])) {
-            throw new NotFoundException(
-                __(
-                    'The "%1" product price type doesn\'t exist. Verify the product price type code and try again.',
-                    $typeCode
-                )
-            );
-        }
-
-        return $this->types[$typeCode];
+        return isset($this->types[$typeCode]) ? $this->types[$typeCode] : $this->productTypeFactory->create();
     }
 }

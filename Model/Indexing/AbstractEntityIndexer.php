@@ -105,6 +105,18 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
     }
 
     /**
+     * @param DataObject $item
+     * @return bool
+     */
+    abstract protected function canItemBeIndexed(DataObject $item): bool;
+
+    /**
+     * @param DataObject $entityItem
+     * @return int
+     */
+    abstract protected function getEntityId(DataObject $entityItem): ?int;
+
+    /**
      * @inheritDoc
      * @throws Exception
      */
@@ -205,15 +217,15 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
             }
 
             if (isset($itemsToRemove[$this->getEntityId($item)])
-                || isset($this->itemsToRemoveCache[$this->getEntityId($item)])
-                || isset($this->itemsToIndexCache[$this->getEntityId($item)])
+                || isset($this->itemsToRemoveCache[$this->getEntityUniqueId($item)])
+                || isset($this->itemsToIndexCache[$this->getEntityUniqueId($item)])
             ) {
                 continue;
             }
 
             if (!$this->canItemBeIndexed($item)) {
-                $itemsToRemove[$this->getEntityId($item)] = $this->getEntityUniqueId($item);
-                $this->itemsToRemoveCache[$this->getEntityId($item)] = $this->getEntityUniqueId($item);
+                $itemsToRemove[$this->getEntityId($item)] = $this->getEntityId($item);
+                $this->itemsToRemoveCache[$this->getEntityUniqueId($item)] = $this->getEntityId($item);
             }
         }
 
@@ -234,15 +246,15 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
 
         foreach ($fullItemsList as $item) {
             if (isset($itemsToIndex[$this->getEntityId($item)])
-                || isset($this->itemsToIndexCache[$this->getEntityId($item)])
-                || isset($this->itemsToRemoveCache[$this->getEntityId($item)])
+                || isset($this->itemsToIndexCache[$this->getEntityUniqueId($item)])
+                || isset($this->itemsToRemoveCache[$this->getEntityUniqueId($item)])
             ) {
                 continue;
             }
 
             if ($this->canItemBeIndexed($item)) {
                 $itemsToIndex[$this->getEntityId($item)] = $this->convertEntityToIndexDataArray($item);
-                $this->itemsToIndexCache[$this->getEntityId($item)] = $this->getEntityUniqueId($item);
+                $this->itemsToIndexCache[$this->getEntityUniqueId($item)] = $this->getEntityId($item);
             }
         }
 
@@ -310,14 +322,12 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
      * @param DataObject $item
      * @param string $attribute
      * @return mixed
+     * @throws NotFoundException
      */
-    abstract protected function getAttributeValue(DataObject $item, string $attribute);
-
-    /**
-     * @param DataObject $item
-     * @return bool
-     */
-    abstract protected function canItemBeIndexed(DataObject $item): bool;
+    protected function getAttributeValue(DataObject $item, string $attribute)
+    {
+        return $this->getEntityType()->getAttributeHandler()->handle($item, $attribute);
+    }
 
     /**
      * @return EntityTypeInterface
@@ -334,12 +344,6 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
 
         throw new NotFoundException(__('Unregistered Entity Indexer "%1"', get_class($this)));
     }
-
-    /**
-     * @param DataObject $entityItem
-     * @return int
-     */
-    abstract protected function getEntityId(DataObject $entityItem): ?int;
 
     /**
      * @return string

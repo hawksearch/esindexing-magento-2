@@ -47,9 +47,7 @@ class Consumer
 
     /**
      * Process
-     *
      * @param QueueOperationDataInterface $operation
-     *
      * @return void
      */
     public function process(QueueOperationDataInterface $operation)
