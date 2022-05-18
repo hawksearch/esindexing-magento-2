@@ -29,6 +29,7 @@ class EntityPriceObserver implements ObserverInterface
 
     /**
      * EntityPriceObserver constructor.
+     * @param PriceManagementInterface $priceManagement
      */
     public function __construct(
         PriceManagementInterface $priceManagement

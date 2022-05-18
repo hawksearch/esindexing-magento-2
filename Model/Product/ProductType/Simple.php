@@ -12,9 +12,9 @@
  */
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Product\Price\ProductType;
+namespace HawkSearch\EsIndexing\Model\Product\ProductType;
 
-class Downloadable extends DefaultType
+class Simple extends DefaultType
 {
 
 }

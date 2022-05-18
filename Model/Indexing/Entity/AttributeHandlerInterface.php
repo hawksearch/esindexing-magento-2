@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2021 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -12,17 +12,16 @@
  */
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Product\Price\ProductType;
+namespace HawkSearch\EsIndexing\Model\Indexing\Entity;
 
-use Magento\Catalog\Model\Product;
+use Magento\Framework\DataObject;
 
-class Configurable extends CompositeType
+interface AttributeHandlerInterface
 {
     /**
-     * @inheritdoc
+     * @param DataObject $item
+     * @param string $attributeCode
+     * @return mixed
      */
-    protected function getChildProducts(Product $product)
-    {
-        return $product->getTypeInstance()->getUsedProducts($product);
-    }
+    public function handle(DataObject $item, string $attributeCode);
 }

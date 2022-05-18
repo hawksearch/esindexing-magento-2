@@ -20,37 +20,23 @@ use HawkSearch\EsIndexing\Logger\LoggerFactoryInterface;
 use HawkSearch\EsIndexing\Model\Config\Advanced as AdvancedConfig;
 use HawkSearch\EsIndexing\Model\Config\Indexing as IndexingConfig;
 use HawkSearch\EsIndexing\Model\Config\Products as ProductsConfig;
+use HawkSearch\EsIndexing\Model\Indexing\Entity\AttributeHandlerInterface;
 use HawkSearch\EsIndexing\Model\Indexing\Entity\EntityTypePoolInterface;
-use HawkSearch\EsIndexing\Model\Product as ProductDataProvider;
-use HawkSearch\EsIndexing\Model\Product\Attributes as ProductAttributes;
+use HawkSearch\EsIndexing\Model\Product;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Helper\Image as ImageHelper;
-use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\Product as CatalogProductModel;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Catalog\Model\Product\Visibility;
-use Magento\Catalog\Model\ResourceModel\Eav\Attribute as AttributeResource;
-use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\CatalogInventory\Model\Configuration;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\Serializer\Json;
-use Magento\Store\Model\App\Emulation;
 use Magento\Store\Model\StoreManagerInterface;
 
 class ProductEntityIndexer extends AbstractEntityIndexer
 {
-    //TODO: replace with attributeDataProvider interface
-    public const ADDITIONAL_ATTRIBUTES_HANDLERS = [
-        'url' => 'getUrl',
-        'group_id' => 'getGroupId',
-        'thumbnail_url' => 'getThumbnailUrl',
-        'image_url' => 'getImageUrl',
-        'category' => 'getCategories'
-    ];
-
     /**
      * @var Visibility
      */
@@ -77,12 +63,12 @@ class ProductEntityIndexer extends AbstractEntityIndexer
     private $attributesConfigProvider;
 
     /**
-     * @var ProductAttributes
+     * @var Product\Attributes
      */
     private $productAttributes;
 
     /**
-     * @var ProductDataProvider
+     * @var Product
      */
     private $productDataProvider;
 
@@ -92,7 +78,7 @@ class ProductEntityIndexer extends AbstractEntityIndexer
     private $imageHelper;
 
     /**
-     * @var ProductDataProvider\PriceManagementInterface
+     * @var Product\PriceManagementInterface
      */
     private $priceManagement;
 
@@ -107,25 +93,37 @@ class ProductEntityIndexer extends AbstractEntityIndexer
     private $advancedConfig;
 
     /**
+     * @var AttributeHandlerInterface
+     */
+    private $attributeHandler;
+
+    /**
+     * @var Product\ProductTypePoolInterface
+     */
+    private $productTypePool;
+
+    /**
      * ProductEntityIndexer constructor.
      * @param IndexingConfig $indexingConfig
-     * @param Emulation $emulation
      * @param EntityTypePoolInterface $entityTypePool
      * @param IndexManagementInterface $indexManagement
      * @param EventManagerInterface $eventManager
+     * @param LoggerFactoryInterface $loggerFactory
+     * @param StoreManagerInterface $storeManager
+     * @param ContextInterface $indexingContext
      * @param Visibility $visibility
      * @param Configuration $catalogInventoryConfiguration
      * @param StockRegistryInterface $stockRegistry
      * @param Json $jsonSerializer
      * @param ProductsConfig $attributesConfigProvider
-     * @param ProductAttributes $productAttributes
-     * @param StoreManagerInterface $storeManager
-     * @param ProductDataProvider $productDataProvider
+     * @param Product\Attributes $productAttributes
+     * @param Product $productDataProvider
      * @param ImageHelper $imageHelper
-     * @param ProductDataProvider\PriceManagementInterface $priceManagement
+     * @param Product\PriceManagementInterface $priceManagement
      * @param UrlHelper $urlHelper
      * @param AdvancedConfig $advancedConfig
-     * @param LoggerFactoryInterface $loggerFactory
+     * @param AttributeHandlerInterface $attributeHandler
+     * @param Product\ProductTypePoolInterface $productTypePool
      */
     public function __construct(
         IndexingConfig $indexingConfig,
@@ -140,13 +138,14 @@ class ProductEntityIndexer extends AbstractEntityIndexer
         StockRegistryInterface $stockRegistry,
         Json $jsonSerializer,
         ProductsConfig $attributesConfigProvider,
-        ProductAttributes $productAttributes,
-        ProductDataProvider $productDataProvider,
+        Product\Attributes $productAttributes,
+        Product $productDataProvider,
         ImageHelper $imageHelper,
-        ProductDataProvider\PriceManagementInterface $priceManagement,
+        Product\PriceManagementInterface $priceManagement,
         UrlHelper $urlHelper,
-        AdvancedConfig $advancedConfig
-
+        AdvancedConfig $advancedConfig,
+        AttributeHandlerInterface $attributeHandler,
+        Product\ProductTypePoolInterface $productTypePool
     ) {
         parent::__construct(
             $indexingConfig,
@@ -169,6 +168,8 @@ class ProductEntityIndexer extends AbstractEntityIndexer
         $this->priceManagement = $priceManagement;
         $this->urlHelper = $urlHelper;
         $this->advancedConfig = $advancedConfig;
+        $this->attributeHandler = $attributeHandler;
+        $this->productTypePool = $productTypePool;
     }
 
     /**
@@ -191,46 +192,6 @@ class ProductEntityIndexer extends AbstractEntityIndexer
     }
 
     /**
-     * @param ProductInterface|Product|DataObject $item
-     * @inheritdoc
-     * @throws LocalizedException
-     */
-    protected function getAttributeValue(DataObject $item, string $attribute)
-    {
-        $value = '';
-
-        if (isset(static::ADDITIONAL_ATTRIBUTES_HANDLERS[$attribute])
-            && is_callable([$this, static::ADDITIONAL_ATTRIBUTES_HANDLERS[$attribute]])
-        ) {
-            $value = $this->{self::ADDITIONAL_ATTRIBUTES_HANDLERS[$attribute]}($item);
-        } else {
-
-            /** @var ProductResource $productResource */
-            $productResource = $item->getResource();
-
-            /** @var AttributeResource $attributeResource */
-            $attributeResource = $productResource->getAttribute($attribute);
-            if ($attributeResource) {
-                $attributeResource->setData('store_id', $item->getStoreId());
-
-                $value = $item->getData($attribute);
-
-                if ($value !== null) {
-                    if (!is_array($value) && $attributeResource->usesSource()) {
-                        $value = $item->getAttributeText($attribute);
-                    }
-
-                    if ($value === false) {
-                        $value = $attributeResource->getFrontend()->getValue($item);
-                    }
-                }
-            }
-        }
-
-        return $value;
-    }
-
-    /**
      * @param ProductInterface $product
      * @return bool
      */
@@ -242,7 +203,7 @@ class ProductEntityIndexer extends AbstractEntityIndexer
     }
 
     /**
-     * @param ProductInterface|Product|DataObject $entityItem
+     * @param ProductInterface|CatalogProductModel|DataObject $entityItem
      * @inheritdoc
      */
     protected function getEntityId(DataObject $entityItem): ?int
@@ -251,7 +212,7 @@ class ProductEntityIndexer extends AbstractEntityIndexer
     }
 
     /**
-     * @param ProductInterface|Product|DataObject $item
+     * @param ProductInterface|CatalogProductModel|DataObject $item
      * @inheritdoc
      */
     protected function canItemBeIndexed(DataObject $item): bool
@@ -280,76 +241,5 @@ class ProductEntityIndexer extends AbstractEntityIndexer
         }
 
         return true;
-    }
-
-    /**
-     * @param ProductInterface|Product $product
-     * @return false|string
-     * @throws NoSuchEntityException
-     */
-    private function getUrl(ProductInterface $product)
-    {
-        $store = $this->storeManager->getStore($product->getStoreId());
-        return substr($product->getProductUrl(true), strlen($store->getBaseUrl()));
-    }
-
-    /**
-     * Return an array of product parent ids
-     * @param ProductInterface $product
-     * @return array
-     */
-    private function getGroupId(ProductInterface $product)
-    {
-        return $this->productDataProvider->getParentProductIds([$product->getId()]);
-    }
-
-    /**
-     * @param ProductInterface|Product $product
-     * @return false|string
-     * @throws NoSuchEntityException
-     */
-    private function getThumbnailUrl(ProductInterface $product)
-    {
-        return $this->getImageIdUrl($product, 'product_thumbnail_image');
-    }
-
-    /**
-     * @param ProductInterface|Product $product
-     * @return string
-     * @throws NoSuchEntityException
-     */
-    private function getImageUrl(ProductInterface $product)
-    {
-        return $this->getImageIdUrl($product, 'product_base_image');
-    }
-
-    /**
-     * Get product image URL by image_id
-     * @param ProductInterface|Product $product
-     * @param string $imageId
-     * @return string
-     * @throws NoSuchEntityException
-     */
-    private function getImageIdUrl(ProductInterface $product, string $imageId)
-    {
-        $imageUrl = $this->imageHelper->init($product, $imageId)->getUrl();
-        $uri = $this->urlHelper->getUriInstance($imageUrl);
-
-        $store = $this->storeManager->getStore($product->getStoreId());
-        if ($this->advancedConfig->isRemovePubFromAssetsUrl($store)) {
-            /** @link  https://github.com/magento/magento2/issues/9111 */
-            $uri = $this->urlHelper->removeFromUriPath($uri, ['pub']);
-        }
-
-        return (string)$uri->withScheme('');
-    }
-
-    /**
-     * @param ProductInterface $product
-     * @return array|null
-     */
-    private function getCategories(ProductInterface $product): ?array
-    {
-        return $product->getCategoryIds();
     }
 }

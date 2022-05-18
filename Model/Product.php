@@ -15,9 +15,11 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model;
 
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product\Type;
 use Magento\Catalog\Model\Product\Type\AbstractType;
 use Magento\Catalog\Model\ProductFactory;
+use Magento\Catalog\Model\Product as ProductModel;
 
 class Product
 {

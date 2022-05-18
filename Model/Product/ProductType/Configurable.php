@@ -12,9 +12,17 @@
  */
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Product\Price\ProductType;
+namespace HawkSearch\EsIndexing\Model\Product\ProductType;
 
-class Virtual extends DefaultType
+use Magento\Catalog\Api\Data\ProductInterface;
+
+class Configurable extends CompositeType
 {
-
+    /**
+     * @inheritdoc
+     */
+    public function getChildProducts(ProductInterface $product): array
+    {
+        return $product->getTypeInstance()->getUsedProducts($product);
+    }
 }

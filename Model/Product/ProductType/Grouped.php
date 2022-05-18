@@ -10,21 +10,20 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-namespace HawkSearch\EsIndexing\Model\Product\Price;
+declare(strict_types=1);
 
+namespace HawkSearch\EsIndexing\Model\Product\ProductType;
 
-use Magento\Framework\Exception\NotFoundException;
+use Magento\Catalog\Api\Data\ProductInterface;
 
-/**
- * Interface ProductTypePoolInterface
- * @package HawkSearch\EsIndexing\Model\Product\Price
- */
-interface ProductTypePoolInterface
+class Grouped extends CompositeType
 {
+
     /**
-     * @param string $typeCode
-     * @return ProductTypeInterface
-     * @throws NotFoundException
+     * @inheritDoc
      */
-    public function get(string $typeCode): ProductTypeInterface;
+    public function getChildProducts(ProductInterface $product): array
+    {
+        return $product->getTypeInstance()->getAssociatedProducts($product);
+    }
 }

@@ -38,16 +38,23 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
     private $typeName;
 
     /**
+     * @var AttributeHandlerInterface
+     */
+    private $attributeHandler;
+
+    /**
      * EntityTypeAbstract constructor.
      * @param EntityIndexerInterface $entityIndexer
      * @param ItemsProviderInterface $itemsProvider
      */
     public function __construct(
         EntityIndexerInterface $entityIndexer,
-        ItemsProviderInterface $itemsProvider
+        ItemsProviderInterface $itemsProvider,
+        AttributeHandlerInterface $attributeHandler
     ) {
         $this->entityIndexer = $entityIndexer;
         $this->itemsProvider = $itemsProvider;
+        $this->attributeHandler = $attributeHandler;
         $this->typeName = static::ENTITY_TYPE_NAME;
     }
 
@@ -82,5 +89,13 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
     public function getItemsProvider()
     {
         return $this->itemsProvider;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAttributeHandler()
+    {
+        return $this->attributeHandler;
     }
 }

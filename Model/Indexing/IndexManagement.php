@@ -190,6 +190,48 @@ class IndexManagement implements IndexManagementInterface
     }
 
     /**
+     * @inheritdoc
+     * @throws NotFoundException
+     * @throws InstructionException
+     */
+    public function indexItems(array $items, string $indexName)
+    {
+        $items = array_values($items);
+
+        if (!$items) {
+            return;
+        }
+
+        $data = [
+            'IndexName' => $indexName,
+            'Items' => $items
+        ];
+
+        $this->instructionManagerPool
+            ->get('hawksearch-esindexing')->executeByCode('indexItems', $data)->get();
+    }
+
+    /**
+     * @inheritdoc
+     * @throws NotFoundException
+     * @throws InstructionException
+     */
+    public function deleteItems(array $ids, string $indexName)
+    {
+        if (!$ids) {
+            return;
+        }
+
+        $data = [
+            'IndexName' => $indexName,
+            'Ids' => array_values($ids)
+        ];
+
+        $this->instructionManagerPool
+            ->get('hawksearch-esindexing')->executeByCode('deleteItems', $data)->get();
+    }
+
+    /**
      * Get current index used for searching
      * @return string|null
      * @throws InstructionException
@@ -305,41 +347,5 @@ class IndexManagement implements IndexManagementInterface
         return $isCurrent
             ? ($this->currentIndexCache[$storeId] ?? null)
             : ($this->indicesListCache[$storeId] ?? null);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function indexItems(array $items, string $indexName)
-    {
-        $items = array_values($items);
-
-        if ($items) {
-            $data = [
-                'IndexName' => $indexName,
-                'Items' => $items
-            ];
-
-            $response = $this->instructionManagerPool
-                ->get('hawksearch-esindexing')->executeByCode('indexItems', $data)->get();
-        }
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function deleteItems(array $ids, string $indexName)
-    {
-        if (!$ids) {
-            return;
-        }
-
-        $data = [
-            'IndexName' => $indexName,
-            'Ids' => array_values($ids)
-        ];
-
-        $response = $this->instructionManagerPool
-            ->get('hawksearch-esindexing')->executeByCode('deleteItems', $data)->get();
     }
 }

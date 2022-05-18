@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2021 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -10,19 +10,21 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-namespace HawkSearch\EsIndexing\Model\Product\Price;
+declare(strict_types=1);
 
-use Magento\Catalog\Api\Data\ProductInterface;
+namespace HawkSearch\EsIndexing\Model\Indexing\Entity\AttributeHandler;
 
-/**
- * Interface ProductTypeInterface
- * @package HawkSearch\EsIndexing\Model\Product\Price
- */
-interface ProductTypeInterface
+use HawkSearch\EsIndexing\Model\Indexing\Entity\AttributeHandlerInterface;
+use Magento\Framework\DataObject;
+
+class DataObjectHandler implements AttributeHandlerInterface
 {
+
     /**
-     * @param ProductInterface $product
-     * @return array
+     * @inheritDoc
      */
-    public function getPriceData(ProductInterface $product): array;
+    public function handle(DataObject $item, string $attributeCode)
+    {
+        return $item->getData($attributeCode);
+    }
 }

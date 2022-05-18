@@ -89,7 +89,6 @@ class Attributes
             'image_url',
             'name',
             'category'
-            //'group_id'
         ];
     }
 

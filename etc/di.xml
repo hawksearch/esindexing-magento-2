@@ -39,14 +39,19 @@
                 type="HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher"/>
     <preference for="HawkSearch\EsIndexing\Model\Product\PriceManagementInterface"
                 type="HawkSearch\EsIndexing\Model\Product\PriceManagement"/>
-    <preference for="HawkSearch\EsIndexing\Model\Product\Price\ProductTypePoolInterface"
-                type="HawkSearch\EsIndexing\Model\Product\Price\ProductTypePool"/>
+    <preference for="HawkSearch\EsIndexing\Model\Product\ProductTypeInterface"
+                type="HawkSearch\EsIndexing\Model\Product\ProductType\Simple"/>
+    <preference for="HawkSearch\EsIndexing\Model\Product\ProductTypePoolInterface"
+                type="HawkSearch\EsIndexing\Model\Product\ProductTypePool"/>
     <preference for="HawkSearch\EsIndexing\Api\LandingPageManagementInterface"
                 type="HawkSearch\EsIndexing\Model\LandingPageManagement"/>
     <preference for="HawkSearch\EsIndexing\Logger\LoggerFactoryInterface"
                 type="HawkSearch\EsIndexing\Logger\LoggerFactory"/>
     <preference for="HawkSearch\EsIndexing\Logger\LoggerConfigInterface"
                 type="HawkSearch\EsIndexing\Logger\LoggerConfig"/>
+    <preference for="HawkSearch\EsIndexing\Model\Indexing\Entity\AttributeHandlerInterface"
+                type="HawkSearch\EsIndexing\Model\Indexing\Entity\AttributeHandler\DataObjectHandler"/>
+
 
     <!-- Configs -->
     <type name="HawkSearch\EsIndexing\Model\Config\Products">
@@ -621,34 +626,42 @@
             </argument>
         </arguments>
     </type>
+
     <type name="HawkSearch\EsIndexing\Model\Indexing\Entity\Type\HierarchyEntityType">
         <arguments>
             <argument name="entityIndexer" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\HierarchyEntityIndexer\Proxy</argument>
             <argument name="itemsProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\HierarchyItemsProvider\Proxy</argument>
+            <argument name="attributeHandler" xsi:type="object">HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler\Composite</argument>
         </arguments>
     </type>
+
     <type name="HawkSearch\EsIndexing\Model\Indexing\Entity\Type\ProductEntityType">
         <arguments>
             <argument name="entityIndexer" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ProductEntityIndexer\Proxy</argument>
             <argument name="itemsProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ProductItemsProvider\Proxy</argument>
+            <argument name="attributeHandler" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\Composite</argument>
         </arguments>
     </type>
+
     <type name="HawkSearch\EsIndexing\Model\Indexing\Entity\Type\ContentPageEntityType">
         <arguments>
             <argument name="entityIndexer" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ContentPageEntityIndexer\Proxy</argument>
             <argument name="itemsProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ContentPageItemsProvider\Proxy</argument>
         </arguments>
     </type>
+
     <type name="HawkSearch\EsIndexing\Model\Indexing\HierarchyEntityIndexer\Proxy">
         <arguments>
             <argument name="shared" xsi:type="boolean">false</argument>
         </arguments>
     </type>
+
     <type name="HawkSearch\EsIndexing\Model\Indexing\ProductEntityIndexer\Proxy">
         <arguments>
             <argument name="shared" xsi:type="boolean">false</argument>
         </arguments>
     </type>
+
     <type name="HawkSearch\EsIndexing\Model\Indexing\ContentPageEntityIndexer\Proxy">
         <arguments>
             <argument name="shared" xsi:type="boolean">false</argument>
@@ -658,6 +671,31 @@
     <type name="HawkSearch\EsIndexing\Model\Indexing\ProductItemsProvider">
         <arguments>
             <argument name="productRepository" xsi:type="object">HawkSearch\EsIndexing\Model\ProductRepository</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler\Composite"
+                 type="HawkSearch\EsIndexing\Model\Indexing\Entity\AttributeHandler\Composite">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="__DEFAULT_HANDLER__" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\AttributeHandler\DataObjectHandler</item>
+                <item name="HierarchyId" xsi:type="object">HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler\HierarchyId</item>
+                <item name="Name" xsi:type="object">HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler\Name</item>
+                <item name="ParentHierarchyId" xsi:type="object">HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler\ParentHierarchyId</item>
+                <item name="IsActive" xsi:type="object">HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler\IsActive</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="HawkSearch\EsIndexing\Model\Product\Attribute\Handler\Composite">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="__DEFAULT_HANDLER__" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\DefaultHandler</item>
+                <item name="url" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\Url</item>
+                <item name="thumbnail_url" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\ImageUrl</item>
+                <item name="image_url" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\ImageUrl</item>
+                <item name="category" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\Category</item>
+            </argument>
         </arguments>
     </type>
 
@@ -671,15 +709,12 @@
         </arguments>
     </type>
 
-    <type name="HawkSearch\EsIndexing\Model\Product\Price\ProductTypePool">
+    <type name="HawkSearch\EsIndexing\Model\Product\ProductTypePool">
         <arguments>
             <argument name="types" xsi:type="array">
-                <item name="simple" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Price\ProductType\Simple</item>
-                <item name="virtual" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Price\ProductType\Virtual</item>
-                <item name="downloadable" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Price\ProductType\Downloadable</item>
-                <item name="configurable" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Price\ProductType\Configurable</item>
-                <item name="bundle" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Price\ProductType\Bundle</item>
-                <item name="grouped" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Price\ProductType\Grouped</item>
+                <item name="configurable" xsi:type="string">HawkSearch\EsIndexing\Model\Product\ProductType\Configurable</item>
+                <item name="bundle" xsi:type="string">HawkSearch\EsIndexing\Model\Product\ProductType\Bundle</item>
+                <item name="grouped" xsi:type="string">HawkSearch\EsIndexing\Model\Product\ProductType\Grouped</item>
             </argument>
         </arguments>
     </type>
@@ -735,6 +770,19 @@
             <argument name="bulkManagement" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\RetryBulkManagement</argument>
         </arguments>
     </type>
+
+    <type name="HawkSearch\EsIndexing\Model\Product\Attribute\Handler\Composite">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="url" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\ImageUrl</item>
+                <item name="image_url" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\ImageUrl</item>
+                <item name="thumbnail_url" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\ImageUrl</item>
+                <item name="category" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\Category</item>
+                <item name="__DEFAULT_HANDLER__" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\DefaultHandler</item>
+            </argument>
+        </arguments>
+    </type>
+
     <!-- END Types -->
 
     <!-- Plugins -->

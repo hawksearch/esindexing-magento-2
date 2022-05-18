@@ -12,7 +12,7 @@
  */
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Product\Price\ProductType;
+namespace HawkSearch\EsIndexing\Model\Product\ProductType;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product;
@@ -20,21 +20,14 @@ use Magento\Catalog\Model\Product;
 abstract class CompositeType extends DefaultType
 {
     /**
-     * Retrieve child products
-     *
-     * @return Product[]
-     */
-    abstract protected function getChildProducts(Product $product);
-
-    /**
      * Get minimal and maximal prices for composite products
-     * @param Product $product
+     * @param Product|ProductInterface $product
      * @return float[]|array [min, max]
      */
-    protected function getMinMaxPrice(Product $product)
+    protected function getMinMaxPrice(ProductInterface $product)
     {
-        $min      = PHP_INT_MAX;
-        $max      = 0;
+        $min = PHP_INT_MAX;
+        $max = 0;
 
         if ($this->getChildProducts($product)) {
             foreach ($this->getChildProducts($product) as $subProduct) {

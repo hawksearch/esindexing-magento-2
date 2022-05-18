@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2021 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -12,18 +12,21 @@
  */
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Product\Price\ProductType;
+namespace HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler;
 
-use Magento\Catalog\Model\Product;
+use HawkSearch\EsIndexing\Model\Indexing\Entity\AttributeHandlerInterface;
+use Magento\Catalog\Api\Data\CategoryInterface;
+use Magento\Framework\DataObject;
 
-class Grouped extends CompositeType
+class HierarchyId implements AttributeHandlerInterface
 {
 
     /**
      * @inheritDoc
+     * @param CategoryInterface $item
      */
-    protected function getChildProducts(Product $product)
+    public function handle(DataObject $item, string $attributeCode)
     {
-        return $product->getTypeInstance()->getAssociatedProducts($product);
+        return (int)$item->getId();
     }
 }

@@ -21,19 +21,10 @@ use Magento\Catalog\Api\Data\CategoryInterface;
 use Magento\Catalog\Model\Category;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
-use Magento\Store\Model\App\Emulation;
 use Magento\Store\Model\StoreManagerInterface;
 
 class HierarchyEntityIndexer extends AbstractEntityIndexer
 {
-    //TODO: replace with attributeDataProvider interface
-    public const ADDITIONAL_ATTRIBUTES_HANDLERS = [
-        'HierarchyId' => 'getHierarchyId',
-        'Name' => 'getName',
-        'ParentHierarchyId' => 'getParentHierarchyId',
-        'IsActive' => 'getIsActive',
-    ];
-
     public const PARENT_HIERARCHY_NAME = 'category';
 
     /**
@@ -72,22 +63,6 @@ class HierarchyEntityIndexer extends AbstractEntityIndexer
             $indexingContext
         );
         $this->hierarchyManagement = $hierarchyManagement;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getAttributeValue(DataObject $item, string $attribute)
-    {
-        $value = '';
-        if (isset(static::ADDITIONAL_ATTRIBUTES_HANDLERS[$attribute])
-            && is_callable([$this, static::ADDITIONAL_ATTRIBUTES_HANDLERS[$attribute]])
-        ) {
-            $value = $this->{self::ADDITIONAL_ATTRIBUTES_HANDLERS[$attribute]}($item);
-        } else {
-            $value = $item->getData($attribute);
-        }
-        return $value;
     }
 
     /**
@@ -155,49 +130,5 @@ class HierarchyEntityIndexer extends AbstractEntityIndexer
     protected function deleteItemsFromIndex($ids, $indexName)
     {
         $this->hierarchyManagement->deleteHierarchyItems($ids, $indexName);
-    }
-
-    /**
-     * @param CategoryInterface $category
-     * @return int
-     */
-    private function getHierarchyId(CategoryInterface $category)
-    {
-        return $this->getEntityId($category);
-    }
-
-    /**
-     * @param CategoryInterface $category
-     * @return string|null
-     */
-    private function getName(CategoryInterface $category)
-    {
-        if ($category->getLevel() == 1) {
-            return static::PARENT_HIERARCHY_NAME;
-        } else {
-            return $category->getName();
-        }
-    }
-
-    /**
-     * @param CategoryInterface $category
-     * @return int
-     */
-    private function getParentHierarchyId(CategoryInterface $category)
-    {
-        if ($category->getLevel() == 1) {
-            return 0;
-        } else {
-            return (int)$category->getParentId();
-        }
-    }
-
-    /**
-     * @param CategoryInterface $category
-     * @return bool
-     */
-    private function getIsActive(CategoryInterface $category)
-    {
-        return (bool)$category->getIsActive();
     }
 }
