@@ -12,9 +12,6 @@
  */
 namespace HawkSearch\EsIndexing\Model\Product;
 
-
-use Magento\Framework\Exception\NotFoundException;
-
 interface ProductTypePoolInterface
 {
     /**

@@ -14,9 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Product;
 
-use HawkSearch\EsIndexing\Model\Product\ProductTypePoolInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Framework\Exception\NotFoundException;
 
 /**
  * Class PriceManagement
@@ -24,7 +22,6 @@ use Magento\Framework\Exception\NotFoundException;
  */
 class PriceManagement implements PriceManagementInterface
 {
-    private const DEFAULT_PRICE_PRODUCT_TYPE = 'simple';
 
     /**
      * @var ProductTypePoolInterface
@@ -37,8 +34,7 @@ class PriceManagement implements PriceManagementInterface
      */
     public function __construct(
         ProductTypePoolInterface $productTypePool
-    )
-    {
+    ) {
         $this->productTypePool = $productTypePool;
     }
 
@@ -47,11 +43,7 @@ class PriceManagement implements PriceManagementInterface
      */
     public function collectPrices(ProductInterface $product, array &$itemData)
     {
-        try {
-            $priceProvider = $this->productTypePool->get($product->getTypeId());
-        } catch (NotFoundException $e) {
-            $priceProvider = $this->productTypePool->get(self::DEFAULT_PRICE_PRODUCT_TYPE);
-        }
+        $priceProvider = $this->productTypePool->get($product->getTypeId());
         $itemData = array_merge($itemData, $priceProvider->getPriceData($product));
     }
 }

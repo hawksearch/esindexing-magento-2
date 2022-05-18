@@ -18,7 +18,6 @@ use HawkSearch\EsIndexing\Model\Indexing\Entity\AttributeHandlerInterface;
 use HawkSearch\EsIndexing\Model\Product\ProductTypePoolInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\DataObject;
-use Magento\Framework\Exception\NotFoundException;
 
 class Composite extends \HawkSearch\EsIndexing\Model\Indexing\Entity\AttributeHandler\Composite
 {
