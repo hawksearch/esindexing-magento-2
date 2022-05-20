@@ -87,7 +87,7 @@ class ProductItemsProvider implements ItemsProviderInterface
         }
 
         //@TODO Define $excludeNotVisibleProducts in system configuration
-        $excludeNotVisibleProducts = false;
+        $excludeNotVisibleProducts = true;
 
         if ($excludeNotVisibleProducts) {
             $this->searchCriteriaBuilder->addFilter(
