@@ -771,18 +771,6 @@
         </arguments>
     </type>
 
-    <type name="HawkSearch\EsIndexing\Model\Product\Attribute\Handler\Composite">
-        <arguments>
-            <argument name="handlers" xsi:type="array">
-                <item name="url" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\ImageUrl</item>
-                <item name="image_url" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\ImageUrl</item>
-                <item name="thumbnail_url" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\ImageUrl</item>
-                <item name="category" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\Category</item>
-                <item name="__DEFAULT_HANDLER__" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\DefaultHandler</item>
-            </argument>
-        </arguments>
-    </type>
-
     <!-- END Types -->
 
     <!-- Plugins -->
