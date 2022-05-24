@@ -9,16 +9,18 @@
                 <template v-else-if="suggestions.Products.length || suggestions.Content.length">
                     <li class="hawk-autosuggest-inner-list" v-if="suggestions.Products.length">
                         <h3>{{ suggestions.ProductHeading }}</h3>
-                        <suggestion-item v-for="item in suggestions.Products" :item="item" :key="item.Results.DocId" @itemselected="onItemSeleted"></suggestion-item>
+                        <ul>
+                            <suggestion-item v-for="item in suggestions.Products" :item="item" :key="item.Results.DocId" @itemselected="onItemSeleted"></suggestion-item>
+                        </ul>
                         <div @click="viewAllMatches" class="view-matches">View all matches</div>
                     </li>
                     <li class="hawk-autosuggest-inner-list" v-if="suggestions.Content.length">
                         <content-container :suggestions="suggestions"></content-container>
                     </li>
-                    <div class="autosuggest-inner-container" v-if="suggestions.Categories.length || suggestions.Popular.length">
+                    <li class="hawk-autosuggest-inner-list" v-if="suggestions.Categories.length || suggestions.Popular.length">
                         <categories-container :suggestions="suggestions"></categories-container>
                         <popular-container :suggestions="suggestions"></popular-container>
-                    </div>
+                    </li>
                 </template>
                 <template v-else>
                     <li class="hawk-autosuggest-menu__item">{{ $t('No Results') }}</li>
@@ -26,4 +28,43 @@
             </ul>
         </template>
     </div>
+</script>
+
+<script id="vue-hawksearch-content-container" type="x-template">
+    <div v-if="suggestions && suggestions.Content && suggestions.Content.length">
+        <h3>{{ suggestions.ContentHeading }}</h3>
+        <ul>
+            <li v-for="content in suggestions.Content" :key="content.Value" class="autosuggest-menu__item">
+                <div v-html="content.Value"></div>
+            </li>
+        </ul>
+    </div>
+</script>
+<script id="vue-hawksearch-popular-container" type="x-template">
+    <div v-if="suggestions && suggestions.Popular && suggestions.Popular.length">
+        <h3>{{ suggestions.PopularHeading }}</h3>
+        <ul>
+            <li v-for="popular in suggestions.Popular" :key="popular.Value" class="autosuggest-menu__item">
+                <div v-html="popular.Value"></div>
+            </li>
+        </ul>
+    </div>
+</script>
+<script id="vue-hawksearch-categories-container" type="x-template">
+    <div v-if="suggestions && suggestions.Categories && suggestions.Categories.length">
+        <h3>{{ suggestions.CategoryHeading }}</h3>
+        <ul>
+            <li v-for="category in suggestions.Categories" :key="category.Value" class="autosuggest-menu__item">
+                <div v-html="category.Value"></div>
+            </li>
+        </ul>
+    </div>
+</script>
+<script id="vue-hawksearch-suggestion-item" type="x-template">
+    <li @click="onClick">
+        <div v-if="getThumb()">
+            <img class="hawk-sqItemImage-thumb" :src="getThumb()" />
+        </div>
+        <span class="p-name">{{ getTitle() }}</span>
+    </li>
 </script>
