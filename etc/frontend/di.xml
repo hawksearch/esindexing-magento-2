@@ -40,12 +40,10 @@
                 <item name="VueConnection" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueConnectionConfigProcessor</item>
                 <item name="VueTab" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueTabConfigProcessor</item>
                 <item name="VueSearch" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueSearchConfigProcessor</item>
+                <item name="VueSearchBox" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueSearchBoxConfigProcessor</item>
                 <item name="VueParamsMapping" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueParamsMappingProcessor</item>
                 <item name="VueAdditionalParameters" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueAdditionalParametersProcessor</item>
             </argument>
         </arguments>
     </virtualType>
 </config>
-
-
-

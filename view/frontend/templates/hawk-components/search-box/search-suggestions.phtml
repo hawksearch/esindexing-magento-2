@@ -1,0 +1,29 @@
+<!-- SearchSuggestions component -->
+<script id="vue-hawksearch-search-suggestions" type="x-template">
+    <div class="hawk-autosuggest-menu">
+        <template v-if="fieldFocused && (loadingSuggestions || suggestions)">
+            <ul class="hawk-dropdown-menu hawk-autosuggest-menu__list hawk-autosuggest-outer-list">
+                <template v-if="loadingSuggestions">
+                    <li class="hawk-autosuggest-menu__item">{{ $t('Loading') }}...</li>
+                </template>
+                <template v-else-if="suggestions.Products.length || suggestions.Content.length">
+                    <li class="hawk-autosuggest-inner-list" v-if="suggestions.Products.length">
+                        <h3>{{ suggestions.ProductHeading }}</h3>
+                        <suggestion-item v-for="item in suggestions.Products" :item="item" :key="item.Results.DocId" @itemselected="onItemSeleted"></suggestion-item>
+                        <div @click="viewAllMatches" class="view-matches">View all matches</div>
+                    </li>
+                    <li class="hawk-autosuggest-inner-list" v-if="suggestions.Content.length">
+                        <content-container :suggestions="suggestions"></content-container>
+                    </li>
+                    <div class="autosuggest-inner-container" v-if="suggestions.Categories.length || suggestions.Popular.length">
+                        <categories-container :suggestions="suggestions"></categories-container>
+                        <popular-container :suggestions="suggestions"></popular-container>
+                    </div>
+                </template>
+                <template v-else>
+                    <li class="hawk-autosuggest-menu__item">{{ $t('No Results') }}</li>
+                </template>
+            </ul>
+        </template>
+    </div>
+</script>

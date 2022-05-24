@@ -40,24 +40,6 @@ $getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
 ?>
 
 <!-- HawkSearch Vue SDK part -->
-<script id="hawksearch-config" type="application/json">
-    {
-        "clientGuid": "fc799c1399824b6f958c2f7251160ddb",
-        "apiUrl": "https://searchapi-dev.hawksearch.net/",
-        "tabConfig": {
-            "alwaysOn": false
-        },
-        "searchConfig": {
-            "initialSearch": true,
-            "scrollUpOnRefresh": false
-        },
-        "paramsMapping": {
-            "keyword": "q"
-        },
-        "urlPart": "<?= $getAddTocartUrl(); ?>"
-    }
-</script>
-
 <script>
     function addToCart(args) {
         if (this.$parent && this.$parent.$refs.hasOwnProperty('add-to-cart-form')) {
@@ -183,4 +165,3 @@ $getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
     }
 }
 </script>
-

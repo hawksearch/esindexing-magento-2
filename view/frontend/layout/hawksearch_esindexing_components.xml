@@ -17,6 +17,9 @@
             <block class="Magento\Framework\View\Element\Template"
                    name="hawksearch.component.search-box.search-box"
                    template="HawkSearch_EsIndexing::hawk-components/search-box/search-box.phtml"/>
+            <block class="Magento\Framework\View\Element\Template"
+                   name="hawksearch.component.search-box.search-suggestions"
+                   template="HawkSearch_EsIndexing::hawk-components/search-box/search-suggestions.phtml"/>
         </referenceBlock>
     </body>
 </page>
