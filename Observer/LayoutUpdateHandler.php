@@ -39,11 +39,33 @@ class LayoutUpdateHandler implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        if ($this->searchConfig->isSearchEnabled()) {
-            /** @var Layout $layout */
-            $layout = $observer->getData('layout');
-            $layout->getUpdate()->addHandle('hawksearch_esindexing_default_handle');
-            $layout->getUpdate()->addHandle('hawksearch_esindexing_components');
+        /** @var Layout $layout */
+        $layout = $observer->getData('layout');
+        $action = $observer->getData('full_action_name');
+
+        /** @TODO Create a configuration setting to track if Categories are managed by Hawksearch */
+        $isManageCategories = true;
+        $handles = [];
+        switch ($action) {
+            case 'catalogsearch_result_index':
+                if ($this->searchConfig->isSearchEnabled()) {
+                    $handles[] = 'hawksearch_catalogsearch_result_index';
+                }
+                break;
+            case 'catalog_category_view':
+                if ($isManageCategories) {
+                    $handles[] = 'hawksearch_catalog_category_view';
+                }
+                break;
+            case 'hawksearch_landingPage_view':
+                break;
         }
+
+        if ($this->searchConfig->isSearchEnabled() || $isManageCategories) {
+            $handles[] = 'hawksearch_esindexing_default_handle';
+            $handles[] = 'hawksearch_esindexing_components';
+        }
+
+        $layout->getUpdate()->addHandle($handles);
     }
 }

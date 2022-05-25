@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!--
+  /**
+   * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+   *
+   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+   * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+   * IN THE SOFTWARE.
+   */
+  -->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <!-- Remove product listing block (including toolbar) from search results page -->
+            <referenceBlock name="category.products" remove="true" />
+            <block class="Magento\Framework\View\Element\Template" before="-" name="hawksearch.search.result" template="HawkSearch_EsIndexing::results.phtml"/>
+            <block class="Magento\Framework\View\Element\Template" before="-" name="hawksearch.search.box" template="HawkSearch_EsIndexing::searchbox.phtml"/>
+        </referenceContainer>
+
+        <referenceContainer name="sidebar.main">
+            <block class="Magento\Framework\View\Element\Template" before="-" name="hawksearch.leftnav" template="HawkSearch_EsIndexing::facets.phtml"/>
+        </referenceContainer>
+
+        <referenceBlock name="main.content">
+            !-- Add Hawksearch product listing block in page main container -->
+
+            <!-- This is the template for testing purposes. It can be enable as a testing playground -->
+            <block class="Magento\Framework\View\Element\Template" before="-" name="hawksearch.content" template="HawkSearch_EsIndexing::contentwrapper.phtml"/>
+        </referenceBlock>
+
+        <!-- Remove Layered Navigation block from the left sidebar and replace it with Hawksearch facets -->
+        <referenceContainer name="catalog.leftnav" remove="true" />
+
+
+        <!-- After Enabling this the entire left sidebar block will be removed form the page -->
+        <!--<referenceContainer name="sidebar.main" remove="true" />
+        <referenceContainer name="sidebar.additional" remove="true" />-->
+    </body>
+</page>

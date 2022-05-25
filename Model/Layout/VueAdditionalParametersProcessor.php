@@ -59,10 +59,13 @@ class VueAdditionalParametersProcessor implements LayoutConfigProcessorInterface
      */
     public function process($jsConfig)
     {
-        $jsConfig = $jsConfig ?? [];
+        $params = [];
         if ($category = $this->getCategoryPage()) {
-            $jsConfig['CustomUrl'] = $this->getCategoryPath($category);
+            $params['CustomUrl'] = $this->getCategoryPath($category);
         }
+
+        $jsConfig = $jsConfig ?? [];
+        $jsConfig['additionalParameters'] = $params;
 
         return $jsConfig;
     }
@@ -73,9 +76,12 @@ class VueAdditionalParametersProcessor implements LayoutConfigProcessorInterface
      */
     protected function getCategoryPath(Category $category)
     {
+        $path = null;
+
         if ($category->hasData('request_path') && $category->getRequestPath() != null) {
-            return $category->getRequestPath();
+            $path = $category->getRequestPath();
         }
+
         $rewrite = $this->urlFinder->findOneByData(
             [
                 UrlRewrite::ENTITY_ID => $category->getId(),
@@ -84,9 +90,14 @@ class VueAdditionalParametersProcessor implements LayoutConfigProcessorInterface
             ]
         );
         if ($rewrite) {
-            return $rewrite->getRequestPath();
+            $path = $rewrite->getRequestPath();
         }
-        return null;
+
+        if ($path) {
+
+        }
+
+        return $path;
     }
 
     /**

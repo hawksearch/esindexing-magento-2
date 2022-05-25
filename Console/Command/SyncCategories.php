@@ -378,7 +378,7 @@ class SyncCategories extends Command
             $categories->load();
             foreach ($categories as $cat) {
                 $cats[] = [
-                    'hawkurl' => sprintf("/%s", $this->getRequestPath($cat)),
+                    'hawkurl' => sprintf("%s", $this->getRequestPath($cat)),
                     'name' => $cat->getName(),
                     'catid' => $cat->getId(),
                     'pid' => $cat->getParentId()
@@ -427,7 +427,7 @@ RuleType="Group" Operator="All" />'
         $rule = $rules->addChild('Rule');
         $rule->addAttribute('RuleType', 'Eval');
         $rule->addAttribute('Operator', 'None');
-        $rule->addChild('Field', 'facet:category_id');
+        $rule->addChild('Field', 'facet:category');
         $rule->addChild('Condition', 'is');
         $rule->addChild('Value', $id);
         $xml->addChild('Field');
