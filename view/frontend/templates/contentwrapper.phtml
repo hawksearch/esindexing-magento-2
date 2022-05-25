@@ -147,18 +147,6 @@ $getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
 
 <script type="text/x-magento-init">
 {
-    "*": {
-        "Magento_Ui/js/core/app": {
-            "components": {
-                "koexample": {
-                    "component": "HawkSearch_EsIndexing/js/koexample",
-                    "template": "koexample-content",
-                    "urlPart": "<?= $getAddTocartUrl(); ?>"
-                }
-            }
-        },
-        "hawksearchVueSDK": {}
-    },
     "[data-role=tocart-form], .form.map.checkout": {
         "catalogAddToCart": {
         }

@@ -26,7 +26,7 @@
         </referenceContainer>
 
         <referenceBlock name="main.content">
-            !-- Add Hawksearch product listing block in page main container -->
+            <!-- Add Hawksearch product listing block in page main container -->
 
             <!-- This is the template for testing purposes. It can be enable as a testing playground -->
             <block class="Magento\Framework\View\Element\Template" before="-" name="hawksearch.content" template="HawkSearch_EsIndexing::contentwrapper.phtml"/>
