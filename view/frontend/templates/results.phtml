@@ -8,11 +8,11 @@
 
 <script id="vue-hawksearch-results" type="x-template">
     <div class="hawk-results" @click="onClick">
+        <banner zone="FeaturedTop" />
+
         <autocorrect-suggestions />
 
         <search-results-label />
-
-        <banner />
 
         <selections />
 
@@ -37,6 +37,9 @@
                 <tool-row />
             </div>
         </template>
+
+        <banner zone="FeaturedBottom" />
+        <banner zone="FeaturedBottom2" />
 
     </div>
 </script>
