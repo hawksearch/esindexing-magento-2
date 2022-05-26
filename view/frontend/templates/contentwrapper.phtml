@@ -64,7 +64,7 @@ $getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
 
 <script id="vue-hawksearch-result-item-grid" type="x-template">
     <div class="item product product-item">
-        <div class="product-item-info" data-container="product-grid">
+        <div class="product-item-info" data-container="product-grid" @click="onClick">
             <span class="product-image-container" style="width:215px;">
                 <span class="product-image-wrapper" style="padding-bottom: 125%;">
                     <img class="product-image-photo" v-bind:src="getField('image_url')" />
@@ -105,10 +105,10 @@ $getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
 
 <script id="vue-hawksearch-result-item-list" type="x-template">
     <div class="item product product-item">
-        <div class="product-item-info" data-container="product-grid">
+        <div class="product-item-info" data-container="product-grid" @click="onClick">
             <span class="product-image-container" style="width:215px;">
                 <span class="product-image-wrapper" style="padding-bottom: 125%;">
-                    <img class="product-image-photo" src="https://hawksearch-es-dev-m2.test/media/catalog/product/cache/" />
+                    <img class="product-image-photo" v-bind:src="getField('image_url')" />
                 </span>
             </span>
             <div class="product details product-item-details">

@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) 2021 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
@@ -9,10 +10,20 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-var config = {
-    "map": {
-        "*": {
-            "hawksearchVueSDK": "HawkSearch_EsIndexing/js/vue-hawksearch-app"
-        }
+declare(strict_types=1);
+
+namespace HawkSearch\EsIndexing\Model\Layout;
+
+class VueSuggestionItemConfigProcessor extends VueResultItemConfigProcessor
+{
+    /**
+     * @inheritDoc
+     */
+    public function process($jsConfig)
+    {
+        $jsConfig = parent::process($jsConfig);
+        $jsConfig['suggestionItem'] = $jsConfig['resultItem'];
+
+        return $jsConfig;
     }
-};
+}
