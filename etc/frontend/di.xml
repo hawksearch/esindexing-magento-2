@@ -42,6 +42,8 @@
                 <item name="VueSearch" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueSearchConfigProcessor</item>
                 <item name="VueSearchBox" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueSearchBoxConfigProcessor</item>
                 <item name="VueParamsMapping" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueParamsMappingProcessor</item>
+                <item name="VueResultItem" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueResultItemConfigProcessor</item>
+                <item name="VueSuggestionItem" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueSuggestionItemConfigProcessor</item>
                 <item name="VueAdditionalParameters" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueAdditionalParametersProcessor</item>
             </argument>
         </arguments>
