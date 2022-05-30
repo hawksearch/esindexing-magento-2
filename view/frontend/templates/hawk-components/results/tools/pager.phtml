@@ -1,0 +1,64 @@
+<?php
+/**
+ * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ */
+
+/** @var Magento\Framework\View\Element\Template $block */
+/** @var \Magento\Framework\Escaper $escaper */
+
+?>
+<!-- Pager component -->
+<script id="vue-hawksearch-pager" type="x-template">
+    <div class="hawk-pagination__controls">
+        <div class="hawk-pagination__controls">
+            <template v-if="isLink">
+                <a class="hawk-pagination__item" :href="previousPageLink">
+                    <left-chevron-svg icon-class="hawk-pagination__left"/>
+                </a>
+            </template>
+            <template v-else>
+                <button class="hawk-pagination__item" @click="goToPreviousPage">
+                    <left-chevron-svg icon-class="hawk-pagination__left"/>
+                </button>
+            </template>
+            <input type="number" :value="page" @change="onChange"
+                   :class="hasError ? 'hawk-pagination__input error' : 'hawk-pagination__input'" min="1"
+                   :max="totalPages"/>
+            <span class="hawk-pagination__total-text"><span class="break"></span> of {{ totalPages }}</span>
+            <template v-if="isLink">
+                <a class="hawk-pagination__item" :href="nextPageLink">
+                    <right-chevron-svg icon-class="hawk-pagination__right"/>
+                </a>
+            </template>
+            <template v-else>
+                <button class="hawk-pagination__item" @click="goToNextPage">
+                    <right-chevron-svg icon-class="hawk-pagination__right"/>
+                </button>
+            </template>
+        </div>
+
+        <div class="hawk-pagination__controls">
+            <span class="toolbar-number">
+                <template v-if="totalPages > 1">
+                    Items {{ (pagination.MaxPerPage * (page - 1) + 1) }}
+                    to {{ (pagination.NofResults > pagination.MaxPerPage * page) ? pagination.MaxPerPage * page : pagination.NofResults}}
+                    of {{ pagination.NofResults }} total
+                </template>
+                <template v-else-if="pagination.NofResults == 1">
+                    {{ pagination.NofResults }} Item
+                </template>
+                <template v-else>
+                    {{ pagination.NofResults }} Item(s)
+                </template>
+            </span>
+        </div>
+    </div>
+</script>
