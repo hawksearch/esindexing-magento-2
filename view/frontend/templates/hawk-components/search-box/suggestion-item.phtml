@@ -1,7 +1,9 @@
 <!-- SuggestionItem component -->
 <script id="vue-hawksearch-suggestion-item" type="x-template">
     <li @click="onClick">
-        <img class="hawk-sqItemImage-thumb" v-bind:src="getField('thumbnail_url')" />
+        <template v-if="getThumb('thumbnail_url')">
+            <img class="hawk-sqItemImage-thumb" :src="getThumb('thumbnail_url')" />
+        </template>
         <span class="p-name">{{ getTitle() }}</span>
     </li>
 </script>
