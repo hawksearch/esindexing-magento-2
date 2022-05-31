@@ -50,7 +50,8 @@ class ContentPageEntityIndexer extends AbstractEntityIndexer
         return [
             'title',
             'content_heading',
-            'content'
+            'content',
+            'url'
         ];
     }
 }

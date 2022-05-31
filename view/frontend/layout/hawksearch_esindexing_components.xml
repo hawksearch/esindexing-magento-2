@@ -23,6 +23,15 @@
             <block class="Magento\Framework\View\Element\Template"
                    name="hawksearch.component.search-box.search-suggestions"
                    template="HawkSearch_EsIndexing::hawk-components/search-box/search-suggestions.phtml"/>
+            <block class="Magento\Framework\View\Element\Template"
+                   name="hawksearch.component.search-box.popular-container"
+                   template="HawkSearch_EsIndexing::hawk-components/search-box/popular-container.phtml"/>
+            <block class="Magento\Framework\View\Element\Template"
+                   name="hawksearch.component.search-box.content-container"
+                   template="HawkSearch_EsIndexing::hawk-components/search-box/content-container.phtml"/>
+            <block class="Magento\Framework\View\Element\Template"
+                   name="hawksearch.component.search-box.categories-container"
+                   template="HawkSearch_EsIndexing::hawk-components/search-box/categories-container.phtml"/>
         </referenceBlock>
     </body>
 </page>

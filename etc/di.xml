@@ -647,6 +647,7 @@
         <arguments>
             <argument name="entityIndexer" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ContentPageEntityIndexer\Proxy</argument>
             <argument name="itemsProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ContentPageItemsProvider\Proxy</argument>
+            <argument name="attributeHandler" xsi:type="object">HawkSearch\EsIndexing\Model\ContentPage\Attribute\Handler\Composite</argument>
         </arguments>
     </type>
 
@@ -698,6 +699,16 @@
             </argument>
         </arguments>
     </type>
+
+    <virtualType name="HawkSearch\EsIndexing\Model\ContentPage\Attribute\Handler\Composite"
+                 type="HawkSearch\EsIndexing\Model\Indexing\Entity\AttributeHandler\Composite">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="__DEFAULT_HANDLER__" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\AttributeHandler\DataObjectHandler</item>
+                <item name="url" xsi:type="object">HawkSearch\EsIndexing\Model\ContentPage\Attribute\Handler\Url</item>
+            </argument>
+        </arguments>
+    </virtualType>
 
     <type name="HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicResolverComposite">
         <arguments>

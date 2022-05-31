@@ -1,0 +1,15 @@
+<!-- PopularContainer component -->
+<script id="vue-hawksearch-popular-container" type="x-template">
+    <div v-if="suggestions && suggestions.Popular && suggestions.Popular.length">
+        <h3>{{ suggestions.PopularHeading }}</h3>
+        <ul>
+            <!-- @TODO @click Modificator should be removed after fixing Vue SDK issue which blocks link  clicks -->
+            <li v-for="popular in suggestions.Popular"
+                :key="popular.Value"
+                class="autosuggest-menu__item"
+                @click="location.assign(popular.Url);">
+                <a :href="popular.Url" v-html="popular.Value" />
+            </li>
+        </ul>
+    </div>
+</script>

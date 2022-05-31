@@ -1,0 +1,15 @@
+<!-- ContentContainer component -->
+<script id="vue-hawksearch-content-container" type="x-template">
+    <div v-if="suggestions && suggestions.Content && suggestions.Content.length">
+        <h3>{{ suggestions.ContentHeading }}</h3>
+        <ul>
+            <!-- @TODO @click inline action should be removed after fixing Vue SDK issue which blocks link clicks -->
+            <li v-for="content in suggestions.Content"
+                :key="content.Value"
+                class="autosuggest-menu__item"
+                @click="location.assign(content.Url);">
+                <a :href="content.Url" v-html="content.Value" />
+            </li>
+        </ul>
+    </div>
+</script>
