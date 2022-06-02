@@ -89,7 +89,8 @@ class Attributes
             'image_url',
             'name',
             'category',
-            'url'
+            'url',
+            'visibility'
         ];
     }
 
