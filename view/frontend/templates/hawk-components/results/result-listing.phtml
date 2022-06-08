@@ -5,8 +5,12 @@
             <spinner></spinner>
         </template>
         <template v-if="results && results.length">
-            <result-item v-show="type == 'grid'" v-for="result in results" :key="result.DocId" :result="result" template-override="#vue-hawksearch-result-item-grid"></result-item>
-            <result-item v-show="type == 'list'" v-for="result in results" :key="result.DocId" :result="result" template-override="#vue-hawksearch-result-item-list"></result-item>
+            <template v-if="type == 'grid'">
+                <result-item v-for="result in results" :key="result.DocId" :result="result" template-override="#vue-hawksearch-result-item-grid"></result-item>
+            </template>
+            <template v-else>
+                <result-item v-for="result in results" :key="result.DocId" :result="result" template-override="#vue-hawksearch-result-item-list"></result-item>
+            </template>
         </template>
         <template v-else>
             <placeholder-item v-for="index in 12" :key="index"></placeholder-item>
