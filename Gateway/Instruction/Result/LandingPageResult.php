@@ -16,6 +16,7 @@ namespace HawkSearch\EsIndexing\Gateway\Instruction\Result;
 
 use HawkSearch\Connector\Gateway\Helper\HttpResponseReader;
 use HawkSearch\Connector\Gateway\Instruction\ResultInterface;
+use HawkSearch\Connector\Helper\DataObjectHelper as HawkSearchDataObjectHelper;
 use HawkSearch\EsIndexing\Api\Data\LandingPageInterface;
 use HawkSearch\EsIndexing\Api\Data\LandingPageInterfaceFactory;
 use Magento\Framework\Api\DataObjectHelper;
@@ -38,6 +39,11 @@ class LandingPageResult implements ResultInterface
     private $dataObjectHelper;
 
     /**
+     * @var HawkSearchDataObjectHelper
+     */
+    private $hawksearchDataObjectHelper;
+
+    /**
      * @var HttpResponseReader
      */
     private $httpResponseReader;
@@ -45,18 +51,21 @@ class LandingPageResult implements ResultInterface
     /**
      * @param LandingPageInterfaceFactory $landingPageFactory
      * @param DataObjectHelper $dataObjectHelper
+     * @param HawkSearchDataObjectHelper $hawksearchDataObjectHelper
      * @param HttpResponseReader $httpResponseReader
      * @param array $result
      */
     public function __construct(
         LandingPageInterfaceFactory $landingPageFactory,
         DataObjectHelper $dataObjectHelper,
+        HawkSearchDataObjectHelper $hawksearchDataObjectHelper,
         HttpResponseReader $httpResponseReader,
         array $result = []
     ) {
         $this->result = $result;
         $this->landingPageFactory = $landingPageFactory;
         $this->dataObjectHelper = $dataObjectHelper;
+        $this->hawksearchDataObjectHelper = $hawksearchDataObjectHelper;
         $this->httpResponseReader = $httpResponseReader;
     }
 
@@ -77,7 +86,7 @@ class LandingPageResult implements ResultInterface
             $dataObject = $this->landingPageFactory->create();
             $this->dataObjectHelper->populateWithArray(
                 $dataObject,
-                $landingPage,
+                $this->hawksearchDataObjectHelper->convertArrayToSnakeCase($landingPage),
                 LandingPageInterface::class
             );
             $result[] = $dataObject;

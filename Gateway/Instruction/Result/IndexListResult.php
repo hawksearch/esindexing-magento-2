@@ -16,6 +16,7 @@ namespace HawkSearch\EsIndexing\Gateway\Instruction\Result;
 
 use HawkSearch\Connector\Gateway\Helper\HttpResponseReader;
 use HawkSearch\Connector\Gateway\Instruction\ResultInterface;
+use HawkSearch\Connector\Helper\DataObjectHelper as HawkSearchDataObjectHelper;
 use HawkSearch\EsIndexing\Api\Data\IndexListInterface;
 use HawkSearch\EsIndexing\Api\Data\IndexListInterfaceFactory;
 use Magento\Framework\Api\DataObjectHelper;
@@ -38,6 +39,11 @@ class IndexListResult implements ResultInterface
     private $dataObjectHelper;
 
     /**
+     * @var HawkSearchDataObjectHelper
+     */
+    private $hawksearchDataObjectHelper;
+
+    /**
      * @var HttpResponseReader
      */
     private $httpResponseReader;
@@ -51,12 +57,14 @@ class IndexListResult implements ResultInterface
     public function __construct(
         IndexListInterfaceFactory $indexListFactory,
         DataObjectHelper $dataObjectHelper,
+        HawkSearchDataObjectHelper $hawksearchDataObjectHelper,
         HttpResponseReader $httpResponseReader,
         array $result = []
     ) {
         $this->result = $result;
         $this->indexListFactory = $indexListFactory;
         $this->dataObjectHelper = $dataObjectHelper;
+        $this->hawksearchDataObjectHelper = $hawksearchDataObjectHelper;
         $this->httpResponseReader = $httpResponseReader;
     }
 
@@ -71,7 +79,7 @@ class IndexListResult implements ResultInterface
         $dataObject = $this->indexListFactory->create();
         $this->dataObjectHelper->populateWithArray(
             $dataObject,
-            $response,
+            $this->hawksearchDataObjectHelper->convertArrayToSnakeCase($response),
             IndexListInterface::class
         );
         return $dataObject;
