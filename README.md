@@ -11,7 +11,7 @@ This extension is capable to replace the built-in Magento search with a feature 
 search experience powered with HawkSearch ElasticSearch API v4.0+
 
 ## Support
-You can submit a new ticket through our [Freshdesk Account Management Portal](https://hawksearch.freshdesk.com/support/tickets/new)
+You can submit a new ticket through our [Support Center](https://support.bridgeline.com/)
 If you have any questions please read our [Support FAQ](https://hawksearch.atlassian.net/wiki/spaces/HSKB/pages/327719/Support%2BFAQ)
 
 ## Documentation
