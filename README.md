@@ -20,7 +20,7 @@ Check out our [Getting Started](https://hawksearch.atlassian.net/wiki/spaces/CON
 guide and start using [HawkSearch](https://www.hawksearch.com/ ) for Magento 2.
 
 ## Magento Version Support
-2.4.x
+Supports Magento versions  2.4.0 - 2.4.4
 
 ## Installation Instructions
 
