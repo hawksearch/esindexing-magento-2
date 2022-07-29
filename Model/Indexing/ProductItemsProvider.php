@@ -22,7 +22,6 @@ use Magento\Catalog\Model\Product\Visibility;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use HawkSearch\EsIndexing\Model\Config\Indexing;
-use Magento\Swagger\Block\Index;
 
 class ProductItemsProvider implements ItemsProviderInterface
 {
