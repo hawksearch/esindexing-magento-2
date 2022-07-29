@@ -35,7 +35,11 @@
                         ]]>
                     </comment>
                 </field>
-
+                <field id="products_include_categories_hierarchy" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Include all parent categories for products</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Include all parent categories in the hierarchy when indexing products, even if they are not selected for the product directly.</comment>
+                </field>
             </group>
         </section>
         <section id="hawksearch_search_settings" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
