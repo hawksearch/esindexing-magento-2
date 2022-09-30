@@ -28,9 +28,9 @@ class Products extends ConfigProvider
     /**
      * Return product attributes configuration in JSON format
      * @param null|int|string $store
-     * @return string | null
+     * @return string
      */
-    public function getAttributes($store = null): ?string
+    public function getAttributes($store = null): string
     {
         return $this->getConfig(self::CONFIG_CUSTOM_ATTRIBUTES, $store) ?: "{}";
     }

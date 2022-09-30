@@ -44,19 +44,19 @@ class ApiSettings extends ConnectorApiSettings
 
     /**
      * @param null|int|string $store
-     * @return string | null
+     * @return string
      */
-    public function getIndexingApiUrl($store = null) : ?string
+    public function getIndexingApiUrl($store = null) : string
     {
-        return $this->getConfig(self::INDEXING_API_URL . '/' . $this->getApiMode(), $store);
+        return (string)$this->getConfig(self::INDEXING_API_URL . '/' . $this->getApiMode(), $store);
     }
 
     /**
      * @param null|int|string $store
-     * @return string | null
+     * @return string
      */
-    public function getSearchApiUrl($store = null) : ?string
+    public function getSearchApiUrl($store = null) : string
     {
-        return $this->getConfig(self::SEARCH_API_URL . '/' . $this->getApiMode(), $store);
+        return (string)$this->getConfig(self::SEARCH_API_URL . '/' . $this->getApiMode(), $store);
     }
 }
