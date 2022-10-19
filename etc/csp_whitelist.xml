@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
+    <policies>
+        <policy id="connect-src">
+            <values>
+                <value id="hawksearch-searchapi-dev" type="host">https://searchapi-dev.hawksearch.net</value>
+                <value id="hawksearch-searchapi-test" type="host">https://searchapi-test.hawksearch.net</value>
+                <value id="hawksearch-searchapi" type="host">https://searchapi-na.hawksearch.com</value>
+                <value id="hawksearch-tracking-dev" type="host">https://tracking-dev.hawksearch.net</value>
+                <value id="hawksearch-tracking-test" type="host">https://tracking-test.hawksearch.net</value>
+                <value id="hawksearch-tracking" type="host">https://tracking-na.hawksearch.com</value>
+                <value id="hawksearch-recs-dev" type="host">https://recs-dev.hawksearch.net</value>
+                <value id="hawksearch-recs-test" type="host">https://recs-test.hawksearch.net</value>
+                <value id="hawksearch-recs" type="host">https://recs-na.hawksearch.com</value>
+            </values>
+        </policy>
+    </policies>
+</csp_whitelist>
