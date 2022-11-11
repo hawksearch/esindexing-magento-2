@@ -207,7 +207,9 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
      */
     protected function getItemsToRemove(array $fullItemsList, ?array $entityIds = null): array
     {
-        $idsToRemove = is_array($entityIds) ? array_combine($entityIds, $entityIds) : [];
+        $idsToRemove = is_array($entityIds)
+            ? array_combine($entityIds, array_map(function($id) { return $this->addTypePrefix($id);}, $entityIds))
+            : [];
         $itemsToRemove = [];
 
         foreach ($fullItemsList as $item) {
@@ -224,7 +226,7 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
             }
 
             if (!$this->canItemBeIndexed($item)) {
-                $itemsToRemove[$this->getEntityId($item)] = $this->getEntityId($item);
+                $itemsToRemove[$this->getEntityId($item)] = $this->getEntityUniqueId($item);
                 $this->itemsToRemoveCache[$this->getEntityUniqueId($item)] = $this->getEntityId($item);
             }
         }
@@ -372,9 +374,19 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
      * @return string
      * @throws NotFoundException
      */
-    private function getEntityUniqueId(DataObject $entityItem): string
+    protected function getEntityUniqueId(DataObject $entityItem): string
     {
-        return $this->getEntityType()->getTypeName() . '_' . $this->getEntityId($entityItem);
+        return $this->addTypePrefix((string)$this->getEntityId($entityItem));
+    }
+
+    /**
+     * @param string $value
+     * @return string
+     * @throws NotFoundException
+     */
+    protected function addTypePrefix(string $value)
+    {
+        return $this->getEntityType()->getTypeName() . '_' . $value;
     }
 
     /**
