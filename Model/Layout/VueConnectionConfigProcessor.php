@@ -40,8 +40,8 @@ class VueConnectionConfigProcessor implements LayoutConfigProcessorInterface
     {
         $connectionConfig = [
             'apiUrl' => $this->apiSettings->getSearchApiUrl(),
-            'dashboardUrl' => $this->apiSettings->getApiUrl(),
-            'clientGuid' => $this->apiSettings->getTrackingKey(),
+            'dashboardUrl' => $this->apiSettings->getHawksearchWorkbenchUrl(),
+            'clientGuid' => $this->apiSettings->getClientGuid(),
             'trackEventUrl' => $this->apiSettings->getTrackingUrl() . 'api/trackevent/',
         ];
         return array_merge_recursive($jsConfig ?? [], $connectionConfig);

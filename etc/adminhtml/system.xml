@@ -15,6 +15,12 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
+        <section id="hawksearch_connector">
+            <group id="api_settings">
+                <field id="engine_name" showInDefault="0" showInWebsite="0" showInStore="0"  />
+                <group id="hawk_url" showInDefault="0" showInWebsite="0" showInStore="0"  />
+            </group>
+        </section>
         <section id="hawksearch_indexing_settings" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Indexing</label>
             <tab>hawksearch</tab>
