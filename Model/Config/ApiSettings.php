@@ -18,6 +18,10 @@ namespace HawkSearch\EsIndexing\Model\Config;
 use HawkSearch\Connector\Model\Config\ApiSettings as ConnectorApiSettings;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 
+/**
+ * @deprecated 0.1.3 No longer used
+ * @see \HawkSearch\Connector\Model\Config\ApiSettings
+ */
 class ApiSettings extends ConnectorApiSettings
 {
     /**#@+
@@ -40,23 +44,5 @@ class ApiSettings extends ConnectorApiSettings
     )
     {
         parent::__construct($scopeConfig, $configRootPath, $configGroup);
-    }
-
-    /**
-     * @param null|int|string $store
-     * @return string
-     */
-    public function getIndexingApiUrl($store = null) : string
-    {
-        return (string)$this->getConfig(self::INDEXING_API_URL . '/' . $this->getApiMode(), $store);
-    }
-
-    /**
-     * @param null|int|string $store
-     * @return string
-     */
-    public function getSearchApiUrl($store = null) : string
-    {
-        return (string)$this->getConfig(self::SEARCH_API_URL . '/' . $this->getApiMode(), $store);
     }
 }

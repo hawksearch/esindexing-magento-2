@@ -119,12 +119,10 @@
             <argument name="resultFactory" xsi:type="object">HawkSearchEsIndexingGetIndexResultFactory</argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingGetIndexListTransferFactory" type="HawkSearch\Connector\Gateway\Http\TransferFactory">
+    <virtualType name="HawkSearchEsIndexingGetIndexListTransferFactory" type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
         <arguments>
             <argument name="path" xsi:type="string">api/v2/indexing</argument>
             <argument name="method" xsi:type="string">GET</argument>
-            <argument name="headers" xsi:type="object">HawkSearchApiHeaders</argument>
-            <argument name="apiConfig" xsi:type="object">HawkSearch\EsIndexing\Gateway\Config\EsIndexingApiConfig</argument>
         </arguments>
     </virtualType>
     <virtualType name="HawkSearchEsIndexingGetIndexResultFactory" type="HawkSearch\Connector\Gateway\Instruction\ResultInterfaceFactory">
@@ -144,12 +142,10 @@
             <argument name="resultFactory" xsi:type="object">HawkSearchEsIndexingGetCurrentIndexResultFactory</argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingGetCurrentIndexTransferFactory" type="HawkSearch\Connector\Gateway\Http\TransferFactory">
+    <virtualType name="HawkSearchEsIndexingGetCurrentIndexTransferFactory" type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
         <arguments>
             <argument name="path" xsi:type="string">api/v2/indexing/current</argument>
             <argument name="method" xsi:type="string">GET</argument>
-            <argument name="headers" xsi:type="object">HawkSearchApiHeaders</argument>
-            <argument name="apiConfig" xsi:type="object">HawkSearch\EsIndexing\Gateway\Config\EsIndexingApiConfig</argument>
         </arguments>
     </virtualType>
     <virtualType name="HawkSearchEsIndexingGetCurrentIndexResultFactory" type="HawkSearch\Connector\Gateway\Instruction\ResultInterfaceFactory">
@@ -176,12 +172,10 @@
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingSetCurrentIndexTransferFactory" type="HawkSearch\Connector\Gateway\Http\TransferFactory">
+    <virtualType name="HawkSearchEsIndexingSetCurrentIndexTransferFactory" type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
         <arguments>
             <argument name="path" xsi:type="string">api/v2/indexing/set-current</argument>
             <argument name="method" xsi:type="string">POST</argument>
-            <argument name="headers" xsi:type="object">HawkSearchApiHeaders</argument>
-            <argument name="apiConfig" xsi:type="object">HawkSearch\EsIndexing\Gateway\Config\EsIndexingApiConfig</argument>
         </arguments>
     </virtualType>
     <!-- END setCurrentIndex Instruction  -->
@@ -203,12 +197,10 @@
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingCreateIndexTransferFactory" type="HawkSearch\Connector\Gateway\Http\TransferFactory">
+    <virtualType name="HawkSearchEsIndexingCreateIndexTransferFactory" type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
         <arguments>
             <argument name="path" xsi:type="string">api/v2/indexing/create</argument>
             <argument name="method" xsi:type="string">POST</argument>
-            <argument name="headers" xsi:type="object">HawkSearchApiHeaders</argument>
-            <argument name="apiConfig" xsi:type="object">HawkSearch\EsIndexing\Gateway\Config\EsIndexingApiConfig</argument>
         </arguments>
     </virtualType>
     <virtualType name="HawkSearchEsIndexingCreateIndexResultFactory" type="HawkSearch\Connector\Gateway\Instruction\ResultInterfaceFactory">
@@ -234,12 +226,10 @@
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingDeleteIndexTransferFactory" type="HawkSearch\Connector\Gateway\Http\TransferFactory">
+    <virtualType name="HawkSearchEsIndexingDeleteIndexTransferFactory" type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
         <arguments>
             <argument name="path" xsi:type="string">api/v2/indexing/delete-index</argument>
             <argument name="method" xsi:type="string">POST</argument>
-            <argument name="headers" xsi:type="object">HawkSearchApiHeaders</argument>
-            <argument name="apiConfig" xsi:type="object">HawkSearch\EsIndexing\Gateway\Config\EsIndexingApiConfig</argument>
         </arguments>
     </virtualType>
     <!-- END deleteIndex Instruction  -->
@@ -260,12 +250,10 @@
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingIndexItemsTransferFactory" type="HawkSearch\Connector\Gateway\Http\TransferFactory">
+    <virtualType name="HawkSearchEsIndexingIndexItemsTransferFactory" type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
         <arguments>
             <argument name="path" xsi:type="string">api/v2/indexing/index-items</argument>
             <argument name="method" xsi:type="string">POST</argument>
-            <argument name="headers" xsi:type="object">HawkSearchApiHeaders</argument>
-            <argument name="apiConfig" xsi:type="object">HawkSearch\EsIndexing\Gateway\Config\EsIndexingApiConfig</argument>
         </arguments>
     </virtualType>
     <virtualType name="HawkSearchEsIndexingIndexItemsBadResponseValidator" type="HawkSearch\Connector\Gateway\Validator\ValidatorComposite">
@@ -297,12 +285,10 @@
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingDeleteItemsTransferFactory" type="HawkSearch\Connector\Gateway\Http\TransferFactory">
+    <virtualType name="HawkSearchEsIndexingDeleteItemsTransferFactory" type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
         <arguments>
             <argument name="path" xsi:type="string">api/v2/indexing/delete-items</argument>
             <argument name="method" xsi:type="string">POST</argument>
-            <argument name="headers" xsi:type="object">HawkSearchApiHeaders</argument>
-            <argument name="apiConfig" xsi:type="object">HawkSearch\EsIndexing\Gateway\Config\EsIndexingApiConfig</argument>
         </arguments>
     </virtualType>
     <virtualType name="HawkSearchEsIndexingDeleteItemsBadResponseValidator" type="HawkSearch\Connector\Gateway\Validator\ValidatorComposite">
@@ -353,12 +339,10 @@
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingUpsertHierarchyTransferFactory" type="HawkSearch\Connector\Gateway\Http\TransferFactory">
+    <virtualType name="HawkSearchEsIndexingUpsertHierarchyTransferFactory" type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
         <arguments>
             <argument name="path" xsi:type="string">api/hierarchy/upsert</argument>
             <argument name="method" xsi:type="string">POST</argument>
-            <argument name="headers" xsi:type="object">HawkSearchApiHeaders</argument>
-            <argument name="apiConfig" xsi:type="object">HawkSearch\EsIndexing\Gateway\Config\EsIndexingApiConfig</argument>
         </arguments>
     </virtualType>
     <!-- END hierarchyUpsert Instruction  -->
@@ -379,12 +363,10 @@
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingRebuildHierarchyTransferFactory" type="HawkSearch\Connector\Gateway\Http\TransferFactory">
+    <virtualType name="HawkSearchEsIndexingRebuildHierarchyTransferFactory" type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
         <arguments>
             <argument name="path" xsi:type="string">api/hierarchy/rebuild</argument>
             <argument name="method" xsi:type="string">POST</argument>
-            <argument name="headers" xsi:type="object">HawkSearchApiHeaders</argument>
-            <argument name="apiConfig" xsi:type="object">HawkSearch\EsIndexing\Gateway\Config\EsIndexingApiConfig</argument>
         </arguments>
     </virtualType>
     <!-- END hierarchyRebuild Instruction  -->
@@ -405,12 +387,10 @@
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingDeleteHierarchyItemsTransferFactory" type="HawkSearch\Connector\Gateway\Http\TransferFactory">
+    <virtualType name="HawkSearchEsIndexingDeleteHierarchyItemsTransferFactory" type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
         <arguments>
             <argument name="path" xsi:type="string">api/hierarchy/delete-items</argument>
             <argument name="method" xsi:type="string">POST</argument>
-            <argument name="headers" xsi:type="object">HawkSearchApiHeaders</argument>
-            <argument name="apiConfig" xsi:type="object">HawkSearch\EsIndexing\Gateway\Config\EsIndexingApiConfig</argument>
         </arguments>
     </virtualType>
     <!-- END deleteHierarchyItems Instruction  -->
@@ -432,12 +412,10 @@
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingGetLandingPagesTransferFactory" type="HawkSearch\Connector\Gateway\Http\TransferFactory">
+    <virtualType name="HawkSearchEsIndexingGetLandingPagesTransferFactory" type="HawkSearch\Connector\Gateway\Http\DashboardApiTransferFactory">
         <arguments>
             <argument name="path" xsi:type="string">api/v9/LandingPage</argument>
             <argument name="method" xsi:type="string">GET</argument>
-            <argument name="headers" xsi:type="object">HawkSearchApiHeaders</argument>
-            <argument name="apiConfig" xsi:type="object">HawkSearch\Connector\Gateway\Config\ApiConfigDefault</argument>
         </arguments>
     </virtualType>
     <virtualType name="HawkSearchEsIndexingGetLandingPagesResultFactory" type="HawkSearch\Connector\Gateway\Instruction\ResultInterfaceFactory">
@@ -464,12 +442,10 @@
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingGetLandingPageUrlsTransferFactory" type="HawkSearch\Connector\Gateway\Http\TransferFactory">
+    <virtualType name="HawkSearchEsIndexingGetLandingPageUrlsTransferFactory" type="HawkSearch\Connector\Gateway\Http\DashboardApiTransferFactory">
         <arguments>
             <argument name="path" xsi:type="string">api/v9/LandingPage/urls</argument>
             <argument name="method" xsi:type="string">GET</argument>
-            <argument name="headers" xsi:type="object">HawkSearchApiHeaders</argument>
-            <argument name="apiConfig" xsi:type="object">HawkSearch\Connector\Gateway\Config\ApiConfigDefault</argument>
         </arguments>
     </virtualType>
     <!-- getLandingPageUrls Instruction  -->
@@ -490,12 +466,10 @@
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingAddLandingPagesBulkTransferFactory" type="HawkSearch\Connector\Gateway\Http\TransferFactory">
+    <virtualType name="HawkSearchEsIndexingAddLandingPagesBulkTransferFactory" type="HawkSearch\Connector\Gateway\Http\DashboardApiTransferFactory">
         <arguments>
             <argument name="path" xsi:type="string">api/v9/LandingPage/bulk</argument>
             <argument name="method" xsi:type="string">POST</argument>
-            <argument name="headers" xsi:type="object">HawkSearchApiHeaders</argument>
-            <argument name="apiConfig" xsi:type="object">HawkSearch\Connector\Gateway\Config\ApiConfigDefault</argument>
         </arguments>
     </virtualType>
     <!-- addLandingPagesBulk Instruction  -->
@@ -516,12 +490,10 @@
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingUpdateLandingPagesBulkTransferFactory" type="HawkSearch\Connector\Gateway\Http\TransferFactory">
+    <virtualType name="HawkSearchEsIndexingUpdateLandingPagesBulkTransferFactory" type="HawkSearch\Connector\Gateway\Http\DashboardApiTransferFactory">
         <arguments>
             <argument name="path" xsi:type="string">api/v9/LandingPage/bulk</argument>
             <argument name="method" xsi:type="string">PUT</argument>
-            <argument name="headers" xsi:type="object">HawkSearchApiHeaders</argument>
-            <argument name="apiConfig" xsi:type="object">HawkSearch\Connector\Gateway\Config\ApiConfigDefault</argument>
         </arguments>
     </virtualType>
     <!-- updateLandingPagesBulk Instruction  -->
@@ -542,12 +514,10 @@
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingDeleteLandingPagesBulkTransferFactory" type="HawkSearch\Connector\Gateway\Http\TransferFactory">
+    <virtualType name="HawkSearchEsIndexingDeleteLandingPagesBulkTransferFactory" type="HawkSearch\Connector\Gateway\Http\DashboardApiTransferFactory">
         <arguments>
             <argument name="path" xsi:type="string">api/v9/LandingPage/bulk</argument>
             <argument name="method" xsi:type="string">DELETE</argument>
-            <argument name="headers" xsi:type="object">HawkSearchApiHeaders</argument>
-            <argument name="apiConfig" xsi:type="object">HawkSearch\Connector\Gateway\Config\ApiConfigDefault</argument>
         </arguments>
     </virtualType>
     <!-- deleteLandingPagesBulk Instruction  -->
@@ -779,6 +749,13 @@
     <type name="HawkSearch\EsIndexing\Console\Command\RetryBulk">
         <arguments>
             <argument name="bulkManagement" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\RetryBulkManagement</argument>
+        </arguments>
+    </type>
+
+    <type name="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
+        <arguments>
+            <argument name="headersBuilder" xsi:type="object">HawkSearchApiHeaders</argument>
+            <argument name="apiConfig" xsi:type="object">HawkSearch\Connector\Gateway\Config\IndexingApiConfig</argument>
         </arguments>
     </type>
 
