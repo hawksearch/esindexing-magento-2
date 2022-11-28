@@ -19,7 +19,7 @@ use HawkSearch\Connector\Model\Config\ApiSettings as ConnectorApiSettings;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 
 /**
- * @deprecated 0.1.3 No longer used
+ * @deprecated 0.1.2 No longer used
  * @see \HawkSearch\Connector\Model\Config\ApiSettings
  */
 class ApiSettings extends ConnectorApiSettings
