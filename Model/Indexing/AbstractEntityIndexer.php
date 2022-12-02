@@ -313,6 +313,7 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
             $value = array_filter($value, function ($item){
                 return $item !== '' && $item !== null;
             });
+            $value = array_values($value);
         }
 
         return $value !== null && !is_array($value) ? array($value) : $value;
