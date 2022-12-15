@@ -12,6 +12,6 @@
  */
 ?>
 <?php /* @var $block \HawkSearch\EsIndexing\Block\Html\Head\VueConfig */ ?>
-<script id="hawksearch-config" type="application/json">
+<script id="hawksearch-config-<?= $block->getConfigId()?>" type="application/json">
     <?= $block->getJsLayout(); ?>
 </script>

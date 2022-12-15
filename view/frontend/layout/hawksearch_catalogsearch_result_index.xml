@@ -24,7 +24,6 @@ https://magento.test/catalogsearch/result/
             <referenceBlock name="search.result" remove="true" />
 
             <block class="Magento\Framework\View\Element\Template" before="-" name="hawksearch.widget.search-results" template="HawkSearch_EsIndexing::results.phtml"/>
-            <block class="Magento\Framework\View\Element\Template" before="-" name="hawksearch.widget.search-box" template="HawkSearch_EsIndexing::searchbox.phtml"/>
         </referenceContainer>
 
         <referenceContainer name="sidebar.main">

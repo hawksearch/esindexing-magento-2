@@ -21,6 +21,11 @@ use Magento\Framework\View\Element\Template;
 class VueConfig extends Template
 {
     /**
+     * @var string
+     */
+    private $configId;
+
+    /**
      * @var SerializerInterface
      */
     private $serializer;
@@ -55,5 +60,23 @@ class VueConfig extends Template
     public function getJsLayout()
     {
         return $this->serializer->serialize($this->configProcessor->process($this->jsLayout));
+    }
+
+    /**
+     * @param string $id
+     * @return $this
+     */
+    public function setConfigId(string $id)
+    {
+        $this->configId = $id;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getConfigId(): string
+    {
+        return $this->configId;
     }
 }

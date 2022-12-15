@@ -18,7 +18,6 @@
             <!-- Remove product listing block (including toolbar) from search results page -->
             <referenceBlock name="category.products" remove="true" />
             <block class="Magento\Framework\View\Element\Template" before="-" name="hawksearch.search.result" template="HawkSearch_EsIndexing::results.phtml"/>
-            <block class="Magento\Framework\View\Element\Template" before="-" name="hawksearch.search.box" template="HawkSearch_EsIndexing::searchbox.phtml"/>
         </referenceContainer>
 
         <referenceContainer name="sidebar.main">
