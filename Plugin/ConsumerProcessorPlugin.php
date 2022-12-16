@@ -17,7 +17,7 @@ namespace HawkSearch\EsIndexing\Plugin;
 
 use HawkSearch\EsIndexing\Api\Data\QueueOperationDataInterface;
 use HawkSearch\EsIndexing\Model\Indexing\Consumer;
-use HawkSearch\EsIndexing\Model\Indexing\Context;
+use HawkSearch\EsIndexing\Model\Indexing\ContextInterface;
 use Magento\Framework\App\Area;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -38,7 +38,7 @@ class ConsumerProcessorPlugin
     private $storeManager;
 
     /**
-     * @var Context
+     * @var ContextInterface
      */
     private $indexingContext;
 
@@ -51,13 +51,13 @@ class ConsumerProcessorPlugin
      * ConsumerProcessorPlugin constructor.
      * @param SerializerInterface $serializer
      * @param StoreManagerInterface $storeManager
-     * @param Context $indexingContext
+     * @param ContextInterface $indexingContext
      * @param Emulation $emulation
      */
     public function __construct(
         SerializerInterface $serializer,
         StoreManagerInterface $storeManager,
-        Context $indexingContext,
+        ContextInterface $indexingContext,
         Emulation $emulation
     ) {
         $this->serializer = $serializer;
@@ -89,6 +89,9 @@ class ConsumerProcessorPlugin
                 $applicationHeaders['index']
             );
         }
+
+        $isFullReindex = $applicationHeaders['full_reindex'] ?? false;
+        $this->indexingContext->setIsFullReindex($isFullReindex);
 
         return null;
     }

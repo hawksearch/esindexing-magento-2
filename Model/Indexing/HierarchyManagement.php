@@ -21,25 +21,17 @@ use Magento\Framework\Exception\NotFoundException;
 class HierarchyManagement implements HierarchyManagementInterface
 {
     /**
-     * @var IndexManagementInterface
-     */
-    private $indexManagement;
-
-    /**
      * @var InstructionManagerPool
      */
     private $instructionManagerPool;
 
     /**
      * HierarchyManagement constructor.
-     * @param IndexManagementInterface $indexManagement
      * @param InstructionManagerPool $instructionManagerPool
      */
     public function __construct(
-        IndexManagementInterface $indexManagement,
         InstructionManagerPool $instructionManagerPool
     ){
-        $this->indexManagement = $indexManagement;
         $this->instructionManagerPool = $instructionManagerPool;
     }
 

@@ -33,7 +33,7 @@ interface HierarchyManagementInterface
 
     /**
      * Rebuild index hierarchy
-     * @param string|null $indexName
+     * @param string $indexName
      * @return void
      */
     public function rebuildHierarchy(string $indexName);

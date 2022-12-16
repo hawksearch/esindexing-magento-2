@@ -16,7 +16,6 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Indexer;
 
 use HawkSearch\EsIndexing\Model\Config\Indexing;
-use HawkSearch\EsIndexing\Model\Indexing\ContextInterface;
 use HawkSearch\EsIndexing\Model\Indexing\Entity\EntityTypePoolInterface;
 use HawkSearch\EsIndexing\Model\Indexing\Entity\Type\ProductEntityType;
 use HawkSearch\EsIndexing\Model\Indexing\IndexManagementInterface;
@@ -46,7 +45,6 @@ class Product extends AbstractItemsIndexer implements IndexerActionInterface, Mv
      * @param ManagerInterface $eventManager
      * @param MessageTopicResolverInterface $messageTopicResolver
      * @param IndexManagementInterface $indexManagement
-     * @param ContextInterface $indexingContext
      * @param ProductDataProvider $productDataProvider
      */
     public function __construct(
@@ -57,7 +55,6 @@ class Product extends AbstractItemsIndexer implements IndexerActionInterface, Mv
         ManagerInterface $eventManager,
         MessageTopicResolverInterface $messageTopicResolver,
         IndexManagementInterface $indexManagement,
-        ContextInterface $indexingContext,
         ProductDataProvider $productDataProvider
     ) {
         parent::__construct(
@@ -67,8 +64,7 @@ class Product extends AbstractItemsIndexer implements IndexerActionInterface, Mv
             $entityTypePool,
             $eventManager,
             $messageTopicResolver,
-            $indexManagement,
-            $indexingContext
+            $indexManagement
         );
         $this->productDataProvider = $productDataProvider;
     }
