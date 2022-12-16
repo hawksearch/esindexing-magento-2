@@ -763,19 +763,24 @@
 
     <!-- Plugins -->
     <type name="Magento\Catalog\Model\ResourceModel\Product">
-        <plugin name="hawksearchProduct" type="HawkSearch\EsIndexing\Model\Indexer\Product\Plugin\Product"/>
+        <plugin name="hawksearchProduct"
+                type="HawkSearch\EsIndexing\Model\Indexer\Product\Plugin\Product"/>
     </type>
     <type name="Magento\Catalog\Model\Product\Action">
-        <plugin name="hawksearchProductMassAction" type="HawkSearch\EsIndexing\Model\Indexer\Product\Plugin\Product\Action"/>
+        <plugin name="hawksearchProductMassAction"
+                type="HawkSearch\EsIndexing\Model\Indexer\Product\Plugin\Product\Action"/>
     </type>
     <type name="Magento\Cms\Model\ResourceModel\Page">
-        <plugin name="hawksearchPage" type="HawkSearch\EsIndexing\Model\Indexer\ContentPage\Plugin\Page"/>
+        <plugin name="hawksearchPage"
+                type="HawkSearch\EsIndexing\Model\Indexer\ContentPage\Plugin\Page"/>
     </type>
     <type name="Magento\AsynchronousOperations\Model\OperationProcessor">
-        <plugin name="hawksearch" type="HawkSearch\EsIndexing\Plugin\AsynchronousOperationProcessorPlugin"/>
+        <plugin name="hawksearchAsynchronousOperationProcessor"
+                type="HawkSearch\EsIndexing\Plugin\AsynchronousOperationProcessorPlugin"/>
     </type>
     <type name="HawkSearch\EsIndexing\Model\Indexing\Consumer">
-        <plugin name="hawksearchConsumerProcessor" type="HawkSearch\EsIndexing\Plugin\ConsumerProcessorPlugin"/>
+        <plugin name="hawksearchConsumerProcessor"
+                type="HawkSearch\EsIndexing\Plugin\ConsumerProcessorPlugin"/>
     </type>
 
     <!-- END Plugins -->

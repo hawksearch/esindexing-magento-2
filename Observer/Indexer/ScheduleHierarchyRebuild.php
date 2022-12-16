@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Observer\Indexer;
 
-use HawkSearch\EsIndexing\Model\Indexing\ContextInterface;
 use HawkSearch\EsIndexing\Model\Indexing\Entity\Type\HierarchyEntityType;
 use HawkSearch\EsIndexing\Model\Indexing\HierarchyManagementInterface;
 use HawkSearch\EsIndexing\Model\Indexing\IndexManagementInterface;
@@ -31,21 +30,13 @@ class ScheduleHierarchyRebuild implements ObserverInterface
     private $indexManagement;
 
     /**
-     * @var ContextInterface
-     */
-    private $indexingContext;
-
-    /**
      * HierarchyRebuild constructor.
      * @param IndexManagementInterface $indexManagement
-     * @param ContextInterface $indexingContext
      */
     public function __construct(
-        IndexManagementInterface $indexManagement,
-        ContextInterface $indexingContext
+        IndexManagementInterface $indexManagement
     ) {
         $this->indexManagement = $indexManagement;
-        $this->indexingContext = $indexingContext;
     }
 
     /**

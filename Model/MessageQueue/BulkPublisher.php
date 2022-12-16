@@ -231,6 +231,7 @@ class BulkPublisher implements BulkPublisherInterface
         $data['application_headers'] = $data['application_headers'] ?? [];
         $data['application_headers']['store_id'] = $storeId;
         $data['application_headers']['index'] = $indexName;
+        $data['application_headers']['full_reindex'] = $isFullReindex;
 
         return $data;
     }
