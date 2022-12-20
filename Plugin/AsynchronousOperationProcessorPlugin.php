@@ -20,12 +20,15 @@ use HawkSearch\EsIndexing\Model\MessageQueue\IndexingOperationValidator;
 use Magento\AsynchronousOperations\Api\Data\OperationInterface;
 use Magento\AsynchronousOperations\Model\ConfigInterface as AsyncConfig;
 use Magento\AsynchronousOperations\Model\OperationProcessor;
+use Magento\Checkout\Exception;
 use Magento\Framework\Bulk\OperationManagementInterface;
+use Magento\Framework\Exception\BulkException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\MessageQueue\MessageEncoder;
 use Magento\Framework\MessageQueue\MessageValidator;
 use Magento\Framework\Serialize\SerializerInterface;
+use Magento\Store\Model\App\Emulation;
 use Magento\Store\Model\StoreManagerInterface;
 
 class AsynchronousOperationProcessorPlugin
@@ -76,6 +79,11 @@ class AsynchronousOperationProcessorPlugin
     private Indexing\Context $indexingContext;
 
     /**
+     * @var Emulation
+     */
+    private Emulation $emulation;
+
+    /**
      * AsynchronousOperationProcessorPlugin constructor.
      *
      * @param MessageEncoder $messageEncoder
@@ -97,7 +105,8 @@ class AsynchronousOperationProcessorPlugin
         SerializerInterface $serializer,
         MessageValidator $messageValidator,
         StoreManagerInterface $storeManager,
-        Indexing\Context $indexingContext
+        Indexing\Context $indexingContext,
+        Emulation $emulation
     )
     {
         $this->messageEncoder = $messageEncoder;
@@ -109,6 +118,7 @@ class AsynchronousOperationProcessorPlugin
         $this->messageValidator = $messageValidator;
         $this->storeManager = $storeManager;
         $this->indexingContext = $indexingContext;
+        $this->emulation = $emulation;
     }
 
     /**
@@ -124,41 +134,41 @@ class AsynchronousOperationProcessorPlugin
         $operation = $this->messageEncoder->decode(AsyncConfig::SYSTEM_TOPIC_NAME, $encodedMessage);
         $this->messageValidator->validate(AsyncConfig::SYSTEM_TOPIC_NAME, $operation);
 
-        if ($this->indexingOperationValidator->isOperationTopicAllowed($operation)) {
-            try {
-                if (!$this->indexingOperationValidator->isValidOperation($operation)) {
-                    throw new LocalizedException(
-                        __(
-                            'Can\'t process operation Bulk UUID: %1, key: %2',
-                            $operation->getBulkUuid(),
-                            $operation->getId()
-                        )
-                    );
-                }
-            } catch (LocalizedException | NoSuchEntityException $e) {
-                //@TODO Add error code mapping
-                $errorCode = 100;
-                $serializedData = (isset($errorCode)) ? $operation->getSerializedData() : null;
-                $this->operationManagement->changeOperationStatus(
-                    $operation->getBulkUuid(),
-                    $operation->getId(),
-                    OperationInterface::STATUS_TYPE_RETRIABLY_FAILED,
-                    $errorCode,
-                    implode('; ', array_merge([], ...[[$e->getMessage()]])),
-                    $serializedData
-                );
+        if (!$this->indexingOperationValidator->isOperationTopicAllowed($operation)) {
+            return null;
+        }
 
-                //re-throw exception
-                throw $e;
+        try {
+            if (!$this->indexingOperationValidator->isValidOperation($operation)) {
+                throw new BulkException(
+                    __(
+                        'Can\'t process operation Bulk UUID: %1, key: %2',
+                        $operation->getBulkUuid(),
+                        $operation->getId()
+                    )
+                );
             }
+        } catch (BulkException | NoSuchEntityException $e) {
+            //@TODO Add error code mapping
+            $errorCode = 100;
+            $serializedData = (isset($errorCode)) ? $operation->getSerializedData() : null;
+            $this->operationManagement->changeOperationStatus(
+                $operation->getBulkUuid(),
+                $operation->getId(),
+                OperationInterface::STATUS_TYPE_RETRIABLY_FAILED,
+                $errorCode,
+                implode('; ', array_merge([], ...[[$e->getMessage()]])),
+                $serializedData
+            );
+
+            //re-throw exception
+            throw $e;
         }
 
         return null;
     }
 
     /**
-     * Complete full reindexing process: rebuild hierarchy, set current index
-     *
      * @param OperationProcessor $subject
      * @param $result
      * @param string $encodedMessage
@@ -171,6 +181,29 @@ class AsynchronousOperationProcessorPlugin
         $operation = $this->messageEncoder->decode(AsyncConfig::SYSTEM_TOPIC_NAME, $encodedMessage);
         $this->messageValidator->validate(AsyncConfig::SYSTEM_TOPIC_NAME, $operation);
 
+        if (!$this->indexingOperationValidator->isOperationTopicAllowed($operation)) {
+            return;
+        }
+
+        try {
+            $this->finalizeFullReindexing($operation);
+        } catch (\Exception $e) {
+            $this->emulation->stopEnvironmentEmulation();
+            throw $e;
+        }
+
+        $this->emulation->stopEnvironmentEmulation();
+    }
+
+    /**
+     * Finalize full reindexing process: rebuild hierarchy, set current index
+     *
+     * @param OperationInterface $operation
+     * @return void
+     * @throws NoSuchEntityException
+     */
+    private function finalizeFullReindexing(OperationInterface $operation)
+    {
         if (!$this->indexingContext->isFullReindex()) {
             return;
         }
