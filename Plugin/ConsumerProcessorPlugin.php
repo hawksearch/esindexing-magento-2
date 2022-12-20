@@ -95,14 +95,4 @@ class ConsumerProcessorPlugin
 
         return null;
     }
-
-    /**
-     * Restore original store value
-     * @param Consumer $subject
-     * @param $result
-     */
-    public function afterProcess(Consumer $subject, $result)
-    {
-        $this->emulation->stopEnvironmentEmulation();
-    }
 }
