@@ -20,7 +20,7 @@ Check out our [Getting Started](https://hawksearch.atlassian.net/wiki/spaces/CON
 guide and start using [HawkSearch](https://www.hawksearch.com/ ) for Magento 2.
 
 ## Magento Version Support
-Supports Magento versions  2.4.0 - 2.4.4
+Supports Magento versions  2.4.0 - 2.4.5
 
 ## Installation Instructions
 
@@ -38,7 +38,6 @@ bin/magento setup:upgrade
 bin/magento cache:flush
 ```
 3. Proceed with [Getting Started](https://hawksearch.atlassian.net/wiki/spaces/CON/pages/1626112046/Getting+Started+with+Hawksearch+ES) guide
-
 
 ## Contribution
 Coming soon
