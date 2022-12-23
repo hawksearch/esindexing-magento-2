@@ -23,6 +23,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class RetryBulk extends Command
 {
+    const INPUT_BULK_UUID = 'bulk-uuid';
+    const INPUT_STATUSES = 'statuses';
+
     /**
      * @var BulkManagementInterface
      */
@@ -57,7 +60,15 @@ class RetryBulk extends Command
     {
         $this->setName('hawksearch:retry-bulk')
             ->setDescription('Retry hawksearch indexing bulk failed operations')
-            ->addArgument('bulk-uuid', InputArgument::REQUIRED, 'Bulk UUID');
+            ->addArgument(
+                self::INPUT_BULK_UUID,
+                InputArgument::REQUIRED,
+                'Bulk UUID'
+            )->addArgument(
+                self::INPUT_STATUSES,
+                InputArgument::OPTIONAL | InputArgument::IS_ARRAY,
+                'Space-separated list of bulk operation statuses.'
+            );
         parent::configure();
     }
 
@@ -66,9 +77,21 @@ class RetryBulk extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $bulkUuid = $input->getArgument('bulk-uuid');
+        $bulkUuid = $input->getArgument(self::INPUT_BULK_UUID);
+        $statuses = $input->getArgument(self::INPUT_STATUSES);
+
         try {
-            $operations = $this->bulkStatus->getFailedOperationsByBulkId($bulkUuid);
+            $operations = [];
+            if ($statuses) {
+                foreach ($statuses as $status) {
+                    $operations = array_merge(
+                        $operations,
+                        $this->bulkStatus->getFailedOperationsByBulkId($bulkUuid, $status)
+                    );
+                }
+            } else {
+                $operations = $this->bulkStatus->getFailedOperationsByBulkId($bulkUuid);
+            }
 
             if ($this->bulkManagement->scheduleBulk($bulkUuid, $operations, 'Reschedule bulk')) {
                 $output->writeln(__('%1 item(s) have been scheduled for update."', count($operations)));

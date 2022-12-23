@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
   /**
-   * Copyright (c) 2021 Hawksearch (www.hawksearch.com) - All Rights Reserved
+   * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
    *
    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -28,22 +28,41 @@
 
     <type name="HawkSearch\EsIndexing\Block\Html\Head\VueConfig">
         <arguments>
-            <argument name="configProcessor" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\CompositeVueConfigProcessor</argument>
             <argument name="serializer" xsi:type="object">Magento\Framework\Serialize\Serializer\JsonHexTag</argument>
         </arguments>
     </type>
+    <virtualType name="HawkSearch\EsIndexing\Block\Html\Head\VueConfig\Searchbox" type="HawkSearch\EsIndexing\Block\Html\Head\VueConfig">
+        <arguments>
+            <argument name="configProcessor" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueSearchboxConfigProcessorComposite</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearch\EsIndexing\Block\Html\Head\VueConfig\Results" type="HawkSearch\EsIndexing\Block\Html\Head\VueConfig">
+        <arguments>
+            <argument name="configProcessor" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueResultsConfigProcessorComposite</argument>
+        </arguments>
+    </virtualType>
 
-    <virtualType name="HawkSearch\EsIndexing\Model\Layout\CompositeVueConfigProcessor"
+    <virtualType name="HawkSearch\EsIndexing\Model\Layout\VueSearchboxConfigProcessorComposite"
+                 type="HawkSearch\EsIndexing\Model\Layout\CompositeConfigProcessor">
+        <arguments>
+            <argument name="configProcessors"  xsi:type="array">
+                <item name="VueConnection" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueConnectionConfigProcessor</item>
+                <item name="VueSearchBox" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueSearchBoxConfigProcessor</item>
+                <item name="VueParamsMapping" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueParamsMappingProcessor</item>
+                <item name="VueSuggestionItem" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueSuggestionItemConfigProcessor</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="HawkSearch\EsIndexing\Model\Layout\VueResultsConfigProcessorComposite"
                  type="HawkSearch\EsIndexing\Model\Layout\CompositeConfigProcessor">
         <arguments>
             <argument name="configProcessors"  xsi:type="array">
                 <item name="VueConnection" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueConnectionConfigProcessor</item>
                 <item name="VueTab" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueTabConfigProcessor</item>
                 <item name="VueSearch" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueSearchConfigProcessor</item>
-                <item name="VueSearchBox" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueSearchBoxConfigProcessor</item>
                 <item name="VueParamsMapping" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueParamsMappingProcessor</item>
                 <item name="VueResultItem" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueResultItemConfigProcessor</item>
-                <item name="VueSuggestionItem" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueSuggestionItemConfigProcessor</item>
                 <item name="VueAdditionalParameters" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueAdditionalParametersProcessor</item>
             </argument>
         </arguments>

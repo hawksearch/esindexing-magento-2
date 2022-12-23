@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2020 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -18,6 +18,10 @@ namespace HawkSearch\EsIndexing\Model\Config;
 use HawkSearch\Connector\Model\Config\ApiSettings as ConnectorApiSettings;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 
+/**
+ * @deprecated 0.1.2 No longer used
+ * @see \HawkSearch\Connector\Model\Config\ApiSettings
+ */
 class ApiSettings extends ConnectorApiSettings
 {
     /**#@+
@@ -40,23 +44,5 @@ class ApiSettings extends ConnectorApiSettings
     )
     {
         parent::__construct($scopeConfig, $configRootPath, $configGroup);
-    }
-
-    /**
-     * @param null|int|string $store
-     * @return string | null
-     */
-    public function getIndexingApiUrl($store = null) : ?string
-    {
-        return $this->getConfig(self::INDEXING_API_URL . '/' . $this->getApiMode(), $store);
-    }
-
-    /**
-     * @param null|int|string $store
-     * @return string | null
-     */
-    public function getSearchApiUrl($store = null) : ?string
-    {
-        return $this->getConfig(self::SEARCH_API_URL . '/' . $this->getApiMode(), $store);
     }
 }

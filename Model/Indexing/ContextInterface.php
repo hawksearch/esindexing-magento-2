@@ -27,4 +27,15 @@ interface ContextInterface
      * @return string
      */
     public function getIndexName(int $storeId);
+
+    /**
+     * @param bool $isFull
+     * @return void
+     */
+    public function setIsFullReindex(bool $isFull);
+
+    /**
+     * @return bool
+     */
+    public function isFullReindex();
 }

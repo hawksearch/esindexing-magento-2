@@ -15,9 +15,9 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\MessageQueue;
 
 use Magento\AsynchronousOperations\Api\Data\OperationInterface;
+use Magento\AsynchronousOperations\Api\Data\OperationSearchResultsInterface;
 use Magento\AsynchronousOperations\Api\OperationRepositoryInterface;
 use Magento\Framework\Api\FilterBuilder;
-use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\NotFoundException;
@@ -71,7 +71,7 @@ class IndexingOperationValidator
      * @return bool|void
      * @throws NoSuchEntityException
      */
-    protected function isPrevOperationComplete(OperationInterface $operation)
+    public function isPrevOperationComplete(OperationInterface $operation)
     {
         $prevOperationKey = (int)$operation->getId() === 0 ? null : (int)$operation->getId() - 1;
         $prevOperationStatus = $this->getOperationByBulkAndKey(
@@ -79,19 +79,61 @@ class IndexingOperationValidator
             $prevOperationKey
         )->getStatus();
 
-        return $prevOperationKey !== null
-            ? $prevOperationStatus == OperationInterface::STATUS_TYPE_COMPLETE
-            //this is the first operation in bulk
-            : true;
+        return $prevOperationKey === null || $prevOperationStatus == OperationInterface::STATUS_TYPE_COMPLETE;
     }
 
     /**
-     * @param $bulkUuid
-     * @param $operationKey
+     * @param OperationInterface $operation
+     * @return bool
+     * @throws NoSuchEntityException
+     * @throws NotFoundException
+     */
+    public function isValidOperation(OperationInterface $operation)
+    {
+        if ($this->isOperationComplete($operation)) {
+            throw new NotFoundException(
+                __(
+                    'Operation was already processed. Bulk UUID: %1, key: %2',
+                    $operation->getBulkUuid(),
+                    $operation->getId()
+                )
+            );
+        }
+
+        return $this->isBulkConsistent($operation->getBulkUuid());
+    }
+
+    /**
+     * @param OperationInterface $operation
+     * @return bool
+     */
+    public function isOperationComplete(OperationInterface $operation)
+    {
+        return $operation->getStatus() == OperationInterface::STATUS_TYPE_COMPLETE;
+    }
+
+    /**
+     * @param OperationInterface $operation
+     * @return bool
+     */
+    public function isAllBulkOperationsComplete(OperationInterface $operation)
+    {
+        $allCount = $this->getAllBulkOperationsResult($operation->getBulkUuid())->getTotalCount();
+        $completeCount = $this->getOperationsResultByBulkAndStatus(
+            $operation->getBulkUuid(),
+            OperationInterface::STATUS_TYPE_COMPLETE
+        )->getTotalCount();
+
+        return $allCount == $completeCount;
+    }
+
+    /**
+     * @param string $bulkUuid
+     * @param int $operationKey
      * @return OperationInterface
      * @throws NoSuchEntityException
      */
-    protected function getOperationByBulkAndKey($bulkUuid, $operationKey)
+    protected function getOperationByBulkAndKey(string $bulkUuid, int $operationKey)
     {
         $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
 
@@ -125,6 +167,44 @@ class IndexingOperationValidator
 
     /**
      * @param string $bulkUuid
+     * @param int $status
+     * @return OperationSearchResultsInterface
+     */
+    protected function getOperationsResultByBulkAndStatus(string $bulkUuid, int $status)
+    {
+        $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
+
+        $searchCriteriaBuilder->addFilter(
+            OperationInterface::BULK_ID,
+            $bulkUuid
+        )->addFilter(
+            OperationInterface::STATUS,
+            $status
+        );
+        $searchCriteria = $searchCriteriaBuilder->create();
+
+        return $this->operationRepository->getList($searchCriteria);
+    }
+
+    /**
+     * @param string $bulkUuid
+     * @return OperationSearchResultsInterface
+     */
+    protected function getAllBulkOperationsResult(string $bulkUuid)
+    {
+        $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
+
+        $searchCriteriaBuilder->addFilter(
+            OperationInterface::BULK_ID,
+            $bulkUuid
+        );
+        $searchCriteria = $searchCriteriaBuilder->create();
+
+        return $this->operationRepository->getList($searchCriteria);
+    }
+
+    /**
+     * @param string $bulkUuid
      * @return bool
      * @todo Check bulk consistency: operations order is correct,
      * @todo number of operation is eq to bulk operations count,
@@ -133,27 +213,5 @@ class IndexingOperationValidator
     protected function isBulkConsistent($bulkUuid)
     {
         return true;
-    }
-
-    /**
-     * @param OperationInterface $operation
-     * @return bool
-     * @throws NoSuchEntityException
-     * @throws NotFoundException
-     */
-    public function isValidOperation(OperationInterface $operation)
-    {
-        if ($operation->getStatus() == OperationInterface::STATUS_TYPE_COMPLETE) {
-            throw new NotFoundException(
-                __(
-                    'Operation was already processed Bulk UUID: %1, key: %2',
-                    $operation->getBulkUuid(),
-                    $operation->getId()
-                )
-            );
-        }
-
-        return $this->isBulkConsistent($operation->getBulkUuid())
-            && $this->isPrevOperationComplete($operation);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2021 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -40,8 +40,8 @@ class VueConnectionConfigProcessor implements LayoutConfigProcessorInterface
     {
         $connectionConfig = [
             'apiUrl' => $this->apiSettings->getSearchApiUrl(),
-            'dashboardUrl' => $this->apiSettings->getApiUrl(),
-            'clientGuid' => $this->apiSettings->getTrackingKey(),
+            'dashboardUrl' => $this->apiSettings->getHawksearchWorkbenchUrl(),
+            'clientGuid' => $this->apiSettings->getClientGuid(),
             'trackEventUrl' => $this->apiSettings->getTrackingUrl() . 'api/trackevent/',
         ];
         return array_merge_recursive($jsConfig ?? [], $connectionConfig);

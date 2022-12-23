@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
   /**
-   * Copyright (c) 2020 Hawksearch (www.hawksearch.com) - All Rights Reserved
+   * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
    *
    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -14,21 +14,6 @@
   -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
-        <hawksearch_connector>
-            <api_settings>
-                <indexing_api_url>
-                    <develop>https://indexing-dev.hawksearch.net/</develop>
-                    <staging>https://indexing-test.hawksearch.net/</staging>
-                    <production>https://indexing.hawksearch.com/</production>
-                </indexing_api_url>
-                <search_api_url>
-                    <develop>https://searchapi-dev.hawksearch.net/</develop>
-                    <staging>https://searchapi-test.hawksearch.net/</staging>
-                    <production>https://searchapi.hawksearch.com/</production>
-                </search_api_url>
-
-            </api_settings>
-        </hawksearch_connector>
         <hawksearch_indexing_settings>
             <indexing>
                 <items_batch_size>500</items_batch_size>

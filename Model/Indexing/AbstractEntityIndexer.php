@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2021 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -207,7 +207,9 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
      */
     protected function getItemsToRemove(array $fullItemsList, ?array $entityIds = null): array
     {
-        $idsToRemove = is_array($entityIds) ? array_combine($entityIds, $entityIds) : [];
+        $idsToRemove = is_array($entityIds)
+            ? array_combine($entityIds, array_map(function($id) { return $this->addTypePrefix($id);}, $entityIds))
+            : [];
         $itemsToRemove = [];
 
         foreach ($fullItemsList as $item) {
@@ -224,7 +226,7 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
             }
 
             if (!$this->canItemBeIndexed($item)) {
-                $itemsToRemove[$this->getEntityId($item)] = $this->getEntityId($item);
+                $itemsToRemove[$this->getEntityId($item)] = $this->getEntityUniqueId($item);
                 $this->itemsToRemoveCache[$this->getEntityUniqueId($item)] = $this->getEntityId($item);
             }
         }
@@ -311,6 +313,7 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
             $value = array_filter($value, function ($item){
                 return $item !== '' && $item !== null;
             });
+            $value = array_values($value);
         }
 
         return $value !== null && !is_array($value) ? array($value) : $value;
@@ -372,9 +375,19 @@ abstract class AbstractEntityIndexer implements EntityIndexerInterface
      * @return string
      * @throws NotFoundException
      */
-    private function getEntityUniqueId(DataObject $entityItem): string
+    protected function getEntityUniqueId(DataObject $entityItem): string
     {
-        return $this->getEntityType()->getTypeName() . '_' . $this->getEntityId($entityItem);
+        return $this->addTypePrefix((string)$this->getEntityId($entityItem));
+    }
+
+    /**
+     * @param string $value
+     * @return string
+     * @throws NotFoundException
+     */
+    protected function addTypePrefix(string $value)
+    {
+        return $this->getEntityType()->getTypeName() . '_' . $value;
     }
 
     /**

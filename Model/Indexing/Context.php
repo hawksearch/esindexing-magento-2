@@ -22,6 +22,11 @@ class Context implements ContextInterface
     private $indexNameCache = [];
 
     /**
+     * @var bool
+     */
+    private $isFullReindex;
+
+    /**
      * @inheritDoc
      */
     public function setIndexName(int $storeId, string $indexName)
@@ -35,5 +40,21 @@ class Context implements ContextInterface
     public function getIndexName(int $storeId)
     {
         return $this->indexNameCache[$storeId] ?? '';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setIsFullReindex(bool $isFull)
+    {
+        $this->isFullReindex = $isFull;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isFullReindex()
+    {
+        return $this->isFullReindex;
     }
 }

@@ -12,21 +12,11 @@
  */
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\MessageQueue;
+namespace HawkSearch\EsIndexing\Gateway\Http;
 
-interface BulkPublisherInterface
+use HawkSearch\Connector\Gateway\Http\TransferFactory;
+
+class IndexingApiTransferFactory extends TransferFactory
 {
-    /**
-     * Publishes messages in bulk to a specific queue or exchange.
-     *
-     * @return void
-     */
-    public function publish();
 
-    /**
-     * @param string $topicName
-     * @param array $data
-     * @return $this
-     */
-    public function addMessage($topicName, $data);
 }
