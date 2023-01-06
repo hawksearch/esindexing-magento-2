@@ -17,12 +17,14 @@ namespace HawkSearch\EsIndexing\Model;
 
 use HawkSearch\Connector\Gateway\Http\ClientInterface;
 use HawkSearch\Connector\Gateway\Instruction\InstructionManagerPool;
+use HawkSearch\Connector\Gateway\InstructionException;
 use HawkSearch\EsIndexing\Api\Data\FieldInterface;
 use HawkSearch\EsIndexing\Api\FieldsManagementInterface;
 use HawkSearch\EsIndexing\Block\Adminhtml\System\Config\Product\CustomAttributes;
 use HawkSearch\EsIndexing\Model\Product\Attributes;
 use Magento\Framework\DataObjectFactory;
 use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\NotFoundException;
 use Magento\Framework\Serialize\Serializer\Json;
 use Psr\Log\LoggerInterface;
 
@@ -154,5 +156,24 @@ class FieldsManagement implements FieldsManagementInterface
     private function calcOptionHash($optionValue)
     {
         return sprintf('%u', crc32(self::CONFIG_NAME . self::OPTION_ID . $optionValue));
+    }
+
+    /**
+     * @inheritDoc
+     * @throws InstructionException
+     * @throws NotFoundException
+     */
+    public function getHawkSearchFields()
+    {
+        $hawkFieldsResponse =  $this->instructionManagerPool->get('hawksearch')
+            ->executeByCode('getFields')->get();
+
+        if ($hawkFieldsResponse[ClientInterface::RESPONSE_CODE] === 200) {
+            return is_array($hawkFieldsResponse[ClientInterface::RESPONSE_DATA])
+                ? $hawkFieldsResponse[ClientInterface::RESPONSE_DATA]
+                : [];
+        } else {
+            throw new InstructionException(__($hawkFieldsResponse[ClientInterface::RESPONSE_MESSAGE]));
+        }
     }
 }

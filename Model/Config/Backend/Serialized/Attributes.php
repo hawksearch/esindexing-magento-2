@@ -41,11 +41,6 @@ class Attributes extends ArraySerialized
     /**#@-*/
 
     /**
-     * @var Json
-     */
-    private $serializer;
-
-    /**
      * @var InstructionManagerPool
      */
     private $instructionManagerPool;
@@ -97,7 +92,6 @@ class Attributes extends ArraySerialized
             $data,
             $serializer
         );
-        $this->serializer = $serializer;
         $this->instructionManagerPool = $instructionManagerPool;
         $this->productAttributeRepository = $productAttributeRepository;
         $this->message = $message;
@@ -120,7 +114,7 @@ class Attributes extends ArraySerialized
             foreach ($submitValue as $id => $value) {
                 if (preg_match(self::NEW_ROW_PATTERN_ID, $id)) {
                     $newFields[$id] = $value;
-                } else {
+                } elseif (!empty($value[CustomAttributes::COLUMN_ATTRIBUTE])) {
                     $valueToSave[$id] = $value;
                 }
             }

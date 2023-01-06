@@ -14,6 +14,8 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Api;
 
+use HawkSearch\Connector\Api\Data\HawkSearchFieldInterface;
+
 interface FieldsManagementInterface
 {
     /**
@@ -21,4 +23,9 @@ interface FieldsManagementInterface
      * @return string[]
      */
     public function syncProductAttributesConfig();
+
+    /**
+     * @return HawkSearchFieldInterface[]
+     */
+    public function getHawkSearchFields();
 }
