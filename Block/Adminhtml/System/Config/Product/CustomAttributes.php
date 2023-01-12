@@ -17,8 +17,9 @@ namespace HawkSearch\EsIndexing\Block\Adminhtml\System\Config\Product;
 use HawkSearch\EsIndexing\Block\Adminhtml\Form\Field\Select;
 use HawkSearch\EsIndexing\Model\Config\Source\HawksearchFields;
 use HawkSearch\EsIndexing\Model\Config\Source\ProductAttributes;
-use Magento\Backend\Block\Template\Context;
+use Magento\Backend\Block\Template;
 use Magento\Config\Block\System\Config\Form\Field\FieldArray\AbstractFieldArray;
+use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
 
@@ -29,6 +30,7 @@ class CustomAttributes extends AbstractFieldArray
      */
     const COLUMN_ATTRIBUTE = 'attribute';
     const COLUMN_FIELD = 'field';
+    const SELECT_OPTION_NEW_FILED_VALUE = '--insert--new--';
     /**#@-*/
 
     /**
@@ -47,13 +49,13 @@ class CustomAttributes extends AbstractFieldArray
     private ProductAttributes $productAttributes;
 
     /**
-     * @param Context $context
+     * @param Template\Context $context
      * @param HawksearchFields $hawksearchFields
      * @param ProductAttributes $productAttributes
      * @param array $data
      */
     public function __construct(
-        Context $context,
+        Template\Context $context,
         HawksearchFields $hawksearchFields,
         ProductAttributes $productAttributes,
         array $data = []
@@ -93,6 +95,7 @@ class CustomAttributes extends AbstractFieldArray
 
         $this->_addAfter = false;
         $this->_addButtonLabel = __('Add New Mapping');
+        $this->setHtmlId('_' . uniqid());
     }
 
     /**
@@ -195,5 +198,27 @@ class CustomAttributes extends AbstractFieldArray
         $renderer->setOptions($options);
 
         return $renderer;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function _getElementHtml(AbstractElement $element)
+    {
+        $html = parent::_getElementHtml($element);
+
+        $block = $this->getLayout()->createBlock(
+            Template::class
+        )->setTemplate(
+            'HawkSearch_EsIndexing::system/config/product/custom-attributes-js.phtml'
+        )->setData(
+            [
+                'html_id' => $this->getHtmlId(),
+                'new_field_option_value' => self::SELECT_OPTION_NEW_FILED_VALUE,
+                'base_class_prefix' => 'arrayRow'
+            ]
+        );
+
+        return $html . $block->toHtml();
     }
 }
