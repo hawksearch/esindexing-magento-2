@@ -522,6 +522,33 @@
     </virtualType>
     <!-- deleteLandingPagesBulk Instruction  -->
 
+    <!-- getFields Instruction  -->
+    <virtualType name="HawkSearchEsIndexingGetFieldsResultFactory" type="HawkSearch\Connector\Gateway\Instruction\ResultInterfaceFactory">
+        <arguments>
+            <argument xsi:type="string" name="instanceName">HawkSearch\EsIndexing\Gateway\Instruction\Result\FieldListResult</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearchGetFieldsInstruction">
+        <arguments>
+            <argument name="resultFactory" xsi:type="object">HawkSearchEsIndexingGetFieldsResultFactory</argument>
+        </arguments>
+    </virtualType>
+    <!-- END getFields Instruction  -->
+
+    <!-- postField Instruction  -->
+    <virtualType name="HawkSearchEsIndexingPostFieldResultFactory" type="HawkSearch\Connector\Gateway\Instruction\ResultInterfaceFactory">
+        <arguments>
+            <argument xsi:type="string" name="instanceName">HawkSearch\EsIndexing\Gateway\Instruction\Result\FieldResult</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearchPostFieldInstruction">
+        <arguments>
+            <argument name="resultFactory" xsi:type="object">HawkSearchEsIndexingPostFieldResultFactory</argument>
+        </arguments>
+    </virtualType>
+    <!-- END postField Instruction  -->
+
+
     <!-- END Instructions  -->
 
     <!-- Instruction global validators   -->
@@ -758,6 +785,13 @@
             <argument name="apiConfig" xsi:type="object">HawkSearch\Connector\Gateway\Config\IndexingApiConfig</argument>
         </arguments>
     </type>
+
+    <virtualType name="HawkSearch\EsIndexing\Model\Config\Backend\Serialized\ProductAttributes"
+                 type="HawkSearch\EsIndexing\Model\Config\Backend\Serialized\ArraySerialized">
+        <arguments>
+            <argument name="processor" xsi:type="object">HawkSearch\EsIndexing\Model\Config\Backend\Serialized\Processor\ProductAttributes</argument>
+        </arguments>
+    </virtualType>
 
     <!-- END Types -->
 

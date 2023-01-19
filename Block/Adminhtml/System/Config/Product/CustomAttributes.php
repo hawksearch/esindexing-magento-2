@@ -14,28 +14,50 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Block\Adminhtml\System\Config\Product;
 
-use HawkSearch\EsIndexing\Block\Adminhtml\Form\Field\AttributeColumn;
+use HawkSearch\EsIndexing\Block\Adminhtml\Form\Field\Select;
+use HawkSearch\EsIndexing\Model\Config\Backend\Serialized\Processor\ValueProcessorInterface;
+use HawkSearch\EsIndexing\Model\Config\Source\HawksearchFields;
+use HawkSearch\EsIndexing\Model\Config\Source\ProductAttributes;
+use Magento\Backend\Block\Template;
 use Magento\Config\Block\System\Config\Form\Field\FieldArray\AbstractFieldArray;
+use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
 
 class CustomAttributes extends AbstractFieldArray
 {
-    /**#@+
-     * Constants
+    /**
+     * @var array
      */
-    const COLUMN_ATTRIBUTE = 'attribute';
-    /**#@-*/
+    protected $columnRendererCache = [];
 
     /**
-     * @var string
+     * @var HawksearchFields
      */
-    protected $_template = 'HawkSearch_EsIndexing::system/config/form/field/array.phtml';
+    private HawksearchFields $hawksearchFields;
 
     /**
-     * @var AttributeColumn
+     * @var ProductAttributes
      */
-    private $attributeRenderer;
+    private ProductAttributes $productAttributes;
+
+    /**
+     * @param Template\Context $context
+     * @param HawksearchFields $hawksearchFields
+     * @param ProductAttributes $productAttributes
+     * @param array $data
+     */
+    public function __construct(
+        Template\Context $context,
+        HawksearchFields $hawksearchFields,
+        ProductAttributes $productAttributes,
+        array $data = []
+    )
+    {
+        $this->hawksearchFields = $hawksearchFields;
+        $this->productAttributes = $productAttributes;
+        parent::__construct($context, $data);
+    }
 
     /**
      * Prepare rendering the new field by adding all the needed columns
@@ -44,14 +66,29 @@ class CustomAttributes extends AbstractFieldArray
     protected function _prepareToRender()
     {
         $this->addColumn(
-            self::COLUMN_ATTRIBUTE,
+            ValueProcessorInterface::COLUMN_FIELD,
             [
-                'label' => __('Attribute'),
-                'renderer' => $this->getAttributeRenderer()
+                'label' => __('Hawk Field Name'),
+                'class' => 'required-entry',
+                'options' => function() {
+                    return $this->hawksearchFields->toOptionArray();
+                },
+            ]
+        );
+
+        $this->addColumn(
+            ValueProcessorInterface::COLUMN_ATTRIBUTE,
+            [
+                'label' => __('Product Attribute'),
+                'options' => function() {
+                    return $this->productAttributes->toOptionArray();
+                },
             ]
         );
 
         $this->_addAfter = false;
+        $this->_addButtonLabel = __('Add New Mapping');
+        $this->setHtmlId('_' . uniqid());
     }
 
     /**
@@ -64,9 +101,17 @@ class CustomAttributes extends AbstractFieldArray
     public function addColumn($name, $params)
     {
         parent::addColumn($name, $params);
-        if (isset($this->_columns[$name])) {
-            $this->_columns[$name]['readonly'] = $this->_getParam($params, 'readonly', false);
+        if (!isset($this->_columns[$name])) {
+            return;
         }
+
+        $this->_columns[$name]['readonly'] = $this->_getParam($params, 'readonly', false);
+
+        $options = $this->_getParam($params, 'options');
+        if ($options !== null) {
+            $this->_columns[$name]['options'] = $options;
+        }
+        $this->_columns[$name]['renderer'] = $this->getColumnRenderer($name);
     }
 
     /**
@@ -79,27 +124,98 @@ class CustomAttributes extends AbstractFieldArray
     {
         $options = [];
 
-        $attribute = $row->getData(static::COLUMN_ATTRIBUTE);
-        if ($attribute !== null) {
-            $options['option_' . $this->getAttributeRenderer()->calcOptionHash($attribute)] = 'selected="selected"';
+        foreach ($this->_columns as $columnName => $columnData) {
+            if (isset($columnData['options'])) {
+                $index = 'option_' . $this->getColumnRenderer($columnName)
+                        ->calcOptionHash($row->getData($columnName));
+
+                $options[$index] = 'selected="selected"';
+            }
+        }
+
+        if ($row['_id'] === null || is_int($row['_id'])) {
+            $row->setData('_id', '_' . rand(1000000000, 9999999999) . '_' . rand(0, 999));
         }
 
         $row->setData('option_extra_attrs', $options);
     }
 
     /**
-     * @return AttributeColumn
+     * @param string $columnName
+     * @return void
      * @throws LocalizedException
+     * @throws \Exception
      */
-    private function getAttributeRenderer()
+    protected function getColumnRenderer($columnName)
     {
-        if (!$this->attributeRenderer) {
-            $this->attributeRenderer = $this->getLayout()->createBlock(
-                AttributeColumn::class,
-                '',
-                ['data' => ['is_render_to_js_template' => true]]
-            );
+        if (empty($this->_columns[$columnName])) {
+            throw new \Exception('Wrong column name specified.');
         }
-        return $this->attributeRenderer;
+
+        $columnData = $this->_columns[$columnName];
+        if (!array_key_exists($columnName, $this->columnRendererCache) || !$this->columnRendererCache[$columnName]) {
+            $renderer = $this->resolveSelectFieldRenderer($columnName);
+
+            $renderer = $columnData['renderer'] ?: $renderer ?? false;
+
+            $this->columnRendererCache[$columnName] = $renderer;
+        }
+
+        return $this->columnRendererCache[$columnName];
+    }
+
+    /**
+     * @param string $columnName
+     * @return Select|null
+     * @throws \Exception
+     */
+    protected function resolveSelectFieldRenderer($columnName)
+    {
+        if (empty($this->_columns[$columnName])) {
+            throw new \Exception('Wrong column name specified.');
+        }
+
+        $columnData = $this->_columns[$columnName];
+        if (empty($columnData['options'])) {
+            return null;
+        }
+
+        /** @var Select $renderer */
+        $renderer = $this->getLayout()->createBlock(
+            Select::class,
+            '',
+            ['data' => ['is_render_to_js_template' => true]]
+        );
+
+        $options = $columnData['options'];
+        if (is_callable($options)) {
+            $options = $options();
+        }
+
+        $renderer->setOptions($options);
+
+        return $renderer;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function _getElementHtml(AbstractElement $element)
+    {
+        $html = parent::_getElementHtml($element);
+
+        $block = $this->getLayout()->createBlock(
+            Template::class
+        )->setTemplate(
+            'HawkSearch_EsIndexing::system/config/product/custom-attributes-js.phtml'
+        )->setData(
+            [
+                'html_id' => $this->getHtmlId(),
+                'new_field_option_value' => ValueProcessorInterface::SELECT_OPTION_NEW_FILED_VALUE,
+                'base_class_prefix' => 'arrayRow'
+            ]
+        );
+
+        return $html . $block->toHtml();
     }
 }

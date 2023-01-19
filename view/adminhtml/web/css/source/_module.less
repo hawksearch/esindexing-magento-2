@@ -1,6 +1,5 @@
-<?php
-/**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+/*
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -10,16 +9,19 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Api;
+@control-table-cell__row-added__background-color: @color-gray-light1;
 
-use HawkSearch\Connector\Api\Data\HawkSearchFieldInterface;
+.admin__control-table {
+    tr {
+        &.row-added {
+            td {
+                background-color: @control-table-cell__row-added__background-color;
+            }
+        }
+    }
 
-interface FieldsManagementInterface
-{
-    /**
-     * @return HawkSearchFieldInterface[]
-     */
-    public function getHawkSearchFields();
+    .new-field-wrapper {
+        padding-top: @indent__s;
+    }
 }
