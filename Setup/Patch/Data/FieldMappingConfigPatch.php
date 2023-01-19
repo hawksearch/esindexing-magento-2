@@ -76,14 +76,15 @@ class FieldMappingConfigPatch implements DataPatchInterface
         if (!empty($config)) {
             $unserialized = $this->json->unserialize($config['value']);
 
-            foreach ($unserialized as $fieldId => $fieldData) {
+            $result = [];
+            foreach ($unserialized as $fieldData) {
                 $fieldData['field'] = $fieldData['field'] ?? $fieldData['attribute'];
-                $unserialized[$fieldId] = $fieldData;
+                $result[] = $fieldData;
             }
 
             $this->moduleDataSetup->getConnection()->update(
                 $configTable,
-                ['value' => $this->json->serialize($unserialized)],
+                ['value' => $this->json->serialize($result)],
                 ['path = ?' => self::CONFIG_PATH_ATTRIBUTES]
             );
         }

@@ -75,7 +75,7 @@
                 <field id="custom_attributes" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Attributes</label>
                     <frontend_model>HawkSearch\EsIndexing\Block\Adminhtml\System\Config\Product\CustomAttributes</frontend_model>
-                    <backend_model>HawkSearch\EsIndexing\Model\Config\Backend\Serialized\Attributes</backend_model>
+                    <backend_model>HawkSearch\EsIndexing\Model\Config\Backend\Serialized\ProductAttributes</backend_model>
                     <comment>
                         <![CDATA[
                             Specify product attributes.

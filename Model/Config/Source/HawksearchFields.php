@@ -15,11 +15,8 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Config\Source;
 
 use HawkSearch\Connector\Api\Data\HawkSearchFieldInterface;
-use HawkSearch\Connector\Gateway\InstructionException;
 use HawkSearch\EsIndexing\Api\FieldsManagementInterface;
-use HawkSearch\Datafeed\Model\Config\Admin\StoreViewConfigResolver;
 use Magento\Framework\Data\OptionSourceInterface;
-use Magento\Store\Model\StoreManagerInterface;
 
 class HawksearchFields implements OptionSourceInterface
 {
@@ -34,24 +31,13 @@ class HawksearchFields implements OptionSourceInterface
     private $fieldsCache;
 
     /**
-     * @var StoreManagerInterface
+     * @param FieldsManagementInterface $fieldsManagement
      */
-    private $storeManager;
-
-    /**
-     * @var StoreViewConfigResolver
-     */
-    private $storeViewConfigResolver;
-
     public function __construct(
-        FieldsManagementInterface $fieldsManagement,
-        StoreManagerInterface $storeManager/*,
-        StoreViewConfigResolver $storeViewConfigResolver*/
+        FieldsManagementInterface $fieldsManagement
 
     ) {
         $this->fieldsManagement = $fieldsManagement;
-        $this->storeManager = $storeManager;
-        //$this->storeViewConfigResolver = $storeViewConfigResolver;
     }
 
     /**
@@ -76,19 +62,11 @@ class HawksearchFields implements OptionSourceInterface
 
     /**
      * @return HawkSearchFieldInterface[]
-     * @todo emulate current configuration store
      */
     private function getFields()
     {
         if ($this->fieldsCache === null) {
-            try {
-                //$this->storeViewConfigResolver->resolve(true);
-                $this->fieldsCache = $this->fieldsManagement->getHawkSearchFields();
-            } catch (InstructionException $e) {
-                $this->fieldsCache = [];
-            } finally {
-                //$this->storeViewConfigResolver->unresolve();
-            }
+            $this->fieldsCache = $this->fieldsManagement->getHawkSearchFields();
         }
 
         return $this->fieldsCache;

@@ -19,12 +19,6 @@ use HawkSearch\Connector\Api\Data\HawkSearchFieldInterface;
 interface FieldsManagementInterface
 {
     /**
-     * Sync fields with HawkSearch and return updated values for config
-     * @return string[]
-     */
-    public function syncProductAttributesConfig();
-
-    /**
      * @return HawkSearchFieldInterface[]
      */
     public function getHawkSearchFields();

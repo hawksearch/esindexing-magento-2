@@ -24,10 +24,11 @@ define([
             tbodyIdPrefix: 'addRow',
             addedRowCssClass: 'row-added',
             newFieldWrapperCssClass: 'new-field-wrapper',
-            newFieldInputNameSuffix: '[name]',
+            newFieldInputNameSuffix: '[field_new]',
             htmlId: '',
             newFieldOptionValue: '--insert--new--',
-            fieldSelectSelector: 'select[name$=\"[field]\"]'
+            fieldSelectSelector: 'select[name$=\"[field]\"]',
+            fieldSelectNameSuffix: '[field]',
         },
 
         /**
@@ -72,7 +73,8 @@ define([
                         'class': this.newFieldWrapperCssClass
                     }).append(
                         $('<input>').attr({
-                            'name': fieldSelect.attr('name') + this.newFieldInputNameSuffix,
+                            'name': fieldSelect.attr('name')
+                                .replace(this.fieldSelectNameSuffix, this.newFieldInputNameSuffix),
                             'type': 'text',
                             'placeholder': newFieldInputPlaceholder
                         })

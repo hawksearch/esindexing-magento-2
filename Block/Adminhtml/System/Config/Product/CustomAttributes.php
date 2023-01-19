@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Block\Adminhtml\System\Config\Product;
 
 use HawkSearch\EsIndexing\Block\Adminhtml\Form\Field\Select;
+use HawkSearch\EsIndexing\Model\Config\Backend\Serialized\Processor\ValueProcessorInterface;
 use HawkSearch\EsIndexing\Model\Config\Source\HawksearchFields;
 use HawkSearch\EsIndexing\Model\Config\Source\ProductAttributes;
 use Magento\Backend\Block\Template;
@@ -25,14 +26,6 @@ use Magento\Framework\Exception\LocalizedException;
 
 class CustomAttributes extends AbstractFieldArray
 {
-    /**#@+
-     * Constants
-     */
-    const COLUMN_ATTRIBUTE = 'attribute';
-    const COLUMN_FIELD = 'field';
-    const SELECT_OPTION_NEW_FILED_VALUE = '--insert--new--';
-    /**#@-*/
-
     /**
      * @var array
      */
@@ -73,7 +66,7 @@ class CustomAttributes extends AbstractFieldArray
     protected function _prepareToRender()
     {
         $this->addColumn(
-            self::COLUMN_FIELD,
+            ValueProcessorInterface::COLUMN_FIELD,
             [
                 'label' => __('Hawk Field Name'),
                 'class' => 'required-entry',
@@ -84,7 +77,7 @@ class CustomAttributes extends AbstractFieldArray
         );
 
         $this->addColumn(
-            self::COLUMN_ATTRIBUTE,
+            ValueProcessorInterface::COLUMN_ATTRIBUTE,
             [
                 'label' => __('Product Attribute'),
                 'options' => function() {
@@ -138,6 +131,10 @@ class CustomAttributes extends AbstractFieldArray
 
                 $options[$index] = 'selected="selected"';
             }
+        }
+
+        if ($row['_id'] === null || is_int($row['_id'])) {
+            $row->setData('_id', '_' . rand(1000000000, 9999999999) . '_' . rand(0, 999));
         }
 
         $row->setData('option_extra_attrs', $options);
@@ -214,7 +211,7 @@ class CustomAttributes extends AbstractFieldArray
         )->setData(
             [
                 'html_id' => $this->getHtmlId(),
-                'new_field_option_value' => self::SELECT_OPTION_NEW_FILED_VALUE,
+                'new_field_option_value' => ValueProcessorInterface::SELECT_OPTION_NEW_FILED_VALUE,
                 'base_class_prefix' => 'arrayRow'
             ]
         );
