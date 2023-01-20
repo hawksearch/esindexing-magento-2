@@ -24,7 +24,7 @@
         <section id="hawksearch_indexing_settings" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Indexing</label>
             <tab>hawksearch</tab>
-            <resource>HawkSearch_EsIndexing::hawksearch_esindexing</resource>
+            <resource>HawkSearch_EsIndexing::config</resource>
             <group id="indexing" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Indexing</label>
                 <field id="enable_indexing" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -51,7 +51,7 @@
         <section id="hawksearch_search_settings" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Search</label>
             <tab>hawksearch</tab>
-            <resource>HawkSearch_EsIndexing::hawksearch_esindexing</resource>
+            <resource>HawkSearch_EsIndexing::config</resource>
             <group id="search" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Search</label>
                 <field id="enable_search" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -69,7 +69,7 @@
         <section id="hawksearch_product_settings" translate="label" type="text" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Products</label>
             <tab>hawksearch</tab>
-            <resource>HawkSearch_EsIndexing::hawksearch_esindexing</resource>
+            <resource>HawkSearch_EsIndexing::config</resource>
             <group id="products" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Products</label>
                 <field id="custom_attributes" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -88,7 +88,7 @@
         <section id="hawksearch_advanced_settings" translate="label" type="text" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Advanced</label>
             <tab>hawksearch</tab>
-            <resource>HawkSearch_EsIndexing::hawksearch_esindexing</resource>
+            <resource>HawkSearch_EsIndexing::config</resource>
             <group id="advanced" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <field id="remove_pub_assets_url" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Remove pub folder from assets url</label>

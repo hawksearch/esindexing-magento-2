@@ -19,7 +19,7 @@
                 <resource id="Magento_Backend::stores">
                     <resource id="Magento_Backend::stores_settings">
                         <resource id="Magento_Config::config">
-                            <resource id="HawkSearch_EsIndexing::hawksearch_esindexing" title="Hawksearch ES" translate="title"/>
+                            <resource id="HawkSearch_EsIndexing::config" title="Hawksearch ES" translate="title"/>
                         </resource>
                     </resource>
                 </resource>
