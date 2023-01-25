@@ -15,7 +15,11 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Console\Command;
 
 use Magento\AsynchronousOperations\Api\BulkStatusInterface;
+use Magento\AsynchronousOperations\Api\Data\BulkSummaryInterface;
+use Magento\AsynchronousOperations\Api\Data\BulkSummaryInterfaceFactory;
 use Magento\Framework\Bulk\BulkManagementInterface;
+use Magento\Framework\EntityManager\EntityManager;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,8 +27,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class RetryBulk extends Command
 {
-    const INPUT_BULK_UUID = 'bulk-uuid';
-    const INPUT_STATUSES = 'statuses';
+    /**#@+
+     * Constants for keys of data array
+     */
+    public const INPUT_BULK_UUID = 'bulk-uuid';
+    public const INPUT_STATUSES = 'statuses';
+    /**#@-*/
 
     /**
      * @var BulkManagementInterface
@@ -37,20 +45,37 @@ class RetryBulk extends Command
     private $bulkStatus;
 
     /**
+     * @var BulkSummaryInterfaceFactory
+     */
+    private $bulkSummaryFactory;
+
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
      * RetryBulk constructor.
+     *
      * @param BulkManagementInterface $bulkManagement
      * @param BulkStatusInterface $bulkStatus
+     * @param BulkSummaryInterfaceFactory $bulkSummaryFactory
+     * @param EntityManager $entityManager
      * @param string|null $name
      */
     public function __construct(
         BulkManagementInterface $bulkManagement,
         BulkStatusInterface $bulkStatus,
+        BulkSummaryInterfaceFactory $bulkSummaryFactory,
+        EntityManager $entityManager,
         string $name = null
     )
     {
         parent::__construct($name);
         $this->bulkManagement = $bulkManagement;
         $this->bulkStatus = $bulkStatus;
+        $this->bulkSummaryFactory = $bulkSummaryFactory;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -93,10 +118,22 @@ class RetryBulk extends Command
                 $operations = $this->bulkStatus->getFailedOperationsByBulkId($bulkUuid);
             }
 
-            if ($this->bulkManagement->scheduleBulk($bulkUuid, $operations, 'Reschedule bulk')) {
-                $output->writeln(__('%1 item(s) have been scheduled for update."', count($operations)));
+            /** @var BulkSummaryInterface $bulkSummary */
+            $bulkSummary = $this->bulkSummaryFactory->create();
+            $this->entityManager->load($bulkSummary, $bulkUuid);
+            if (!$bulkSummary->getBulkId()) {
+                throw new NoSuchEntityException(__('Bulk is not found'));
+            }
+
+            if ($this->bulkManagement->scheduleBulk(
+                $bulkUuid,
+                $operations,
+                $bulkSummary->getDescription(),
+                $bulkSummary->getUserId()
+            )) {
+                $output->writeln(__('%1 item(s) have been scheduled for update"', count($operations)));
             } else {
-                $output->writeln(__('No failed operations found.'));
+                $output->writeln(__('No operations found to retry'));
             }
         } catch (\Exception $exception) {
             $output->writeln(__('An error occurred: %1', $exception->getMessage()));

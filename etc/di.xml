@@ -778,6 +778,11 @@
             <argument name="bulkManagement" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\RetryBulkManagement</argument>
         </arguments>
     </type>
+    <type name="HawkSearch\EsIndexing\Controller\Adminhtml\Bulkoperations\Retry">
+        <arguments>
+            <argument name="bulkManagement" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\RetryBulkManagement</argument>
+        </arguments>
+    </type>
 
     <type name="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
         <arguments>

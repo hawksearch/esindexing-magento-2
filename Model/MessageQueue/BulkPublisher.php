@@ -194,9 +194,13 @@ class BulkPublisher implements BulkPublisherInterface
 
         $this->saveMultipleOperations->execute($operations);
         if (!$this->bulkManagement->scheduleBulk($bulkUuid, $operations, $bulkDescription, $userId)) {
-            throw new LocalizedException(
-                __('Something went wrong while scheduling bulk operation request.')
-            );
+            try {
+                $this->bulkManagement->deleteBulk($bulkUuid);
+            } finally {
+                throw new LocalizedException(
+                    __('Something went wrong while processing the request.')
+                );
+            }
         }
 
         if ($bulkException->wasErrorAdded()) {
