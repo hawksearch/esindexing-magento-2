@@ -17,6 +17,9 @@
         <resources>
             <resource id="Magento_Backend::admin">
                 <resource id="Magento_Backend::stores">
+                    <resource id="HawkSearch_EsIndexing::stores_hawksearch" title="Hawksearch" translate="title" sortOrder="500">
+                        <resource id="HawkSearch_EsIndexing::bulk_operations" title="Indexing Bulk Operations" translate="title" sortOrder="10"/>
+                    </resource>
                     <resource id="Magento_Backend::stores_settings">
                         <resource id="Magento_Config::config">
                             <resource id="HawkSearch_EsIndexing::config" title="Hawksearch ES" translate="title"/>
