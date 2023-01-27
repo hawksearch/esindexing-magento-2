@@ -1,0 +1,115 @@
+<!--
+  /**
+   * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
+   *
+   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+   * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+   * IN THE SOFTWARE.
+   */
+  -->
+
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">hawksearch_bulk_details_form.hawksearch_bulk_details_form_data_source</item>
+        </item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+    </argument>
+    <settings>
+        <buttons>
+            <button name="save" class="HawkSearch\EsIndexing\Block\Adminhtml\Bulk\Details\RetryButton"/>
+            <button name="back" class="HawkSearch\EsIndexing\Block\Adminhtml\Bulk\Details\BackButton"/>
+        </buttons>
+        <namespace>hawksearch_bulk_details_form</namespace>
+        <dataScope>data</dataScope>
+        <deps>
+            <dep>hawksearch_bulk_details_form.hawksearch_bulk_details_form_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="hawksearch_bulk_details_form_data_source">
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+        <settings>
+            <submitUrl path="hawksearch/bulkoperations/retry"/>
+        </settings>
+        <dataProvider class="HawkSearch\EsIndexing\Ui\Component\DataProvider\BulkDataProvider" name="hawksearch_bulk_details_form_data_source">
+            <settings>
+                <requestFieldName>uuid</requestFieldName>
+                <primaryFieldName>uuid</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <fieldset name="general" sortOrder="10">
+        <settings>
+            <label/>
+        </settings>
+        <field name="description" formElement="input">
+            <settings>
+                <elementTmpl>ui/form/element/text</elementTmpl>
+                <dataType>text</dataType>
+                <label translate="true">Description of Operation</label>
+            </settings>
+        </field>
+        <field name="summary" formElement="input">
+            <settings>
+                <elementTmpl>ui/form/element/text</elementTmpl>
+                <dataType>text</dataType>
+                <label translate="true">Summary</label>
+            </settings>
+        </field>
+        <field name="start_time" formElement="date">
+            <settings>
+                <elementTmpl>ui/form/element/textDate</elementTmpl>
+                <dataType>text</dataType>
+                <label translate="true">Start Time</label>
+            </settings>
+            <formElements>
+                <date>
+                    <settings>
+                        <options>
+                            <option name="showsTime" xsi:type="boolean">true</option>
+                            <option name="dateFormat" xsi:type="string">MMM d, YYYY</option>
+                            <option name="timeFormat" xsi:type="string">h:mm:ss A</option>
+                        </options>
+                    </settings>
+                </date>
+            </formElements>
+        </field>
+    </fieldset>
+    <fieldset name="hawksearch_operations" sortOrder="20">
+        <settings>
+            <label translate="true">Bulk Operations</label>
+        </settings>
+        <container name="hawksearch_operations_description" template="ui/form/components/complex">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string"/>
+                    <item name="text" xsi:type="string" translate="true">To retry failed operations click “Retry”.</item>
+                </item>
+            </argument>
+        </container>
+        <insertListing name="hawksearch_operation">
+            <settings>
+                <externalProvider>${ $.ns }.hawksearch_operation_listing_data_source</externalProvider>
+                <loading>false</loading>
+                <selectionsProvider>${ $.ns }.${ $.ns }.hawksearch_operation_listing_columns.ids</selectionsProvider>
+                <autoRender>true</autoRender>
+                <dataScope>hawksearch_operation</dataScope>
+                <ns>hawksearch_operation_listing</ns>
+                <exports>
+                    <link name="uuid">${ $.externalProvider }:params.uuid</link>
+                </exports>
+                <imports>
+                    <link name="uuid">${ $.provider }:data.uuid</link>
+                </imports>
+            </settings>
+        </insertListing>
+    </fieldset>
+</form>

@@ -15,16 +15,16 @@
 <listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
     <argument name="data" xsi:type="array">
         <item name="js_config" xsi:type="array">
-            <item name="provider" xsi:type="string">hawksearch_bulk_listing.hawksearch_bulk_listing_data_source</item>
+            <item name="provider" xsi:type="string">hawksearch_operation_listing.hawksearch_operation_listing_data_source</item>
         </item>
     </argument>
     <settings>
-        <spinner>hawksearch_bulk_columns</spinner>
+        <spinner>hawksearch_operation_listing_columns</spinner>
         <deps>
-            <dep>hawksearch_bulk_listing.hawksearch_bulk_listing_data_source</dep>
+            <dep>hawksearch_operation_listing.hawksearch_operation_listing_data_source</dep>
         </deps>
     </settings>
-    <dataSource name="hawksearch_bulk_listing_data_source" component="Magento_Ui/js/grid/provider">
+    <dataSource name="hawksearch_operation_listing_data_source" component="Magento_Ui/js/grid/provider">
         <settings>
             <storageConfig>
                 <param name="indexField" xsi:type="string">id</param>
@@ -32,7 +32,7 @@
             <updateUrl path="mui/index/render"/>
         </settings>
         <aclResource>HawkSearch_EsIndexing::bulk_operations</aclResource>
-        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="hawksearch_bulk_listing_data_source">
+        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="hawksearch_operation_listing_data_source">
             <settings>
                 <requestFieldName>id</requestFieldName>
                 <primaryFieldName>id</primaryFieldName>
@@ -41,7 +41,6 @@
     </dataSource>
     <listingToolbar name="listing_top">
         <bookmark name="bookmarks"/>
-        <columnsControls name="columns_controls"/>
         <exportButton name="export_button"/>
         <filters name="listing_filters">
             <argument name="data" xsi:type="array">
@@ -60,60 +59,59 @@
         </filters>
         <paging name="listing_paging"/>
     </listingToolbar>
-    <columns name="hawksearch_bulk_columns">
-        <selectionsColumn name="ids" sortOrder="10">
+    <columns name="hawksearch_operation_listing_columns">
+        <settings>
+            <dndConfig>
+                <param name="enabled" xsi:type="boolean">false</param>
+            </dndConfig>
+        </settings>
+        <selectionsColumn name="ids" sortOrder="1">
             <settings>
-                <indexField>uuid</indexField>
+                <indexField>id</indexField>
                 <visible>false</visible>
             </settings>
         </selectionsColumn>
-        <column name="uuid" sortOrder="20">
+        <column name="id" component="Magento_Ui/js/grid/columns/link" sortOrder="10">
+            <settings>
+                <label translate="true">ID</label>
+                <filter>range</filter>
+                <sortable>false</sortable>
+                <resizeEnabled>false</resizeEnabled>
+                <resizeDefaultWidth>55</resizeDefaultWidth>
+            </settings>
+        </column>
+        <column name="operation_key" sortOrder="20">
+            <settings>
+                <label translate="true">#</label>
+                <resizeEnabled>false</resizeEnabled>
+                <resizeDefaultWidth>55</resizeDefaultWidth>
+            </settings>
+        </column>
+        <column name="topic_name" sortOrder="30">
             <settings>
                 <filter>text</filter>
-                <label translate="true">ID</label>
+                <label translate="true">Topic</label>
             </settings>
         </column>
-        <column name="start_time" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date" sortOrder="30">
+        <column name="result_message" sortOrder="40">
             <settings>
-                <filter>dateRange</filter>
-                <dataType>date</dataType>
-                <label translate="true">Start Time</label>
-            </settings>
-        </column>
-        <column name="last_time" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date" sortOrder="40">
-            <settings>
-                <filter>dateRange</filter>
-                <dataType>date</dataType>
-                <label translate="true">Last Execution Time</label>
+                <label translate="true">Error</label>
             </settings>
         </column>
         <column name="status" component="Magento_Ui/js/grid/columns/select" sortOrder="50">
             <settings>
+                <options class="HawkSearch\EsIndexing\Model\BulkOperation\Options"/>
                 <filter>select</filter>
-                <options class="Magento\AsynchronousOperations\Model\BulkStatus\Options"/>
                 <dataType>select</dataType>
                 <label translate="true">Status</label>
             </settings>
         </column>
-        <column name="status_summary" sortOrder="60">
+        <column name="meta_information" sortOrder="60">
             <settings>
-                <label translate="true">Processing/Complete/Failed Count</label>
+                <filter>text</filter>
+                <label translate="true">Meta Information</label>
                 <sortable>false</sortable>
             </settings>
         </column>
-        <column name="is_fullreindex" component="Magento_Ui/js/grid/columns/select" sortOrder="70">
-            <settings>
-                <options class="Magento\Config\Model\Config\Source\Yesno"/>
-                <filter>select</filter>
-                <dataType>select</dataType>
-                <label translate="true">Is Full Reindex?</label>
-            </settings>
-        </column>
-        <actionsColumn name="actions" class="\HawkSearch\EsIndexing\Ui\Component\Listing\Column\BulkActions">
-            <settings>
-                <indexField>id</indexField>
-                <label translate="true">Action</label>
-            </settings>
-        </actionsColumn>
     </columns>
 </listing>

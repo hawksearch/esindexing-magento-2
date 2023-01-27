@@ -20,6 +20,7 @@ use Magento\AsynchronousOperations\Model\BulkNotificationManagement;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Backend\Model\View\Result\Redirect;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Bulk\BulkManagementInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\DataObject\Factory as DataObjectFactory;
@@ -30,7 +31,7 @@ use Magento\Framework\Exception\NotFoundException;
 /**
  * Class Bulk Retry Controller
  */
-class Retry extends Action
+class Retry extends Action implements HttpPostActionInterface
 {
     /**
      * Authorization level of a basic admin session

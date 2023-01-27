@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Ui\Component\DataProvider\BulkListing;
 
+use HawkSearch\EsIndexing\Model\MessageQueue\IndexingOperationValidator;
 use Magento\AsynchronousOperations\Model\BulkStatus\CalculatedStatusSql;
 use Magento\AsynchronousOperations\Model\ResourceModel\Operation\CollectionFactory as OperationCollectionFactory;
 use Magento\AsynchronousOperations\Model\StatusMapper;
@@ -94,7 +95,7 @@ class SearchResult extends \Magento\AsynchronousOperations\Ui\Component\DataProv
                         'CONCAT(op.status_open," / ",op.status_complete," / ",op.status_failed)'
                     )
                 ]
-            );
+            )->where("op.all_count = op.allowed_topic_count");
         return $this;
     }
 
@@ -153,7 +154,17 @@ class SearchResult extends \Magento\AsynchronousOperations\Ui\Component\DataProv
                                 NULL
                             )
                         )'
-                    )
+                    ),
+                    'all_count' => new \Zend_Db_Expr('COUNT(*)'),
+                    'allowed_topic_count' => new \Zend_Db_Expr(
+                        'COUNT(
+                            IF(
+                                topic_name LIKE "'. IndexingOperationValidator::OPERATION_TOPIC_PREFIX .'%",
+                                1,
+                                NULL
+                            )
+                        )'
+                    ),
                 ]
             )
             ->group('bulk_uuid');

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
   /**
-   * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+   * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
    *
    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -778,11 +778,6 @@
             <argument name="bulkManagement" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\RetryBulkManagement</argument>
         </arguments>
     </type>
-    <type name="HawkSearch\EsIndexing\Controller\Adminhtml\Bulkoperations\Retry">
-        <arguments>
-            <argument name="bulkManagement" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\RetryBulkManagement</argument>
-        </arguments>
-    </type>
 
     <type name="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
         <arguments>
@@ -802,6 +797,7 @@
         <arguments>
             <argument name="collections" xsi:type="array">
                 <item name="hawksearch_bulk_listing_data_source" xsi:type="string">HawkSearch\EsIndexing\Ui\Component\DataProvider\BulkListing\SearchResult</item>
+                <item name="hawksearch_operation_listing_data_source" xsi:type="string">HawkSearch\EsIndexing\Ui\Component\DataProvider\Operation\SearchResult</item>
             </argument>
         </arguments>
     </type>

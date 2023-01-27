@@ -14,12 +14,14 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Controller\Adminhtml\Bulkoperations;
 
+use HawkSearch\EsIndexing\Model\MessageQueue\BulkAccessValidator;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\Action\HttpGetActionInterface;
+use Magento\Framework\View\Result\Page;
 use Magento\Framework\View\Result\PageFactory;
 
-class Index extends Action implements HttpGetActionInterface
+class Details extends Action implements HttpGetActionInterface
 {
     /**
      * Authorization level of a basic admin session
@@ -39,32 +41,51 @@ class Index extends Action implements HttpGetActionInterface
     private $menuId;
 
     /**
+     * @var BulkAccessValidator
+     */
+    private $bulkAccessValidator;
+
+    /**
      * Index constructor.
+     *
      * @param Context $context
      * @param PageFactory $resultPageFactory
+     * @param BulkAccessValidator $bulkAccessValidator
      * @param string $menuId
      */
     public function __construct(
         Context $context,
         PageFactory $resultPageFactory,
+        BulkAccessValidator $bulkAccessValidator,
         $menuId = 'HawkSearch_EsIndexing::bulk_operations'
     ) {
         $this->resultPageFactory = $resultPageFactory;
         $this->menuId = $menuId;
+        $this->bulkAccessValidator = $bulkAccessValidator;
         parent::__construct($context);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function _isAllowed()
+    {
+        return parent::_isAllowed() && $this->bulkAccessValidator->isAllowed($this->getRequest()->getParam('uuid'));
     }
 
     /**
      * Bulk list action
      *
-     * @return \Magento\Framework\View\Result\Page
+     * @return Page
      */
     public function execute()
     {
+        $bulkId = $this->getRequest()->getParam('uuid');
         $resultPage = $this->resultPageFactory->create();
         $resultPage->initLayout();
         $this->_setActiveMenu($this->menuId);
-        $resultPage->getConfig()->getTitle()->prepend(__('Indexing Bulks'));
+        $resultPage->getConfig()->getTitle()->prepend(__('Bulk Details - #' . $bulkId));
+
         return $resultPage;
     }
 }

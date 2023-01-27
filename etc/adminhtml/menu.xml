@@ -27,7 +27,7 @@
         />
         <add
             id="HawkSearch_EsIndexing::bulk_operations"
-            title="Indexing Bulk Operations"
+            title="Indexing Bulks"
             translate="title"
             module="HawkSearch_EsIndexing"
             sortOrder="10"
