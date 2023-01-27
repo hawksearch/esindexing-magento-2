@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -17,24 +17,18 @@ namespace HawkSearch\EsIndexing\Model\MessageQueue;
 use Magento\AsynchronousOperations\Api\Data\OperationInterface;
 use Magento\AsynchronousOperations\Api\Data\OperationSearchResultsInterface;
 use Magento\AsynchronousOperations\Api\OperationRepositoryInterface;
-use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\NotFoundException;
 
 class IndexingOperationValidator
 {
-    private const OPERATION_TOPIC_PREFIX = 'hawksearch.indexing.';
+    public const OPERATION_TOPIC_PREFIX = 'hawksearch.indexing.';
 
     /**
      * @var SearchCriteriaBuilderFactory
      */
     private $searchCriteriaBuilderFactory;
-
-    /**
-     * @var FilterBuilder
-     */
-    private $filterBuilder;
 
     /**
      * @var OperationRepositoryInterface
@@ -44,16 +38,13 @@ class IndexingOperationValidator
     /**
      * IndexingOperationValidator constructor.
      * @param SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory
-     * @param FilterBuilder $filterBuilder
      * @param OperationRepositoryInterface $operationRepository
      */
     public function __construct(
         SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
-        FilterBuilder $filterBuilder,
         OperationRepositoryInterface $operationRepository
     ) {
         $this->searchCriteriaBuilderFactory = $searchCriteriaBuilderFactory;
-        $this->filterBuilder = $filterBuilder;
         $this->operationRepository = $operationRepository;
     }
 

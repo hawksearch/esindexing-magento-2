@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -14,37 +14,17 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\MessageQueue;
 
-use Magento\AsynchronousOperations\Api\Data\BulkSummaryInterface;
-use Magento\AsynchronousOperations\Api\Data\BulkSummaryInterfaceFactory;
 use Magento\Framework\Bulk\BulkManagementInterface;
 use Magento\Framework\Bulk\OperationInterface;
 use Magento\Framework\Bulk\OperationManagementInterface;
-use Magento\Framework\EntityManager\EntityManager;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\MessageQueue\BulkPublisherInterface;
-use Psr\Log\LoggerInterface;
 
 class RetryBulkManagement implements BulkManagementInterface
 {
     /**
-     * @var BulkSummaryInterfaceFactory
-     */
-    private $bulkSummaryFactory;
-
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    /**
      * @var OperationManagementInterface
      */
     private $operationManagement;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
 
     /**
      * @var BulkPublisherInterface
@@ -53,45 +33,28 @@ class RetryBulkManagement implements BulkManagementInterface
 
     /**
      * RetryBulkManagement constructor.
-     * @param BulkSummaryInterfaceFactory $bulkSummaryFactory
-     * @param EntityManager $entityManager
+     *
      * @param OperationManagementInterface $operationManagement
-     * @param LoggerInterface $logger
      * @param BulkPublisherInterface $publisher
      */
     public function __construct(
-        BulkSummaryInterfaceFactory $bulkSummaryFactory,
-        EntityManager $entityManager,
         OperationManagementInterface $operationManagement,
-        LoggerInterface $logger,
         BulkPublisherInterface $publisher
     )
     {
-        $this->bulkSummaryFactory = $bulkSummaryFactory;
-        $this->entityManager = $entityManager;
         $this->operationManagement = $operationManagement;
-        $this->logger = $logger;
         $this->publisher = $publisher;
     }
 
     /**
      * It is used to reschedule bulk operations
+     *
      * @inheritDoc
-     * @throws NoSuchEntityException
      */
     public function scheduleBulk($bulkUuid, array $operations, $description, $userId = null)
     {
-        try {
-            /** @var BulkSummaryInterface $bulkSummary */
-            $bulkSummary = $this->bulkSummaryFactory->create();
-            $this->entityManager->load($bulkSummary, $bulkUuid);
-            if (!$bulkSummary->getBulkId()) {
-                throw new NoSuchEntityException(__('Bulk is not found'));
-            }
-        } catch (\Exception $exception) {
-            //re-throw exception
-            $this->logger->critical($exception->getMessage());
-            throw $exception;
+        if (!$operations) {
+            return false;
         }
 
         foreach ($operations as $operation) {
@@ -99,16 +62,13 @@ class RetryBulkManagement implements BulkManagementInterface
                 $operation->getBulkUuid(),
                 $operation->getId(),
                 OperationInterface::STATUS_TYPE_OPEN,
-                $operation->getErrorCode(),
-                $operation->getResultMessage(),
+                null,
+                null,
                 $operation->getSerializedData()
             );
         }
-        $this->publishOperations($operations);
 
-        if (!$operations) {
-            return false;
-        }
+        $this->publishOperations($operations);
 
         return true;
     }
