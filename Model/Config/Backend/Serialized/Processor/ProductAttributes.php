@@ -17,7 +17,6 @@ namespace HawkSearch\EsIndexing\Model\Config\Backend\Serialized\Processor;
 use HawkSearch\Connector\Api\Data\HawkSearchFieldInterface;
 use HawkSearch\Connector\Gateway\Instruction\InstructionManagerPool;
 use HawkSearch\Connector\Gateway\InstructionException;
-use HawkSearch\EsIndexing\Api\Data\FieldInterface;
 use Magento\Catalog\Api\ProductAttributeRepositoryInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\NotFoundException;
@@ -103,7 +102,10 @@ class ProductAttributes implements ValueProcessorInterface
             $this->message->addWarningMessage($error);
         }
 
-        return $resultSave;
+        //remove values from the result which have empty COLUMN_FIELD or COLUMN_ATTRIBUTE
+        return array_filter($resultSave, function ($value) {
+            return !empty($value[ValueProcessorInterface::COLUMN_FIELD]) && !empty($value[ValueProcessorInterface::COLUMN_ATTRIBUTE]);
+        });
     }
 
     /**
@@ -128,9 +130,9 @@ class ProductAttributes implements ValueProcessorInterface
                 $data[HawkSearchFieldInterface::IS_QUERY] = (bool)$attribute->getIsSearchable();
             } catch (NoSuchEntityException $e) {
                 // not a product attribute but a system field
-                $data[FieldInterface::IS_SORT] = false;
-                $data[FieldInterface::IS_COMPARE] = false;
-                $data[FieldInterface::IS_QUERY] = false;
+                $data[HawkSearchFieldInterface::IS_SORT] = false;
+                $data[HawkSearchFieldInterface::IS_COMPARE] = false;
+                $data[HawkSearchFieldInterface::IS_QUERY] = false;
             }
         }
 
