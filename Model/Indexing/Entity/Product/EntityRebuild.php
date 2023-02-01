@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -13,18 +13,17 @@
 
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Indexing;
+namespace HawkSearch\EsIndexing\Model\Indexing\Entity\Product;
 
-use HawkSearch\Connector\Helper\Url as UrlHelper;
+use HawkSearch\EsIndexing\Api\IndexManagementInterface;
 use HawkSearch\EsIndexing\Logger\LoggerFactoryInterface;
-use HawkSearch\EsIndexing\Model\Config\Advanced as AdvancedConfig;
 use HawkSearch\EsIndexing\Model\Config\Indexing as IndexingConfig;
 use HawkSearch\EsIndexing\Model\Config\Products as ProductsConfig;
-use HawkSearch\EsIndexing\Model\Indexing\Entity\AttributeHandlerInterface;
-use HawkSearch\EsIndexing\Model\Indexing\Entity\EntityTypePoolInterface;
+use HawkSearch\EsIndexing\Model\Indexing\AbstractEntityRebuild;
+use HawkSearch\EsIndexing\Model\Indexing\ContextInterface;
+use HawkSearch\EsIndexing\Model\Indexing\EntityTypePoolInterface;
 use HawkSearch\EsIndexing\Model\Product;
 use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Catalog\Helper\Image as ImageHelper;
 use Magento\Catalog\Model\Product as CatalogProductModel;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Catalog\Model\Product\Visibility;
@@ -35,7 +34,7 @@ use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Store\Model\StoreManagerInterface;
 
-class ProductEntityIndexer extends AbstractEntityIndexer
+class EntityRebuild extends AbstractEntityRebuild
 {
     /**
      * @var Visibility
@@ -73,37 +72,8 @@ class ProductEntityIndexer extends AbstractEntityIndexer
     private $productDataProvider;
 
     /**
-     * @var ImageHelper
-     */
-    private $imageHelper;
-
-    /**
-     * @var Product\PriceManagementInterface
-     */
-    private $priceManagement;
-
-    /**
-     * @var UrlHelper
-     */
-    private $urlHelper;
-
-    /**
-     * @var AdvancedConfig
-     */
-    private $advancedConfig;
-
-    /**
-     * @var AttributeHandlerInterface
-     */
-    private $attributeHandler;
-
-    /**
-     * @var Product\ProductTypePoolInterface
-     */
-    private $productTypePool;
-
-    /**
-     * ProductEntityIndexer constructor.
+     * ProductEntity constructor.
+     *
      * @param IndexingConfig $indexingConfig
      * @param EntityTypePoolInterface $entityTypePool
      * @param IndexManagementInterface $indexManagement
@@ -118,12 +88,6 @@ class ProductEntityIndexer extends AbstractEntityIndexer
      * @param ProductsConfig $attributesConfigProvider
      * @param Product\Attributes $productAttributes
      * @param Product $productDataProvider
-     * @param ImageHelper $imageHelper
-     * @param Product\PriceManagementInterface $priceManagement
-     * @param UrlHelper $urlHelper
-     * @param AdvancedConfig $advancedConfig
-     * @param AttributeHandlerInterface $attributeHandler
-     * @param Product\ProductTypePoolInterface $productTypePool
      */
     public function __construct(
         IndexingConfig $indexingConfig,
@@ -139,13 +103,7 @@ class ProductEntityIndexer extends AbstractEntityIndexer
         Json $jsonSerializer,
         ProductsConfig $attributesConfigProvider,
         Product\Attributes $productAttributes,
-        Product $productDataProvider,
-        ImageHelper $imageHelper,
-        Product\PriceManagementInterface $priceManagement,
-        UrlHelper $urlHelper,
-        AdvancedConfig $advancedConfig,
-        AttributeHandlerInterface $attributeHandler,
-        Product\ProductTypePoolInterface $productTypePool
+        Product $productDataProvider
     ) {
         parent::__construct(
             $indexingConfig,
@@ -164,12 +122,6 @@ class ProductEntityIndexer extends AbstractEntityIndexer
         $this->attributesConfigProvider = $attributesConfigProvider;
         $this->productAttributes = $productAttributes;
         $this->productDataProvider = $productDataProvider;
-        $this->imageHelper = $imageHelper;
-        $this->priceManagement = $priceManagement;
-        $this->urlHelper = $urlHelper;
-        $this->advancedConfig = $advancedConfig;
-        $this->attributeHandler = $attributeHandler;
-        $this->productTypePool = $productTypePool;
     }
 
     /**

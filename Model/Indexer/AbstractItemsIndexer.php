@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -13,10 +13,10 @@
 
 namespace HawkSearch\EsIndexing\Model\Indexer;
 
+use HawkSearch\EsIndexing\Api\IndexManagementInterface;
 use HawkSearch\EsIndexing\Model\Config\Indexing;
-use HawkSearch\EsIndexing\Model\Indexing\Entity\EntityTypeInterface;
-use HawkSearch\EsIndexing\Model\Indexing\Entity\EntityTypePoolInterface;
-use HawkSearch\EsIndexing\Model\Indexing\IndexManagementInterface;
+use HawkSearch\EsIndexing\Model\Indexing\EntityTypeInterface;
+use HawkSearch\EsIndexing\Model\Indexing\EntityTypePoolInterface;
 use HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisherInterface;
 use HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicResolverInterface;
 use Magento\Framework\DataObject;
@@ -65,6 +65,7 @@ abstract class AbstractItemsIndexer
 
     /**
      * AbstractIndexer constructor.
+     *
      * @param BulkPublisherInterface $publisher
      * @param StoreManagerInterface $storeManager
      * @param Indexing $indexingConfig
@@ -93,9 +94,11 @@ abstract class AbstractItemsIndexer
 
     /**
      * Rebuild delta items index
+     *
      * @param array $ids
-     * @throws NoSuchEntityException
      * @throws InputException
+     * @throws NoSuchEntityException
+     * @throws NotFoundException
      */
     protected function rebuildDelta($ids)
     {
@@ -116,10 +119,11 @@ abstract class AbstractItemsIndexer
             foreach ($chunks as $chunk) {
                 $dataToUpdate[] = [
                     'topic' => $this->messageTopicResolver->resolve($this->getEntityType()),
-                    'class' => get_class($this->getEntityType()->getEntityIndexer()),
-                    'method' => 'rebuildEntityIndex',
+                    'class' => get_class($this->getEntityType()->getRebuilder()),
+                    'method' => 'rebuild',
                     'method_arguments' => [
-                        'entityIds' => $chunk
+                        'searchCriteria' => [],
+                        'ids' => $chunk
                     ],
                     'full_reindex' => false,
                 ];
@@ -170,7 +174,7 @@ abstract class AbstractItemsIndexer
             $batchSize = $this->indexingConfig->getItemsBatchSize($store->getId());
 
             foreach ($this->entityTypePool->getList() as $entityType) {
-                $items = $entityType->getItemsProvider()->getItems($store->getId());
+                $items = $entityType->getItemsDataProvider()->getItems($store->getId());
                 $batches = ceil(count($items) / $batchSize);
 
                 $transport = new DataObject($dataToUpdate);
@@ -189,11 +193,13 @@ abstract class AbstractItemsIndexer
                 for ($page = 1; $page <= $batches; $page++) {
                     $dataToUpdate[] = [
                         'topic' => $this->messageTopicResolver->resolve($entityType),
-                        'class' => get_class($entityType->getEntityIndexer()),
-                        'method' => 'rebuildEntityIndexBatch',
+                        'class' => get_class($entityType->getRebuilder()),
+                        'method' => 'rebuild',
                         'method_arguments' => [
-                            'currentPage' => $page,
-                            'pageSize' => $batchSize
+                            'searchCriteria' => [
+                                'page_size' => $batchSize,
+                                'current_page' => $page,
+                            ],
                         ],
                         'full_reindex' => true,
                     ];

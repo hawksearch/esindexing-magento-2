@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -12,10 +12,11 @@
  */
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Indexing;
+namespace HawkSearch\EsIndexing\Model;
 
 use HawkSearch\Connector\Gateway\Instruction\InstructionManagerPool;
 use HawkSearch\Connector\Gateway\InstructionException;
+use HawkSearch\EsIndexing\Api\HierarchyManagementInterface;
 use Magento\Framework\Exception\NotFoundException;
 
 class HierarchyManagement implements HierarchyManagementInterface
@@ -88,13 +89,5 @@ class HierarchyManagement implements HierarchyManagementInterface
 
         $this->instructionManagerPool
             ->get('hawksearch-esindexing')->executeByCode('deleteHierarchyItems', $data)->get();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function initializeHierarchyIndexing(bool $useCurrentIndex)
-    {
-        // TODO: Implement initializeHierarchyIndexing() method.
     }
 }

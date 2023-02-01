@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -12,17 +12,10 @@
  */
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Indexing;
+namespace HawkSearch\EsIndexing\Api;
 
 interface HierarchyManagementInterface
 {
-    /**
-     * Initialize reindexing of hierarchy items
-     * @param bool $useCurrentIndex
-     * @return void
-     */
-    public function initializeHierarchyIndexing(bool $useCurrentIndex);
-
     /**
      * Upseart Hierarchy
      * @param array $items

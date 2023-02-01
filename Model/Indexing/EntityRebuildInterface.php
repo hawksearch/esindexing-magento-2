@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -15,19 +15,16 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexing;
 
-interface EntityIndexerInterface
+use Magento\Framework\Api\SearchCriteriaInterface;
+
+interface EntityRebuildInterface
 {
     /**
-     * @param array|null $entityIds
+     * Rebuild Entity items
+     *
+     * @param SearchCriteriaInterface $searchCriteria
+     * @param array|null $ids
      * @return void
      */
-    public function rebuildEntityIndex($entityIds = null);
-
-    /**
-     * @param int $currentPage
-     * @param int $pageSize
-     * @param array|null $entityIds
-     * @return void
-     */
-    public function rebuildEntityIndexBatch(int $currentPage, int $pageSize, ?array $entityIds = null);
+    public function rebuild(SearchCriteriaInterface $searchCriteria, ?array $ids = null);
 }

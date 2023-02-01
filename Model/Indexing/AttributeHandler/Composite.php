@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -12,9 +12,9 @@
  */
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Indexing\Entity\AttributeHandler;
+namespace HawkSearch\EsIndexing\Model\Indexing\AttributeHandler;
 
-use HawkSearch\EsIndexing\Model\Indexing\Entity\AttributeHandlerInterface;
+use HawkSearch\EsIndexing\Model\Indexing\AttributeHandlerInterface;
 use Magento\Framework\DataObject;
 
 class Composite implements AttributeHandlerInterface
@@ -53,8 +53,6 @@ class Composite implements AttributeHandlerInterface
     {
         /** @var AttributeHandlerInterface $currentHandler */
         $currentHandler = $this->handlers['__DEFAULT_HANDLER__'] ?? null;
-        $currentHandler = isset($this->handlers[$attributeCode]) ? $this->handlers[$attributeCode] : $currentHandler;
-
-        return $currentHandler;
+        return $this->handlers[$attributeCode] ?? $currentHandler;
     }
 }

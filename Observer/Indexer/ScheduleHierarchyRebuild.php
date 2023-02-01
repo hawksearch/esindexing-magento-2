@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -14,9 +14,9 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Observer\Indexer;
 
-use HawkSearch\EsIndexing\Model\Indexing\Entity\Type\HierarchyEntityType;
-use HawkSearch\EsIndexing\Model\Indexing\HierarchyManagementInterface;
-use HawkSearch\EsIndexing\Model\Indexing\IndexManagementInterface;
+use HawkSearch\EsIndexing\Api\HierarchyManagementInterface;
+use HawkSearch\EsIndexing\Api\IndexManagementInterface;
+use HawkSearch\EsIndexing\Model\Indexing\EntityType\HierarchyEntityType;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;

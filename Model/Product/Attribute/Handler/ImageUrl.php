@@ -16,7 +16,7 @@ namespace HawkSearch\EsIndexing\Model\Product\Attribute\Handler;
 
 use HawkSearch\Connector\Helper\Url as UrlHelper;
 use HawkSearch\EsIndexing\Model\Config\Advanced as AdvancedConfig;
-use HawkSearch\EsIndexing\Model\Indexing\Entity\AttributeHandlerInterface;
+use HawkSearch\EsIndexing\Model\Indexing\AttributeHandlerInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Helper\Image as ImageHelper;
 use Magento\Catalog\Model\Product;

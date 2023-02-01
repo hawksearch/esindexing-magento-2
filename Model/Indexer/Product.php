@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -15,10 +15,10 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexer;
 
+use HawkSearch\EsIndexing\Api\IndexManagementInterface;
 use HawkSearch\EsIndexing\Model\Config\Indexing;
-use HawkSearch\EsIndexing\Model\Indexing\Entity\EntityTypePoolInterface;
-use HawkSearch\EsIndexing\Model\Indexing\Entity\Type\ProductEntityType;
-use HawkSearch\EsIndexing\Model\Indexing\IndexManagementInterface;
+use HawkSearch\EsIndexing\Model\Indexing\EntityType\ProductEntityType;
+use HawkSearch\EsIndexing\Model\Indexing\EntityTypePoolInterface;
 use HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisherInterface;
 use HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicResolverInterface;
 use HawkSearch\EsIndexing\Model\Product as ProductDataProvider;
@@ -38,6 +38,7 @@ class Product extends AbstractItemsIndexer implements IndexerActionInterface, Mv
 
     /**
      * Product constructor.
+     *
      * @param BulkPublisherInterface $publisher
      * @param StoreManagerInterface $storeManager
      * @param Indexing $indexingConfig

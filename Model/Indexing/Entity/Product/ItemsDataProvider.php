@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -13,17 +13,17 @@
 
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Indexing;
+namespace HawkSearch\EsIndexing\Model\Indexing\Entity\Product;
 
+use HawkSearch\EsIndexing\Model\Config\Indexing;
+use HawkSearch\EsIndexing\Model\Indexing\ItemsDataProviderInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCollectionFactory;
 use Magento\Catalog\Model\Product\Visibility;
-use Magento\Framework\Api\FilterBuilder;
+use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCollectionFactory;
 use Magento\Framework\Api\SearchCriteriaBuilder;
-use HawkSearch\EsIndexing\Model\Config\Indexing;
 
-class ProductItemsProvider implements ItemsProviderInterface
+class ItemsDataProvider implements ItemsDataProviderInterface
 {
     /**
      * @var ProductRepositoryInterface
@@ -41,11 +41,6 @@ class ProductItemsProvider implements ItemsProviderInterface
     private $visibility;
 
     /**
-     * @var FilterBuilder
-     */
-    private $filterBuilder;
-
-    /**
      * @var Indexing
      */
     private $indexingConfig;
@@ -56,11 +51,10 @@ class ProductItemsProvider implements ItemsProviderInterface
     private $categoryCollectionFactory;
 
     /**
-     * ProductItemsProvider constructor.
+     * ProductItems constructor.
      * @param ProductRepositoryInterface $productRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param Visibility $visibility
-     * @param FilterBuilder $filterBuilder
      * @param Indexing $indexingConfig
      * @param CategoryCollectionFactory $categoryCollectionFactory
      */
@@ -68,14 +62,12 @@ class ProductItemsProvider implements ItemsProviderInterface
         ProductRepositoryInterface $productRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         Visibility $visibility,
-        FilterBuilder $filterBuilder,
         Indexing $indexingConfig,
         CategoryCollectionFactory $categoryCollectionFactory
     ) {
         $this->productRepository = $productRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->visibility = $visibility;
-        $this->filterBuilder = $filterBuilder;
         $this->indexingConfig = $indexingConfig;
         $this->categoryCollectionFactory = $categoryCollectionFactory;
     }

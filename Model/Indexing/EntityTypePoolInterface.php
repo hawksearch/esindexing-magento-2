@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -12,21 +12,24 @@
  */
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler;
+namespace HawkSearch\EsIndexing\Model\Indexing;
 
-use HawkSearch\EsIndexing\Model\Indexing\AttributeHandlerInterface;
-use Magento\Catalog\Api\Data\CategoryInterface;
-use Magento\Framework\DataObject;
+use Magento\Framework\Exception\NotFoundException;
 
-class HierarchyId implements AttributeHandlerInterface
+interface EntityTypePoolInterface
 {
+    /**
+     * Gets an entity type instance by its type name
+     *
+     * @param string $entityTypeName
+     * @return EntityTypeInterface
+     * @throws NotFoundException
+     */
+    public function get($entityTypeName);
 
     /**
-     * @inheritDoc
-     * @param CategoryInterface $item
+     * Get a list of entity types
+     * @return EntityTypeInterface[]
      */
-    public function handle(DataObject $item, string $attributeCode)
-    {
-        return (int)$item->getId();
-    }
+    public function getList();
 }

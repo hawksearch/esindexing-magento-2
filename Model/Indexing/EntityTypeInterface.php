@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -12,36 +12,40 @@
  */
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Indexing\Entity;
-
-use HawkSearch\EsIndexing\Model\Indexing\EntityIndexerInterface;
-use HawkSearch\EsIndexing\Model\Indexing\ItemsProviderInterface;
+namespace HawkSearch\EsIndexing\Model\Indexing;
 
 interface EntityTypeInterface
 {
     /**
      * @return string
      */
-    public function getTypeName();
+    public function getTypeName() : string;
 
     /**
      * @param string $type
      * @return $this
      */
-    public function setTypeName($type);
+    public function setTypeName(string $type);
 
     /**
-     * @return EntityIndexerInterface
+     * @return EntityRebuildInterface
      */
-    public function getEntityIndexer();
+    public function getRebuilder() : EntityRebuildInterface;
 
     /**
-     * @return ItemsProviderInterface
+     * @return ItemsDataProviderInterface
      */
-    public function getItemsProvider();
+    public function getItemsDataProvider() : ItemsDataProviderInterface;
+
+    /**
+     * @return ItemsIndexerInterface
+     */
+    public function getItemsIndexer() : ItemsIndexerInterface;
 
     /**
      * @return AttributeHandlerInterface
      */
-    public function getAttributeHandler();
+    public function getAttributeHandler() : AttributeHandlerInterface;
+
+    public function getConfigHelper() : AbstractConfigHelper;
 }

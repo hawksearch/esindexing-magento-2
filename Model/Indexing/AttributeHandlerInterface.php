@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -12,24 +12,16 @@
  */
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Indexing\Entity;
+namespace HawkSearch\EsIndexing\Model\Indexing;
 
-use Magento\Framework\Exception\NotFoundException;
+use Magento\Framework\DataObject;
 
-interface EntityTypePoolInterface
+interface AttributeHandlerInterface
 {
     /**
-     * Gets an entity type instance by its type name
-     *
-     * @param string $entityTypeName
-     * @return EntityTypeInterface
-     * @throws NotFoundException
+     * @param DataObject $item
+     * @param string $attributeCode
+     * @return mixed
      */
-    public function get($entityTypeName);
-
-    /**
-     * Get a list of entity types
-     * @return EntityTypeInterface[]
-     */
-    public function getList();
+    public function handle(DataObject $item, string $attributeCode);
 }

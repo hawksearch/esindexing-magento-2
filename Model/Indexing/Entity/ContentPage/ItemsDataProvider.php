@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -12,16 +12,16 @@
  */
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Indexing;
+namespace HawkSearch\EsIndexing\Model\Indexing\Entity\ContentPage;
 
+use HawkSearch\EsIndexing\Model\Indexing\ItemsDataProviderInterface;
 use Magento\Cms\Api\Data\PageInterface;
 use Magento\Cms\Api\PageRepositoryInterface;
-use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Store\Model\Store;
 
-class ContentPageItemsProvider implements ItemsProviderInterface
+class ItemsDataProvider implements ItemsDataProviderInterface
 {
     /**
      * @var PageRepositoryInterface
@@ -34,25 +34,17 @@ class ContentPageItemsProvider implements ItemsProviderInterface
     private $searchCriteriaBuilder;
 
     /**
-     * @var FilterBuilder
-     */
-    private $filterBuilder;
-
-    /**
-     * ContentPageItemsProvider constructor.
+     * ContentPageItems constructor.
      * @param PageRepositoryInterface $pageRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
-     * @param FilterBuilder $filterBuilder
      */
     public function __construct(
         PageRepositoryInterface $pageRepository,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
-        FilterBuilder $filterBuilder
+        SearchCriteriaBuilder $searchCriteriaBuilder
     )
     {
         $this->pageRepository = $pageRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->filterBuilder = $filterBuilder;
     }
 
     /**

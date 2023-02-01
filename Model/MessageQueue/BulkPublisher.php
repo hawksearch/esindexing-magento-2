@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -14,7 +14,7 @@
 namespace HawkSearch\EsIndexing\Model\MessageQueue;
 
 use HawkSearch\EsIndexing\Api\Data\QueueOperationDataInterfaceFactory;
-use HawkSearch\EsIndexing\Model\Indexing\IndexManagementInterface;
+use HawkSearch\EsIndexing\Api\IndexManagementInterface;
 use Magento\AsynchronousOperations\Api\SaveMultipleOperationsInterface;
 use Magento\AsynchronousOperations\Model\OperationRepositoryInterface;
 use Magento\Authorization\Model\UserContextInterface;

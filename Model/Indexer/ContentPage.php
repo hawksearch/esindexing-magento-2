@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexer;
 
-use HawkSearch\EsIndexing\Model\Indexing\Entity\Type\ContentPageEntityType;
+use HawkSearch\EsIndexing\Model\Indexing\EntityType\ContentPageEntityType;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Indexer\ActionInterface as IndexerActionInterface;

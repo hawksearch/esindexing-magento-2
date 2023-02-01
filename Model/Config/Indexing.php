@@ -48,12 +48,12 @@ class Indexing extends ConfigProvider
     }
 
     /**
-     * Check if products should include hierarchy wtih all parent categories
+     * Check if products should include hierarchy with all parent categories
      * @param null|int|string $store
      * @return bool
      */
     public function isProductsIncludeCategoriesHierarchy($store = null): bool
     {
-        return (bool)$this->getConfig(self::CONFIG_ITEMS_BATCH_SIZE, $store);
+        return (bool)$this->getConfig(self::CONFIG_PRODUCTS_INCLUDE_CATEGORIES_HIERARCHY, $store);
     }
 }

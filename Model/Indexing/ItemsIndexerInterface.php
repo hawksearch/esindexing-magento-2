@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -10,19 +10,30 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-
 declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexing;
 
-interface ItemsProviderInterface
+interface ItemsIndexerInterface
 {
     /**
-     * @param int $storeId
-     * @param array|null $entityIds
-     * @param int $currentPage
-     * @param int $pageSize
-     * @return array
+     * @param array $items
+     * @param string $indexName
+     * @return void
      */
-    public function getItems(int $storeId, $entityIds = null, $currentPage = 1, $pageSize = 0);
+    public function add(array $items, string $indexName);
+
+    /**
+     * @param array $items
+     * @param string $indexName
+     * @return void
+     */
+    public function update(array $items, string $indexName);
+
+    /**
+     * @param array $items
+     * @param string $indexName
+     * @return void
+     */
+    public function delete(array $items, string $indexName);
 }

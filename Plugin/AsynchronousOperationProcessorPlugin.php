@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -14,13 +14,13 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Plugin;
 
-use HawkSearch\EsIndexing\Api\Data\QueueOperationDataInterface;
+use HawkSearch\EsIndexing\Api\HierarchyManagementInterface;
+use HawkSearch\EsIndexing\Api\IndexManagementInterface;
 use HawkSearch\EsIndexing\Model\Indexing;
 use HawkSearch\EsIndexing\Model\MessageQueue\IndexingOperationValidator;
 use Magento\AsynchronousOperations\Api\Data\OperationInterface;
 use Magento\AsynchronousOperations\Model\ConfigInterface as AsyncConfig;
 use Magento\AsynchronousOperations\Model\OperationProcessor;
-use Magento\Checkout\Exception;
 use Magento\Framework\Bulk\OperationManagementInterface;
 use Magento\Framework\Exception\BulkException;
 use Magento\Framework\Exception\LocalizedException;
@@ -49,14 +49,14 @@ class AsynchronousOperationProcessorPlugin
     private $indexingOperationValidator;
 
     /**
-     * @var Indexing\HierarchyManagementInterface
+     * @var HierarchyManagementInterface
      */
-    private Indexing\HierarchyManagementInterface $hierarchyManagement;
+    private HierarchyManagementInterface $hierarchyManagement;
 
     /**
-     * @var Indexing\IndexManagementInterface
+     * @var IndexManagementInterface
      */
-    private Indexing\IndexManagementInterface $indexManagement;
+    private IndexManagementInterface $indexManagement;
 
     /**
      * @var SerializerInterface
@@ -89,8 +89,8 @@ class AsynchronousOperationProcessorPlugin
      * @param MessageEncoder $messageEncoder
      * @param OperationManagementInterface $operationManagement
      * @param IndexingOperationValidator $indexingOperationValidator
-     * @param Indexing\HierarchyManagementInterface $hierarchyManagement
-     * @param Indexing\IndexManagementInterface $indexManagement
+     * @param HierarchyManagementInterface $hierarchyManagement
+     * @param IndexManagementInterface $indexManagement
      * @param SerializerInterface $serializer
      * @param MessageValidator $messageValidator
      * @param StoreManagerInterface $storeManager
@@ -100,8 +100,8 @@ class AsynchronousOperationProcessorPlugin
         MessageEncoder $messageEncoder,
         OperationManagementInterface $operationManagement,
         IndexingOperationValidator $indexingOperationValidator,
-        Indexing\HierarchyManagementInterface $hierarchyManagement,
-        Indexing\IndexManagementInterface $indexManagement,
+        HierarchyManagementInterface $hierarchyManagement,
+        IndexManagementInterface $indexManagement,
         SerializerInterface $serializer,
         MessageValidator $messageValidator,
         StoreManagerInterface $storeManager,

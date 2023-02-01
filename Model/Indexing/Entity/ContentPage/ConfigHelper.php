@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -12,11 +12,10 @@
  */
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Indexing\Entity\Type;
+namespace HawkSearch\EsIndexing\Model\Indexing\Entity\ContentPage;
 
-use HawkSearch\EsIndexing\Model\Indexing\Entity\EntityTypeAbstract;
+use HawkSearch\EsIndexing\Model\Indexing\AbstractConfigHelper;
 
-class HierarchyEntityType extends EntityTypeAbstract
+class ConfigHelper extends AbstractConfigHelper
 {
-    public const ENTITY_TYPE_NAME = 'hierarchy';
 }

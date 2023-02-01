@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -12,28 +12,31 @@
  */
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Indexing;
+namespace HawkSearch\EsIndexing\Model\Indexing\Entity\Hierarchy;
 
+use HawkSearch\EsIndexing\Api\HierarchyManagementInterface;
+use HawkSearch\EsIndexing\Api\IndexManagementInterface;
 use HawkSearch\EsIndexing\Logger\LoggerFactoryInterface;
 use HawkSearch\EsIndexing\Model\Config\Indexing as IndexingConfig;
-use HawkSearch\EsIndexing\Model\Indexing\Entity\EntityTypePoolInterface;
+use HawkSearch\EsIndexing\Model\Indexing\AbstractEntityRebuild;
+use HawkSearch\EsIndexing\Model\Indexing\ContextInterface;
+use HawkSearch\EsIndexing\Model\Indexing\EntityTypePoolInterface;
 use Magento\Catalog\Api\Data\CategoryInterface;
 use Magento\Catalog\Model\Category;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
-class HierarchyEntityIndexer extends AbstractEntityIndexer
+class EntityRebuild extends AbstractEntityRebuild
 {
-    public const PARENT_HIERARCHY_NAME = 'category';
-
     /**
-     * @var HierarchyManagementInterface
+     * @var \HawkSearch\EsIndexing\Api\HierarchyManagementInterface
      */
     private $hierarchyManagement;
 
     /**
-     * HierarchyEntityIndexer constructor.
+     * HierarchyEntity constructor.
+     *
      * @param IndexingConfig $indexingConfig
      * @param EntityTypePoolInterface $entityTypePool
      * @param IndexManagementInterface $indexManagement

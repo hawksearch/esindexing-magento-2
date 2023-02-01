@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -13,26 +13,21 @@
 
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Indexing;
+namespace HawkSearch\EsIndexing\Model\Indexing\Entity\Hierarchy;
 
+use HawkSearch\EsIndexing\Model\Indexing\ItemsDataProviderInterface;
 use Magento\Catalog\Api\Data\CategoryInterface;
 use Magento\Catalog\Model\Category as CategoryModel;
 use Magento\Catalog\Model\CategoryFactory;
 use Magento\Catalog\Model\ResourceModel\Category as CategoryResource;
 use Magento\Store\Model\StoreManagerInterface;
-use Magento\Catalog\Helper\Category as CategoryHelper;
 
-class HierarchyItemsProvider implements ItemsProviderInterface
+class ItemsDataProvider implements ItemsDataProviderInterface
 {
     /**
      * @var CategoryResource
      */
     private $categoryResource;
-
-    /**
-     * @var CategoryHelper
-     */
-    private $categoryHelper;
 
     /**
      * @var StoreManagerInterface
@@ -46,21 +41,18 @@ class HierarchyItemsProvider implements ItemsProviderInterface
 
 
     /**
-     * HierarchyItemsProvider constructor.
+     * HierarchyItems constructor.
      * @param CategoryResource $categoryResource
-     * @param CategoryHelper $categoryHelper
      * @param StoreManagerInterface $storeManager
      * @param CategoryFactory $categoryFactory
      */
     public function __construct(
         CategoryResource $categoryResource,
-        CategoryHelper $categoryHelper,
         StoreManagerInterface $storeManager,
         CategoryFactory $categoryFactory
     ) {
         $this->categoryResource = $categoryResource;
         $this->storeManager = $storeManager;
-        $this->categoryHelper = $categoryHelper;
         $this->categoryFactory = $categoryFactory;
     }
 

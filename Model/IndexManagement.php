@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -13,17 +13,16 @@
 
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Indexing;
+namespace HawkSearch\EsIndexing\Model;
 
 use HawkSearch\Connector\Gateway\Instruction\InstructionManagerPool;
 use HawkSearch\Connector\Gateway\InstructionException;
 use HawkSearch\EsIndexing\Api\Data\EsIndexInterface;
 use HawkSearch\EsIndexing\Api\Data\IndexListInterface;
+use HawkSearch\EsIndexing\Api\IndexManagementInterface;
 use HawkSearch\EsIndexing\Logger\LoggerFactoryInterface;
-use Magento\Framework\App\Cache\Type\Config as ConfigCache;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\NotFoundException;
-use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -46,16 +45,6 @@ class IndexManagement implements IndexManagementInterface
     private $instructionManagerPool;
 
     /**
-     * @var ConfigCache
-     */
-    private $cache;
-
-    /**
-     * @var SerializerInterface
-     */
-    private $serializer;
-
-    /**
      * @var LoggerInterface
      */
     private $hawkLogger;
@@ -68,21 +57,15 @@ class IndexManagement implements IndexManagementInterface
     /**
      * IndexManagement constructor.
      * @param InstructionManagerPool $instructionManagerPool
-     * @param ConfigCache $cache
-     * @param SerializerInterface $serializer
      * @param LoggerFactoryInterface $loggerFactory
      * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         InstructionManagerPool $instructionManagerPool,
-        ConfigCache $cache,
-        SerializerInterface $serializer,
         LoggerFactoryInterface $loggerFactory,
         StoreManagerInterface $storeManager
     ) {
         $this->instructionManagerPool = $instructionManagerPool;
-        $this->cache = $cache;
-        $this->serializer = $serializer;
         $this->hawkLogger = $loggerFactory->create();
         $this->storeManager = $storeManager;
     }

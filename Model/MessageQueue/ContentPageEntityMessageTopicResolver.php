@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\MessageQueue;
 
-use HawkSearch\EsIndexing\Model\Indexing\Entity\Type\ContentPageEntityType;
+use HawkSearch\EsIndexing\Model\Indexing\EntityType\ContentPageEntityType;
 
 class ContentPageEntityMessageTopicResolver implements MessageTopicResolverInterface
 {
