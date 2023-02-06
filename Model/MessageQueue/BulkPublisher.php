@@ -14,27 +14,20 @@
 namespace HawkSearch\EsIndexing\Model\MessageQueue;
 
 use HawkSearch\EsIndexing\Api\Data\QueueOperationDataInterfaceFactory;
-use HawkSearch\EsIndexing\Api\IndexManagementInterface;
 use Magento\AsynchronousOperations\Api\SaveMultipleOperationsInterface;
 use Magento\AsynchronousOperations\Model\OperationRepositoryInterface;
 use Magento\Authorization\Model\UserContextInterface;
+use Magento\Framework\Api\AbstractSimpleObject;
 use Magento\Framework\Bulk\BulkManagementInterface;
 use Magento\Framework\DataObject\IdentityGeneratorInterface;
 use Magento\Framework\Exception\BulkException;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\SerializerInterface;
-use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 
-class BulkPublisher implements BulkPublisherInterface
+class BulkPublisher extends AbstractSimpleObject implements BulkPublisherInterface
 {
     public const DEFAULT_BULK_DESCRIPTION = 'Hawksearch indexing bulk operation';
-
-    /**
-     * @var array
-     */
-    private $messages;
 
     /**
      * @var SerializerInterface
@@ -62,11 +55,6 @@ class BulkPublisher implements BulkPublisherInterface
     private $userContext;
 
     /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
-
-    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -82,27 +70,29 @@ class BulkPublisher implements BulkPublisherInterface
     private $queueOperationDataFactory;
 
     /**
-     * @var IndexManagementInterface
-     */
-    private $indexManagement;
-
-    /**
      * @var string
      */
     private $bulkDescription;
 
     /**
+     * @var MessageManagerInterface
+     */
+    private $messageManager;
+
+    /**
      * Publisher constructor.
+     *
      * @param SerializerInterface $serializer
      * @param OperationRepositoryInterface $operationRepository
      * @param IdentityGeneratorInterface $identityService
      * @param BulkManagementInterface $bulkManagement
      * @param UserContextInterface $userContext
-     * @param StoreManagerInterface $storeManager
      * @param LoggerInterface $logger
      * @param SaveMultipleOperationsInterface $saveMultipleOperations
      * @param QueueOperationDataInterfaceFactory $queueOperationDataFactory
+     * @param MessageManagerInterface $messageManager
      * @param string|null $bulkDescription
+     * @param array $data
      */
     public function __construct(
         SerializerInterface $serializer,
@@ -110,39 +100,24 @@ class BulkPublisher implements BulkPublisherInterface
         IdentityGeneratorInterface $identityService,
         BulkManagementInterface $bulkManagement,
         UserContextInterface $userContext,
-        StoreManagerInterface $storeManager,
         LoggerInterface $logger,
         SaveMultipleOperationsInterface $saveMultipleOperations,
         QueueOperationDataInterfaceFactory $queueOperationDataFactory,
-        IndexManagementInterface $indexManagement,
-        string $bulkDescription = null
+        MessageManagerInterface $messageManager,
+        string $bulkDescription = null,
+        array $data = []
     ) {
+        parent::__construct($data);
         $this->serializer = $serializer;
         $this->operationRepository = $operationRepository;
         $this->identityService = $identityService;
         $this->bulkManagement = $bulkManagement;
         $this->userContext = $userContext;
-        $this->storeManager = $storeManager;
         $this->logger = $logger;
         $this->saveMultipleOperations = $saveMultipleOperations;
         $this->queueOperationDataFactory = $queueOperationDataFactory;
-        $this->indexManagement = $indexManagement;
         $this->bulkDescription = $bulkDescription;
-    }
-
-
-    /**
-     * @inheritDoc
-     */
-    public function addMessage($topicName, $data)
-    {
-        $this->messages[] =
-            [
-                'topic' => $topicName,
-                'data' => $this->updateApplicationHeaders($data),
-            ];
-
-        return $this;
+        $this->messageManager = $messageManager;
     }
 
     /**
@@ -165,7 +140,7 @@ class BulkPublisher implements BulkPublisherInterface
 
         $operations = [];
         $bulkException = new BulkException();
-        foreach (($this->messages ?? []) as $operationId => $topicMessage) {
+        foreach ($this->messageManager->getMessages() as $operationId => $topicMessage) {
             try {
                 $operationData = $this->queueOperationDataFactory->create(
                     [
@@ -206,37 +181,7 @@ class BulkPublisher implements BulkPublisherInterface
         if ($bulkException->wasErrorAdded()) {
             throw $bulkException;
         } else {
-            $this->messages = null;
+            $this->messageManager->setMessages([]);
         }
-    }
-
-    /**
-     * Set current store_id in messageData['application_headers']
-     * so consumer may check store_id and execute operation in correct store scope.
-     * Prevent publishing inconsistent messages because of store_id not defined or wrong.
-     * Set other operation global data
-     * @param array $data
-     */
-    private function updateApplicationHeaders(array $data)
-    {
-        try {
-            $storeId = $this->storeManager->getStore()->getId();
-            $isFullReindex = $data['full_reindex'] ?? false;
-            $indexName = $this->indexManagement->getIndexName(!$isFullReindex);
-        } catch (NoSuchEntityException $e) {
-            $errorMessage = sprintf(
-                "Can't get current storeId and inject to the message queue. Error %s.",
-                $e->getMessage()
-            );
-            $this->logger->error($errorMessage);
-            throw new \LogicException($errorMessage);
-        }
-
-        $data['application_headers'] = $data['application_headers'] ?? [];
-        $data['application_headers']['store_id'] = $storeId;
-        $data['application_headers']['index'] = $indexName;
-        $data['application_headers']['full_reindex'] = $isFullReindex;
-
-        return $data;
     }
 }

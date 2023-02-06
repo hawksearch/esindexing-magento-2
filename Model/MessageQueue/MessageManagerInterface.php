@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -14,12 +14,23 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\MessageQueue;
 
-interface BulkPublisherInterface
+interface MessageManagerInterface
 {
     /**
-     * Publishes messages in bulk to a specific queue or exchange.
-     *
-     * @return void
+     * @param string $topicName
+     * @param array $data
+     * @return $this
      */
-    public function publish();
+    public function addMessage(string $topicName, array $data);
+
+    /**
+     * @param array $messages
+     * @return $this
+     */
+    public function setMessages(array $messages);
+
+    /**
+     * @return array
+     */
+    public function getMessages();
 }

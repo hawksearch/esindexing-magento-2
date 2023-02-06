@@ -35,4 +35,5 @@
             <table name="cms_page" entity_column="page_id" />
         </subscriptions>
     </view>
+    <view id="hawksearch_entities" class="Magento\Framework\Indexer\Action\Dummy" group="indexer"/>
 </config>

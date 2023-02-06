@@ -37,6 +37,8 @@
                 type="HawkSearch\EsIndexing\Model\Indexing\Context"/>
     <preference for="HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisherInterface"
                 type="HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher"/>
+    <preference for="HawkSearch\EsIndexing\Model\MessageQueue\MessageManagerInterface"
+                type="HawkSearch\EsIndexing\Model\MessageQueue\MessageManager"/>
     <preference for="HawkSearch\EsIndexing\Model\Product\PriceManagementInterface"
                 type="HawkSearch\EsIndexing\Model\Product\PriceManagement"/>
     <preference for="HawkSearch\EsIndexing\Model\Product\ProductTypeInterface"
@@ -810,6 +812,103 @@
             </argument>
         </arguments>
     </type>
+
+    <virtualType name="HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher\Full" type="HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher">
+        <arguments>
+            <argument name="bulkDescription" xsi:type="string">Hawksearch full reindexing</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher\Delta" type="HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher">
+        <arguments>
+            <argument name="bulkDescription" xsi:type="string">Hawksearch delta reindexing</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="HawkSearch\EsIndexing\Model\Indexer\Entities\ActionFull">
+        <arguments>
+            <argument name="publisher" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher\Full</argument>
+            <argument name="entityScheduler" xsi:type="object">HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\All</argument>
+        </arguments>
+    </type>
+    <type name="HawkSearch\EsIndexing\Model\Indexer\Entities\ActionEntityDefault">
+        <arguments>
+            <argument name="publisher" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher\Delta</argument>
+        </arguments>
+    </type>
+    <virtualType name="HawkSearch\EsIndexing\Model\Indexer\Entities\ActionEntityProduct" type="HawkSearch\EsIndexing\Model\Indexer\Entities\ActionEntityDefault">
+        <arguments>
+            <argument name="entityScheduler" xsi:type="object">HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\Product</argument>
+            <argument name="publisher" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher\Delta</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearch\EsIndexing\Model\Indexer\Entities\ActionEntityContentPage" type="HawkSearch\EsIndexing\Model\Indexer\Entities\ActionEntityDefault">
+        <arguments>
+            <argument name="entityScheduler" xsi:type="object">HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\ContentPage</argument>
+            <argument name="publisher" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher\Delta</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\Product" type="HawkSearch\EsIndexing\Model\Indexer\Entities\SchedulerAbstract">
+        <arguments>
+            <argument name="entityType" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\EntityType\ProductEntityType</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\ContentPage" type="HawkSearch\EsIndexing\Model\Indexer\Entities\SchedulerAbstract">
+        <arguments>
+            <argument name="entityType" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\EntityType\ContentPageEntityType</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\Hierarchy" type="HawkSearch\EsIndexing\Model\Indexer\Entities\SchedulerAbstract">
+        <arguments>
+            <argument name="entityType" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\EntityType\HierarchyEntityType</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\Category" type="HawkSearch\EsIndexing\Model\Indexer\Entities\SchedulerComposite">
+        <arguments>
+            <argument name="schedulers"  xsi:type="array">
+                <item name="hierarchy" xsi:type="string">HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\Hierarchy</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\All" type="HawkSearch\EsIndexing\Model\Indexer\Entities\SchedulerComposite">
+        <arguments>
+            <argument name="schedulers"  xsi:type="array">
+                <item name="category" xsi:type="string">HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\Category</item>
+                <item name="product" xsi:type="string">HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\Product</item>
+                <item name="content_page" xsi:type="string">HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\ContentPage</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="HawkSearch\EsIndexing\Model\Indexer\Product">
+        <arguments>
+            <argument name="action" xsi:type="object">HawkSearch\EsIndexing\Model\Indexer\Entities\ActionEntityProduct</argument>
+        </arguments>
+    </type>
+
+    <type name="HawkSearch\EsIndexing\Model\Indexer\ContentPage">
+        <arguments>
+            <argument name="action" xsi:type="object">HawkSearch\EsIndexing\Model\Indexer\Entities\ActionEntityContentPage</argument>
+        </arguments>
+    </type>
+
+    <type name="HawkSearch\EsIndexing\Model\Indexer\Entities\SchedulerAbstract">
+        <arguments>
+            <argument name="messageTopicResolver" xsi:type="object">
+                HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicResolverComposite
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="HawkSearch\EsIndexing\Observer\Indexer\ScheduleHierarchyRebuild">
+        <arguments>
+            <argument name="messageTopicResolver" xsi:type="object">
+                HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicResolverComposite
+            </argument>
+        </arguments>
+    </type>
+
 
     <!-- END Types -->
 

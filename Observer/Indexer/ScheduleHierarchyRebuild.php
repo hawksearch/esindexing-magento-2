@@ -17,10 +17,11 @@ namespace HawkSearch\EsIndexing\Observer\Indexer;
 use HawkSearch\EsIndexing\Api\HierarchyManagementInterface;
 use HawkSearch\EsIndexing\Api\IndexManagementInterface;
 use HawkSearch\EsIndexing\Model\Indexing\EntityType\HierarchyEntityType;
-use Magento\Framework\DataObject;
+use HawkSearch\EsIndexing\Model\MessageQueue\MessageManagerInterface;
+use HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicResolverInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Magento\Store\Api\Data\StoreInterface;
+use Magento\Framework\Exception\InputException;
 
 class ScheduleHierarchyRebuild implements ObserverInterface
 {
@@ -30,49 +31,56 @@ class ScheduleHierarchyRebuild implements ObserverInterface
     private $indexManagement;
 
     /**
+     * @var MessageTopicResolverInterface
+     */
+    private $messageTopicResolver;
+
+    /**
      * HierarchyRebuild constructor.
+     *
      * @param IndexManagementInterface $indexManagement
+     * @param MessageTopicResolverInterface $messageTopicResolver
      */
     public function __construct(
-        IndexManagementInterface $indexManagement
+        IndexManagementInterface $indexManagement,
+        MessageTopicResolverInterface $messageTopicResolver
     ) {
         $this->indexManagement = $indexManagement;
+        $this->messageTopicResolver = $messageTopicResolver;
     }
 
     /**
      * After hierarchy data is upserted the rebuild API request should follow after that
+     *
      * @inheritDoc
      * @param Observer $observer
+     * @throws InputException
      */
     public function execute(Observer $observer)
     {
-        /** @var StoreInterface $store */
-        $store = $observer->getData('store');
-        /** @var DataObject $transport */
-        $transport = $observer->getData('transport');
+        /** @var MessageManagerInterface $messageManager */
+        $messageManager = $observer->getData('message_manager');
         /** @var HierarchyEntityType $entityType */
         $entityType = $observer->getData('entity_type');
+        $isFullReindex = $observer->getData('full_reindex');
 
         if (!($entityType instanceof HierarchyEntityType)) {
             return;
         }
 
-        $dataToUpdate = (array)$transport->getData();
-
-        $isFullReindex = true;
         $isCurrentIndex = !$isFullReindex;
         $indexName = $this->indexManagement->getIndexName($isCurrentIndex);
 
-        $dataToUpdate[] = [
-            'topic' => 'hawksearch.indexing.hierarchy.reindex',
-            'class' => HierarchyManagementInterface::class,
-            'method' => 'rebuildHierarchy',
-            'method_arguments' => [
-                'indexName' => $indexName,
-            ],
-            'full_reindex' => $isFullReindex,
-        ];
-
-        $transport->setData($dataToUpdate);
+        $messageManager->addMessage(
+            $this->messageTopicResolver->resolve($entityType),
+            [
+                'class' => HierarchyManagementInterface::class,
+                'method' => 'rebuildHierarchy',
+                'method_arguments' => [
+                    'indexName' => $indexName,
+                ],
+                'full_reindex' => $isFullReindex,
+            ]
+        );
     }
 }
