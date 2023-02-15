@@ -840,7 +840,6 @@
     <type name="Magento\Framework\Console\CommandList">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="hawksearch_run_category_sync" xsi:type="object">HawkSearch\EsIndexing\Console\Command\SyncCategories</item>
                 <item name="hawksearch_retry_bulk" xsi:type="object">HawkSearch\EsIndexing\Console\Command\RetryBulk</item>
             </argument>
         </arguments>
