@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Product\Attribute\Handler;
 
-use HawkSearch\EsIndexing\Model\Indexing\Entity\AttributeHandlerInterface;
+use HawkSearch\EsIndexing\Model\Indexing\AttributeHandlerInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\ResourceModel\Eav\Attribute as AttributeResource;
 use Magento\Catalog\Model\ResourceModel\Product as ProductResource;

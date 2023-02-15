@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\ContentPage\Attribute\Handler;
 
-use HawkSearch\EsIndexing\Model\Indexing\Entity\AttributeHandlerInterface;
+use HawkSearch\EsIndexing\Model\Indexing\AttributeHandlerInterface;
 use Magento\Cms\Api\Data\PageInterface;
 use Magento\Framework\DataObject;
 use Magento\Framework\Exception\NoSuchEntityException;

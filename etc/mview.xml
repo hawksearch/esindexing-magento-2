@@ -35,4 +35,15 @@
             <table name="cms_page" entity_column="page_id" />
         </subscriptions>
     </view>
+    <view id="hawksearch_categories" class="HawkSearch\EsIndexing\Model\Indexer\Category" group="indexer">
+        <subscriptions>
+            <table name="catalog_category_entity" entity_column="entity_id" />
+            <table name="catalog_category_entity_datetime" entity_column="entity_id" />
+            <table name="catalog_category_entity_decimal" entity_column="entity_id" />
+            <table name="catalog_category_entity_int" entity_column="entity_id" />
+            <table name="catalog_category_entity_text" entity_column="entity_id" />
+            <table name="catalog_category_entity_varchar" entity_column="entity_id" />
+        </subscriptions>
+    </view>
+    <view id="hawksearch_entities" class="Magento\Framework\Indexer\Action\Dummy" group="indexer"/>
 </config>

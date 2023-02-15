@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler;
 
-use HawkSearch\EsIndexing\Model\Indexing\Entity\AttributeHandlerInterface;
+use HawkSearch\EsIndexing\Model\Indexing\AttributeHandlerInterface;
 use Magento\Catalog\Api\Data\CategoryInterface;
 use Magento\Framework\DataObject;
 

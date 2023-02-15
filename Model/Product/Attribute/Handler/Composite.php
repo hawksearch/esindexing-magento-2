@@ -14,12 +14,13 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Product\Attribute\Handler;
 
-use HawkSearch\EsIndexing\Model\Indexing\Entity\AttributeHandlerInterface;
+use HawkSearch\EsIndexing\Model\Indexing\AttributeHandlerInterface;
 use HawkSearch\EsIndexing\Model\Product\ProductTypePoolInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\DataObject;
+use Magento\Framework\ObjectManagerInterface;
 
-class Composite extends \HawkSearch\EsIndexing\Model\Indexing\Entity\AttributeHandler\Composite
+class Composite extends \HawkSearch\EsIndexing\Model\Indexing\AttributeHandler\Composite
 {
     /**
      * @var ProductTypePoolInterface
@@ -28,14 +29,16 @@ class Composite extends \HawkSearch\EsIndexing\Model\Indexing\Entity\AttributeHa
 
     /**
      * AttributeHandlerComposite constructor.
+     *
      * @param ProductTypePoolInterface $productTypePool
      * @param AttributeHandlerInterface[] $handlers
      */
     public function __construct(
+        ObjectManagerInterface $objectManager,
         ProductTypePoolInterface $productTypePool,
         array $handlers = []
     ) {
-        parent::__construct($handlers);
+        parent::__construct($objectManager, $handlers);
         $this->productTypePool = $productTypePool;
     }
 
