@@ -25,7 +25,7 @@ class EntityRebuild extends AbstractEntityRebuild
      * @param PageInterface|Page|DataObject $item
      * @inheritDoc
      */
-    protected function canItemBeIndexed(DataObject $item): bool
+    protected function isAllowedItem(DataObject $item): bool
     {
         if (!$item->isActive()) {
             return false;
@@ -44,9 +44,9 @@ class EntityRebuild extends AbstractEntityRebuild
     }
 
     /**
-     * @return array
+     * @inheritDoc
      */
-    protected function getIndexedAttributes(): array
+    protected function getIndexedAttributes(DataObject $item = null): array
     {
         return [
             'title',

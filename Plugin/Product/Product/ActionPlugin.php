@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -12,12 +12,12 @@
  */
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Indexer\Product\Plugin\Product;
+namespace HawkSearch\EsIndexing\Plugin\Product\Product;
 
-use HawkSearch\EsIndexing\Model\Indexer\Product\Plugin\AbstractPlugin;
+use HawkSearch\EsIndexing\Plugin\Product\AbstractPlugin;
 use Magento\Catalog\Model\Product\Action as ProductAction;
 
-class Action extends AbstractPlugin
+class ActionPlugin extends AbstractPlugin
 {
     /**
      * Reindex on product attribute mass change

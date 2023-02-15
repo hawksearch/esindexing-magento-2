@@ -51,7 +51,7 @@ class ScheduleHierarchyRebuild implements ObserverInterface
 
     /**
      * After hierarchy data is upserted the rebuild API request should follow after that
-     *
+     * Should work only for full reindexing
      * @inheritDoc
      * @param Observer $observer
      * @throws InputException
@@ -65,6 +65,10 @@ class ScheduleHierarchyRebuild implements ObserverInterface
         $isFullReindex = $observer->getData('full_reindex');
 
         if (!($entityType instanceof HierarchyEntityType)) {
+            return;
+        }
+
+        if (!$isFullReindex) {
             return;
         }
 

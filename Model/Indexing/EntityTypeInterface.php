@@ -28,6 +28,12 @@ interface EntityTypeInterface
     public function setTypeName(string $type);
 
     /**
+     * @param string $itemId
+     * @return string
+     */
+    public function getUniqueId(string $itemId);
+
+    /**
      * @return EntityRebuildInterface
      */
     public function getRebuilder() : EntityRebuildInterface;

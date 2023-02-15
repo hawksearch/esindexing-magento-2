@@ -16,8 +16,8 @@ namespace HawkSearch\EsIndexing\Model\Indexing\Entity\Hierarchy;
 
 use HawkSearch\EsIndexing\Api\HierarchyManagementInterface;
 use HawkSearch\EsIndexing\Api\IndexManagementInterface;
+use HawkSearch\EsIndexing\Helper\ObjectHelper;
 use HawkSearch\EsIndexing\Logger\LoggerFactoryInterface;
-use HawkSearch\EsIndexing\Model\Config\Indexing as IndexingConfig;
 use HawkSearch\EsIndexing\Model\Indexing\AbstractEntityRebuild;
 use HawkSearch\EsIndexing\Model\Indexing\ContextInterface;
 use HawkSearch\EsIndexing\Model\Indexing\EntityTypePoolInterface;
@@ -37,7 +37,6 @@ class EntityRebuild extends AbstractEntityRebuild
     /**
      * HierarchyEntity constructor.
      *
-     * @param IndexingConfig $indexingConfig
      * @param EntityTypePoolInterface $entityTypePool
      * @param IndexManagementInterface $indexManagement
      * @param EventManagerInterface $eventManager
@@ -47,23 +46,23 @@ class EntityRebuild extends AbstractEntityRebuild
      * @param HierarchyManagementInterface $hierarchyManagement
      */
     public function __construct(
-        IndexingConfig $indexingConfig,
         EntityTypePoolInterface $entityTypePool,
         IndexManagementInterface $indexManagement,
         EventManagerInterface $eventManager,
         LoggerFactoryInterface $loggerFactory,
         StoreManagerInterface $storeManager,
         ContextInterface $indexingContext,
+        ObjectHelper $objectHelper,
         HierarchyManagementInterface $hierarchyManagement
     ) {
         parent::__construct(
-            $indexingConfig,
             $entityTypePool,
             $indexManagement,
             $eventManager,
             $loggerFactory,
             $storeManager,
-            $indexingContext
+            $indexingContext,
+            $objectHelper
         );
         $this->hierarchyManagement = $hierarchyManagement;
     }
@@ -72,7 +71,7 @@ class EntityRebuild extends AbstractEntityRebuild
      * @param CategoryInterface|Category|DataObject $item
      * @inheritDoc
      */
-    protected function canItemBeIndexed(DataObject $item): bool
+    protected function isAllowedItem(DataObject $item): bool
     {
         $category = $item;
         if ($category->getId()) {
@@ -99,9 +98,9 @@ class EntityRebuild extends AbstractEntityRebuild
     }
 
     /**
-     * @return array
+     * @inheritDoc
      */
-    protected function getIndexedAttributes(): array
+    protected function getIndexedAttributes(DataObject $item = null): array
     {
         return [
             'HierarchyId',
@@ -117,21 +116,5 @@ class EntityRebuild extends AbstractEntityRebuild
     protected function castAttributeValue($value)
     {
         return $value === '' ? null : $value;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function indexItems($items, $indexName)
-    {
-        $this->hierarchyManagement->upsertHierarchy($items, $indexName);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function deleteItemsFromIndex($ids, $indexName)
-    {
-        $this->hierarchyManagement->deleteHierarchyItems($ids, $indexName);
     }
 }

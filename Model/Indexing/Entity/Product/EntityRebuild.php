@@ -16,9 +16,8 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Indexing\Entity\Product;
 
 use HawkSearch\EsIndexing\Api\IndexManagementInterface;
+use HawkSearch\EsIndexing\Helper\ObjectHelper;
 use HawkSearch\EsIndexing\Logger\LoggerFactoryInterface;
-use HawkSearch\EsIndexing\Model\Config\Indexing as IndexingConfig;
-use HawkSearch\EsIndexing\Model\Config\Products as ProductsConfig;
 use HawkSearch\EsIndexing\Model\Indexing\AbstractEntityRebuild;
 use HawkSearch\EsIndexing\Model\Indexing\ContextInterface;
 use HawkSearch\EsIndexing\Model\Indexing\EntityTypePoolInterface;
@@ -31,7 +30,6 @@ use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\CatalogInventory\Model\Configuration;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
-use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Store\Model\StoreManagerInterface;
 
 class EntityRebuild extends AbstractEntityRebuild
@@ -52,16 +50,6 @@ class EntityRebuild extends AbstractEntityRebuild
     private $stockRegistry;
 
     /**
-     * @var Json
-     */
-    private $jsonSerializer;
-
-    /**
-     * @var ProductsConfig
-     */
-    private $attributesConfigProvider;
-
-    /**
      * @var Product\Attributes
      */
     private $productAttributes;
@@ -74,52 +62,46 @@ class EntityRebuild extends AbstractEntityRebuild
     /**
      * ProductEntity constructor.
      *
-     * @param IndexingConfig $indexingConfig
      * @param EntityTypePoolInterface $entityTypePool
      * @param IndexManagementInterface $indexManagement
      * @param EventManagerInterface $eventManager
      * @param LoggerFactoryInterface $loggerFactory
      * @param StoreManagerInterface $storeManager
      * @param ContextInterface $indexingContext
+     * @param ObjectHelper $objectHelper
      * @param Visibility $visibility
      * @param Configuration $catalogInventoryConfiguration
      * @param StockRegistryInterface $stockRegistry
-     * @param Json $jsonSerializer
-     * @param ProductsConfig $attributesConfigProvider
      * @param Product\Attributes $productAttributes
      * @param Product $productDataProvider
      */
     public function __construct(
-        IndexingConfig $indexingConfig,
         EntityTypePoolInterface $entityTypePool,
         IndexManagementInterface $indexManagement,
         EventManagerInterface $eventManager,
         LoggerFactoryInterface $loggerFactory,
         StoreManagerInterface $storeManager,
         ContextInterface $indexingContext,
+        ObjectHelper $objectHelper,
         Visibility $visibility,
         Configuration $catalogInventoryConfiguration,
         StockRegistryInterface $stockRegistry,
-        Json $jsonSerializer,
-        ProductsConfig $attributesConfigProvider,
         Product\Attributes $productAttributes,
         Product $productDataProvider
     ) {
         parent::__construct(
-            $indexingConfig,
             $entityTypePool,
             $indexManagement,
             $eventManager,
             $loggerFactory,
             $storeManager,
-            $indexingContext
+            $indexingContext,
+            $objectHelper
         );
 
         $this->visibility = $visibility;
         $this->catalogInventoryConfiguration = $catalogInventoryConfiguration;
         $this->stockRegistry = $stockRegistry;
-        $this->jsonSerializer = $jsonSerializer;
-        $this->attributesConfigProvider = $attributesConfigProvider;
         $this->productAttributes = $productAttributes;
         $this->productDataProvider = $productDataProvider;
     }
@@ -127,20 +109,9 @@ class EntityRebuild extends AbstractEntityRebuild
     /**
      * @inheritdoc
      */
-    protected function getIndexedAttributes(): array
+    protected function getIndexedAttributes(DataObject $item = null): array
     {
-        $currentAttributesConfig = $this->jsonSerializer->unserialize(
-            $this->attributesConfigProvider->getAttributes()
-        );
-
-        $attributes = [];
-        foreach ($currentAttributesConfig as $configItem) {
-            if (isset($configItem['attribute'])) {
-                $attributes[] = $configItem['attribute'];
-            }
-        }
-
-        return array_merge($attributes, $this->productAttributes->getMandatoryAttributes());
+        return $this->productAttributes->getIndexedAttributes();
     }
 
     /**
@@ -167,7 +138,7 @@ class EntityRebuild extends AbstractEntityRebuild
      * @param ProductInterface|CatalogProductModel|DataObject $item
      * @inheritdoc
      */
-    protected function canItemBeIndexed(DataObject $item): bool
+    protected function isAllowedItem(DataObject $item): bool
     {
         if ($item->isDeleted()) {
             return false;

@@ -24,8 +24,6 @@ use HawkSearch\EsIndexing\Model\Indexing\ItemsIndexerInterface;
 
 abstract class EntityTypeAbstract implements EntityTypeInterface
 {
-    public const ENTITY_TYPE_NAME = null;
-
     /**
      * @var EntityRebuildInterface
      */
@@ -97,6 +95,14 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
     {
         $this->typeName = $type;
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getUniqueId(string $itemId)
+    {
+        return $this->getTypeName() . '_' . $itemId;
     }
 
     /**

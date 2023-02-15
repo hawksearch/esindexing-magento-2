@@ -28,4 +28,7 @@
     <topic name="hawksearch.indexing.content_page.reindex"
            request="HawkSearch\EsIndexing\Api\Data\QueueOperationDataInterface[]">
     </topic>
+    <topic name="hawksearch.indexing.landing_page.reindex"
+           request="HawkSearch\EsIndexing\Api\Data\QueueOperationDataInterface[]">
+    </topic>
 </config>

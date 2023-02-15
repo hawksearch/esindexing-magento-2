@@ -15,8 +15,10 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Product;
 
+use HawkSearch\EsIndexing\Model\Config\Products as ProductsConfig;
 use Magento\Catalog\Model\Product;
 use Magento\Eav\Model\Config;
+use Magento\Framework\Serialize\Serializer\Json;
 
 class Attributes
 {
@@ -31,13 +33,27 @@ class Attributes
     private $eavConfig;
 
     /**
+     * @var Json
+     */
+    private $jsonSerializer;
+
+    /**
+     * @var ProductsConfig
+     */
+    private $attributesConfigProvider;
+
+    /**
      * Attributes constructor.
      * @param Config $eavConfig
      */
     public function __construct(
-        Config $eavConfig
+        Config $eavConfig,
+        Json $jsonSerializer,
+        ProductsConfig $attributesConfigProvider
     ) {
         $this->eavConfig = $eavConfig;
+        $this->jsonSerializer = $jsonSerializer;
+        $this->attributesConfigProvider = $attributesConfigProvider;
     }
 
     /**
@@ -101,5 +117,29 @@ class Attributes
     public function getExtraDataCodes()
     {
         return [];
+    }
+
+    /**
+     * @param $forceMandatory
+     * @return array|string[]
+     */
+    public function getIndexedAttributes($forceMandatory = true)
+    {
+        $currentAttributesConfig = $this->jsonSerializer->unserialize(
+            $this->attributesConfigProvider->getAttributes()
+        );
+
+        $attributes = [];
+        foreach ($currentAttributesConfig as $configItem) {
+            if (isset($configItem['attribute'])) {
+                $attributes[] = $configItem['attribute'];
+            }
+        }
+
+        if ($forceMandatory) {
+            $attributes = array_merge($attributes, $this->getMandatoryAttributes());
+        }
+
+        return $attributes;
     }
 }

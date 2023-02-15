@@ -16,8 +16,7 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\MessageQueue;
 
 use HawkSearch\EsIndexing\Api\Data\QueueOperationDataInterface;
-use Magento\Framework\Api\SearchCriteria;
-use Magento\Framework\Api\SearchCriteriaBuilder;
+use HawkSearch\EsIndexing\Helper\ObjectHelper;
 use Magento\Framework\Data\ObjectFactory;
 use Magento\Framework\DataObject;
 use Magento\Framework\Serialize\SerializerInterface;
@@ -35,25 +34,25 @@ class Consumer
     private $objectFactory;
 
     /**
-     * @var SearchCriteriaBuilder
+     * @var ObjectHelper
      */
-    private $searchCriteriaBuilder;
+    private $objectHelper;
 
     /**
      * InitFullReindex constructor.
      *
      * @param SerializerInterface $serializer
      * @param ObjectFactory $objectFactory
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param ObjectHelper $objectHelper
      */
     public function __construct(
         SerializerInterface $serializer,
         ObjectFactory $objectFactory,
-        SearchCriteriaBuilder $searchCriteriaBuilder
+        ObjectHelper $objectHelper
     ) {
         $this->serializer = $serializer;
         $this->objectFactory = $objectFactory;
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->objectHelper = $objectHelper;
     }
 
     /**
@@ -89,35 +88,10 @@ class Consumer
         $arguments = $data->getData('method_arguments') ?? [];
         foreach ($arguments as $paramName => $value) {
             if ($paramName == 'searchCriteria') {
-                $arguments[$paramName] = $this->buildSearchCriteriaArgument((array)$value);
+                $arguments[$paramName] = $this->objectHelper->convertArrayToSearchCriteriaObject((array)$value);
             }
         }
 
         return $arguments;
     }
-
-    /**
-     * @param array $data
-     * @return SearchCriteria
-     */
-    private function buildSearchCriteriaArgument(array $data)
-    {
-        foreach ($data as $key => $value) {
-            switch ($key) {
-                case SearchCriteria::PAGE_SIZE:
-                    $this->searchCriteriaBuilder->setPageSize($value);
-                    break;
-                case SearchCriteria::CURRENT_PAGE:
-                    $this->searchCriteriaBuilder->setCurrentPage($value);
-                    break;
-                case SearchCriteria::SORT_ORDERS:
-                    $this->searchCriteriaBuilder->setSortOrders($value);
-                    break;
-                default:
-                    $this->searchCriteriaBuilder->addFilter($key, $value);
-            }
-        }
-        return $this->searchCriteriaBuilder->create();
-    }
-
 }

@@ -15,8 +15,8 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Indexing;
 
 use HawkSearch\EsIndexing\Api\IndexManagementInterface;
+use HawkSearch\EsIndexing\Helper\ObjectHelper;
 use HawkSearch\EsIndexing\Logger\LoggerFactoryInterface;
-use HawkSearch\EsIndexing\Model\Config\Indexing as IndexingConfig;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
@@ -36,11 +36,6 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
      * @var array
      */
     private $itemsToIndexCache = [];
-
-    /**
-     * @var IndexingConfig
-     */
-    protected $indexingConfig;
 
     /**
      * @var EntityTypePoolInterface
@@ -73,39 +68,59 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     protected $indexingContext;
 
     /**
+     * @var ObjectHelper
+     */
+    private $objectHelper;
+
+    /**
      * AbstractEntityRebuild constructor.
-     * @param IndexingConfig $indexingConfig
+     *
      * @param EntityTypePoolInterface $entityTypePool
      * @param IndexManagementInterface $indexManagement
      * @param EventManagerInterface $eventManager
      * @param LoggerFactoryInterface $loggerFactory
      * @param StoreManagerInterface $storeManager
      * @param ContextInterface $indexingContext
+     * @param ObjectHelper $objectHelper
      */
     public function __construct(
-        IndexingConfig $indexingConfig,
         EntityTypePoolInterface $entityTypePool,
         IndexManagementInterface $indexManagement,
         EventManagerInterface $eventManager,
         LoggerFactoryInterface $loggerFactory,
         StoreManagerInterface $storeManager,
-        ContextInterface $indexingContext
+        ContextInterface $indexingContext,
+        ObjectHelper $objectHelper
     )
     {
-        $this->indexingConfig = $indexingConfig;
         $this->entityTypePool = $entityTypePool;
         $this->indexManagement = $indexManagement;
         $this->eventManager = $eventManager;
         $this->hawkLogger = $loggerFactory->create();
         $this->storeManager = $storeManager;
         $this->indexingContext = $indexingContext;
+        $this->objectHelper = $objectHelper;
     }
 
     /**
+     * Check whether item is allowed to be indexed. Otherwise it should be removed.
+     *
      * @param DataObject $item
      * @return bool
      */
-    abstract protected function canItemBeIndexed(DataObject $item): bool;
+    abstract protected function isAllowedItem(DataObject $item): bool;
+
+    /**
+     * Check if item is new or existing one.
+     * By default it is considered that new and existing items are updated through the same indexing endpoint.
+     *
+     * @param DataObject $item
+     * @return bool
+     */
+    protected function isItemNew(DataObject $item): bool
+    {
+        return true;
+    }
 
     /**
      * @param DataObject $entityItem
@@ -116,17 +131,15 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     /**
      * @inheritDoc
      */
-    public function rebuild(SearchCriteriaInterface $searchCriteria, ?array $ids = null)
+    public function rebuild(SearchCriteriaInterface $searchCriteria)
     {
-        if (!$this->indexingConfig->isIndexingEnabled()) {
+        if (!$this->getEntityType()->getConfigHelper()->isEnabled()) {
             return;
         }
-        //@todo repalce the condition above with the statement bellow
-        //$this->getEntityType()->getState()->isEnabled();
-        //$this->getEntityType()->getState()->getBatchSize();
+        $ids = $this->objectHelper->getSearchCriteriaFilterValue($searchCriteria, 'ids');
 
         if ($searchCriteria->getCurrentPage() === null) {
-            $batchSize = $this->indexingConfig->getItemsBatchSize();
+            $batchSize = $this->getEntityType()->getConfigHelper()->getBatchSize();
             $batches = ceil(count($ids) / $batchSize);
             $searchCriteria->setPageSize($batchSize);
 
@@ -192,20 +205,36 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
         $itemsToRemove = $this->getItemsToRemove($items, $entityIds);
         $this->hawkLogger->debug(
             sprintf(
-                "Items to be removed from the index: %s",
+                "Items to be removed: %s",
                 implode(',', $itemsToRemove)
             )
         );
-        $this->deleteItemsFromIndex($itemsToRemove, $indexName);
+        $this->deleteIndexItems($itemsToRemove, $indexName);
 
         $itemsToIndex = $this->getItemsToIndex($items, $entityIds);
+        $itemsToIndexNew = [];
+        foreach ($itemsToIndex as $itemId => $item) {
+            if ($this->isItemNew($item)) {
+                $itemsToIndexNew[$itemId] = $item;
+                unset($itemsToIndex[$itemId]);
+            }
+        }
+
         $this->hawkLogger->debug(
             sprintf(
-                "Items to be indexed: %s",
+                "Items to be added: %s",
+                implode(',', array_keys($itemsToIndexNew))
+            )
+        );
+        $this->addIndexItems($itemsToIndexNew, $indexName);
+
+        $this->hawkLogger->debug(
+            sprintf(
+                "Items to be updated: %s",
                 implode(',', array_keys($itemsToIndex))
             )
         );
-        $this->indexItems($itemsToIndex, $indexName);
+        $this->updateIndexItems($itemsToIndex, $indexName);
     }
 
     /**
@@ -217,7 +246,10 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     protected function getItemsToRemove(array $fullItemsList, ?array $entityIds = null): array
     {
         $idsToRemove = is_array($entityIds)
-            ? array_combine($entityIds, array_map(function($id) { return $this->addTypePrefix($id);}, $entityIds))
+            ? array_combine(
+                $entityIds,
+                array_map(function($id) { return $this->addTypePrefix((string)$id);}, $entityIds)
+            )
             : [];
         $itemsToRemove = [];
 
@@ -234,15 +266,13 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
                 continue;
             }
 
-            if (!$this->canItemBeIndexed($item)) {
+            if (!$this->isAllowedItem($item)) {
                 $itemsToRemove[$this->getEntityId($item)] = $this->getEntityUniqueId($item);
                 $this->itemsToRemoveCache[$this->getEntityUniqueId($item)] = $this->getEntityId($item);
             }
         }
 
-        $itemsToRemove = array_merge($itemsToRemove, $idsToRemove);
-
-        return $itemsToRemove;
+        return array_merge($itemsToRemove, $idsToRemove);
     }
 
     /**
@@ -263,8 +293,8 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
                 continue;
             }
 
-            if ($this->canItemBeIndexed($item)) {
-                $itemsToIndex[$this->getEntityId($item)] = $this->convertEntityToIndexDataArray($item);
+            if ($this->isAllowedItem($item)) {
+                $itemsToIndex[$this->getEntityId($item)] = $item;
                 $this->itemsToIndexCache[$this->getEntityUniqueId($item)] = $this->getEntityId($item);
             }
         }
@@ -282,11 +312,15 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
         $itemData = [];
         $itemData[$this->getEntityIdField()] = $this->getEntityUniqueId($item);
         $itemData[$this->getEntityTypeField()] = $this->getEntityType()->getTypeName();
-        foreach ($this->getIndexedAttributes() as $attribute) {
+        foreach ($this->getIndexedAttributes($item) as $attribute) {
             if (!$attribute) {
                 continue;
             }
-            $itemData[$attribute] = $this->getAttributeValue($item, $attribute);
+            if (is_array($attribute) && !empty($attribute['code'])) {
+                $itemData[$attribute['code']] = $attribute['value'] ?? null;
+            } else {
+                $itemData[$attribute] = $this->getAttributeValue($item, $attribute);
+            }
         }
 
         $transport = new DataObject($itemData);
@@ -329,9 +363,10 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     }
 
     /**
+     * @param DataObject|null $item
      * @return array
      */
-    protected function getIndexedAttributes(): array
+    protected function getIndexedAttributes(DataObject $item = null): array
     {
         return [];
     }
@@ -395,24 +430,61 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
      */
     protected function addTypePrefix(string $value)
     {
-        return $this->getEntityType()->getTypeName() . '_' . $value;
+        return $this->getEntityType()->getUniqueId($value);
     }
 
     /**
      * @param array $items
      * @param string $indexName
+     * @throws LocalizedException
+     * @throws NotFoundException
      */
-    protected function indexItems($items, $indexName)
+    protected function addIndexItems($items, $indexName)
     {
-        $this->indexManagement->indexItems($items, $indexName);
+        if (!$items) {
+            return;
+        }
+
+        $itemsToIndex = [];
+        foreach ($items as $i => $item) {
+            $itemsToIndex[$i] = $this->convertEntityToIndexDataArray($item);
+        }
+
+        $this->getEntityType()->getItemsIndexer()->add($itemsToIndex, $indexName);
+    }
+
+    /**
+     * @param $items
+     * @param $indexName
+     * @return void
+     * @throws LocalizedException
+     * @throws NotFoundException
+     */
+    protected function updateIndexItems($items, $indexName)
+    {
+        if (!$items) {
+            return;
+        }
+
+        $itemsToIndex = [];
+        foreach ($items as $i => $item) {
+            $itemsToIndex[$i] = $this->convertEntityToIndexDataArray($item);
+        }
+
+        $this->getEntityType()->getItemsIndexer()->update($itemsToIndex, $indexName);
     }
 
     /**
      * @param array $ids
      * @param string $indexName
+     * @throws NotFoundException
      */
-    protected function deleteItemsFromIndex($ids, $indexName)
+    protected function deleteIndexItems($ids, $indexName)
     {
-        $this->indexManagement->deleteItems($ids, $indexName);
+        if (!$ids) {
+            return;
+        }
+
+        $this->getEntityType()->getItemsIndexer()->delete($ids, $indexName);
     }
 }

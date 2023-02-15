@@ -49,7 +49,7 @@ class SearchedItemsIndexer implements ItemsIndexerInterface
     }
 
     /**
-     * Uses api/v2/indexing/index-items API call for items indexing
+     * Uses api/v2/indexing/index-ixtems API call for items indexing
      *
      * @param array $items
      * @param string $indexName

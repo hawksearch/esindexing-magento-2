@@ -33,6 +33,16 @@
             <indexer id="hawksearch_entities" />
         </dependencies>
     </indexer>
+    <indexer id="hawksearch_categories" view_id="hawksearch_categories"
+             class="HawkSearch\EsIndexing\Model\Indexer\Category" shared_index="hawksearch_entities_shared">
+        <title translate="true">Hawksearch Categories</title>
+        <description translate="true">
+            Rebuild categories index.
+        </description>
+        <dependencies>
+            <indexer id="hawksearch_entities" />
+        </dependencies>
+    </indexer>
     <indexer id="hawksearch_entities" view_id="hawksearch_entities"
              class="HawkSearch\EsIndexing\Model\Indexer\Entities" shared_index="hawksearch_entities_shared">
         <title translate="true">Hawksearch Entities</title>

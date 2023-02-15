@@ -10,20 +10,11 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Indexing;
+namespace HawkSearch\EsIndexing\Model\Indexing\EntityType;
 
-use Magento\Framework\Api\SearchCriteriaInterface;
-
-interface EntityRebuildInterface
+class LandingPageEntityType extends EntityTypeAbstract
 {
-    /**
-     * Rebuild Entity items
-     *
-     * @param SearchCriteriaInterface $searchCriteria
-     * @return void
-     */
-    public function rebuild(SearchCriteriaInterface $searchCriteria);
+    public const ENTITY_TYPE_NAME = 'landing_page';
 }

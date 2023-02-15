@@ -16,22 +16,53 @@ namespace HawkSearch\EsIndexing\Model\Indexing\AttributeHandler;
 
 use HawkSearch\EsIndexing\Model\Indexing\AttributeHandlerInterface;
 use Magento\Framework\DataObject;
+use Magento\Framework\ObjectManagerInterface;
 
 class Composite implements AttributeHandlerInterface
 {
-    /**
-     * @var AttributeHandlerInterface[]
+    /**#@+
+     * Constants
      */
-    protected $handlers = [];
+    public const HANDLER_DEFAULT_NAME = '__DEFAULT_HANDLER__';
+    /**#@-*/
+
+    /**
+     * @var string[]
+     */
+    protected $handlers = [
+        self::HANDLER_DEFAULT_NAME => DataObjectHandler::class
+    ];
+
+    /**
+     * @var ObjectManagerInterface
+     */
+    private $objectManager;
 
     /**
      * AttributeHandlerComposite constructor.
      * @param AttributeHandlerInterface[] $handlers
      */
     public function __construct(
+        ObjectManagerInterface $objectManager,
         array $handlers = []
     ) {
-        $this->handlers = $handlers;
+        $this->objectManager = $objectManager;
+        $this->mergeTypes($handlers);
+    }
+
+    /**
+     * Add or override handlers
+     *
+     * @param array $handlers
+     * @return void
+     */
+    protected function mergeTypes(array $handlers)
+    {
+        foreach ($handlers as $handler) {
+            if (isset($handler['attribute']) && isset($handler['class'])) {
+                $this->handlers[$handler['attribute']] = $handler['class'];
+            }
+        }
     }
 
     /**
@@ -40,19 +71,33 @@ class Composite implements AttributeHandlerInterface
      */
     public function handle(DataObject $item, string $attributeCode)
     {
-        $handler = $this->getHandler($attributeCode);
+        $handler = $this->getObject( $this->handlers[$attributeCode] ?? $this->handlers[self::HANDLER_DEFAULT_NAME]);
 
-        return $handler ? $handler->handle($item, $attributeCode) : null;
+        return $handler->handle($item, $attributeCode);
     }
 
     /**
      * @param string $attributeCode
-     * @return AttributeHandlerInterface|null
+     * @return AttributeHandlerInterface
      */
     protected function getHandler(string $attributeCode)
     {
-        /** @var AttributeHandlerInterface $currentHandler */
-        $currentHandler = $this->handlers['__DEFAULT_HANDLER__'] ?? null;
-        return $this->handlers[$attributeCode] ?? $currentHandler;
+        return $this->getObject( $this->handlers[$attributeCode] ?? $this->handlers[self::HANDLER_DEFAULT_NAME]);
+    }
+
+    /**
+     * @param string $instanceName
+     * @return AttributeHandlerInterface
+     */
+    private function getObject(string $instanceName)
+    {
+        $instance = $this->objectManager->create($instanceName);
+        if (!$instance instanceof AttributeHandlerInterface) {
+            throw new \InvalidArgumentException(
+                get_class($instance) . ' isn\'t instance of ' . AttributeHandlerInterface::class
+            );
+        }
+
+        return $instance;
     }
 }
