@@ -97,13 +97,13 @@ class IndexManagement implements IndexManagementInterface
     public function getIndexName($useCurrent = false) : ?string
     {
         $indices = $this->getIndices();
-        $currentIndex = $this->getCurrentIndex();
+        $currentIndex = $indices ? $this->getCurrentIndex() : '';
 
         if ($useCurrent) {
             return $currentIndex;
         }
 
-        $selectedIndex = null;
+        $selectedIndex = '';
         foreach ($indices as $indexName) {
             if ($indexName === $currentIndex) {
                 continue;

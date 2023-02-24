@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -18,12 +18,13 @@ namespace HawkSearch\EsIndexing\Gateway\Validator;
 use HawkSearch\Connector\Gateway\Helper\HttpResponseReader;
 use HawkSearch\Connector\Gateway\Helper\SubjectReader;
 use HawkSearch\Connector\Gateway\Http\ClientInterface;
-use HawkSearch\Connector\Gateway\Validator\AbstractValidator;
 use HawkSearch\Connector\Gateway\Validator\ResultInterface;
 use HawkSearch\Connector\Gateway\Validator\ResultInterfaceFactory;
 
-class BadRequestValidator extends AbstractValidator
+class GetIndexListBadRequestValidator extends BadRequestValidator
 {
+    private const NO_INDECES_MESSAGE = "There are no indices.";
+
     /**
      * @var HttpResponseReader
      */
@@ -35,7 +36,7 @@ class BadRequestValidator extends AbstractValidator
     private $subjectReader;
 
     /**
-     * BadRequestValidator constructor.
+     * GetIndexListBadRequestValidator constructor.
      * @param ResultInterfaceFactory $resultFactory
      * @param HttpResponseReader $httpResponseReader
      * @param SubjectReader $subjectReader
@@ -46,7 +47,7 @@ class BadRequestValidator extends AbstractValidator
         SubjectReader $subjectReader
     )
     {
-        parent::__construct($resultFactory);
+        parent::__construct($resultFactory, $httpResponseReader, $subjectReader);
         $this->httpResponseReader = $httpResponseReader;
         $this->subjectReader = $subjectReader;
     }
@@ -57,27 +58,14 @@ class BadRequestValidator extends AbstractValidator
     public function validate(array $validationSubject): ResultInterface
     {
         $response = $this->subjectReader->readResponse($validationSubject);
-        $responseCode = $this->httpResponseReader->readResponseCode($response);
 
-        if ($responseCode == 400) {
-            $responseMessage = '';
-            if (is_array($response[ClientInterface::RESPONSE_DATA])
-                && isset($response[ClientInterface::RESPONSE_DATA]['Message'])
-            ) {
-                $responseMessage = $response[ClientInterface::RESPONSE_DATA]['Message'];
-            } elseif ($response[ClientInterface::RESPONSE_DATA]) {
-                $responseMessage = $response[ClientInterface::RESPONSE_DATA];
-            }
-            $error = $responseMessage
-                ?: __('Bad Request');
-            return $this->createResult(
-                false,
-                [
-                    $error
-                ]
-            );
+        if (is_array($response[ClientInterface::RESPONSE_DATA])
+            && isset($response[ClientInterface::RESPONSE_DATA]['Message'])
+            && $response[ClientInterface::RESPONSE_DATA]['Message'] == self::NO_INDECES_MESSAGE
+        ) {
+            return $this->createResult(true);
         }
 
-        return $this->createResult(true);
+        return parent::validate($validationSubject);
     }
 }

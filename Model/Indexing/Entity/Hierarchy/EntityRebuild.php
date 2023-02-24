@@ -14,59 +14,13 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexing\Entity\Hierarchy;
 
-use HawkSearch\EsIndexing\Api\HierarchyManagementInterface;
-use HawkSearch\EsIndexing\Api\IndexManagementInterface;
-use HawkSearch\EsIndexing\Helper\ObjectHelper;
-use HawkSearch\EsIndexing\Logger\LoggerFactoryInterface;
 use HawkSearch\EsIndexing\Model\Indexing\AbstractEntityRebuild;
-use HawkSearch\EsIndexing\Model\Indexing\ContextInterface;
-use HawkSearch\EsIndexing\Model\Indexing\EntityTypePoolInterface;
 use Magento\Catalog\Api\Data\CategoryInterface;
 use Magento\Catalog\Model\Category;
 use Magento\Framework\DataObject;
-use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
-use Magento\Store\Model\StoreManagerInterface;
 
 class EntityRebuild extends AbstractEntityRebuild
 {
-    /**
-     * @var \HawkSearch\EsIndexing\Api\HierarchyManagementInterface
-     */
-    private $hierarchyManagement;
-
-    /**
-     * HierarchyEntity constructor.
-     *
-     * @param EntityTypePoolInterface $entityTypePool
-     * @param IndexManagementInterface $indexManagement
-     * @param EventManagerInterface $eventManager
-     * @param LoggerFactoryInterface $loggerFactory
-     * @param StoreManagerInterface $storeManager
-     * @param ContextInterface $indexingContext
-     * @param HierarchyManagementInterface $hierarchyManagement
-     */
-    public function __construct(
-        EntityTypePoolInterface $entityTypePool,
-        IndexManagementInterface $indexManagement,
-        EventManagerInterface $eventManager,
-        LoggerFactoryInterface $loggerFactory,
-        StoreManagerInterface $storeManager,
-        ContextInterface $indexingContext,
-        ObjectHelper $objectHelper,
-        HierarchyManagementInterface $hierarchyManagement
-    ) {
-        parent::__construct(
-            $entityTypePool,
-            $indexManagement,
-            $eventManager,
-            $loggerFactory,
-            $storeManager,
-            $indexingContext,
-            $objectHelper
-        );
-        $this->hierarchyManagement = $hierarchyManagement;
-    }
-
     /**
      * @param CategoryInterface|Category|DataObject $item
      * @inheritDoc

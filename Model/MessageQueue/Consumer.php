@@ -58,7 +58,7 @@ class Consumer
     /**
      * Process
      * @param QueueOperationDataInterface $operation
-     * @return void
+     * @return string
      */
     public function process(QueueOperationDataInterface $operation)
     {
@@ -69,7 +69,7 @@ class Consumer
         $method = $dataObject->getMethod();
 
         if (!$class) {
-            return;
+            return '';
         }
 
         $object = $this->objectFactory->create($class, []);
@@ -77,6 +77,8 @@ class Consumer
         if (is_callable([$object, $method])) {
             call_user_func_array([$object, $method], $this->buildArguments($dataObject));
         }
+
+        return $operation->getData();
     }
 
     /**

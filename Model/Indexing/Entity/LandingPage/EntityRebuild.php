@@ -15,7 +15,6 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Indexing\Entity\LandingPage;
 
 use HawkSearch\EsIndexing\Api\Data\LandingPageInterface;
-use HawkSearch\EsIndexing\Api\IndexManagementInterface;
 use HawkSearch\EsIndexing\Api\LandingPageManagementInterface;
 use HawkSearch\EsIndexing\Api\Data\LandingPageInterfaceFactory;
 use HawkSearch\EsIndexing\Helper\ObjectHelper;
@@ -26,7 +25,6 @@ use HawkSearch\EsIndexing\Model\Indexing\EntityTypePoolInterface;
 use HawkSearch\EsIndexing\Model\LandingPage\Attribute\Handler\CustomUrl;
 use Magento\Catalog\Api\Data\CategoryInterface;
 use Magento\Catalog\Model\Category;
-use Magento\Framework\Api\DataObjectHelper;
 use Magento\Framework\App\CacheInterface as Cache;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
@@ -78,24 +76,20 @@ class EntityRebuild extends AbstractEntityRebuild
     private $customUrlAttribute;
 
     /**
-     * @var DataObjectHelper
-     */
-    private $dataObjectHelper;
-
-    /**
      * @param EntityTypePoolInterface $entityTypePool
-     * @param IndexManagementInterface $indexManagement
      * @param EventManagerInterface $eventManager
      * @param LoggerFactoryInterface $loggerFactory
      * @param StoreManagerInterface $storeManager
      * @param ContextInterface $indexingContext
+     * @param ObjectHelper $objectHelper
      * @param Cache $cache
      * @param SerializerInterface $serializer
      * @param LandingPageManagementInterface $landingPageManagement
+     * @param LandingPageInterfaceFactory $landingPageFactory
+     * @param CustomUrl $customUrlAttribute
      */
     public function __construct(
         EntityTypePoolInterface $entityTypePool,
-        IndexManagementInterface $indexManagement,
         EventManagerInterface $eventManager,
         LoggerFactoryInterface $loggerFactory,
         StoreManagerInterface $storeManager,
@@ -105,12 +99,10 @@ class EntityRebuild extends AbstractEntityRebuild
         SerializerInterface $serializer,
         LandingPageManagementInterface $landingPageManagement,
         LandingPageInterfaceFactory $landingPageFactory,
-        CustomUrl $customUrlAttribute,
-        DataObjectHelper $dataObjectHelper
+        CustomUrl $customUrlAttribute
     ) {
         parent::__construct(
             $entityTypePool,
-            $indexManagement,
             $eventManager,
             $loggerFactory,
             $storeManager,
@@ -122,7 +114,6 @@ class EntityRebuild extends AbstractEntityRebuild
         $this->landingPageManagement = $landingPageManagement;
         $this->landingPageFactory = $landingPageFactory;
         $this->customUrlAttribute = $customUrlAttribute;
-        $this->dataObjectHelper = $dataObjectHelper;
     }
 
     /**
