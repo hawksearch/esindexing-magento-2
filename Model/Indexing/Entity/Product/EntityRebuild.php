@@ -15,7 +15,6 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexing\Entity\Product;
 
-use HawkSearch\EsIndexing\Api\IndexManagementInterface;
 use HawkSearch\EsIndexing\Helper\ObjectHelper;
 use HawkSearch\EsIndexing\Logger\LoggerFactoryInterface;
 use HawkSearch\EsIndexing\Model\Indexing\AbstractEntityRebuild;
@@ -63,7 +62,6 @@ class EntityRebuild extends AbstractEntityRebuild
      * ProductEntity constructor.
      *
      * @param EntityTypePoolInterface $entityTypePool
-     * @param IndexManagementInterface $indexManagement
      * @param EventManagerInterface $eventManager
      * @param LoggerFactoryInterface $loggerFactory
      * @param StoreManagerInterface $storeManager
@@ -77,7 +75,6 @@ class EntityRebuild extends AbstractEntityRebuild
      */
     public function __construct(
         EntityTypePoolInterface $entityTypePool,
-        IndexManagementInterface $indexManagement,
         EventManagerInterface $eventManager,
         LoggerFactoryInterface $loggerFactory,
         StoreManagerInterface $storeManager,
@@ -91,7 +88,6 @@ class EntityRebuild extends AbstractEntityRebuild
     ) {
         parent::__construct(
             $entityTypePool,
-            $indexManagement,
             $eventManager,
             $loggerFactory,
             $storeManager,

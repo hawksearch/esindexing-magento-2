@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexing;
 
-use HawkSearch\EsIndexing\Api\IndexManagementInterface;
 use HawkSearch\EsIndexing\Helper\ObjectHelper;
 use HawkSearch\EsIndexing\Logger\LoggerFactoryInterface;
 use Magento\Framework\Api\SearchCriteriaInterface;
@@ -41,11 +40,6 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
      * @var EntityTypePoolInterface
      */
     protected $entityTypePool;
-
-    /**
-     * @var IndexManagementInterface
-     */
-    protected $indexManagement;
 
     /**
      * @var EventManagerInterface
@@ -76,7 +70,6 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
      * AbstractEntityRebuild constructor.
      *
      * @param EntityTypePoolInterface $entityTypePool
-     * @param IndexManagementInterface $indexManagement
      * @param EventManagerInterface $eventManager
      * @param LoggerFactoryInterface $loggerFactory
      * @param StoreManagerInterface $storeManager
@@ -85,7 +78,6 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
      */
     public function __construct(
         EntityTypePoolInterface $entityTypePool,
-        IndexManagementInterface $indexManagement,
         EventManagerInterface $eventManager,
         LoggerFactoryInterface $loggerFactory,
         StoreManagerInterface $storeManager,
@@ -94,7 +86,6 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     )
     {
         $this->entityTypePool = $entityTypePool;
-        $this->indexManagement = $indexManagement;
         $this->eventManager = $eventManager;
         $this->hawkLogger = $loggerFactory->create();
         $this->storeManager = $storeManager;
@@ -190,9 +181,8 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
         );
 
         if (!($indexName = $this->indexingContext->getIndexName($storeId))) {
-            $isFullReindex = $entityIds === null;
-            $isCurrentIndex = !$isFullReindex;
-            $indexName = $this->indexManagement->getIndexName($isCurrentIndex);
+            $this->hawkLogger->debug("No index selected. Termitating index rebuild.");
+            throw new LocalizedException(__('There is no index selected. Please run full reindexing and try again.'));
         }
 
         $this->hawkLogger->debug(
