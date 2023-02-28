@@ -353,8 +353,10 @@ class EntityRebuild extends AbstractEntityRebuild
             $pageByCustomUrl = $customUrlMap[$convertedItem->getCustomUrl()] ?? null;
             $existingPages[] = $pageByCustomUrl;
             $pageByCustomField = $customFieldMap[$convertedItem->getCustom()] ?? null;
-            if ($pageByCustomField && ($pageByCustomField->getPageId() != $pageByCustomUrl->getPageId())) {
-                $existingPages[] = $pageByCustomField;
+            if ($pageByCustomField) {
+                if (!$pageByCustomUrl || ($pageByCustomField->getPageId() != $pageByCustomUrl->getPageId())) {
+                    $existingPages[] = $pageByCustomField;
+                }
             }
             $existingPages = array_filter($existingPages);
 
