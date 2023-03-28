@@ -62,7 +62,7 @@ class ProductPlugin extends AbstractPlugin
             $productResource->beginTransaction();
             $result = $proceed($object);
             $productResource->addCommitCallback(function () use ($object) {
-                $this->reindexRow($object->getEntityId());
+                $this->reindexRow($object->getId());
             });
             $productResource->commit();
         } catch (\Exception $e) {
