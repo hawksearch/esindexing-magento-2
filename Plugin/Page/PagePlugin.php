@@ -78,7 +78,7 @@ class PagePlugin
             $pageResource->beginTransaction();
             $result = $proceed($object);
             $pageResource->addCommitCallback(function () use ($object) {
-                $this->reindexRow($object->getEntityId());
+                $this->reindexRow($object->getId());
             });
             $pageResource->commit();
         } catch (\Exception $e) {

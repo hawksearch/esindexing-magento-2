@@ -375,12 +375,23 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     /**
      * @return EntityTypeInterface
      * @throws NotFoundException
+     * @todo Refactor and get rid of iterating EntityTypePool
      */
     protected function getEntityType(): EntityTypeInterface
     {
         foreach ($this->entityTypePool->getList() as $entityType) {
-            if ($entityType->getRebuilder() instanceof $this) {
+            $rebuilder = $entityType->getRebuilder();
+            if ($this instanceof $rebuilder) {
                 return $entityType;
+            }
+
+            //check if $rebuilder is instance of Proxy class
+            $proxyPosition = strlen(get_class($rebuilder)) - strlen('\Proxy');
+            if (strpos(get_class($rebuilder), '\Proxy', -$proxyPosition) === $proxyPosition) {
+                $parentClass = get_parent_class($rebuilder);
+                if ($this instanceof $parentClass || is_subclass_of($this, $parentClass)) {
+                    return $entityType;
+                }
             }
         }
 

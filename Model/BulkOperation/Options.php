@@ -28,7 +28,7 @@ class Options implements OptionSourceInterface
         return [
             [
                 'value' => OperationInterface::STATUS_TYPE_COMPLETE,
-                'label' =>  __('Complite')
+                'label' =>  __('Complete')
             ],
             [
                 'value' => OperationInterface::STATUS_TYPE_RETRIABLY_FAILED,

@@ -16,7 +16,6 @@ namespace HawkSearch\EsIndexing\Plugin\Category;
 
 use Magento\Catalog\Model\Category as CategoryModel;
 use Magento\Catalog\Model\ResourceModel\Category as CategoryResource;
-use Magento\Cms\Model\ResourceModel\Page as PageResource;
 use Magento\Framework\Indexer\IndexerInterface;
 use Magento\Framework\Indexer\IndexerRegistry;
 use Magento\Framework\Model\AbstractModel;
@@ -93,7 +92,7 @@ class CategoryPlugin
                 if (is_array($affectedProducts)) {
                     $this->reindexProductList($affectedProducts);
                 }
-                $this->reindexCategoryRow($category->getEntityId());
+                $this->reindexCategoryRow($category->getId());
             });
             $categoryResource->commit();
         } catch (\Exception $e) {
