@@ -1135,6 +1135,10 @@
         <plugin name="hawksearchCleanData"
                 type="HawkSearch\EsIndexing\Plugin\Indexing\Entity\Product\EntityRebuildPlugin"/>
     </type>
+    <type name="Magento\ImportExport\Model\Import">
+        <plugin name="hawksearchInvalidateProductIndexerOnImport"
+                type="HawkSearch\EsIndexing\Plugin\ImportExport\ImportPlugin"/>
+    </type>
 
     <!-- END Plugins -->
 </config>
