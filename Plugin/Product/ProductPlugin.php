@@ -15,10 +15,27 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Plugin\Product;
 
 use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
+use Magento\Framework\Indexer\IndexerInterface;
+use Magento\Framework\Indexer\IndexerRegistry;
 use Magento\Framework\Model\AbstractModel;
 
 class ProductPlugin extends AbstractPlugin
 {
+    /**
+     * @var IndexerInterface
+     */
+    private $categoryIndexer;
+
+    /**
+     * @param IndexerRegistry $indexerRegistry
+     */
+    public function __construct(
+        IndexerRegistry $indexerRegistry
+    ) {
+        parent::__construct($indexerRegistry);
+        $this->categoryIndexer = $indexerRegistry->get('hawksearch_categories');
+    }
+
     /**
      * Reindex on product save.
      *
@@ -62,6 +79,10 @@ class ProductPlugin extends AbstractPlugin
             $productResource->beginTransaction();
             $result = $proceed($object);
             $productResource->addCommitCallback(function () use ($object) {
+                $affectedCategories = $object->getAffectedCategoryIds();
+                if (is_array($affectedCategories)) {
+                    $this->reindexCategoryList($affectedCategories);
+                }
                 $this->reindexRow($object->getId());
             });
             $productResource->commit();
@@ -71,5 +92,18 @@ class ProductPlugin extends AbstractPlugin
         }
 
         return $result;
+    }
+
+    /**
+     * Reindex categories if indexer is not scheduled
+     *
+     * @param int[] $categoryIds
+     * @return void
+     */
+    protected function reindexCategoryList(array $categoryIds)
+    {
+        if (!$this->categoryIndexer->isScheduled()) {
+            $this->categoryIndexer->reindexList($categoryIds);
+        }
     }
 }
