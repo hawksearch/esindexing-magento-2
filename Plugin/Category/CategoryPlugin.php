@@ -18,7 +18,6 @@ use Magento\Catalog\Model\Category as CategoryModel;
 use Magento\Catalog\Model\ResourceModel\Category as CategoryResource;
 use Magento\Framework\Indexer\IndexerInterface;
 use Magento\Framework\Indexer\IndexerRegistry;
-use Magento\Framework\Model\AbstractModel;
 
 class CategoryPlugin
 {
@@ -117,7 +116,7 @@ class CategoryPlugin
     }
 
     /**
-     * Reindex product if indexer is not scheduled
+     * Reindex products if indexer is not scheduled
      *
      * @param int[] $productIds
      * @return void
