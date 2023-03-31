@@ -15,6 +15,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexer;
 
+use HawkSearch\EsIndexing\Model\Indexer\Entities as EntitiesIndexer;
 use HawkSearch\EsIndexing\Model\Indexer\Entities\ActionAbstract as Action;
 use HawkSearch\EsIndexing\Model\Product as ProductDataProvider;
 use Magento\Framework\Exception\LocalizedException;
@@ -24,6 +25,11 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 
 class Product implements IndexerActionInterface, MviewActionInterface
 {
+    /**
+     * Indexer ID in configuration
+     */
+    const INDEXER_ID = 'hawksearch_products';
+
     /**
      * @var ProductDataProvider
      */
@@ -64,7 +70,12 @@ class Product implements IndexerActionInterface, MviewActionInterface
      */
     public function executeFull()
     {
-        $this->output->writeln('To trigger full reindex please use `hawksearch_entities` indexer.');
+        $this->output->writeln(
+            sprintf(
+                'To trigger full reindex please use `%s` indexer.',
+                EntitiesIndexer::INDEXER_ID
+            )
+        );
     }
 
     /**

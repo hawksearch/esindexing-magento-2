@@ -14,10 +14,11 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Plugin\Store;
 
-use HawkSearch\EsIndexing\Plugin\Product\AbstractPlugin;
+use HawkSearch\EsIndexing\Model\Indexer\Category as CategoryIndexer;
+use HawkSearch\EsIndexing\Model\Indexer\Product as ProductIndexer;
 use Magento\Framework\Model\AbstractModel;
+use Magento\Store\Model\Group as StoreGroupModel;
 use Magento\Store\Model\ResourceModel\Group as StoreGroupResourceModel;
-use Magento\Store\Model\ResourceModel\Store as StoreResourceModel;
 
 class StoreGroupPlugin extends AbstractPlugin
 {
@@ -33,26 +34,29 @@ class StoreGroupPlugin extends AbstractPlugin
      */
     public function afterSave(StoreGroupResourceModel $subject, StoreGroupResourceModel $result, AbstractModel $group)
     {
-        if (!$group->isObjectNew() && $group->dataHasChangedFor('website_id')) {
-            $this->productIndexer->invalidate();
+        if ($this->validate($group)) {
+            $this->indexerRegistry->get(CategoryIndexer::INDEXER_ID)->invalidate();
+            $this->indexerRegistry->get(ProductIndexer::INDEXER_ID)->invalidate();
         }
 
         return $result;
     }
 
     /**
-     * Invalidate indexer on store view delete
+     * Validate changes for invalidating indexer
      *
-     * @param StoreGroupResourceModel $subject
-     * @param StoreGroupResourceModel $result
-     * @return StoreGroupResourceModel
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param AbstractModel $model
+     * @return bool
      */
-    public function afterDelete(StoreGroupResourceModel $subject, StoreGroupResourceModel $result)
+    protected function validate(AbstractModel $model)
     {
-        $this->productIndexer->invalidate();
+        $isIndexingEnabled = false;
+        /** @var StoreGroupModel $model */
+        foreach ($model->getStores() as $store) {
+            $isIndexingEnabled = $isIndexingEnabled || $this->indexingConfig->isIndexingEnabled($store);
+        }
 
-        return $result;
+        return ($model->dataHasChangedFor('website_id') || $model->dataHasChangedFor('root_category_id'))
+            && !$model->isObjectNew() && $isIndexingEnabled;
     }
 }
