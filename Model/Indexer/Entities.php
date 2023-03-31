@@ -20,6 +20,11 @@ use Magento\Framework\Indexer\ActionInterface;
 class Entities implements ActionInterface
 {
     /**
+     * Indexer ID in configuration
+     */
+    const INDEXER_ID = 'hawksearch_entities';
+
+    /**
      * @var Action
      */
     private $action;

@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Plugin\Page;
 
+use HawkSearch\EsIndexing\Model\Indexer\ContentPage as ContentPageIndexer;
 use Magento\Cms\Model\ResourceModel\Page as PageResource;
 use Magento\Framework\Indexer\IndexerInterface;
 use Magento\Framework\Indexer\IndexerRegistry;
@@ -32,7 +33,7 @@ class PagePlugin
     public function __construct(
         IndexerRegistry $indexerRegistry
     ) {
-        $this->pageIndexer = $indexerRegistry->get('hawksearch_content_pages');
+        $this->pageIndexer = $indexerRegistry->get(ContentPageIndexer::INDEXER_ID);
     }
 
     /**

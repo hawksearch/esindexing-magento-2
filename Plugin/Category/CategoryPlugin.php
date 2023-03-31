@@ -14,6 +14,8 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Plugin\Category;
 
+use HawkSearch\EsIndexing\Model\Indexer\Category as CategoryIndexer;
+use HawkSearch\EsIndexing\Model\Indexer\Product as ProductIndexer;
 use Magento\Catalog\Model\Category as CategoryModel;
 use Magento\Catalog\Model\ResourceModel\Category as CategoryResource;
 use Magento\Framework\Indexer\IndexerInterface;
@@ -37,8 +39,8 @@ class CategoryPlugin
     public function __construct(
         IndexerRegistry $indexerRegistry
     ) {
-        $this->categoryIndexer = $indexerRegistry->get('hawksearch_categories');
-        $this->productIndexer = $indexerRegistry->get('hawksearch_products');
+        $this->categoryIndexer = $indexerRegistry->get(CategoryIndexer::INDEXER_ID);
+        $this->productIndexer = $indexerRegistry->get(ProductIndexer::INDEXER_ID);
     }
 
     /**

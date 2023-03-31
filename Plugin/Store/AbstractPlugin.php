@@ -12,44 +12,41 @@
  */
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Plugin\ImportExport;
+namespace HawkSearch\EsIndexing\Plugin\Store;
 
-use HawkSearch\EsIndexing\Model\Indexer\Product as ProductIndexer;
-use Magento\Framework\Indexer\IndexerInterface;
+use HawkSearch\EsIndexing\Model\Config\Indexing as IndexingConfig;
 use Magento\Framework\Indexer\IndexerRegistry;
-use Magento\ImportExport\Model\Import;
+use Magento\Framework\Model\AbstractModel;
 
-class ImportPlugin
+abstract class AbstractPlugin
 {
     /**
-     * @var IndexerInterface
+     * @var IndexerRegistry
      */
-    private $productIndexer;
+    protected $indexerRegistry;
+
+    /**
+     * @var IndexingConfig
+     */
+    protected $indexingConfig;
 
     /**
      * @param IndexerRegistry $indexerRegistry
+     * @param IndexingConfig $indexingConfig
      */
     public function __construct(
-        IndexerRegistry $indexerRegistry
+        IndexerRegistry $indexerRegistry,
+        IndexingConfig $indexingConfig
     ) {
-        $this->productIndexer = $indexerRegistry->get(ProductIndexer::INDEXER_ID);
+        $this->indexerRegistry = $indexerRegistry;
+        $this->indexingConfig = $indexingConfig;
     }
 
     /**
-     * After import handler
+     * Validate changes for invalidating indexer
      *
-     * @param Import $subject
-     * @param bool $import
-     *
+     * @param AbstractModel $model
      * @return bool
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterImportSource(Import $subject, $import)
-    {
-        if (!$this->productIndexer->isScheduled()) {
-            $this->productIndexer->invalidate();
-        }
-
-        return $import;
-    }
+    abstract protected function validate(AbstractModel $model);
 }

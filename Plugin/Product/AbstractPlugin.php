@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Plugin\Product;
 
+use HawkSearch\EsIndexing\Model\Indexer\Product as ProductIndexer;
 use Magento\Framework\Indexer\IndexerInterface;
 use Magento\Framework\Indexer\IndexerRegistry;
 
@@ -30,7 +31,7 @@ abstract class AbstractPlugin
     public function __construct(
         IndexerRegistry $indexerRegistry
     ) {
-        $this->productIndexer = $indexerRegistry->get('hawksearch_products');
+        $this->productIndexer = $indexerRegistry->get(ProductIndexer::INDEXER_ID);
     }
 
     /**

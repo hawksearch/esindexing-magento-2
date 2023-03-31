@@ -47,43 +47,6 @@ class AttributePlugin extends AbstractPlugin
     }
 
     /**
-     * Check if product indexer invalidation is needed on attribute save
-     *
-     * @param AttributeResourceModel $subject
-     * @param Attribute $attribute
-     *
-     * @return void
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function beforeSave(
-        AttributeResourceModel $subject,
-        AbstractModel $attribute
-    ) {
-        $this->isInvalidationNeeded = $this->isIndexInvalidationNeeded($attribute);
-    }
-
-    /**
-     * Invalidate product indexer on attribute save
-     *
-     * @param AttributeResourceModel $subject
-     * @param AttributeResourceModel $result
-     *
-     * @return AttributeResourceModel
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function afterSave(
-        AttributeResourceModel $subject,
-        AttributeResourceModel $result
-    ) {
-        if ($this->isInvalidationNeeded) {
-            $this->productIndexer->invalidate();
-        }
-        $this->isInvalidationNeeded = false;
-
-        return $result;
-    }
-
-    /**
      * Check if product indexer invalidation is needed on attribute delete
      *
      * @param AttributeResourceModel $subject

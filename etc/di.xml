@@ -1139,6 +1139,9 @@
         <plugin name="hawksearchInvalidateProductIndexerOnImport"
                 type="HawkSearch\EsIndexing\Plugin\ImportExport\ImportPlugin"/>
     </type>
+    <type name="Magento\Catalog\Model\ResourceModel\Attribute">
+        <plugin name="hawksearchIndexerAttribute" type="HawkSearch\EsIndexing\Plugin\Product\Product\AttributePlugin"/>
+    </type>
 
     <!-- END Plugins -->
 </config>

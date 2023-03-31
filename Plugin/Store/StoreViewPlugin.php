@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
@@ -14,9 +15,11 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Plugin\Store;
 
-use HawkSearch\EsIndexing\Plugin\Product\AbstractPlugin;
+use HawkSearch\EsIndexing\Model\Indexer\Category as CategoryIndexer;
+use HawkSearch\EsIndexing\Model\Indexer\Product as ProductIndexer;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Store\Model\ResourceModel\Store as StoreResourceModel;
+use Magento\Store\Model\Store as StoreModel;
 
 class StoreViewPlugin extends AbstractPlugin
 {
@@ -32,26 +35,22 @@ class StoreViewPlugin extends AbstractPlugin
      */
     public function afterSave(StoreResourceModel $subject, StoreResourceModel $result, AbstractModel $store)
     {
-        if ($store->isObjectNew()) {
-            $this->productIndexer->invalidate();
+        if ($this->validate($store)) {
+            $this->indexerRegistry->get(CategoryIndexer::INDEXER_ID)->invalidate();
+            $this->indexerRegistry->get(ProductIndexer::INDEXER_ID)->invalidate();
         }
 
         return $result;
     }
 
     /**
-     * Invalidate indexer on store view delete
-     *
-     * @param StoreResourceModel $subject
-     * @param StoreResourceModel $result
-     * @return StoreResourceModel
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @inheritDoc
      */
-    public function afterDelete(StoreResourceModel $subject, StoreResourceModel $result)
+    protected function validate(AbstractModel $model)
     {
-        $this->productIndexer->invalidate();
-
-        return $result;
+        /** @var StoreModel $model */
+        return !$model->isObjectNew()
+            && $model->dataHasChangedFor('group_id')
+            && $this->indexingConfig->isIndexingEnabled($model);
     }
 }
