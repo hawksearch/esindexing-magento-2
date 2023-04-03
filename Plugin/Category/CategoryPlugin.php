@@ -66,12 +66,8 @@ class CategoryPlugin
      */
     public function aroundDelete(CategoryResource $categoryResource, \Closure $proceed, CategoryModel $object)
     {
-        $affectedProductsOrig = $object->getAffectedProductIds();
         $object->setAffectedProductIds(array_keys($object->getProductsPosition()));
-        $result = $this->addCommitCallback($categoryResource, $proceed, $object);
-        $object->setAffectedProductIds($affectedProductsOrig);
-
-        return $result;
+        return $this->addCommitCallback($categoryResource, $proceed, $object);
     }
 
     /**

@@ -62,6 +62,7 @@ class ProductPlugin extends AbstractPlugin
      */
     public function aroundDelete(ProductResource $productResource, \Closure $proceed, AbstractModel $object)
     {
+        $object->setAffectedCategoryIds($object->getCategoryIds());
         return $this->addCommitCallback($productResource, $proceed, $object);
     }
 
