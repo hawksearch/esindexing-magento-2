@@ -41,6 +41,11 @@ class EntityRebuild extends AbstractEntityRebuild
     private const CUSTOM_FIELD_PREFIX = "__mage_catid__";
 
     /**
+     * @var LandingPageInterface[]
+     */
+    private $landingPages;
+
+    /**
      * @var array
      */
     private $customFieldMap;
@@ -201,6 +206,19 @@ class EntityRebuild extends AbstractEntityRebuild
      * @throws NoSuchEntityException
      */
     protected function getLandingPages()
+    {
+        if ($this->landingPages === null) {
+            $this->landingPages = $this->landingPageManagement->getLandingPages();
+        }
+
+        return $this->landingPages;
+    }
+
+    /**
+     * @return array|LandingPageInterface[]
+     * @throws NoSuchEntityException
+     */
+    protected function getCachedLandingPages()
     {
         $cacheKey = self::CACHE_KEY . $this->storeManager->getStore()->getId();
         if ($serialized = $this->cache->load($cacheKey)) {
