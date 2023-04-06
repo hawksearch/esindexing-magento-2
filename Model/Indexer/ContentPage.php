@@ -14,20 +14,57 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexer;
 
-use HawkSearch\EsIndexing\Model\Indexing\Entity\Type\ContentPageEntityType;
+use HawkSearch\EsIndexing\Model\Indexer\Entities as EntitiesIndexer;
+use HawkSearch\EsIndexing\Model\Indexer\Entities\ActionAbstract as Action;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Indexer\ActionInterface as IndexerActionInterface;
 use Magento\Framework\Mview\ActionInterface as MviewActionInterface;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
-class ContentPage extends AbstractItemsIndexer implements IndexerActionInterface, MviewActionInterface
+class ContentPage implements IndexerActionInterface, MviewActionInterface
 {
     /**
-     * @inheritdoc
+     * Indexer ID in configuration
+     */
+    const INDEXER_ID = 'hawksearch_content_pages';
+
+    /**
+     * @var ConsoleOutput
+     */
+    private $output;
+
+    /**
+     * @var Action
+     */
+    private $action;
+
+    /**
+     * @param Action $action
+     * @param ConsoleOutput $output
+     */
+    public function __construct(
+        Action $action,
+        ConsoleOutput $output
+    ) {
+        $this->output = $output;
+        $this->action = $action;
+    }
+
+    /**
+     * This indexer is not designed to run full reindex
+     *
+     * @see Entities
+     * @inheritDoc
      */
     public function executeFull()
     {
-        $this->execute(null);
+        $this->output->writeln(
+            sprintf(
+                'To trigger full reindex please use `%s` indexer.',
+                EntitiesIndexer::INDEXER_ID
+            )
+        );
     }
 
     /**
@@ -54,18 +91,6 @@ class ContentPage extends AbstractItemsIndexer implements IndexerActionInterface
      */
     public function execute($ids)
     {
-        if (is_array($ids) && count($ids) > 0) {
-            $this->rebuildDelta($ids);
-        } else {
-            $this->rebuildFull();
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getEntityTypeName()
-    {
-        return ContentPageEntityType::ENTITY_TYPE_NAME;
+        $this->action->execute($ids);
     }
 }

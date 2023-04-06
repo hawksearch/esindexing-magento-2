@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -16,8 +16,8 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Plugin;
 
 use HawkSearch\EsIndexing\Api\Data\QueueOperationDataInterface;
-use HawkSearch\EsIndexing\Model\Indexing\Consumer;
 use HawkSearch\EsIndexing\Model\Indexing\ContextInterface;
+use HawkSearch\EsIndexing\Model\MessageQueue\Consumer;
 use Magento\Framework\App\Area;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;

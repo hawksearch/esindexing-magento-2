@@ -28,4 +28,7 @@
     <publisher topic="hawksearch.indexing.content_page.reindex">
         <connection name="db" exchange="magento-db" />
     </publisher>
+    <publisher topic="hawksearch.indexing.landing_page.reindex">
+        <connection name="db" exchange="magento-db" />
+    </publisher>
 </config>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   /**
-   * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+   * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
    *
    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -13,16 +13,41 @@
    */
   -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Indexer/etc/indexer.xsd">
-    <indexer id="hawksearch_products" view_id="hawksearch_products" class="HawkSearch\EsIndexing\Model\Indexer\Product">
+    <indexer id="hawksearch_products" view_id="hawksearch_products" class="HawkSearch\EsIndexing\Model\Indexer\Product"
+             shared_index="hawksearch_entities_shared">
         <title translate="true">Hawksearch Products</title>
         <description translate="true">
             Rebuild products index.
         </description>
+        <dependencies>
+            <indexer id="hawksearch_entities" />
+        </dependencies>
     </indexer>
-    <indexer id="hawksearch_content_pages" view_id="hawksearch_content_pages" class="HawkSearch\EsIndexing\Model\Indexer\ContentPage">
+    <indexer id="hawksearch_content_pages" view_id="hawksearch_content_pages"
+             class="HawkSearch\EsIndexing\Model\Indexer\ContentPage" shared_index="hawksearch_entities_shared">
         <title translate="true">Hawksearch Content Pages</title>
         <description translate="true">
             Rebuild content pages index.
+        </description>
+        <dependencies>
+            <indexer id="hawksearch_entities" />
+        </dependencies>
+    </indexer>
+    <indexer id="hawksearch_categories" view_id="hawksearch_categories"
+             class="HawkSearch\EsIndexing\Model\Indexer\Category" shared_index="hawksearch_entities_shared">
+        <title translate="true">Hawksearch Categories</title>
+        <description translate="true">
+            Rebuild categories index.
+        </description>
+        <dependencies>
+            <indexer id="hawksearch_entities" />
+        </dependencies>
+    </indexer>
+    <indexer id="hawksearch_entities" view_id="hawksearch_entities"
+             class="HawkSearch\EsIndexing\Model\Indexer\Entities" shared_index="hawksearch_entities_shared">
+        <title translate="true">Hawksearch Entities</title>
+        <description translate="true">
+            Rebuild all Hawksearch entities index. The indexer is designed to perform full reindex action only.
         </description>
     </indexer>
 </config>

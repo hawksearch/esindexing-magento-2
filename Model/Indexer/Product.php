@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -15,70 +15,72 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexer;
 
-use HawkSearch\EsIndexing\Model\Config\Indexing;
-use HawkSearch\EsIndexing\Model\Indexing\Entity\EntityTypePoolInterface;
-use HawkSearch\EsIndexing\Model\Indexing\Entity\Type\ProductEntityType;
-use HawkSearch\EsIndexing\Model\Indexing\IndexManagementInterface;
-use HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisherInterface;
-use HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicResolverInterface;
+use HawkSearch\EsIndexing\Model\Indexer\Entities as EntitiesIndexer;
+use HawkSearch\EsIndexing\Model\Indexer\Entities\ActionAbstract as Action;
 use HawkSearch\EsIndexing\Model\Product as ProductDataProvider;
-use Magento\Framework\Event\ManagerInterface;
-use Magento\Framework\Exception\InputException;
-use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Indexer\ActionInterface as IndexerActionInterface;
 use Magento\Framework\Mview\ActionInterface as MviewActionInterface;
-use Magento\Store\Model\StoreManagerInterface;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
-class Product extends AbstractItemsIndexer implements IndexerActionInterface, MviewActionInterface
+class Product implements IndexerActionInterface, MviewActionInterface
 {
+    /**
+     * Indexer ID in configuration
+     */
+    const INDEXER_ID = 'hawksearch_products';
+
     /**
      * @var ProductDataProvider
      */
     private $productDataProvider;
 
     /**
+     * @var Action
+     */
+    private $action;
+
+    /**
+     * @var ConsoleOutput
+     */
+    private $output;
+
+    /**
      * Product constructor.
-     * @param BulkPublisherInterface $publisher
-     * @param StoreManagerInterface $storeManager
-     * @param Indexing $indexingConfig
-     * @param EntityTypePoolInterface $entityTypePool
-     * @param ManagerInterface $eventManager
-     * @param MessageTopicResolverInterface $messageTopicResolver
-     * @param IndexManagementInterface $indexManagement
+     *
      * @param ProductDataProvider $productDataProvider
+     * @param Action $action
+     * @param ConsoleOutput $output
      */
     public function __construct(
-        BulkPublisherInterface $publisher,
-        StoreManagerInterface $storeManager,
-        Indexing $indexingConfig,
-        EntityTypePoolInterface $entityTypePool,
-        ManagerInterface $eventManager,
-        MessageTopicResolverInterface $messageTopicResolver,
-        IndexManagementInterface $indexManagement,
-        ProductDataProvider $productDataProvider
+        ProductDataProvider $productDataProvider,
+        Action $action,
+        ConsoleOutput $output
     ) {
-        parent::__construct(
-            $publisher,
-            $storeManager,
-            $indexingConfig,
-            $entityTypePool,
-            $eventManager,
-            $messageTopicResolver,
-            $indexManagement
-        );
         $this->productDataProvider = $productDataProvider;
+        $this->output = $output;
+        $this->action = $action;
     }
 
     /**
+     * This indexer is not designed to run full reindex
+     *
+     * @see Entities
      * @inheritDoc
      */
     public function executeFull()
     {
-        $this->execute(null);
+        $this->output->writeln(
+            sprintf(
+                'To trigger full reindex please use `%s` indexer.',
+                EntitiesIndexer::INDEXER_ID
+            )
+        );
     }
 
     /**
      * @inheritDoc
+     * @throws LocalizedException
      */
     public function executeList(array $ids)
     {
@@ -87,6 +89,7 @@ class Product extends AbstractItemsIndexer implements IndexerActionInterface, Mv
 
     /**
      * @inheritDoc
+     * @throws LocalizedException
      */
     public function executeRow($id)
     {
@@ -95,27 +98,13 @@ class Product extends AbstractItemsIndexer implements IndexerActionInterface, Mv
 
     /**
      * @inheritDoc
-     * @throws NoSuchEntityException
-     * @throws InputException
+     * @param $ids
+     * @throws LocalizedException
      */
     public function execute($ids)
     {
-        if ($ids) {
-            $ids = array_merge($ids, $this->productDataProvider->getParentProductIds($ids));
-        }
+        $ids = array_merge($ids, $this->productDataProvider->getParentProductIds($ids));
 
-        if (is_array($ids) && count($ids) > 0) {
-            $this->rebuildDelta($ids);
-        } else {
-            $this->rebuildFull();
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getEntityTypeName()
-    {
-        return ProductEntityType::ENTITY_TYPE_NAME;
+        $this->action->execute($ids);
     }
 }

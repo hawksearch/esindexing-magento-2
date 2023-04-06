@@ -35,7 +35,7 @@ class BadRequestValidator extends AbstractValidator
     private $subjectReader;
 
     /**
-     * HttpCodeValidator constructor.
+     * BadRequestValidator constructor.
      * @param ResultInterfaceFactory $resultFactory
      * @param HttpResponseReader $httpResponseReader
      * @param SubjectReader $subjectReader
@@ -60,6 +60,7 @@ class BadRequestValidator extends AbstractValidator
         $responseCode = $this->httpResponseReader->readResponseCode($response);
 
         if ($responseCode == 400) {
+            $responseMessage = '';
             if (is_array($response[ClientInterface::RESPONSE_DATA])
                 && isset($response[ClientInterface::RESPONSE_DATA]['Message'])
             ) {
@@ -68,8 +69,7 @@ class BadRequestValidator extends AbstractValidator
                 $responseMessage = $response[ClientInterface::RESPONSE_DATA];
             }
             $error = $responseMessage
-                ? __('Bad Request: %1', $responseMessage)
-                : __('Bad Request');
+                ?: __('Bad Request');
             return $this->createResult(
                 false,
                 [

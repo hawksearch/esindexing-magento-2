@@ -22,11 +22,4 @@ interface BulkPublisherInterface
      * @return void
      */
     public function publish();
-
-    /**
-     * @param string $topicName
-     * @param array $data
-     * @return $this
-     */
-    public function addMessage($topicName, $data);
 }

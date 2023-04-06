@@ -25,6 +25,7 @@ class LandingPageListBuilder implements BuilderInterface
      *
      * @param array $buildSubject
      * @return array
+     * @throws InstructionException
      */
     public function build(array $buildSubject)
     {

@@ -1,4 +1,52 @@
-# CHANGELOG
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+## [0.3.0] - 2023-04-06
+### ADDED
+- Rework UI interface for mapping Hawksearch fields to  Magento attributes ([#5](https://github.com/hawksearch/esindexing-magento-2/pull/5)),
+  Refs: [#HC-1227](https://bridgeline.atlassian.net/browse/HC-1227)
+- Add listing of Hawksearch scheduled bulks ([#7](https://github.com/hawksearch/esindexing-magento-2/pull/7)),
+  Refs: [#HC-1317](https://bridgeline.atlassian.net/browse/HC-1317)
+- Add "Hawksearch Categories" indexer.
+  Add LandingPage entity in `hawksearch.esindexing` consumer ([#9](https://github.com/hawksearch/esindexing-magento-2/pull/9)),
+  Refs: [#HC-1400](https://bridgeline.atlassian.net/browse/HC-1400)
+- Add support for sorting by product position on category pages ([9dfcdbf](https://github.com/hawksearch/esindexing-magento-2/commit/9dfcdbf6e69854dc694b6b4e6d70656fc731a5de)),
+  Refs: [#HC-1213](https://bridgeline.atlassian.net/browse/HC-1213), [#RR-28](https://bridgeline.atlassian.net/browse/RR-28)
+
+### UPDATED
+- Update Hawksearch indexers depenndencies ([e0510ad](https://github.com/hawksearch/esindexing-magento-2/commit/e0510ad9b205498a9c20b82c3fef5badb8fbd03c)),
+  Refs: [#HC-1400](https://bridgeline.atlassian.net/browse/HC-1400)
+- Invalidate indexers on Store view and Store group changes, after Product attribute changes ([#13](https://github.com/hawksearch/esindexing-magento-2/pull/13)),
+  Refs: [#HC-1406](https://bridgeline.atlassian.net/browse/HC-1406)
+
+### FIXED
+- Fix ACL in System Configuration for Hawksearch sections ([#6](https://github.com/hawksearch/esindexing-magento-2/pull/6)),
+  Refs: [#HC-1315](https://bridgeline.atlassian.net/browse/HC-1315)
+- Fix Landing page is not updated after editing Magento category for the second time ([#10](https://github.com/hawksearch/esindexing-magento-2/pull/10))
+- Fix consumer is crashing when sync landing pages ([9ab04ff](https://github.com/hawksearch/esindexing-magento-2/commit/9ab04fffe5c9a2ca3d3549ff76930e74c53328bb))
+- Fix bug when product stock status changes are not taken into account when consumer is continuously running ([98364c3](https://github.com/hawksearch/esindexing-magento-2/commit/98364c3f8f9f97f36cff6897b2c67e9b57a7f797))
+- Fix fatal error during reindexing when there are no inexes in the Hawksearch Engine ([#11](https://github.com/hawksearch/esindexing-magento-2/pull/11)),
+  Refs: [#HC-58](https://bridgeline.atlassian.net/browse/HC-58)
+- Update indexers after product import ([dcddbc0](https://github.com/hawksearch/esindexing-magento-2/commit/dcddbc0b4b02d868944e5d935654ded8523978c4)),
+  Refs: [#HC-1322](https://bridgeline.atlassian.net/browse/HC-1322)
+- Fix linked Category are not updated after product save ([#12](https://github.com/hawksearch/esindexing-magento-2/pull/12)),
+  Refs: [#HC-1405](https://bridgeline.atlassian.net/browse/HC-1405)
+- Fix linked Category are not updated after product delete ([#14](https://github.com/hawksearch/esindexing-magento-2/pull/14)),
+  Refs: [#HC-1405](https://bridgeline.atlassian.net/browse/HC-1405)
+- Deactivate landing pages cache to fix category status updates issue ([#15](https://github.com/hawksearch/esindexing-magento-2/pull/15)),
+  Refs: [#HC-1401](https://bridgeline.atlassian.net/browse/HC-1401)
+
+### REMOVED
+- Remove hawksearch:sync-categories CLI command ([#9](https://github.com/hawksearch/esindexing-magento-2/pull/9)),
+  Refs: [#HC-1400](https://bridgeline.atlassian.net/browse/HC-1400)
+
+
 
 ## 0.2.0
 ### FEATURES
@@ -26,3 +74,6 @@
 
 ## 0.1.0
 Initial stable release
+
+[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.2.0...v0.3.0

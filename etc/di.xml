@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
   /**
-   * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+   * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
    *
    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -12,7 +12,8 @@
    * IN THE SOFTWARE.
    */
   -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="HawkSearch\EsIndexing\Api\FieldsManagementInterface"
                 type="HawkSearch\EsIndexing\Model\FieldsManagement"/>
     <preference for="HawkSearch\EsIndexing\Api\Data\IndexItemsContextInterface"
@@ -27,16 +28,18 @@
                 type="HawkSearch\EsIndexing\Model\LandingPage"/>
     <preference for="HawkSearch\EsIndexing\Api\Data\QueueOperationDataInterface"
                 type="HawkSearch\EsIndexing\Model\MessageQueue\QueueOperationData"/>
-    <preference for="HawkSearch\EsIndexing\Model\Indexing\IndexManagementInterface"
-                type="HawkSearch\EsIndexing\Model\Indexing\IndexManagement"/>
-    <preference for="HawkSearch\EsIndexing\Model\Indexing\HierarchyManagementInterface"
-                type="HawkSearch\EsIndexing\Model\Indexing\HierarchyManagement"/>
-    <preference for="HawkSearch\EsIndexing\Model\Indexing\Entity\EntityTypePoolInterface"
-                type="HawkSearch\EsIndexing\Model\Indexing\Entity\EntityTypePool"/>
+    <preference for="HawkSearch\EsIndexing\Api\IndexManagementInterface"
+                type="HawkSearch\EsIndexing\Model\IndexManagement"/>
+    <preference for="HawkSearch\EsIndexing\Api\HierarchyManagementInterface"
+                type="HawkSearch\EsIndexing\Model\HierarchyManagement"/>
+    <preference for="HawkSearch\EsIndexing\Model\Indexing\EntityTypePoolInterface"
+                type="HawkSearch\EsIndexing\Model\Indexing\EntityTypePool"/>
     <preference for="HawkSearch\EsIndexing\Model\Indexing\ContextInterface"
                 type="HawkSearch\EsIndexing\Model\Indexing\Context"/>
     <preference for="HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisherInterface"
                 type="HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher"/>
+    <preference for="HawkSearch\EsIndexing\Model\MessageQueue\MessageManagerInterface"
+                type="HawkSearch\EsIndexing\Model\MessageQueue\MessageManager"/>
     <preference for="HawkSearch\EsIndexing\Model\Product\PriceManagementInterface"
                 type="HawkSearch\EsIndexing\Model\Product\PriceManagement"/>
     <preference for="HawkSearch\EsIndexing\Model\Product\ProductTypeInterface"
@@ -49,8 +52,11 @@
                 type="HawkSearch\EsIndexing\Logger\LoggerFactory"/>
     <preference for="HawkSearch\EsIndexing\Logger\LoggerConfigInterface"
                 type="HawkSearch\EsIndexing\Logger\LoggerConfig"/>
-    <preference for="HawkSearch\EsIndexing\Model\Indexing\Entity\AttributeHandlerInterface"
-                type="HawkSearch\EsIndexing\Model\Indexing\Entity\AttributeHandler\DataObjectHandler"/>
+    <preference for="HawkSearch\EsIndexing\Model\Indexing\AttributeHandlerInterface"
+                type="HawkSearch\EsIndexing\Model\Indexing\AttributeHandler\DataObjectHandler"/>
+
+    <preference for="HawkSearch\EsIndexing\Model\Indexing\ItemsIndexerInterface"
+                type="HawkSearch\EsIndexing\Model\Indexing\ItemsIndexer\SearchedItemsIndexer"/>
 
 
     <!-- Configs -->
@@ -81,7 +87,8 @@
     <!-- Configs -->
 
     <!-- Instructions infrastructure -->
-    <virtualType name="HawkSearchEsIndexingInstructionsPool" type="HawkSearch\Connector\Gateway\Instruction\InstructionPool">
+    <virtualType name="HawkSearchEsIndexingInstructionsPool"
+                 type="HawkSearch\Connector\Gateway\Instruction\InstructionPool">
         <arguments>
             <argument name="instructions" xsi:type="array">
                 <!-- Indexes -->
@@ -110,30 +117,46 @@
 
     <!-- Instructions  -->
     <!-- getIndexList Instruction  -->
-    <virtualType name="HawkSearchEsIndexingGetIndexListInstruction" type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
+    <virtualType name="HawkSearchEsIndexingGetIndexListInstruction"
+                 type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearch\Connector\Gateway\Request\BuilderComposite</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingGetIndexListTransferFactory</argument>
             <argument name="client" xsi:type="object">HawkSearch\Connector\Gateway\Http\Client</argument>
-            <argument name="validator" xsi:type="object">HawkSearchEsIndexingBadResponseValidator</argument>
+            <argument name="validator" xsi:type="object">HawkSearchEsIndexingGetIndexListBadResponseValidator</argument>
             <argument name="resultFactory" xsi:type="object">HawkSearchEsIndexingGetIndexResultFactory</argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingGetIndexListTransferFactory" type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
+    <virtualType name="HawkSearchEsIndexingGetIndexListTransferFactory"
+                 type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
         <arguments>
             <argument name="path" xsi:type="string">api/v2/indexing</argument>
             <argument name="method" xsi:type="string">GET</argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingGetIndexResultFactory" type="HawkSearch\Connector\Gateway\Instruction\ResultInterfaceFactory">
+    <virtualType name="HawkSearchEsIndexingGetIndexResultFactory"
+                 type="HawkSearch\Connector\Gateway\Instruction\ResultInterfaceFactory">
         <arguments>
             <argument xsi:type="string" name="instanceName">HawkSearch\EsIndexing\Gateway\Instruction\Result\IndexListResult</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearchEsIndexingGetIndexListBadResponseValidator"
+                 type="HawkSearch\Connector\Gateway\Validator\ValidatorComposite">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="badRequestValidator" xsi:type="string">HawkSearch\EsIndexing\Gateway\Validator\GetIndexListBadRequestValidator</item>
+            </argument>
+            <argument name="chainBreakingValidators" xsi:type="array">
+                <item name="httpCodeValidator" xsi:type="string">httpCodeValidator</item>
+                <item name="badRequestValidator" xsi:type="string">badRequestValidator</item>
+            </argument>
         </arguments>
     </virtualType>
     <!-- END getIndexList Instruction  -->
 
     <!-- getCurrentIndex Instruction  -->
-    <virtualType name="HawkSearchEsIndexingGetCurrentIndexInstruction" type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
+    <virtualType name="HawkSearchEsIndexingGetCurrentIndexInstruction"
+                 type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearch\Connector\Gateway\Request\BuilderComposite</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingGetCurrentIndexTransferFactory</argument>
@@ -142,13 +165,15 @@
             <argument name="resultFactory" xsi:type="object">HawkSearchEsIndexingGetCurrentIndexResultFactory</argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingGetCurrentIndexTransferFactory" type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
+    <virtualType name="HawkSearchEsIndexingGetCurrentIndexTransferFactory"
+                 type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
         <arguments>
             <argument name="path" xsi:type="string">api/v2/indexing/current</argument>
             <argument name="method" xsi:type="string">GET</argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingGetCurrentIndexResultFactory" type="HawkSearch\Connector\Gateway\Instruction\ResultInterfaceFactory">
+    <virtualType name="HawkSearchEsIndexingGetCurrentIndexResultFactory"
+                 type="HawkSearch\Connector\Gateway\Instruction\ResultInterfaceFactory">
         <arguments>
             <argument xsi:type="string" name="instanceName">HawkSearch\EsIndexing\Gateway\Instruction\Result\EsIndexResult</argument>
         </arguments>
@@ -156,23 +181,25 @@
     <!-- END getCurrentIndex Instruction  -->
 
     <!-- setCurrentIndex Instruction  -->
-    <virtualType name="HawkSearchEsIndexingSetCurrentIndexInstruction" type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
+    <virtualType name="HawkSearchEsIndexingSetCurrentIndexInstruction"
+                 type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearchEsIndexingSetCurrentIndexRequestBuilder</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingSetCurrentIndexTransferFactory</argument>
             <argument name="client" xsi:type="object">HawkSearch\Connector\Gateway\Http\Client</argument>
             <argument name="validator" xsi:type="object">HawkSearchEsIndexingBadResponseValidator</argument>
-            <!--<argument name="handler" xsi:type="object">HawkSearchEsIndexingGetIndexListHandler</argument>-->
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingSetCurrentIndexRequestBuilder" type="HawkSearch\Connector\Gateway\Request\BuilderComposite">
+    <virtualType name="HawkSearchEsIndexingSetCurrentIndexRequestBuilder"
+                 type="HawkSearch\Connector\Gateway\Request\BuilderComposite">
         <arguments>
             <argument name="builders" xsi:type="array">
                 <item name="strict_data_builder" xsi:type="string">HawkSearch\Connector\Gateway\Request\StrictDataBuilder</item>
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingSetCurrentIndexTransferFactory" type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
+    <virtualType name="HawkSearchEsIndexingSetCurrentIndexTransferFactory"
+                 type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
         <arguments>
             <argument name="path" xsi:type="string">api/v2/indexing/set-current</argument>
             <argument name="method" xsi:type="string">POST</argument>
@@ -181,7 +208,8 @@
     <!-- END setCurrentIndex Instruction  -->
 
     <!-- createIndex Instruction  -->
-    <virtualType name="HawkSearchEsIndexingCreateIndexInstruction" type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
+    <virtualType name="HawkSearchEsIndexingCreateIndexInstruction"
+                 type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearchEsIndexingCreateIndexRequestBuilder</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingCreateIndexTransferFactory</argument>
@@ -190,20 +218,23 @@
             <argument name="resultFactory" xsi:type="object">HawkSearchEsIndexingCreateIndexResultFactory</argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingCreateIndexRequestBuilder" type="HawkSearch\Connector\Gateway\Request\BuilderComposite">
+    <virtualType name="HawkSearchEsIndexingCreateIndexRequestBuilder"
+                 type="HawkSearch\Connector\Gateway\Request\BuilderComposite">
         <arguments>
             <argument name="builders" xsi:type="array">
                 <item name="strict_data_builder" xsi:type="string">HawkSearch\Connector\Gateway\Request\StrictDataBuilder</item>
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingCreateIndexTransferFactory" type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
+    <virtualType name="HawkSearchEsIndexingCreateIndexTransferFactory"
+                 type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
         <arguments>
             <argument name="path" xsi:type="string">api/v2/indexing/create</argument>
             <argument name="method" xsi:type="string">POST</argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingCreateIndexResultFactory" type="HawkSearch\Connector\Gateway\Instruction\ResultInterfaceFactory">
+    <virtualType name="HawkSearchEsIndexingCreateIndexResultFactory"
+                 type="HawkSearch\Connector\Gateway\Instruction\ResultInterfaceFactory">
         <arguments>
             <argument xsi:type="string" name="instanceName">HawkSearch\EsIndexing\Gateway\Instruction\Result\EsIndexResult</argument>
         </arguments>
@@ -211,7 +242,8 @@
     <!-- END createIndex Instruction  -->
 
     <!-- deleteIndex Instruction  -->
-    <virtualType name="HawkSearchEsIndexingDeleteIndexInstruction" type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
+    <virtualType name="HawkSearchEsIndexingDeleteIndexInstruction"
+                 type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearchEsIndexingDeleteIndexRequestBuilder</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingDeleteIndexTransferFactory</argument>
@@ -219,14 +251,16 @@
             <argument name="validator" xsi:type="object">HawkSearchEsIndexingBadResponseValidator</argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingDeleteIndexRequestBuilder" type="HawkSearch\Connector\Gateway\Request\BuilderComposite">
+    <virtualType name="HawkSearchEsIndexingDeleteIndexRequestBuilder"
+                 type="HawkSearch\Connector\Gateway\Request\BuilderComposite">
         <arguments>
             <argument name="builders" xsi:type="array">
                 <item name="strict_data_builder" xsi:type="string">HawkSearch\Connector\Gateway\Request\StrictDataBuilder</item>
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingDeleteIndexTransferFactory" type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
+    <virtualType name="HawkSearchEsIndexingDeleteIndexTransferFactory"
+                 type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
         <arguments>
             <argument name="path" xsi:type="string">api/v2/indexing/delete-index</argument>
             <argument name="method" xsi:type="string">POST</argument>
@@ -235,7 +269,8 @@
     <!-- END deleteIndex Instruction  -->
 
     <!-- indexItems Instruction  -->
-    <virtualType name="HawkSearchEsIndexingIndexItemsInstruction" type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
+    <virtualType name="HawkSearchEsIndexingIndexItemsInstruction"
+                 type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearchEsIndexingIndexItemsRequestBuilder</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingIndexItemsTransferFactory</argument>
@@ -243,20 +278,23 @@
             <argument name="validator" xsi:type="object">HawkSearchEsIndexingIndexItemsBadResponseValidator</argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingIndexItemsRequestBuilder" type="HawkSearch\Connector\Gateway\Request\BuilderComposite">
+    <virtualType name="HawkSearchEsIndexingIndexItemsRequestBuilder"
+                 type="HawkSearch\Connector\Gateway\Request\BuilderComposite">
         <arguments>
             <argument name="builders" xsi:type="array">
                 <item name="strict_data_builder" xsi:type="string">HawkSearch\Connector\Gateway\Request\StrictDataBuilder</item>
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingIndexItemsTransferFactory" type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
+    <virtualType name="HawkSearchEsIndexingIndexItemsTransferFactory"
+                 type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
         <arguments>
             <argument name="path" xsi:type="string">api/v2/indexing/index-items</argument>
             <argument name="method" xsi:type="string">POST</argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingIndexItemsBadResponseValidator" type="HawkSearch\Connector\Gateway\Validator\ValidatorComposite">
+    <virtualType name="HawkSearchEsIndexingIndexItemsBadResponseValidator"
+                 type="HawkSearch\Connector\Gateway\Validator\ValidatorComposite">
         <arguments>
             <argument name="validators" xsi:type="array">
                 <item name="badRequestValidator" xsi:type="string">HawkSearch\EsIndexing\Gateway\Validator\IndexItemsBadRequestValidator</item>
@@ -270,7 +308,8 @@
     <!-- END indexItems Instruction  -->
 
     <!-- deleteItems Instruction  -->
-    <virtualType name="HawkSearchEsIndexingDeleteItemsInstruction" type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
+    <virtualType name="HawkSearchEsIndexingDeleteItemsInstruction"
+                 type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearchEsIndexingDeleteItemsRequestBuilder</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingDeleteItemsTransferFactory</argument>
@@ -278,20 +317,23 @@
             <argument name="validator" xsi:type="object">HawkSearchEsIndexingDeleteItemsBadResponseValidator</argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingDeleteItemsRequestBuilder" type="HawkSearch\Connector\Gateway\Request\BuilderComposite">
+    <virtualType name="HawkSearchEsIndexingDeleteItemsRequestBuilder"
+                 type="HawkSearch\Connector\Gateway\Request\BuilderComposite">
         <arguments>
             <argument name="builders" xsi:type="array">
                 <item name="strict_data_builder" xsi:type="string">HawkSearch\Connector\Gateway\Request\StrictDataBuilder</item>
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingDeleteItemsTransferFactory" type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
+    <virtualType name="HawkSearchEsIndexingDeleteItemsTransferFactory"
+                 type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
         <arguments>
             <argument name="path" xsi:type="string">api/v2/indexing/delete-items</argument>
             <argument name="method" xsi:type="string">POST</argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingDeleteItemsBadResponseValidator" type="HawkSearch\Connector\Gateway\Validator\ValidatorComposite">
+    <virtualType name="HawkSearchEsIndexingDeleteItemsBadResponseValidator"
+                 type="HawkSearch\Connector\Gateway\Validator\ValidatorComposite">
         <arguments>
             <argument name="validators" xsi:type="array">
                 <item name="badRequestValidator" xsi:type="string">HawkSearch\EsIndexing\Gateway\Validator\DeleteItemsBadRequestValidator</item>
@@ -310,7 +352,8 @@
             <argument name="validator" xsi:type="object">HawkSearchEsIndexingFieldBadResponseValidator</argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingFieldBadResponseValidator" type="HawkSearch\Connector\Gateway\Validator\ValidatorComposite">
+    <virtualType name="HawkSearchEsIndexingFieldBadResponseValidator"
+                 type="HawkSearch\Connector\Gateway\Validator\ValidatorComposite">
         <arguments>
             <argument name="validators" xsi:type="array">
                 <item name="badRequestValidator" xsi:type="string">HawkSearch\EsIndexing\Gateway\Validator\FieldsBadRequestValidator</item>
@@ -324,7 +367,8 @@
     <!-- END postFields Instruction  -->
 
     <!-- hierarchyUpsert Instruction  -->
-    <virtualType name="HawkSearchEsIndexingUpsertHierarchyInstruction" type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
+    <virtualType name="HawkSearchEsIndexingUpsertHierarchyInstruction"
+                 type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearchEsIndexingUpsertHierarchyRequestBuilder</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingUpsertHierarchyTransferFactory</argument>
@@ -332,14 +376,16 @@
             <argument name="validator" xsi:type="object">HawkSearchEsIndexingBadResponseValidator</argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingUpsertHierarchyRequestBuilder" type="HawkSearch\Connector\Gateway\Request\BuilderComposite">
+    <virtualType name="HawkSearchEsIndexingUpsertHierarchyRequestBuilder"
+                 type="HawkSearch\Connector\Gateway\Request\BuilderComposite">
         <arguments>
             <argument name="builders" xsi:type="array">
                 <item name="strict_data_builder" xsi:type="string">HawkSearch\Connector\Gateway\Request\StrictDataBuilder</item>
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingUpsertHierarchyTransferFactory" type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
+    <virtualType name="HawkSearchEsIndexingUpsertHierarchyTransferFactory"
+                 type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
         <arguments>
             <argument name="path" xsi:type="string">api/hierarchy/upsert</argument>
             <argument name="method" xsi:type="string">POST</argument>
@@ -348,7 +394,8 @@
     <!-- END hierarchyUpsert Instruction  -->
 
     <!-- hierarchyRebuild Instruction  -->
-    <virtualType name="HawkSearchEsIndexingRebuildHierarchyInstruction" type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
+    <virtualType name="HawkSearchEsIndexingRebuildHierarchyInstruction"
+                 type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearchEsIndexingRebuildHierarchyRequestBuilder</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingRebuildHierarchyTransferFactory</argument>
@@ -356,14 +403,16 @@
             <argument name="validator" xsi:type="object">HawkSearchEsIndexingBadResponseValidator</argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingRebuildHierarchyRequestBuilder" type="HawkSearch\Connector\Gateway\Request\BuilderComposite">
+    <virtualType name="HawkSearchEsIndexingRebuildHierarchyRequestBuilder"
+                 type="HawkSearch\Connector\Gateway\Request\BuilderComposite">
         <arguments>
             <argument name="builders" xsi:type="array">
                 <item name="strict_data_builder" xsi:type="string">HawkSearch\Connector\Gateway\Request\StrictDataBuilder</item>
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingRebuildHierarchyTransferFactory" type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
+    <virtualType name="HawkSearchEsIndexingRebuildHierarchyTransferFactory"
+                 type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
         <arguments>
             <argument name="path" xsi:type="string">api/hierarchy/rebuild</argument>
             <argument name="method" xsi:type="string">POST</argument>
@@ -372,7 +421,8 @@
     <!-- END hierarchyRebuild Instruction  -->
 
     <!-- deleteHierarchyItems Instruction  -->
-    <virtualType name="HawkSearchEsIndexingDeleteHierarchyItemsInstruction" type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
+    <virtualType name="HawkSearchEsIndexingDeleteHierarchyItemsInstruction"
+                 type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearchEsIndexingDeleteHierarchyItemsRequestBuilder</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingDeleteHierarchyItemsTransferFactory</argument>
@@ -380,14 +430,16 @@
             <argument name="validator" xsi:type="object">HawkSearchEsIndexingBadResponseValidator</argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingDeleteHierarchyItemsRequestBuilder" type="HawkSearch\Connector\Gateway\Request\BuilderComposite">
+    <virtualType name="HawkSearchEsIndexingDeleteHierarchyItemsRequestBuilder"
+                 type="HawkSearch\Connector\Gateway\Request\BuilderComposite">
         <arguments>
             <argument name="builders" xsi:type="array">
                 <item name="strict_data_builder" xsi:type="string">HawkSearch\Connector\Gateway\Request\StrictDataBuilder</item>
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingDeleteHierarchyItemsTransferFactory" type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
+    <virtualType name="HawkSearchEsIndexingDeleteHierarchyItemsTransferFactory"
+                 type="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
         <arguments>
             <argument name="path" xsi:type="string">api/hierarchy/delete-items</argument>
             <argument name="method" xsi:type="string">POST</argument>
@@ -396,7 +448,8 @@
     <!-- END deleteHierarchyItems Instruction  -->
 
     <!-- getLandingPages Instruction  -->
-    <virtualType name="HawkSearchEsIndexingGetLandingPagesInstruction" type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
+    <virtualType name="HawkSearchEsIndexingGetLandingPagesInstruction"
+                 type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearchEsIndexingGetLandingPagesRequestBuilder</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingGetLandingPagesTransferFactory</argument>
@@ -405,20 +458,23 @@
             <argument name="resultFactory" xsi:type="object">HawkSearchEsIndexingGetLandingPagesResultFactory</argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingGetLandingPagesRequestBuilder" type="HawkSearch\Connector\Gateway\Request\BuilderComposite">
+    <virtualType name="HawkSearchEsIndexingGetLandingPagesRequestBuilder"
+                 type="HawkSearch\Connector\Gateway\Request\BuilderComposite">
         <arguments>
             <argument name="builders" xsi:type="array">
                 <item name="strict_data_builder" xsi:type="string">HawkSearch\Connector\Gateway\Request\StrictDataBuilder</item>
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingGetLandingPagesTransferFactory" type="HawkSearch\Connector\Gateway\Http\DashboardApiTransferFactory">
+    <virtualType name="HawkSearchEsIndexingGetLandingPagesTransferFactory"
+                 type="HawkSearch\Connector\Gateway\Http\DashboardApiTransferFactory">
         <arguments>
-            <argument name="path" xsi:type="string">api/v9/LandingPage</argument>
+            <argument name="path" xsi:type="string">api/v11/LandingPage</argument>
             <argument name="method" xsi:type="string">GET</argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingGetLandingPagesResultFactory" type="HawkSearch\Connector\Gateway\Instruction\ResultInterfaceFactory">
+    <virtualType name="HawkSearchEsIndexingGetLandingPagesResultFactory"
+                 type="HawkSearch\Connector\Gateway\Instruction\ResultInterfaceFactory">
         <arguments>
             <argument xsi:type="string" name="instanceName">HawkSearch\EsIndexing\Gateway\Instruction\Result\LandingPageResult</argument>
         </arguments>
@@ -426,7 +482,8 @@
     <!-- getLandingPages Instruction  -->
 
     <!-- getLandingPageUrls Instruction  -->
-    <virtualType name="HawkSearchEsIndexingGetLandingPageUrlsInstruction" type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
+    <virtualType name="HawkSearchEsIndexingGetLandingPageUrlsInstruction"
+                 type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearchEsIndexingGetLandingPageUrlsRequestBuilder</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingGetLandingPageUrlsTransferFactory</argument>
@@ -435,23 +492,26 @@
             <argument name="resultFactory" xsi:type="object">HawkSearchArrayResultFactory</argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingGetLandingPageUrlsRequestBuilder" type="HawkSearch\Connector\Gateway\Request\BuilderComposite">
+    <virtualType name="HawkSearchEsIndexingGetLandingPageUrlsRequestBuilder"
+                 type="HawkSearch\Connector\Gateway\Request\BuilderComposite">
         <arguments>
             <argument name="builders" xsi:type="array">
                 <item name="strict_data_builder" xsi:type="string">HawkSearch\Connector\Gateway\Request\StrictDataBuilder</item>
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingGetLandingPageUrlsTransferFactory" type="HawkSearch\Connector\Gateway\Http\DashboardApiTransferFactory">
+    <virtualType name="HawkSearchEsIndexingGetLandingPageUrlsTransferFactory"
+                 type="HawkSearch\Connector\Gateway\Http\DashboardApiTransferFactory">
         <arguments>
-            <argument name="path" xsi:type="string">api/v9/LandingPage/urls</argument>
+            <argument name="path" xsi:type="string">api/v11/LandingPage/urls</argument>
             <argument name="method" xsi:type="string">GET</argument>
         </arguments>
     </virtualType>
     <!-- getLandingPageUrls Instruction  -->
 
     <!-- addLandingPagesBulk Instruction  -->
-    <virtualType name="HawkSearchEsIndexingAddLandingPagesBulkInstruction" type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
+    <virtualType name="HawkSearchEsIndexingAddLandingPagesBulkInstruction"
+                 type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearchEsIndexingAddLandingPagesBulkRequestBuilder</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingAddLandingPagesBulkTransferFactory</argument>
@@ -459,23 +519,26 @@
             <argument name="validator" xsi:type="object">HawkSearchEsIndexingBadResponseValidator</argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingAddLandingPagesBulkRequestBuilder" type="HawkSearch\Connector\Gateway\Request\BuilderComposite">
+    <virtualType name="HawkSearchEsIndexingAddLandingPagesBulkRequestBuilder"
+                 type="HawkSearch\Connector\Gateway\Request\BuilderComposite">
         <arguments>
             <argument name="builders" xsi:type="array">
                 <item name="landing_pages_list_builder" xsi:type="string">HawkSearch\EsIndexing\Gateway\Request\LandingPageListBuilder</item>
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingAddLandingPagesBulkTransferFactory" type="HawkSearch\Connector\Gateway\Http\DashboardApiTransferFactory">
+    <virtualType name="HawkSearchEsIndexingAddLandingPagesBulkTransferFactory"
+                 type="HawkSearch\Connector\Gateway\Http\DashboardApiTransferFactory">
         <arguments>
-            <argument name="path" xsi:type="string">api/v9/LandingPage/bulk</argument>
+            <argument name="path" xsi:type="string">api/v11/LandingPage/bulk</argument>
             <argument name="method" xsi:type="string">POST</argument>
         </arguments>
     </virtualType>
     <!-- addLandingPagesBulk Instruction  -->
 
     <!-- updateLandingPagesBulk Instruction  -->
-    <virtualType name="HawkSearchEsIndexingUpdateLandingPagesBulkInstruction" type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
+    <virtualType name="HawkSearchEsIndexingUpdateLandingPagesBulkInstruction"
+                 type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearchEsIndexingUpdateLandingPagesBulkRequestBuilder</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingUpdateLandingPagesBulkTransferFactory</argument>
@@ -483,23 +546,26 @@
             <argument name="validator" xsi:type="object">HawkSearchEsIndexingBadResponseValidator</argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingUpdateLandingPagesBulkRequestBuilder" type="HawkSearch\Connector\Gateway\Request\BuilderComposite">
+    <virtualType name="HawkSearchEsIndexingUpdateLandingPagesBulkRequestBuilder"
+                 type="HawkSearch\Connector\Gateway\Request\BuilderComposite">
         <arguments>
             <argument name="builders" xsi:type="array">
                 <item name="landing_pages_list_builder" xsi:type="string">HawkSearch\EsIndexing\Gateway\Request\LandingPageListBuilder</item>
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingUpdateLandingPagesBulkTransferFactory" type="HawkSearch\Connector\Gateway\Http\DashboardApiTransferFactory">
+    <virtualType name="HawkSearchEsIndexingUpdateLandingPagesBulkTransferFactory"
+                 type="HawkSearch\Connector\Gateway\Http\DashboardApiTransferFactory">
         <arguments>
-            <argument name="path" xsi:type="string">api/v9/LandingPage/bulk</argument>
+            <argument name="path" xsi:type="string">api/v11/LandingPage/bulk</argument>
             <argument name="method" xsi:type="string">PUT</argument>
         </arguments>
     </virtualType>
     <!-- updateLandingPagesBulk Instruction  -->
 
     <!-- deleteLandingPagesBulk Instruction  -->
-    <virtualType name="HawkSearchEsIndexingDeleteLandingPagesBulkInstruction" type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
+    <virtualType name="HawkSearchEsIndexingDeleteLandingPagesBulkInstruction"
+                 type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearchEsIndexingDeleteLandingPagesBulkRequestBuilder</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingDeleteLandingPagesBulkTransferFactory</argument>
@@ -507,25 +573,57 @@
             <argument name="validator" xsi:type="object">HawkSearchEsIndexingBadResponseValidator</argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingDeleteLandingPagesBulkRequestBuilder" type="HawkSearch\Connector\Gateway\Request\BuilderComposite">
+    <virtualType name="HawkSearchEsIndexingDeleteLandingPagesBulkRequestBuilder"
+                 type="HawkSearch\Connector\Gateway\Request\BuilderComposite">
         <arguments>
             <argument name="builders" xsi:type="array">
                 <item name="strict_data_builder" xsi:type="string">HawkSearch\Connector\Gateway\Request\StrictDataBuilder</item>
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingDeleteLandingPagesBulkTransferFactory" type="HawkSearch\Connector\Gateway\Http\DashboardApiTransferFactory">
+    <virtualType name="HawkSearchEsIndexingDeleteLandingPagesBulkTransferFactory"
+                 type="HawkSearch\Connector\Gateway\Http\DashboardApiTransferFactory">
         <arguments>
-            <argument name="path" xsi:type="string">api/v9/LandingPage/bulk</argument>
+            <argument name="path" xsi:type="string">api/v11/LandingPage/bulk</argument>
             <argument name="method" xsi:type="string">DELETE</argument>
         </arguments>
     </virtualType>
     <!-- deleteLandingPagesBulk Instruction  -->
 
+    <!-- getFields Instruction  -->
+    <virtualType name="HawkSearchEsIndexingGetFieldsResultFactory"
+                 type="HawkSearch\Connector\Gateway\Instruction\ResultInterfaceFactory">
+        <arguments>
+            <argument xsi:type="string" name="instanceName">HawkSearch\EsIndexing\Gateway\Instruction\Result\FieldListResult</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearchGetFieldsInstruction">
+        <arguments>
+            <argument name="resultFactory" xsi:type="object">HawkSearchEsIndexingGetFieldsResultFactory</argument>
+        </arguments>
+    </virtualType>
+    <!-- END getFields Instruction  -->
+
+    <!-- postField Instruction  -->
+    <virtualType name="HawkSearchEsIndexingPostFieldResultFactory"
+                 type="HawkSearch\Connector\Gateway\Instruction\ResultInterfaceFactory">
+        <arguments>
+            <argument xsi:type="string" name="instanceName">HawkSearch\EsIndexing\Gateway\Instruction\Result\FieldResult</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearchPostFieldInstruction">
+        <arguments>
+            <argument name="resultFactory" xsi:type="object">HawkSearchEsIndexingPostFieldResultFactory</argument>
+        </arguments>
+    </virtualType>
+    <!-- END postField Instruction  -->
+
+
     <!-- END Instructions  -->
 
     <!-- Instruction global validators   -->
-    <virtualType name="HawkSearchEsIndexingBadResponseValidator" type="HawkSearch\Connector\Gateway\Validator\ValidatorComposite">
+    <virtualType name="HawkSearchEsIndexingBadResponseValidator"
+                 type="HawkSearch\Connector\Gateway\Validator\ValidatorComposite">
         <arguments>
             <argument name="validators" xsi:type="array">
                 <item name="badRequestValidator" xsi:type="string">HawkSearch\EsIndexing\Gateway\Validator\BadRequestValidator</item>
@@ -549,7 +647,8 @@
     <!-- END Instruction global validators   -->
 
     <!-- Instruction managers section -->
-    <virtualType name="HawkSearchEsIndexingInstructionManager" type="HawkSearch\Connector\Gateway\Instruction\InstructionManager">
+    <virtualType name="HawkSearchEsIndexingInstructionManager"
+                 type="HawkSearch\Connector\Gateway\Instruction\InstructionManager">
         <arguments>
             <argument name="instructionPool" xsi:type="object">HawkSearchEsIndexingInstructionsPool</argument>
         </arguments>
@@ -569,14 +668,16 @@
             <argument name="collectionProcessor" xsi:type="object">HawkSearch\EsIndexing\Model\Api\SearchCriteria\ProductCollectionProcessor</argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearch\EsIndexing\Model\Api\SearchCriteria\ProductCollectionProcessor" type="Magento\Catalog\Model\Api\SearchCriteria\ProductCollectionProcessor">
+    <virtualType name="HawkSearch\EsIndexing\Model\Api\SearchCriteria\ProductCollectionProcessor"
+                 type="Magento\Catalog\Model\Api\SearchCriteria\ProductCollectionProcessor">
         <arguments>
             <argument name="processors" xsi:type="array">
                 <item name="joins" xsi:type="object">HawkSearch\EsIndexing\Model\Api\SearchCriteria\CollectionProcessor\ProductItemsJoinProcessor</item>
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearch\EsIndexing\Model\Api\SearchCriteria\CollectionProcessor\ProductItemsJoinProcessor" type="HawkSearch\EsIndexing\Model\Api\SearchCriteria\CollectionProcessor\CustomJoinProcessor">
+    <virtualType name="HawkSearch\EsIndexing\Model\Api\SearchCriteria\CollectionProcessor\ProductItemsJoinProcessor"
+                 type="HawkSearch\EsIndexing\Model\Api\SearchCriteria\CollectionProcessor\CustomJoinProcessor">
         <arguments>
             <argument name="customJoins" xsi:type="array">
                 <item name="price" xsi:type="object">HawkSearch\EsIndexing\Model\Api\SearchCriteria\JoinProcessor\ProductPrices</item>
@@ -587,73 +688,144 @@
     <!-- END Product indexing repository -->
 
     <!-- Types -->
-    <type name="HawkSearch\EsIndexing\Model\Indexing\Entity\EntityTypePool">
+    <type name="HawkSearch\EsIndexing\Model\Indexing\EntityTypePool">
         <arguments>
             <argument name="types" xsi:type="array">
-                <item name="hierarchy" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\Entity\Type\HierarchyEntityType</item>
-                <item name="product" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\Entity\Type\ProductEntityType</item>
-                <item name="content_page" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\Entity\Type\ContentPageEntityType</item>
+                <item name="hierarchy" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\EntityType\HierarchyEntityType</item>
+                <item name="product" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\EntityType\ProductEntityType</item>
+                <item name="content_page" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\EntityType\ContentPageEntityType</item>
+                <item name="landing_page" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\EntityType\LandingPageEntityType</item>
             </argument>
         </arguments>
     </type>
 
-    <type name="HawkSearch\EsIndexing\Model\Indexing\Entity\Type\HierarchyEntityType">
+    <type name="HawkSearch\EsIndexing\Model\Indexing\EntityType\HierarchyEntityType">
         <arguments>
-            <argument name="entityIndexer" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\HierarchyEntityIndexer\Proxy</argument>
-            <argument name="itemsProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\HierarchyItemsProvider\Proxy</argument>
+            <argument name="rebuilder" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Hierarchy\EntityRebuild\Proxy</argument>
+            <argument name="itemsDataProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Hierarchy\ItemsDataProvider</argument>
             <argument name="attributeHandler" xsi:type="object">HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler\Composite</argument>
+            <argument name="configHelper" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Hierarchy\ConfigHelper</argument>
+            <argument name="itemsIndexer" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ItemsIndexer\HierarchyItemsIndexer</argument>
+            <argument name="typeName" xsi:type="const">HawkSearch\EsIndexing\Model\Indexing\EntityType\HierarchyEntityType::ENTITY_TYPE_NAME</argument>
         </arguments>
     </type>
 
-    <type name="HawkSearch\EsIndexing\Model\Indexing\Entity\Type\ProductEntityType">
+    <type name="HawkSearch\EsIndexing\Model\Indexing\EntityType\ProductEntityType">
         <arguments>
-            <argument name="entityIndexer" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ProductEntityIndexer\Proxy</argument>
-            <argument name="itemsProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ProductItemsProvider\Proxy</argument>
+            <argument name="rebuilder" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Product\EntityRebuild\Proxy</argument>
+            <argument name="itemsDataProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Product\ItemsDataProvider</argument>
             <argument name="attributeHandler" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\Composite</argument>
+            <argument name="configHelper" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Product\ConfigHelper</argument>
+            <argument name="itemsIndexer" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ItemsIndexer\SearchedItemsIndexer</argument>
+            <argument name="typeName" xsi:type="const">HawkSearch\EsIndexing\Model\Indexing\EntityType\ProductEntityType::ENTITY_TYPE_NAME</argument>
         </arguments>
     </type>
 
-    <type name="HawkSearch\EsIndexing\Model\Indexing\Entity\Type\ContentPageEntityType">
+    <type name="HawkSearch\EsIndexing\Model\Indexing\EntityType\ContentPageEntityType">
         <arguments>
-            <argument name="entityIndexer" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ContentPageEntityIndexer\Proxy</argument>
-            <argument name="itemsProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ContentPageItemsProvider\Proxy</argument>
+            <argument name="rebuilder" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\ContentPage\EntityRebuild\Proxy</argument>
+            <argument name="itemsDataProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\ContentPage\ItemsDataProvider</argument>
             <argument name="attributeHandler" xsi:type="object">HawkSearch\EsIndexing\Model\ContentPage\Attribute\Handler\Composite</argument>
+            <argument name="configHelper" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\ContentPage\ConfigHelper</argument>
+            <argument name="itemsIndexer" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ItemsIndexer\SearchedItemsIndexer</argument>
+            <argument name="typeName" xsi:type="const">HawkSearch\EsIndexing\Model\Indexing\EntityType\ContentPageEntityType::ENTITY_TYPE_NAME</argument>
         </arguments>
     </type>
 
-    <type name="HawkSearch\EsIndexing\Model\Indexing\HierarchyEntityIndexer\Proxy">
+    <type name="HawkSearch\EsIndexing\Model\Indexing\EntityType\LandingPageEntityType">
+        <arguments>
+            <argument name="rebuilder" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\LandingPage\EntityRebuild\Proxy</argument>
+            <argument name="itemsDataProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\LandingPage\ItemsDataProvider</argument>
+            <argument name="attributeHandler" xsi:type="object">HawkSearch\EsIndexing\Model\LandingPage\Attribute\Handler\Composite</argument>
+            <argument name="configHelper" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\LandingPage\ConfigHelper</argument>
+            <argument name="itemsIndexer" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ItemsIndexer\LandingPageItemsIndexer</argument>
+            <argument name="typeName" xsi:type="const">HawkSearch\EsIndexing\Model\Indexing\EntityType\LandingPageEntityType::ENTITY_TYPE_NAME</argument>
+        </arguments>
+    </type>
+
+    <type name="HawkSearch\EsIndexing\Model\Indexing\Entity\Hierarchy\EntityRebuild\Proxy">
+        <arguments>
+            <argument name="shared" xsi:type="boolean">false</argument>
+        </arguments>
+    </type>
+    <type name="HawkSearch\EsIndexing\Model\Indexing\Entity\Product\EntityRebuild\Proxy">
+        <arguments>
+            <argument name="shared" xsi:type="boolean">false</argument>
+        </arguments>
+    </type>
+    <type name="HawkSearch\EsIndexing\Model\Indexing\Entity\ContentPage\EntityRebuild\Proxy">
+        <arguments>
+            <argument name="shared" xsi:type="boolean">false</argument>
+        </arguments>
+    </type>
+    <type name="HawkSearch\EsIndexing\Model\Indexing\Entity\LandingPage\EntityRebuild\Proxy">
         <arguments>
             <argument name="shared" xsi:type="boolean">false</argument>
         </arguments>
     </type>
 
-    <type name="HawkSearch\EsIndexing\Model\Indexing\ProductEntityIndexer\Proxy">
-        <arguments>
-            <argument name="shared" xsi:type="boolean">false</argument>
-        </arguments>
-    </type>
-
-    <type name="HawkSearch\EsIndexing\Model\Indexing\ContentPageEntityIndexer\Proxy">
-        <arguments>
-            <argument name="shared" xsi:type="boolean">false</argument>
-        </arguments>
-    </type>
-
-    <type name="HawkSearch\EsIndexing\Model\Indexing\ProductItemsProvider">
+    <type name="HawkSearch\EsIndexing\Model\Indexing\Entity\Product\ItemsDataProvider">
         <arguments>
             <argument name="productRepository" xsi:type="object">HawkSearch\EsIndexing\Model\ProductRepository</argument>
         </arguments>
     </type>
 
     <virtualType name="HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler\Composite"
-                 type="HawkSearch\EsIndexing\Model\Indexing\Entity\AttributeHandler\Composite">
+                 type="HawkSearch\EsIndexing\Model\Indexing\AttributeHandler\Composite">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="__DEFAULT_HANDLER__" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\AttributeHandler\DataObjectHandler</item>
-                <item name="HierarchyId" xsi:type="object">HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler\HierarchyId</item>
-                <item name="Name" xsi:type="object">HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler\Name</item>
-                <item name="ParentHierarchyId" xsi:type="object">HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler\ParentHierarchyId</item>
-                <item name="IsActive" xsi:type="object">HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler\IsActive</item>
+                <item name="hierarchy_id" xsi:type="array">
+                    <item name="attribute" xsi:type="const">HawkSearch\EsIndexing\Api\Data\HierarchyInterface::FIELD_HIERARCHY_ID</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler\HierarchyId</item>
+                </item>
+                <item name="name" xsi:type="array">
+                    <item name="attribute" xsi:type="const">HawkSearch\EsIndexing\Api\Data\HierarchyInterface::FIELD_NAME</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler\Name</item>
+                </item>
+                <item name="parent_hierarchy_id" xsi:type="array">
+                    <item name="attribute" xsi:type="const">HawkSearch\EsIndexing\Api\Data\HierarchyInterface::FIELD_PARENT_HIERARCHY_ID</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler\ParentHierarchyId</item>
+                </item>
+                <item name="is_active" xsi:type="array">
+                    <item name="attribute" xsi:type="const">HawkSearch\EsIndexing\Api\Data\HierarchyInterface::FIELD_IS_ACTIVE</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler\IsActive</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="HawkSearch\EsIndexing\Model\ContentPage\Attribute\Handler\Composite"
+                 type="HawkSearch\EsIndexing\Model\Indexing\AttributeHandler\Composite">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="url" xsi:type="array">
+                    <item name="attribute" xsi:type="string">url</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\ContentPage\Attribute\Handler\Url</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="HawkSearch\EsIndexing\Model\LandingPage\Attribute\Handler\Composite"
+                 type="HawkSearch\EsIndexing\Model\Indexing\AttributeHandler\Composite">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="name" xsi:type="array">
+                    <item name="attribute" xsi:type="const">HawkSearch\EsIndexing\Model\Indexing\AttributeHandler\Composite::HANDLER_DEFAULT_NAME</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\LandingPage\Attribute\Handler\DefaultHandler</item>
+                </item>
+                <item name="custom_url" xsi:type="array">
+                    <item name="attribute" xsi:type="const">HawkSearch\EsIndexing\Api\Data\LandingPageInterface::FIELD_CUSTOM_URL</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\LandingPage\Attribute\Handler\CustomUrl</item>
+                </item>
+                <item name="narrow_xml" xsi:type="array">
+                    <item name="attribute" xsi:type="const">HawkSearch\EsIndexing\Api\Data\LandingPageInterface::FIELD_NARROW_XML</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\LandingPage\Attribute\Handler\NarrowXml</item>
+                </item>
+                <item name="custom_sort_list" xsi:type="array">
+                    <item name="attribute" xsi:type="const">HawkSearch\EsIndexing\Api\Data\LandingPageInterface::FIELD_CUSTOM_SORT_LIST</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\LandingPage\Attribute\Handler\CustomSortList</item>
+                </item>
             </argument>
         </arguments>
     </virtualType>
@@ -661,34 +833,70 @@
     <type name="HawkSearch\EsIndexing\Model\Product\Attribute\Handler\Composite">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="__DEFAULT_HANDLER__" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\DefaultHandler</item>
-                <item name="url" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\Url</item>
-                <item name="thumbnail_url" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\ImageUrl</item>
-                <item name="image_url" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\ImageUrl</item>
-                <item name="category" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\Category</item>
+                <item name="name" xsi:type="array">
+                    <item name="attribute" xsi:type="const">HawkSearch\EsIndexing\Model\Indexing\AttributeHandler\Composite::HANDLER_DEFAULT_NAME</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\DefaultHandler</item>
+                </item>
+                <item name="url" xsi:type="array">
+                    <item name="attribute" xsi:type="string">url</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\Url</item>
+                </item>
+                <item name="thumbnail_url" xsi:type="array">
+                    <item name="attribute" xsi:type="string">thumbnail_url</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\ImageUrl</item>
+                </item>
+                <item name="image_url" xsi:type="array">
+                    <item name="attribute" xsi:type="string">image_url</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\ImageUrl</item>
+                </item>
+                <item name="category" xsi:type="array">
+                    <item name="attribute" xsi:type="string">category</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\Category</item>
+                </item>
             </argument>
         </arguments>
     </type>
 
-    <virtualType name="HawkSearch\EsIndexing\Model\ContentPage\Attribute\Handler\Composite"
-                 type="HawkSearch\EsIndexing\Model\Indexing\Entity\AttributeHandler\Composite">
+    <virtualType name="HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicByEntityTypeResolver"
+                 type="HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicResolverComposite">
         <arguments>
-            <argument name="handlers" xsi:type="array">
-                <item name="__DEFAULT_HANDLER__" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\AttributeHandler\DataObjectHandler</item>
-                <item name="url" xsi:type="object">HawkSearch\EsIndexing\Model\ContentPage\Attribute\Handler\Url</item>
+            <argument name="resolvers" xsi:type="array">
+                <item name="content_page" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\EntityType\ContentPageMessageTopicResolver</item>
+                <item name="hierarchy" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\EntityType\HierarchyMessageTopicResolver</item>
+                <item name="product" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\EntityType\ProductMessageTopicResolver</item>
+                <item name="landing_page" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\EntityType\LandingPageMessageTopicResolver</item>
             </argument>
         </arguments>
     </virtualType>
-
-    <type name="HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicResolverComposite">
+    <virtualType name="HawkSearch\EsIndexing\Model\Indexing\EntityType\ContentPageMessageTopicResolver"
+                 type="HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicByObjectResolver">
         <arguments>
-            <argument name="resolvers" xsi:type="array">
-                <item name="content_page" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\ContentPageEntityMessageTopicResolver</item>
-                <item name="hierarchy" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\HierarchyEntityMessageTopicResolver</item>
-                <item name="product" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\ProductEntityMessageTopicResolver</item>
-            </argument>
+            <argument name="topic" xsi:type="string">hawksearch.indexing.content_page.reindex</argument>
+            <argument name="resolverClass" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\EntityType\ContentPageEntityType</argument>
         </arguments>
-    </type>
+    </virtualType>
+    <virtualType name="HawkSearch\EsIndexing\Model\Indexing\EntityType\HierarchyMessageTopicResolver"
+                 type="HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicByObjectResolver">
+        <arguments>
+            <argument name="topic" xsi:type="string">hawksearch.indexing.hierarchy.reindex</argument>
+            <argument name="resolverClass" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\EntityType\HierarchyEntityType</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearch\EsIndexing\Model\Indexing\EntityType\ProductMessageTopicResolver"
+                 type="HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicByObjectResolver">
+        <arguments>
+            <argument name="topic" xsi:type="string">hawksearch.indexing.catalog.reindex</argument>
+            <argument name="resolverClass" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\EntityType\ProductEntityType</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearch\EsIndexing\Model\Indexing\EntityType\LandingPageMessageTopicResolver"
+                 type="HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicByObjectResolver">
+        <arguments>
+            <argument name="topic" xsi:type="string">hawksearch.indexing.landing_page.reindex</argument>
+            <argument name="resolverClass" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\EntityType\LandingPageEntityType</argument>
+        </arguments>
+    </virtualType>
+
 
     <type name="HawkSearch\EsIndexing\Model\Product\ProductTypePool">
         <arguments>
@@ -700,18 +908,9 @@
         </arguments>
     </type>
 
-    <type name="HawkSearch\EsIndexing\Model\Indexer\AbstractItemsIndexer">
-        <arguments>
-            <argument name="messageTopicResolver" xsi:type="object">
-                HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicResolverComposite
-            </argument>
-        </arguments>
-    </type>
-
     <type name="Magento\Framework\Console\CommandList">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="hawksearch_run_category_sync" xsi:type="object">HawkSearch\EsIndexing\Console\Command\SyncCategories</item>
                 <item name="hawksearch_retry_bulk" xsi:type="object">HawkSearch\EsIndexing\Console\Command\RetryBulk</item>
             </argument>
         </arguments>
@@ -759,28 +958,189 @@
         </arguments>
     </type>
 
+    <virtualType name="HawkSearch\EsIndexing\Model\Config\Backend\Serialized\ProductAttributes"
+                 type="HawkSearch\EsIndexing\Model\Config\Backend\Serialized\ArraySerialized">
+        <arguments>
+            <argument name="processor" xsi:type="object">HawkSearch\EsIndexing\Model\Config\Backend\Serialized\Processor\ProductAttributes</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="hawksearch_bulk_listing_data_source" xsi:type="string">HawkSearch\EsIndexing\Ui\Component\DataProvider\BulkListing\SearchResult</item>
+                <item name="hawksearch_operation_listing_data_source" xsi:type="string">HawkSearch\EsIndexing\Ui\Component\DataProvider\Operation\SearchResult</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher\Full"
+                 type="HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher">
+        <arguments>
+            <argument name="bulkDescription" xsi:type="string">Hawksearch full reindexing</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher\Delta"
+                 type="HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher">
+        <arguments>
+            <argument name="bulkDescription" xsi:type="string">Hawksearch delta reindexing</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="HawkSearch\EsIndexing\Model\Indexer\Entities\ActionFull">
+        <arguments>
+            <argument name="publisher" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher\Full</argument>
+            <argument name="entityScheduler" xsi:type="object">HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\All</argument>
+        </arguments>
+    </type>
+    <type name="HawkSearch\EsIndexing\Model\Indexer\Entities\ActionEntityDefault">
+        <arguments>
+            <argument name="publisher" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher\Delta</argument>
+        </arguments>
+    </type>
+    <virtualType name="HawkSearch\EsIndexing\Model\Indexer\Entities\ActionEntityProduct"
+                 type="HawkSearch\EsIndexing\Model\Indexer\Entities\ActionEntityDefault">
+        <arguments>
+            <argument name="entityScheduler" xsi:type="object">HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\Product</argument>
+            <argument name="publisher" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher\Delta</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearch\EsIndexing\Model\Indexer\Entities\ActionEntityContentPage"
+                 type="HawkSearch\EsIndexing\Model\Indexer\Entities\ActionEntityDefault">
+        <arguments>
+            <argument name="entityScheduler" xsi:type="object">HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\ContentPage</argument>
+            <argument name="publisher" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher\Delta</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearch\EsIndexing\Model\Indexer\Entities\ActionEntityCategory"
+                 type="HawkSearch\EsIndexing\Model\Indexer\Entities\ActionEntityDefault">
+        <arguments>
+            <argument name="entityScheduler" xsi:type="object">HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\Category</argument>
+            <argument name="publisher" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher\Delta</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\Product"
+                 type="HawkSearch\EsIndexing\Model\Indexer\Entities\SchedulerAbstract">
+        <arguments>
+            <argument name="entityType" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\EntityType\ProductEntityType</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\ContentPage"
+                 type="HawkSearch\EsIndexing\Model\Indexer\Entities\SchedulerAbstract">
+        <arguments>
+            <argument name="entityType" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\EntityType\ContentPageEntityType</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\Hierarchy"
+                 type="HawkSearch\EsIndexing\Model\Indexer\Entities\SchedulerAbstract">
+        <arguments>
+            <argument name="entityType" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\EntityType\HierarchyEntityType</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\LandingPage"
+                 type="HawkSearch\EsIndexing\Model\Indexer\Entities\SchedulerAbstract">
+        <arguments>
+            <argument name="entityType" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\EntityType\LandingPageEntityType</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\Category"
+                 type="HawkSearch\EsIndexing\Model\Indexer\Entities\SchedulerComposite">
+        <arguments>
+            <argument name="schedulers" xsi:type="array">
+                <item name="hierarchy" xsi:type="string">HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\Hierarchy</item>
+                <item name="landing_page" xsi:type="string">HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\LandingPage</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\All"
+                 type="HawkSearch\EsIndexing\Model\Indexer\Entities\SchedulerComposite">
+        <arguments>
+            <argument name="schedulers" xsi:type="array">
+                <item name="category" xsi:type="string">HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\Category</item>
+                <item name="product" xsi:type="string">HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\Product</item>
+                <item name="content_page" xsi:type="string">HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\ContentPage</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="HawkSearch\EsIndexing\Model\Indexer\Product">
+        <arguments>
+            <argument name="action" xsi:type="object">HawkSearch\EsIndexing\Model\Indexer\Entities\ActionEntityProduct</argument>
+        </arguments>
+    </type>
+
+    <type name="HawkSearch\EsIndexing\Model\Indexer\ContentPage">
+        <arguments>
+            <argument name="action" xsi:type="object">HawkSearch\EsIndexing\Model\Indexer\Entities\ActionEntityContentPage</argument>
+        </arguments>
+    </type>
+
+    <type name="HawkSearch\EsIndexing\Model\Indexer\Category">
+        <arguments>
+            <argument name="action" xsi:type="object">HawkSearch\EsIndexing\Model\Indexer\Entities\ActionEntityCategory</argument>
+        </arguments>
+    </type>
+
+    <type name="HawkSearch\EsIndexing\Model\Indexer\Entities\SchedulerAbstract">
+        <arguments>
+            <argument name="messageTopicResolver" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicByEntityTypeResolver</argument>
+        </arguments>
+    </type>
+
+    <type name="HawkSearch\EsIndexing\Observer\Indexer\ScheduleHierarchyRebuild">
+        <arguments>
+            <argument name="messageTopicResolver" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicByEntityTypeResolver</argument>
+        </arguments>
+    </type>
+
+
     <!-- END Types -->
 
     <!-- Plugins -->
     <type name="Magento\Catalog\Model\ResourceModel\Product">
         <plugin name="hawksearchProduct"
-                type="HawkSearch\EsIndexing\Model\Indexer\Product\Plugin\Product"/>
+                type="HawkSearch\EsIndexing\Plugin\Product\ProductPlugin"/>
     </type>
     <type name="Magento\Catalog\Model\Product\Action">
         <plugin name="hawksearchProductMassAction"
-                type="HawkSearch\EsIndexing\Model\Indexer\Product\Plugin\Product\Action"/>
+                type="HawkSearch\EsIndexing\Plugin\Product\Product\ActionPlugin"/>
     </type>
     <type name="Magento\Cms\Model\ResourceModel\Page">
         <plugin name="hawksearchPage"
-                type="HawkSearch\EsIndexing\Model\Indexer\ContentPage\Plugin\Page"/>
+                type="HawkSearch\EsIndexing\Plugin\Page\PagePlugin"/>
+    </type>
+    <type name="Magento\Catalog\Model\ResourceModel\Category">
+        <plugin name="hawksearchCategory"
+                type="HawkSearch\EsIndexing\Plugin\Category\CategoryPlugin"/>
     </type>
     <type name="Magento\AsynchronousOperations\Model\OperationProcessor">
         <plugin name="hawksearchAsynchronousOperationProcessor"
                 type="HawkSearch\EsIndexing\Plugin\AsynchronousOperationProcessorPlugin"/>
     </type>
-    <type name="HawkSearch\EsIndexing\Model\Indexing\Consumer">
+    <type name="HawkSearch\EsIndexing\Model\MessageQueue\Consumer">
         <plugin name="hawksearchConsumerProcessor"
                 type="HawkSearch\EsIndexing\Plugin\ConsumerProcessorPlugin"/>
+    </type>
+    <type name="Magento\Store\Model\ResourceModel\Store">
+        <plugin name="hawksearchStoreView"
+                type="HawkSearch\EsIndexing\Plugin\Store\StoreViewPlugin"/>
+    </type>
+    <type name="Magento\Store\Model\ResourceModel\Group">
+        <plugin name="hawksearchStoreGroup"
+                type="HawkSearch\EsIndexing\Plugin\Store\StoreGroupPlugin"/>
+    </type>
+    <type name="HawkSearch\EsIndexing\Model\Indexing\Entity\Product\EntityRebuild">
+        <plugin name="hawksearchCleanData"
+                type="HawkSearch\EsIndexing\Plugin\Indexing\Entity\Product\EntityRebuildPlugin"/>
+    </type>
+    <type name="Magento\ImportExport\Model\Import">
+        <plugin name="hawksearchInvalidateProductIndexerOnImport"
+                type="HawkSearch\EsIndexing\Plugin\ImportExport\ImportPlugin"/>
+    </type>
+    <type name="Magento\Catalog\Model\ResourceModel\Attribute">
+        <plugin name="hawksearchIndexerAttribute" type="HawkSearch\EsIndexing\Plugin\Product\Product\AttributePlugin"/>
     </type>
 
     <!-- END Plugins -->

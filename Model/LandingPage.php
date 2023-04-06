@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -434,5 +434,21 @@ class LandingPage extends AbstractSimpleObject implements LandingPageInterface
     public function setIsNoFollow(bool $value)
     {
         return $this->setData(self::FIELD_IS_NO_FOLLOW, $value);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCustomSortList(): ?string
+    {
+        return $this->_get(self::FIELD_CUSTOM_SORT_LIST);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setCustomSortList(?string $value)
+    {
+        return $this->setData(self::FIELD_CUSTOM_SORT_LIST, $value);
     }
 }
