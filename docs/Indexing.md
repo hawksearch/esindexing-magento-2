@@ -46,13 +46,13 @@ and keeps data in the current production index up to date.
 
 There is an option to manually trigger full reindexing for all indexed entities using command-line:
 
-```bash
+```shell
 php bin/magento indexer:reindex hawksearch_entities
 ```
 
 Full reindexig of individual entity is forbidden. Foer example, if you'll try to run this command:
 
-```bash
+```shell
 php bin/magento indexer:reindex hawksearch_products
 ```
 
