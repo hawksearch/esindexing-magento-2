@@ -162,3 +162,13 @@ the reference.
 | `title`           | Text Value | Page Title      |
 | `content_heading` | Text Value | Content Heading | 
 | `content`         | Text Value | Page Content    |
+
+
+## Category indexing
+
+> **Note**: Category indexing will be supported in the future connector versions
+
+### Full reindexing
+
+Category entities (Landing Pages and Hierarchies) are reindexed as part of `hawksearch_entities` indexer. 
+See [Manual indexing](#manual-indexing) for the reference.
