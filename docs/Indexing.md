@@ -84,7 +84,7 @@ The following system fields need to be created:
 
 ### Full reindexing
 
-Product entities are reindexed as part of `hawksearch_entities` indexer. See [Magento indexing](#Manual Indexing) for 
+Product entities are reindexed as part of `hawksearch_entities` indexer. See [Manual indexing](#manual-indexing) for 
 the reference.
 
 ### Indexed attributes
@@ -150,7 +150,7 @@ pushed to HawkSearch index:
 
 ### Full reindexing
 
-Content page entities are reindexed as part of `hawksearch_entities` indexer. See [Magento indexing](#Manual Indexing) for
+Content page entities are reindexed as part of `hawksearch_entities` indexer. See [Manual indexing](#manual-indexing) for
 the reference.
 
 ### Indexed attributes
