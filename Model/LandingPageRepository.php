@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model;
 
+use Laminas\Http\Request as HttpRequest;
 use Magento\Framework\App\CacheInterface as Cache;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\SerializerInterface;
@@ -80,7 +81,7 @@ class LandingPageRepository implements \HawkSearch\EsIndexing\Api\LandingPageRep
         if (($serialized = $this->cache->load($this->getCacheKey()))) {
             $landingPages = $this->serializer->unserialize($serialized);
         } else {
-            $landingPages = $this->getHawkResponse(Zend_Http_Client::GET, 'LandingPage/Urls') ?: [];
+            $landingPages = $this->getHawkResponse(HttpRequest::METHOD_GET, 'LandingPage/Urls') ?: [];
             sort($landingPages, SORT_STRING);
             $this->cache->save(
                 $this->serializer->serialize($landingPages),
