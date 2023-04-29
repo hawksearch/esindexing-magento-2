@@ -122,7 +122,6 @@
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearch\Connector\Gateway\Request\BuilderComposite</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingGetIndexListTransferFactory</argument>
-            <argument name="client" xsi:type="object">HawkSearch\Connector\Gateway\Http\Client</argument>
             <argument name="validator" xsi:type="object">HawkSearchEsIndexingGetIndexListBadResponseValidator</argument>
             <argument name="resultFactory" xsi:type="object">HawkSearchEsIndexingGetIndexResultFactory</argument>
         </arguments>
@@ -160,7 +159,6 @@
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearch\Connector\Gateway\Request\BuilderComposite</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingGetCurrentIndexTransferFactory</argument>
-            <argument name="client" xsi:type="object">HawkSearch\Connector\Gateway\Http\Client</argument>
             <argument name="validator" xsi:type="object">HawkSearchEsIndexingBadResponseValidator</argument>
             <argument name="resultFactory" xsi:type="object">HawkSearchEsIndexingGetCurrentIndexResultFactory</argument>
         </arguments>
@@ -186,7 +184,6 @@
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearchEsIndexingSetCurrentIndexRequestBuilder</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingSetCurrentIndexTransferFactory</argument>
-            <argument name="client" xsi:type="object">HawkSearch\Connector\Gateway\Http\Client</argument>
             <argument name="validator" xsi:type="object">HawkSearchEsIndexingBadResponseValidator</argument>
         </arguments>
     </virtualType>
@@ -213,7 +210,6 @@
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearchEsIndexingCreateIndexRequestBuilder</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingCreateIndexTransferFactory</argument>
-            <argument name="client" xsi:type="object">HawkSearch\Connector\Gateway\Http\Client</argument>
             <argument name="validator" xsi:type="object">HawkSearchEsIndexingBadResponseValidator</argument>
             <argument name="resultFactory" xsi:type="object">HawkSearchEsIndexingCreateIndexResultFactory</argument>
         </arguments>
@@ -247,7 +243,6 @@
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearchEsIndexingDeleteIndexRequestBuilder</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingDeleteIndexTransferFactory</argument>
-            <argument name="client" xsi:type="object">HawkSearch\Connector\Gateway\Http\Client</argument>
             <argument name="validator" xsi:type="object">HawkSearchEsIndexingBadResponseValidator</argument>
         </arguments>
     </virtualType>
@@ -274,7 +269,6 @@
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearchEsIndexingIndexItemsRequestBuilder</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingIndexItemsTransferFactory</argument>
-            <argument name="client" xsi:type="object">HawkSearch\Connector\Gateway\Http\Client</argument>
             <argument name="validator" xsi:type="object">HawkSearchEsIndexingIndexItemsBadResponseValidator</argument>
         </arguments>
     </virtualType>
@@ -313,7 +307,6 @@
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearchEsIndexingDeleteItemsRequestBuilder</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingDeleteItemsTransferFactory</argument>
-            <argument name="client" xsi:type="object">HawkSearch\Connector\Gateway\Http\Client</argument>
             <argument name="validator" xsi:type="object">HawkSearchEsIndexingDeleteItemsBadResponseValidator</argument>
         </arguments>
     </virtualType>
@@ -372,7 +365,6 @@
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearchEsIndexingUpsertHierarchyRequestBuilder</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingUpsertHierarchyTransferFactory</argument>
-            <argument name="client" xsi:type="object">HawkSearch\Connector\Gateway\Http\Client</argument>
             <argument name="validator" xsi:type="object">HawkSearchEsIndexingBadResponseValidator</argument>
         </arguments>
     </virtualType>
@@ -399,7 +391,6 @@
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearchEsIndexingRebuildHierarchyRequestBuilder</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingRebuildHierarchyTransferFactory</argument>
-            <argument name="client" xsi:type="object">HawkSearch\Connector\Gateway\Http\Client</argument>
             <argument name="validator" xsi:type="object">HawkSearchEsIndexingBadResponseValidator</argument>
         </arguments>
     </virtualType>
@@ -426,7 +417,6 @@
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearchEsIndexingDeleteHierarchyItemsRequestBuilder</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingDeleteHierarchyItemsTransferFactory</argument>
-            <argument name="client" xsi:type="object">HawkSearch\Connector\Gateway\Http\Client</argument>
             <argument name="validator" xsi:type="object">HawkSearchEsIndexingBadResponseValidator</argument>
         </arguments>
     </virtualType>
@@ -453,7 +443,6 @@
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearchEsIndexingGetLandingPagesRequestBuilder</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingGetLandingPagesTransferFactory</argument>
-            <argument name="client" xsi:type="object">HawkSearch\Connector\Gateway\Http\Client</argument>
             <argument name="validator" xsi:type="object">HawkSearchEsIndexingBadResponseValidator</argument>
             <argument name="resultFactory" xsi:type="object">HawkSearchEsIndexingGetLandingPagesResultFactory</argument>
         </arguments>
@@ -487,7 +476,6 @@
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearchEsIndexingGetLandingPageUrlsRequestBuilder</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingGetLandingPageUrlsTransferFactory</argument>
-            <argument name="client" xsi:type="object">HawkSearch\Connector\Gateway\Http\Client</argument>
             <argument name="validator" xsi:type="object">HawkSearchEsIndexingBadResponseValidator</argument>
             <argument name="resultFactory" xsi:type="object">HawkSearchArrayResultFactory</argument>
         </arguments>
@@ -515,7 +503,6 @@
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearchEsIndexingAddLandingPagesBulkRequestBuilder</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingAddLandingPagesBulkTransferFactory</argument>
-            <argument name="client" xsi:type="object">HawkSearch\Connector\Gateway\Http\Client</argument>
             <argument name="validator" xsi:type="object">HawkSearchEsIndexingBadResponseValidator</argument>
         </arguments>
     </virtualType>
@@ -542,7 +529,6 @@
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearchEsIndexingUpdateLandingPagesBulkRequestBuilder</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingUpdateLandingPagesBulkTransferFactory</argument>
-            <argument name="client" xsi:type="object">HawkSearch\Connector\Gateway\Http\Client</argument>
             <argument name="validator" xsi:type="object">HawkSearchEsIndexingBadResponseValidator</argument>
         </arguments>
     </virtualType>
@@ -569,7 +555,6 @@
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearchEsIndexingDeleteLandingPagesBulkRequestBuilder</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingDeleteLandingPagesBulkTransferFactory</argument>
-            <argument name="client" xsi:type="object">HawkSearch\Connector\Gateway\Http\Client</argument>
             <argument name="validator" xsi:type="object">HawkSearchEsIndexingBadResponseValidator</argument>
         </arguments>
     </virtualType>
