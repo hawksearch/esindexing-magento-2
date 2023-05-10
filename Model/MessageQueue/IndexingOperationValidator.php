@@ -14,38 +14,29 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\MessageQueue;
 
+use HawkSearch\EsIndexing\Model\BulkOperation\BulkOperationManagement;
 use Magento\AsynchronousOperations\Api\Data\OperationInterface;
-use Magento\AsynchronousOperations\Api\Data\OperationSearchResultsInterface;
-use Magento\AsynchronousOperations\Api\OperationRepositoryInterface;
-use Magento\Framework\Api\SearchCriteriaBuilderFactory;
+use Magento\Framework\Bulk\OperationInterface as BulkOperationInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\NotFoundException;
 
 class IndexingOperationValidator
 {
-    public const OPERATION_TOPIC_PREFIX = 'hawksearch.indexing.';
 
     /**
-     * @var SearchCriteriaBuilderFactory
+     * @var BulkOperationManagement
      */
-    private $searchCriteriaBuilderFactory;
-
-    /**
-     * @var OperationRepositoryInterface
-     */
-    private $operationRepository;
+    private $bulkOperationManagement;
 
     /**
      * IndexingOperationValidator constructor.
-     * @param SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory
-     * @param OperationRepositoryInterface $operationRepository
+     *
+     * @param BulkOperationManagement $bulkOperationManagement
      */
     public function __construct(
-        SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
-        OperationRepositoryInterface $operationRepository
+        BulkOperationManagement $bulkOperationManagement,
     ) {
-        $this->searchCriteriaBuilderFactory = $searchCriteriaBuilderFactory;
-        $this->operationRepository = $operationRepository;
+        $this->bulkOperationManagement = $bulkOperationManagement;
     }
 
     /**
@@ -54,7 +45,7 @@ class IndexingOperationValidator
      */
     public function isOperationTopicAllowed(OperationInterface $operation)
     {
-        return strpos($operation->getTopicName(), self::OPERATION_TOPIC_PREFIX) === 0;
+        return strpos($operation->getTopicName(), BulkOperationManagement::OPERATION_TOPIC_PREFIX) === 0;
     }
 
     /**
@@ -65,12 +56,12 @@ class IndexingOperationValidator
     public function isPrevOperationComplete(OperationInterface $operation)
     {
         $prevOperationKey = (int)$operation->getId() === 0 ? null : (int)$operation->getId() - 1;
-        $prevOperationStatus = $this->getOperationByBulkAndKey(
+        $prevOperationStatus = $this->bulkOperationManagement->getOperationByBulkAndKey(
             $operation->getBulkUuid(),
             $prevOperationKey
         )->getStatus();
 
-        return $prevOperationKey === null || $prevOperationStatus == OperationInterface::STATUS_TYPE_COMPLETE;
+        return $prevOperationKey === null || $prevOperationStatus == BulkOperationInterface::STATUS_TYPE_COMPLETE;
     }
 
     /**
@@ -100,7 +91,7 @@ class IndexingOperationValidator
      */
     public function isOperationComplete(OperationInterface $operation)
     {
-        return $operation->getStatus() == OperationInterface::STATUS_TYPE_COMPLETE;
+        return $operation->getStatus() == BulkOperationInterface::STATUS_TYPE_COMPLETE;
     }
 
     /**
@@ -109,89 +100,13 @@ class IndexingOperationValidator
      */
     public function isAllBulkOperationsComplete(OperationInterface $operation)
     {
-        $allCount = $this->getAllBulkOperationsResult($operation->getBulkUuid())->getTotalCount();
-        $completeCount = $this->getOperationsResultByBulkAndStatus(
+        $allCount = $this->bulkOperationManagement->getOperationsByBulkUuid($operation->getBulkUuid())->getTotalCount();
+        $completeCount = $this->bulkOperationManagement->getOperationsByBulkUuidAndStatus(
             $operation->getBulkUuid(),
-            OperationInterface::STATUS_TYPE_COMPLETE
+            BulkOperationInterface::STATUS_TYPE_COMPLETE
         )->getTotalCount();
 
         return $allCount == $completeCount;
-    }
-
-    /**
-     * @param string $bulkUuid
-     * @param int $operationKey
-     * @return OperationInterface
-     * @throws NoSuchEntityException
-     */
-    protected function getOperationByBulkAndKey(string $bulkUuid, int $operationKey)
-    {
-        $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
-
-        $searchCriteriaBuilder->addFilter(
-            OperationInterface::BULK_ID,
-            $bulkUuid
-        )->addFilter(
-            OperationInterface::ID,
-            $operationKey
-        );
-
-        $searchCriteria = $searchCriteriaBuilder
-            ->setPageSize(1)
-            ->setCurrentPage(1)
-            ->create();
-
-        $operations = $this->operationRepository->getList($searchCriteria)->getItems();
-
-        if (count($operations)) {
-            return current($operations);
-        }
-
-        throw new NoSuchEntityException(
-            __(
-                'No such operation Bulk UUID: %1, key: %2',
-                $bulkUuid,
-                $operationKey
-            )
-        );
-    }
-
-    /**
-     * @param string $bulkUuid
-     * @param int $status
-     * @return OperationSearchResultsInterface
-     */
-    protected function getOperationsResultByBulkAndStatus(string $bulkUuid, int $status)
-    {
-        $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
-
-        $searchCriteriaBuilder->addFilter(
-            OperationInterface::BULK_ID,
-            $bulkUuid
-        )->addFilter(
-            OperationInterface::STATUS,
-            $status
-        );
-        $searchCriteria = $searchCriteriaBuilder->create();
-
-        return $this->operationRepository->getList($searchCriteria);
-    }
-
-    /**
-     * @param string $bulkUuid
-     * @return OperationSearchResultsInterface
-     */
-    protected function getAllBulkOperationsResult(string $bulkUuid)
-    {
-        $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
-
-        $searchCriteriaBuilder->addFilter(
-            OperationInterface::BULK_ID,
-            $bulkUuid
-        );
-        $searchCriteria = $searchCriteriaBuilder->create();
-
-        return $this->operationRepository->getList($searchCriteria);
     }
 
     /**
