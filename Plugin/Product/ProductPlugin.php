@@ -19,6 +19,7 @@ use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
 use Magento\Framework\Indexer\IndexerInterface;
 use Magento\Framework\Indexer\IndexerRegistry;
 use Magento\Framework\Model\AbstractModel;
+use HawkSearch\EsIndexing\Model\Product as ProductDataProvider;
 
 class ProductPlugin extends AbstractPlugin
 {
@@ -28,13 +29,21 @@ class ProductPlugin extends AbstractPlugin
     private $categoryIndexer;
 
     /**
+     * @var ProductDataProvider
+     */
+    private $productDataProvider;
+
+    /**
      * @param IndexerRegistry $indexerRegistry
+     * @param ProductDataProvider $productDataProvider
      */
     public function __construct(
-        IndexerRegistry $indexerRegistry
+        IndexerRegistry $indexerRegistry,
+        ProductDataProvider $productDataProvider
     ) {
         parent::__construct($indexerRegistry);
         $this->categoryIndexer = $indexerRegistry->get(CategoryIndexer::INDEXER_ID);
+        $this->productDataProvider = $productDataProvider;
     }
 
     /**
@@ -63,6 +72,7 @@ class ProductPlugin extends AbstractPlugin
     public function aroundDelete(ProductResource $productResource, \Closure $proceed, AbstractModel $object)
     {
         $object->setAffectedCategoryIds($object->getCategoryIds());
+        $object->setAffectedParentProductIds($this->productDataProvider->getParentProductIds([$object->getId()]));
         return $this->addCommitCallback($productResource, $proceed, $object);
     }
 
@@ -85,7 +95,9 @@ class ProductPlugin extends AbstractPlugin
                 if (is_array($affectedCategories)) {
                     $this->reindexCategoryList($affectedCategories);
                 }
-                $this->reindexRow($object->getId());
+                $affectedProductIds = $object->getAffectedParentProductIds() ?? [];
+                $ids = array_merge([$object->getId()], $affectedProductIds);
+                $this->reindexList($ids);
             });
             $productResource->commit();
         } catch (\Exception $e) {

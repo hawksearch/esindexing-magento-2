@@ -15,11 +15,10 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model;
 
-use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product\Type;
 use Magento\Catalog\Model\Product\Type\AbstractType;
 use Magento\Catalog\Model\ProductFactory;
-use Magento\Catalog\Model\Product as ProductModel;
+use Magento\CatalogSearch\Model\ResourceModel\Fulltext as FulltextResource;
 
 class Product
 {
@@ -39,16 +38,25 @@ class Product
     private $productType;
 
     /**
+     * @var FulltextResource
+     */
+    private $fulltextResource;
+
+    /**
      * Product constructor.
+     *
      * @param ProductFactory $productFactory
      * @param Type $productType
+     * @param FulltextResource $fulltextResource
      */
     public function __construct(
         ProductFactory $productFactory,
-        Type $productType
+        Type $productType,
+        FulltextResource $fulltextResource
     ) {
         $this->productFactory = $productFactory;
         $this->productType = $productType;
+        $this->fulltextResource = $fulltextResource;
     }
 
     /**
@@ -73,11 +81,6 @@ class Product
      */
     public function getParentProductIds(array $ids)
     {
-        $parentIds = [];
-        foreach ($this->getCompositeTypes() as $typeInstance) {
-            $parentIds = array_merge($parentIds, $typeInstance->getParentIdsByChild($ids));
-        }
-
-        return $parentIds;
+        return $this->fulltextResource->getRelationsByChild($ids);
     }
 }

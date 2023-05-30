@@ -1080,6 +1080,21 @@
         </arguments>
     </type>
 
+    <type name="Magento\CatalogStaging\Model\Mview\View\SubscriptionFactory">
+        <arguments>
+            <argument name="subscriptionModels" xsi:type="array">
+                <item name="catalog_product_relation" xsi:type="string">
+                    HawkSearch\EsIndexing\Model\Mview\StagedProductAttributeSubscription
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="HawkSearch\EsIndexing\Model\Mview\StagedProductAttributeSubscription"
+                 type="HawkSearch\EsIndexing\Model\Mview\View\StagingSubscription">
+        <arguments>
+            <argument name="entityInterface" xsi:type="string">Magento\Catalog\Api\Data\ProductInterface</argument>
+        </arguments>
+    </virtualType>
 
     <!-- END Types -->
 

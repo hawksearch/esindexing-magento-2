@@ -21,6 +21,9 @@
         </description>
         <dependencies>
             <indexer id="hawksearch_entities" />
+            <indexer id="catalog_category_product" />
+            <indexer id="cataloginventory_stock" />
+            <indexer id="catalog_product_price" />
         </dependencies>
     </indexer>
     <indexer id="hawksearch_content_pages" view_id="hawksearch_content_pages"
