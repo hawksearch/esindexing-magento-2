@@ -15,8 +15,8 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexing\Entity\Product;
 
+use HawkSearch\Connector\Logger\LoggerFactoryInterface;
 use HawkSearch\EsIndexing\Helper\ObjectHelper;
-use HawkSearch\EsIndexing\Logger\LoggerFactoryInterface;
 use HawkSearch\EsIndexing\Model\Indexing\AbstractEntityRebuild;
 use HawkSearch\EsIndexing\Model\Indexing\ContextInterface;
 use HawkSearch\EsIndexing\Model\Indexing\EntityTypePoolInterface;

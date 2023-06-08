@@ -13,6 +13,7 @@
 
 namespace HawkSearch\EsIndexing\Model\MessageQueue;
 
+use HawkSearch\Connector\Logger\LoggerFactoryInterface;
 use HawkSearch\EsIndexing\Api\Data\QueueOperationDataInterfaceFactory;
 use Magento\AsynchronousOperations\Api\SaveMultipleOperationsInterface;
 use Magento\AsynchronousOperations\Model\OperationRepositoryInterface;
@@ -87,7 +88,7 @@ class BulkPublisher extends AbstractSimpleObject implements BulkPublisherInterfa
      * @param IdentityGeneratorInterface $identityService
      * @param BulkManagementInterface $bulkManagement
      * @param UserContextInterface $userContext
-     * @param LoggerInterface $logger
+     * @param LoggerFactoryInterface $loggerFactory
      * @param SaveMultipleOperationsInterface $saveMultipleOperations
      * @param QueueOperationDataInterfaceFactory $queueOperationDataFactory
      * @param MessageManagerInterface $messageManager
@@ -100,7 +101,7 @@ class BulkPublisher extends AbstractSimpleObject implements BulkPublisherInterfa
         IdentityGeneratorInterface $identityService,
         BulkManagementInterface $bulkManagement,
         UserContextInterface $userContext,
-        LoggerInterface $logger,
+        LoggerFactoryInterface $loggerFactory,
         SaveMultipleOperationsInterface $saveMultipleOperations,
         QueueOperationDataInterfaceFactory $queueOperationDataFactory,
         MessageManagerInterface $messageManager,
@@ -113,7 +114,7 @@ class BulkPublisher extends AbstractSimpleObject implements BulkPublisherInterfa
         $this->identityService = $identityService;
         $this->bulkManagement = $bulkManagement;
         $this->userContext = $userContext;
-        $this->logger = $logger;
+        $this->logger = $loggerFactory->create();
         $this->saveMultipleOperations = $saveMultipleOperations;
         $this->queueOperationDataFactory = $queueOperationDataFactory;
         $this->bulkDescription = $bulkDescription;
