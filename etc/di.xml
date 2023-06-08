@@ -50,8 +50,6 @@
                 type="HawkSearch\EsIndexing\Model\LandingPageManagement"/>
     <preference for="HawkSearch\EsIndexing\Logger\LoggerFactoryInterface"
                 type="HawkSearch\EsIndexing\Logger\LoggerFactory"/>
-    <preference for="HawkSearch\EsIndexing\Logger\LoggerConfigInterface"
-                type="HawkSearch\EsIndexing\Logger\LoggerConfig"/>
     <preference for="HawkSearch\EsIndexing\Model\Indexing\AttributeHandlerInterface"
                 type="HawkSearch\EsIndexing\Model\Indexing\AttributeHandler\DataObjectHandler"/>
 

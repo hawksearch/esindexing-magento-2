@@ -14,8 +14,8 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexing;
 
+use HawkSearch\Connector\Logger\LoggerFactoryInterface;
 use HawkSearch\EsIndexing\Helper\ObjectHelper;
-use HawkSearch\EsIndexing\Logger\LoggerFactoryInterface;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
@@ -159,7 +159,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
         $currentPage = $searchCriteria->getCurrentPage() ?? 1;
 
         $storeId = (int)$this->storeManager->getStore()->getId();
-        $this->hawkLogger->debug(
+        $this->hawkLogger->info(
             sprintf(
                 "Starting indexing for Entity type %s, Store %d, Page %d, Page size %d, IDs %s",
                 $this->getEntityType()->getTypeName(),
@@ -173,7 +173,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
         $items = $this->getEntityType()->getItemsDataProvider()
             ->getItems($storeId, $entityIds, $currentPage, $pageSize);
 
-        $this->hawkLogger->debug(
+        $this->hawkLogger->info(
             sprintf(
                 "Collected %d items",
                 count($items)
@@ -181,11 +181,15 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
         );
 
         if (!($indexName = $this->indexingContext->getIndexName($storeId))) {
-            $this->hawkLogger->debug("No index selected. Termitating index rebuild.");
-            throw new LocalizedException(__('There is no index selected. Please run full reindexing and try again.'));
+            $e = new LocalizedException(
+                __('There is no index selected. Please run full reindexing and try again.')
+            );
+            $this->hawkLogger->error("Termitating index rebuild with exception:", ['exception' => $e]);
+
+            throw $e;
         }
 
-        $this->hawkLogger->debug(
+        $this->hawkLogger->info(
             sprintf(
                 "Picked index: %s",
                 $indexName
@@ -193,7 +197,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
         );
 
         $itemsToRemove = $this->getItemsToRemove($items, $entityIds);
-        $this->hawkLogger->debug(
+        $this->hawkLogger->info(
             sprintf(
                 "Items to be removed: %s",
                 implode(',', $itemsToRemove)
@@ -210,7 +214,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
             }
         }
 
-        $this->hawkLogger->debug(
+        $this->hawkLogger->info(
             sprintf(
                 "Items to be added: %s",
                 implode(',', array_keys($itemsToIndexNew))
@@ -218,7 +222,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
         );
         $this->addIndexItems($itemsToIndexNew, $indexName);
 
-        $this->hawkLogger->debug(
+        $this->hawkLogger->info(
             sprintf(
                 "Items to be updated: %s",
                 implode(',', array_keys($itemsToIndex))
