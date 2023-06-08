@@ -14,14 +14,11 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Logger;
 
-use Psr\Log\LoggerInterface;
+use HawkSearch\Connector\Logger\LoggerFactoryInterface as ParentLoggerFactoryInterface;
 
-interface LoggerFactoryInterface
+/**
+ * @deprecated 0.3.1
+ */
+interface LoggerFactoryInterface extends ParentLoggerFactoryInterface
 {
-    /**
-     * Create logger instance
-     *
-     * @return LoggerInterface
-     */
-    public function create();
 }

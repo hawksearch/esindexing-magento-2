@@ -18,7 +18,7 @@ use HawkSearch\EsIndexing\Api\Data\LandingPageInterface;
 use HawkSearch\EsIndexing\Api\LandingPageManagementInterface;
 use HawkSearch\EsIndexing\Api\Data\LandingPageInterfaceFactory;
 use HawkSearch\EsIndexing\Helper\ObjectHelper;
-use HawkSearch\EsIndexing\Logger\LoggerFactoryInterface;
+use HawkSearch\Connector\Logger\LoggerFactoryInterface;
 use HawkSearch\EsIndexing\Model\Indexing\AbstractEntityRebuild;
 use HawkSearch\EsIndexing\Model\Indexing\ContextInterface;
 use HawkSearch\EsIndexing\Model\Indexing\EntityTypePoolInterface;

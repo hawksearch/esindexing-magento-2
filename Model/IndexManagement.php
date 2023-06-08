@@ -20,7 +20,7 @@ use HawkSearch\Connector\Gateway\InstructionException;
 use HawkSearch\EsIndexing\Api\Data\EsIndexInterface;
 use HawkSearch\EsIndexing\Api\Data\IndexListInterface;
 use HawkSearch\EsIndexing\Api\IndexManagementInterface;
-use HawkSearch\EsIndexing\Logger\LoggerFactoryInterface;
+use HawkSearch\Connector\Logger\LoggerFactoryInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\NotFoundException;
 use Magento\Store\Model\StoreManagerInterface;
@@ -75,10 +75,10 @@ class IndexManagement implements IndexManagementInterface
      */
     public function initializeFullReindex()
     {
-        $this->hawkLogger->debug(sprintf("--- initializeFullReindex STARTED ---"));
+        $this->hawkLogger->info("--- initializeFullReindex STARTED ---");
 
         $indexName = $this->getIndexName();
-        $this->hawkLogger->debug(sprintf("Non current index selected: %s", $indexName,));
+        $this->hawkLogger->info(sprintf("Non current index selected: %s", $indexName));
 
         // remove non current index
         if ($indexName) {
@@ -86,9 +86,9 @@ class IndexManagement implements IndexManagementInterface
         }
 
         $newIndex = $this->createIndex();
-        $this->hawkLogger->debug(sprintf("New index created: %s", $newIndex->getIndexName()));
+        $this->hawkLogger->info(sprintf("New index created: %s", $newIndex->getIndexName()));
 
-        $this->hawkLogger->debug(sprintf("--- initializeFullReindex FINISHED ---"));
+        $this->hawkLogger->info("--- initializeFullReindex FINISHED ---");
     }
 
     /**
@@ -159,17 +159,17 @@ class IndexManagement implements IndexManagementInterface
      */
     public function switchIndices()
     {
-        $this->hawkLogger->debug(sprintf("--- switchIndices STARTED ---"));
+        $this->hawkLogger->info("--- switchIndices STARTED ---");
 
         $indexName = $this->getIndexName();
-        $this->hawkLogger->debug(sprintf("Non current index selected: %s", $indexName,));
+        $this->hawkLogger->info(sprintf("Non current index selected: %s", $indexName));
 
         if ($indexName) {
             $this->setCurrentIndex($indexName);
             $this->resetIndexCache();
         }
 
-        $this->hawkLogger->debug(sprintf("--- switchIndices FINISHED ---"));
+        $this->hawkLogger->info("--- switchIndices FINISHED ---");
     }
 
     /**
