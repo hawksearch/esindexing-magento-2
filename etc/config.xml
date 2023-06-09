@@ -16,7 +16,7 @@
     <default>
         <hawksearch_indexing_settings>
             <indexing>
-                <items_batch_size>500</items_batch_size>
+                <items_batch_size>125</items_batch_size>
             </indexing>
         </hawksearch_indexing_settings>
         <hawksearch_advanced_settings>
