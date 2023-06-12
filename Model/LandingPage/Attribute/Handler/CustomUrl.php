@@ -17,29 +17,10 @@ namespace HawkSearch\EsIndexing\Model\LandingPage\Attribute\Handler;
 use HawkSearch\EsIndexing\Model\Indexing\AttributeHandlerInterface;
 use Magento\Catalog\Api\Data\CategoryInterface;
 use Magento\Catalog\Model\Category;
-use Magento\CatalogUrlRewrite\Model\CategoryUrlRewriteGenerator;
 use Magento\Framework\DataObject;
-use Magento\UrlRewrite\Model\UrlFinderInterface;
-use Magento\UrlRewrite\Service\V1\Data\UrlRewrite;
 
 class CustomUrl implements AttributeHandlerInterface
 {
-    /**
-     * @var UrlFinderInterface
-     */
-    private $urlFinder;
-
-    /**
-     * CustomUrl constructor.
-     *
-     * @param UrlFinderInterface $urlFinder
-     */
-    public function __construct(
-        UrlFinderInterface $urlFinder
-    ) {
-        $this->urlFinder = $urlFinder;
-    }
-
     /**
      * @inheritDoc
      * @todo implement handler which can get other attribute values or has access to the final entity
@@ -47,28 +28,15 @@ class CustomUrl implements AttributeHandlerInterface
      */
     public function handle(DataObject $item, string $attributeCode)
     {
-        return sprintf("%s", $this->getRequestPath($item));
+        return sprintf("%s", $this->getUrl($item));
     }
 
     /**
      * @param Category|CategoryInterface $category
      * @return string|null
      */
-    protected function getRequestPath(Category $category)
+    protected function getUrl(Category $category)
     {
-        if ($category->hasData('request_path') && $category->getRequestPath() != null) {
-            return $category->getRequestPath();
-        }
-        $rewrite = $this->urlFinder->findOneByData(
-            [
-                UrlRewrite::ENTITY_ID => $category->getId(),
-                UrlRewrite::ENTITY_TYPE => CategoryUrlRewriteGenerator::ENTITY_TYPE,
-                UrlRewrite::STORE_ID => $category->getStoreId(),
-            ]
-        );
-        if ($rewrite) {
-            return $rewrite->getRequestPath();
-        }
-        return null;
+        return str_replace($category->getUrlInstance()->getBaseUrl(), '', $category->getUrl());
     }
 }
