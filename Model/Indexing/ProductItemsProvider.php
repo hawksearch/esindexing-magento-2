@@ -156,7 +156,12 @@ class ProductItemsProvider implements ItemsProviderInterface
         foreach ($products as $product) {
             $newCategoryIds = $product->getCategoryIds();
             foreach ($product->getCategoryIds() as $categoryId) {
-                $parentIds = $categories[(int)$categoryId]->getParentIds();
+                $category = $categories[(int)$categoryId] ?? null;
+                if ($category === null) {
+                    continue;
+                }
+
+                $parentIds = $category->getParentIds();
                 array_push($newCategoryIds, ...$parentIds);
             }
             $newCategoryIds = array_unique($newCategoryIds);
