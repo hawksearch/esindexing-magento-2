@@ -34,7 +34,7 @@
                 </field>
                 <field id="items_batch_size" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Maximal number of items per iteration</label>
-                    <comment>Default value is 500.</comment>
+                    <comment>Default value is 125.</comment>
                     <comment>
                         <![CDATA[
                             Specify product attributes.
