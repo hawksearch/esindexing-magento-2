@@ -21,15 +21,12 @@ use Magento\Catalog\Model\Category as CategoryModel;
 use Magento\Catalog\Model\CategoryFactory;
 use Magento\Catalog\Model\ResourceModel\Category as CategoryResource;
 use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCollectionFactory;
-use Magento\CatalogUrlRewrite\Model\CategoryUrlRewriteGenerator;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Store\Model\App\Emulation;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
-use Magento\UrlRewrite\Model\UrlFinderInterface;
-use Magento\UrlRewrite\Service\V1\Data\UrlRewrite;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -67,11 +64,6 @@ class SyncCategories extends Command
     private $categoryCollectionFactory;
 
     /**
-     * @var UrlFinderInterface
-     */
-    private $urlFinder;
-
-    /**
      * @var LandingPageInterfaceFactory
      */
     private $landingPageInterfaceFactory;
@@ -89,6 +81,12 @@ class SyncCategories extends Command
     /**
      * @param State $state
      * @param StoreManagerInterface $storeManager
+     * @param Emulation $emulation
+     * @param LandingPageManagementInterface $landingPageManagement
+     * @param CategoryCollectionFactory $categoryCollectionFactory
+     * @param LandingPageInterfaceFactory $landingPageInterfaceFactory
+     * @param CategoryFactory $categoryFactory
+     * @param CategoryResource $categoryResource
      * @param string|null $name
      */
     public function __construct(
@@ -97,7 +95,6 @@ class SyncCategories extends Command
         Emulation $emulation,
         LandingPageManagementInterface $landingPageManagement,
         CategoryCollectionFactory $categoryCollectionFactory,
-        UrlFinderInterface $urlFinder,
         LandingPageInterfaceFactory $landingPageInterfaceFactory,
         CategoryFactory $categoryFactory,
         CategoryResource $categoryResource,
@@ -110,7 +107,6 @@ class SyncCategories extends Command
         $this->emulation = $emulation;
         $this->landingPageManagement = $landingPageManagement;
         $this->categoryCollectionFactory = $categoryCollectionFactory;
-        $this->urlFinder = $urlFinder;
         $this->landingPageInterfaceFactory = $landingPageInterfaceFactory;
         $this->categoryFactory = $categoryFactory;
         $this->categoryResource = $categoryResource;
@@ -396,20 +392,7 @@ class SyncCategories extends Command
      */
     public function getRequestPath(Category $category)
     {
-        if ($category->hasData('request_path') && $category->getRequestPath() != null) {
-            return $category->getRequestPath();
-        }
-        $rewrite = $this->urlFinder->findOneByData(
-            [
-                UrlRewrite::ENTITY_ID => $category->getId(),
-                UrlRewrite::ENTITY_TYPE => CategoryUrlRewriteGenerator::ENTITY_TYPE,
-                UrlRewrite::STORE_ID => $category->getStoreId(),
-            ]
-        );
-        if ($rewrite) {
-            return $rewrite->getRequestPath();
-        }
-        return null;
+        return str_replace($category->getUrlInstance()->getBaseUrl(), '', $category->getUrl());
     }
 
     /**
