@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -14,73 +14,14 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Logger;
 
-use Magento\Framework\ObjectManagerInterface;
-use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
+use HawkSearch\Connector\Logger\LoggerFactory as ParentLoggerFactory;
 
 /**
  * Factory produces logger based on runtime configuration.
  *
- * phpcs:disable MEQP2.Classes.ObjectManager
+ * @deprecated 0.3.1
  */
-class LoggerFactory implements LoggerFactoryInterface
+class LoggerFactory extends ParentLoggerFactory
 {
-    /**
-     * @var ObjectManagerInterface
-     */
-    private $objectManager;
 
-    /**
-     * @var LoggerConfigInterface
-     */
-    private $loggerConfig;
-
-    /**
-     * Instance name to create
-     *
-     * @var string
-     */
-    private $instanceName = null;
-
-    /**
-     * DebuggerFactory constructor.
-     *
-     * @param objectManagerInterface $objectManager
-     * @param string $instanceName
-     */
-    public function __construct(
-        ObjectManagerInterface $objectManager,
-        LoggerConfigInterface $loggerConfig,
-        $instanceName = '\\Psr\\Log\\LoggerInterface'
-    ) {
-        $this->objectManager = $objectManager;
-        $this->loggerConfig = $loggerConfig;
-        $this->instanceName = $instanceName;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function create()
-    {
-        if (!$this->loggerConfig->isEnabled()) {
-            return $this->objectManager->get(NullLogger::class);
-        }
-
-        $object = $this->objectManager->get($this->instanceName);
-
-        if (!($object instanceof LoggerInterface)) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    '%s constructor expects the $instanceName to implement %s; received %s',
-                    self::class,
-                    LoggerInterface::class,
-                    get_class($object)
-                )
-            );
-        }
-
-
-        return $object;
-    }
 }
