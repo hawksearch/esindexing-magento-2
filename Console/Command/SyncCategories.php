@@ -193,13 +193,13 @@ class SyncCategories extends Command
             function ($a, $b) {
                 /** @var LandingPageInterface $a */
                 /** @var LandingPageInterface $b */
-                return strcmp($a->getCustomUrl(), $b->getCustomUrl());
+                return strcmp((string) $a->getCustomUrl(), (string) $b->getCustomUrl());
             }
         );
         usort(
             $mageList,
             function ($a, $b) {
-                return strcmp($a['hawkurl'], $b['hawkurl']);
+                return strcmp((string) $a['hawkurl'], (string) $b['hawkurl']);
             }
         );
 
@@ -216,12 +216,12 @@ class SyncCategories extends Command
                 // only left left to process
                 $sc = -1;
             } else {
-                $sc = strcmp($hawkList[$left]->getCustomUrl(), $mageList[$right]['hawkurl']);
+                $sc = strcmp((string) $hawkList[$left]->getCustomUrl(), (string) $mageList[$right]['hawkurl']);
             }
             $customVal = null;
             if ($sc < 0) {
                 //Hawk has page Magento doesn't want managed, delete, increment left
-                if (substr($hawkList[$left]->getCustom(), 0, strlen('__mage_catid_')) == '__mage_catid_') {
+                if (substr((string) $hawkList[$left]->getCustom(), 0, strlen('__mage_catid_')) == '__mage_catid_') {
                     /*$resp = $this->getHawkResponse(
                         Zend_Http_Client::DELETE,
                         self::HAWK_LANDING_PAGE_URL . $hawkList[$left]['pageid']
@@ -392,7 +392,7 @@ class SyncCategories extends Command
      */
     public function getRequestPath(Category $category)
     {
-        return str_replace($category->getUrlInstance()->getBaseUrl(), '', $category->getUrl());
+        return str_replace($category->getUrlInstance()->getBaseUrl(), '', (string) $category->getUrl());
     }
 
     /**
