@@ -1096,6 +1096,12 @@
     </type>
 
 
+    <type name="HawkSearch\EsIndexing\Model\Cron\RetryFailedOperations">
+        <arguments>
+            <argument name="bulkRetryManagement" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\RetryBulkManagement</argument>
+        </arguments>
+    </type>
+
     <!-- END Types -->
 
     <!-- Plugins -->
@@ -1142,6 +1148,8 @@
     <type name="Magento\Catalog\Model\ResourceModel\Attribute">
         <plugin name="hawksearchIndexerAttribute" type="HawkSearch\EsIndexing\Plugin\Product\Product\AttributePlugin"/>
     </type>
-
+    <type name="Magento\Catalog\Model\ResourceModel\Attribute">
+        <plugin name="hawksearchIndexerAttribute" type="HawkSearch\EsIndexing\Plugin\Product\Product\AttributePlugin"/>
+    </type>
     <!-- END Plugins -->
 </config>
