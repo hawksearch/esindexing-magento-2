@@ -274,16 +274,28 @@ class SyncCategories extends Command
                 unset($existingCustom[$customVal]);
             }
         }
+
+        $batchSize = 125;
+
         if ($deletePages) {
-            $this->landingPageManagement->deleteLandingPages($deletePages);
+            $chunks = array_chunk($deletePages, $batchSize);
+            foreach ($chunks as $chunk) {
+                $this->landingPageManagement->deleteLandingPages($chunk);
+            }
         }
 
         if ($updatePages) {
-            $this->landingPageManagement->updateLandingPages($updatePages);
+            $chunks = array_chunk($updatePages, $batchSize);
+            foreach ($chunks as $chunk) {
+                $this->landingPageManagement->updateLandingPages($chunk);
+            }
         }
 
         if ($addPages) {
-            $this->landingPageManagement->addLandingPages($addPages);
+            $chunks = array_chunk($addPages, $batchSize);
+            foreach ($chunks as $chunk) {
+                $this->landingPageManagement->addLandingPages($chunk);
+            }
         }
 
         $this->emulation->stopEnvironmentEmulation();
