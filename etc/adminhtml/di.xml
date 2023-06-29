@@ -18,8 +18,4 @@
             <argument name="bulkManagement" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\RetryBulkManagement</argument>
         </arguments>
     </type>
-
-    <type name="Magento\AsynchronousOperations\Model\BulkStatus">
-        <plugin name="hawksearchExcludeIndexingBulks" type="HawkSearch\EsIndexing\Plugin\AsynchronousOperations\BulkStatusPlugin"/>
-    </type>
 </config>
