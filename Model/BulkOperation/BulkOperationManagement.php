@@ -170,6 +170,7 @@ class BulkOperationManagement
         $collection = $this->operationCollectionFactory->create();
 
         $collection->getSelect()
+            ->reset(\Magento\Framework\DB\Select::COLUMNS)
             ->columns(
                 [
                     'id' => 'bulk_uuid',
@@ -182,7 +183,7 @@ class BulkOperationManagement
             )
             ->group('bulk_uuid');
 
-        $bulkUuids = array_keys($collection->toOptionHash());
+        $bulkUuids = $collection->getConnection()->fetchCol($collection->getSelect());
 
         /** @var BulkCollection $collection */
         $collection = $this->bulkCollectionFactory->create();
