@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Ui\Component\DataProvider\BulkListing;
 
-use HawkSearch\EsIndexing\Model\MessageQueue\IndexingOperationValidator;
+use HawkSearch\EsIndexing\Model\BulkOperation\BulkOperationManagement;
 use Magento\AsynchronousOperations\Model\BulkStatus\CalculatedStatusSql;
 use Magento\AsynchronousOperations\Model\ResourceModel\Operation\CollectionFactory as OperationCollectionFactory;
 use Magento\AsynchronousOperations\Model\StatusMapper;
@@ -159,7 +159,7 @@ class SearchResult extends \Magento\AsynchronousOperations\Ui\Component\DataProv
                     'allowed_topic_count' => new \Zend_Db_Expr(
                         'COUNT(
                             IF(
-                                topic_name LIKE "'. IndexingOperationValidator::OPERATION_TOPIC_PREFIX .'%",
+                                topic_name LIKE "'. BulkOperationManagement::OPERATION_TOPIC_PREFIX .'%",
                                 1,
                                 NULL
                             )

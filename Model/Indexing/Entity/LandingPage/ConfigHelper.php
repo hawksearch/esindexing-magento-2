@@ -19,8 +19,6 @@ use HawkSearch\EsIndexing\Model\Indexing\AbstractConfigHelper;
 
 class ConfigHelper extends AbstractConfigHelper
 {
-    public const BATCH_SIZE = 500;
-
     /**
      * @var int|null
      */
@@ -31,7 +29,7 @@ class ConfigHelper extends AbstractConfigHelper
         int $batchSize = null
     ) {
         parent::__construct($indexingConfig);
-        $this->batchSize = $batchSize ?? self::BATCH_SIZE;
+        $this->batchSize = $batchSize;
     }
 
     /**
@@ -48,6 +46,6 @@ class ConfigHelper extends AbstractConfigHelper
      */
     public function getBatchSize($store = null)
     {
-        return $this->batchSize;
+        return $this->batchSize ?? parent::getBatchSize($store);
     }
 }

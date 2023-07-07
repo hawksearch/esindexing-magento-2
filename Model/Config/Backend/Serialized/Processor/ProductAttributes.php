@@ -17,6 +17,7 @@ namespace HawkSearch\EsIndexing\Model\Config\Backend\Serialized\Processor;
 use HawkSearch\Connector\Api\Data\HawkSearchFieldInterface;
 use HawkSearch\Connector\Gateway\Instruction\InstructionManagerPool;
 use HawkSearch\Connector\Gateway\InstructionException;
+use HawkSearch\Connector\Logger\LoggerFactoryInterface;
 use Magento\Catalog\Api\ProductAttributeRepositoryInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\NotFoundException;
@@ -45,16 +46,22 @@ class ProductAttributes implements ValueProcessorInterface
      */
     private $logger;
 
+    /**
+     * @param InstructionManagerPool $instructionManagerPool
+     * @param ProductAttributeRepositoryInterface $productAttributeRepository
+     * @param ManagerInterface $message
+     * @param LoggerFactoryInterface $loggerFactory
+     */
     public function __construct(
         InstructionManagerPool $instructionManagerPool,
         ProductAttributeRepositoryInterface $productAttributeRepository,
         ManagerInterface $message,
-        LoggerInterface $logger
+        LoggerFactoryInterface $loggerFactory
     ) {
         $this->instructionManagerPool = $instructionManagerPool;
         $this->productAttributeRepository = $productAttributeRepository;
         $this->message = $message;
-        $this->logger = $logger;
+        $this->logger = $loggerFactory->create();
     }
 
     /**

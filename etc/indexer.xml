@@ -17,17 +17,20 @@
              shared_index="hawksearch_entities_shared">
         <title translate="true">Hawksearch Products</title>
         <description translate="true">
-            Rebuild products index.
+            Rebuild products index
         </description>
         <dependencies>
             <indexer id="hawksearch_entities" />
+            <indexer id="catalog_category_product" />
+            <indexer id="cataloginventory_stock" />
+            <indexer id="catalog_product_price" />
         </dependencies>
     </indexer>
     <indexer id="hawksearch_content_pages" view_id="hawksearch_content_pages"
              class="HawkSearch\EsIndexing\Model\Indexer\ContentPage" shared_index="hawksearch_entities_shared">
         <title translate="true">Hawksearch Content Pages</title>
         <description translate="true">
-            Rebuild content pages index.
+            Rebuild content pages index
         </description>
         <dependencies>
             <indexer id="hawksearch_entities" />
@@ -37,7 +40,7 @@
              class="HawkSearch\EsIndexing\Model\Indexer\Category" shared_index="hawksearch_entities_shared">
         <title translate="true">Hawksearch Categories</title>
         <description translate="true">
-            Rebuild categories index.
+            Rebuild categories index
         </description>
         <dependencies>
             <indexer id="hawksearch_entities" />

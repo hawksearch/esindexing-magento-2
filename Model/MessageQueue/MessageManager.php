@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\MessageQueue;
 
+use HawkSearch\Connector\Logger\LoggerFactoryInterface;
 use HawkSearch\EsIndexing\Api\IndexManagementInterface;
 use Magento\Framework\Api\AbstractSimpleObject;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -41,16 +42,16 @@ class MessageManager extends AbstractSimpleObject implements MessageManagerInter
 
     /**
      * @param StoreManagerInterface $storeManager
-     * @param LoggerInterface $logger
+     * @param LoggerFactoryInterface $loggerFactory
      * @param IndexManagementInterface $indexManagement
      */
     public function __construct(
         StoreManagerInterface $storeManager,
-        LoggerInterface $logger,
+        LoggerFactoryInterface $loggerFactory,
         IndexManagementInterface $indexManagement
     ) {
         $this->storeManager = $storeManager;
-        $this->logger = $logger;
+        $this->logger = $loggerFactory->create();
         $this->indexManagement = $indexManagement;
     }
 
