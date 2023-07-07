@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2023-07-07
+
+## FEATURES
+- update parent products index when child is changed ([48019c6](https://github.com/hawksearch/esindexing-magento-2/commit/48019c6b78330033dbd59c7cc971a6bb6c518c81))
+  When child product is updated/removed then all parents are updated in the index.
+  When child product is assigned to parent product then parent one is updated in the index.
+  Refs: [#HC-1403](https://bridgeline.atlassian.net/browse/HC-1403)
+
+## FIXES
+- duplicate async operations with the same ID in collection ([163daf5](https://github.com/hawksearch/esindexing-magento-2/commit/163daf5b25894bc9fd903b267cfc83c60198c322))
+- invalid array index because of nonexistent category when indexing ([ed3253b](https://github.com/hawksearch/esindexing-magento-2/commit/ed3253b00786c27ed98687bb48cb15cc4bf037ac))
+  Refs: [#HC-1437](https://bridgeline.atlassian.net/browse/HC-1437)
+- class LoggerFactory implements LoggerFactoryInterface ([88e4817](https://github.com/hawksearch/esindexing-magento-2/commit/88e4817cd0238aa0ffd4039f12ad6b582b6b8a47))
+  Deprecated LoggerFactory didn't implement deprecated LoggerFactoryInterface
+  Refs [#HC-1441](https://bridgeline.atlassian.net/browse/HC-1441)
+- categories with empty URL break LandingPage update API ([a8e5123](https://github.com/hawksearch/esindexing-magento-2/commit/a8e512342582d569152e728695cd67ad054d14e5))
+  Refs [#HC-1442](https://bridgeline.atlassian.net/browse/HC-1442)
+- reduce items_batch_size config value to 125 ([ca95985](https://github.com/hawksearch/esindexing-magento-2/commit/ca959858399e0193a3797ce847286879580c6134))
+  Refs: [#HC-1437](https://bridgeline.atlassian.net/browse/HC-1437)
+- update logger file location ([0d4c3cf](https://github.com/hawksearch/esindexing-magento-2/commit/0d4c3cf1db073db6054c5bf20263b57b3a58683e))
+  Refs: [#HC-1437](https://bridgeline.atlassian.net/browse/HC-1437)
+
 ## [0.3.0] - 2023-04-06
 ### ADDED
 - Rework UI interface for mapping Hawksearch fields to  Magento attributes ([#5](https://github.com/hawksearch/esindexing-magento-2/pull/5)),
@@ -75,5 +97,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.1.0
 Initial stable release
 
-[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.4.0...HEAD
+[0.3.0]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.2.0...v0.3.0
