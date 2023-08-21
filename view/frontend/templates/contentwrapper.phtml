@@ -55,7 +55,7 @@ $getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
     }
 
     function getID(uuid) {
-        if (uuid.includes('_')) {
+        if (uuid && uuid.includes('_')) {
             return uuid.split('_').pop();
         }
     }
