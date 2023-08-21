@@ -80,7 +80,7 @@
                 <label translate="true">Start Time</label>
             </settings>
         </column>
-        <column name="last_time" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date" sortOrder="40">
+        <column name="last_time" class="HawkSearch\EsIndexing\Ui\Component\Listing\Column\StartTime" component="Magento_Ui/js/grid/columns/date" sortOrder="40">
             <settings>
                 <filter>dateRange</filter>
                 <dataType>date</dataType>
