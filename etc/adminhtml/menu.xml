@@ -22,7 +22,7 @@
             module="HawkSearch_EsIndexing"
             sortOrder="500"
             parent="Magento_Backend::stores"
-            dependsOnModule="Magento_Logging"
+            dependsOnModule="Magento_AsynchronousOperations"
             resource="HawkSearch_EsIndexing::stores_hawksearch"
         />
         <add

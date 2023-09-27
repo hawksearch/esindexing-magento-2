@@ -17,7 +17,6 @@
     <module name="HawkSearch_EsIndexing">
         <sequence>
             <module name="HawkSearch_Connector"/>
-            <module name="Magento_CatalogStaging"/>
             <module name="Magento_Review"/>
             <module name="Magento_Indexer"/>
             <module name="Magento_AsynchronousOperations"/>

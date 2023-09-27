@@ -64,15 +64,22 @@ $getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
 
 <script id="vue-hawksearch-result-item-grid" type="x-template">
     <div class="item product product-item">
-        <div class="product-item-info" data-container="product-grid" @click="onClick">
-            <span class="product-image-container" style="width:215px;">
-                <span class="product-image-wrapper" style="padding-bottom: 125%;">
-                    <img class="product-image-photo" v-bind:src="getField('image_url')" />
+        <div class="product-item-info" data-container="product-grid">
+            <a :href="getLink()" @click="onClick" class="product photo product-item-photo">
+                <span class="product-image-container" style="width:215px;">
+                    <span class="product-image-wrapper" style="padding-bottom: 125%;">
+                        <img class="product-image-photo" v-bind:src="getField('image_url')" />
+                    </span>
                 </span>
-            </span>
+            </a>
             <div class="product details product-item-details">
-                <span class="product name product-item-name">
-                    {{ getField('name') }}
+                <span class="product name product-item-name"><a
+                        class="product-item-link"
+                        :title="getField('name')"
+                        :href="getLink()"
+                        @click="onClick">
+                        {{ getField('name') }}</a>
+
                 </span>
                 <div class="price-box price-final_price" data-role="priceBox" data-product-id="260" data-price-box="product-id-260">
                     <span class="normal-price">
@@ -105,15 +112,21 @@ $getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
 
 <script id="vue-hawksearch-result-item-list" type="x-template">
     <div class="item product product-item">
-        <div class="product-item-info" data-container="product-grid" @click="onClick">
-            <span class="product-image-container" style="width:215px;">
-                <span class="product-image-wrapper" style="padding-bottom: 125%;">
-                    <img class="product-image-photo" v-bind:src="getField('image_url')" />
+        <div class="product-item-info" data-container="product-grid">
+            <a :href="getLink()" @click="onClick" class="product photo product-item-photo">
+                <span class="product-image-container" style="width:215px;">
+                    <span class="product-image-wrapper" style="padding-bottom: 125%;">
+                        <img class="product-image-photo" v-bind:src="getField('image_url')" />
+                    </span>
                 </span>
-            </span>
+            </a>
             <div class="product details product-item-details">
-                <span class="product name product-item-name">
-                    {{ getField('name') }}
+                <span class="product name product-item-name"><a
+                        class="product-item-link"
+                        :title="getField('name')"
+                        :href="getLink()"
+                        @click="onClick">
+                        {{ getField('name') }}</a>
                 </span>
                 <div class="price-box price-final_price" data-role="priceBox" data-product-id="260" data-price-box="product-id-260">
                     <span class="normal-price">
