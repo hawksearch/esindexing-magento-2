@@ -1,7 +1,7 @@
 {
     "name": "hawksearch/esindexing-magento-2",
     "license": "proprietary",
-    "description": "Hawksearch ES Indexing module for Magento 2",
+    "description": "Hawksearch ES Indexing module for Magento Open Source and Adobe Commerce",
     "type": "magento2-module",
     "version": "0.4.0",
     "require": {

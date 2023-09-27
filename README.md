@@ -1,4 +1,4 @@
-# Hawksearch for Magento 2 (ElasticSearch based Version)
+# Hawksearch for Magento Open Source and Adobe Commerce (ElasticSearch based Version)
 
 ## Introduction
 The Hawksearch service enables online retailers and publishers the ability to drive a rich, compelling user experience. 
@@ -19,8 +19,10 @@ If you have any questions please read our [Support FAQ](https://hawksearch.atlas
 Check out our [Getting Started](https://hawksearch.atlassian.net/wiki/spaces/CON/pages/1626112046/Getting+Started+with+Hawksearch+ES) 
 guide and start using [HawkSearch](https://www.hawksearch.com/ ) for Magento 2.
 
-## Magento Version Support
-Supports Magento versions  2.4.0 - 2.4.6
+## Platform Version Support
+
+* Magento Open Source: 2.4.0 - 2.4.6
+* Adobe Commerce: 2.4.0 - 2.4.6
 
 ## Installation Instructions
 
@@ -37,7 +39,7 @@ bin/magento module:enable --clear-static-content HawkSearch_Connector HawkSearch
 bin/magento setup:upgrade
 bin/magento cache:flush
 ```
-3. Proceed with [Getting Started](https://hawksearch.atlassian.net/wiki/spaces/CON/pages/1626112046/Getting+Started+with+Hawksearch+ES) guide
+3. Proceed with [Getting Started](https://bridgeline.atlassian.net/wiki/spaces/CON/pages/3468468312/Getting+Started+with+Hawksearch+ES) guide
 
 ## Contribution
 Coming soon
