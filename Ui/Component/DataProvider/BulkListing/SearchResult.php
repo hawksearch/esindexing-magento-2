@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Ui\Component\DataProvider\BulkListing;
 
 use HawkSearch\EsIndexing\Model\BulkOperation\BulkOperationManagement;
+use HawkSearch\EsIndexing\Model\ResourceModel\AsynchronousOperations\Operation;
 use Magento\AsynchronousOperations\Model\BulkStatus\CalculatedStatusSql;
 use Magento\AsynchronousOperations\Model\ResourceModel\Operation\CollectionFactory as OperationCollectionFactory;
 use Magento\AsynchronousOperations\Model\StatusMapper;
@@ -33,6 +34,11 @@ class SearchResult extends \Magento\AsynchronousOperations\Ui\Component\DataProv
      * @var OperationCollectionFactory
      */
     private $operationCollectionFactory;
+
+    /**
+     * @var Operation
+     */
+    private $operationResourceConfig;
 
     /**
      * SearchResult constructor.
@@ -59,11 +65,13 @@ class SearchResult extends \Magento\AsynchronousOperations\Ui\Component\DataProv
         StatusMapper $statusMapper,
         CalculatedStatusSql $calculatedStatusSql,
         OperationCollectionFactory $operationCollectionFactory,
+        Operation $operationResourceConfig,
         $mainTable = 'magento_bulk',
         $resourceModel = null,
         $identifierName = 'uuid'
     ) {
         $this->operationCollectionFactory = $operationCollectionFactory;
+        $this->operationResourceConfig = $operationResourceConfig;
         parent::__construct(
             $entityFactory,
             $logger,
@@ -107,66 +115,69 @@ class SearchResult extends \Magento\AsynchronousOperations\Ui\Component\DataProv
     protected function getOperationsSubQuery()
     {
         $collection = $this->operationCollectionFactory->create();
-        return $collection->getSelect()
-            ->reset(Select::COLUMNS)
-            ->columns(
-                [
-                    'bulk_uuid',
-                    'last_time' => new \Zend_Db_Expr('MAX(started_at)'),
-                    'is_fullreindex' => new \Zend_Db_Expr(
-                        'MAX(
+        $columns = [
+            'bulk_uuid',
+            'is_fullreindex' => new \Zend_Db_Expr(
+                'MAX(
                             IF(
                                 topic_name LIKE "hawksearch.indexing.fullreindex.start",
                                 1,
                                 0
                             )
                         )'
-                    ),
-                    'status_complete' => new \Zend_Db_Expr(
-                        'COUNT(
+            ),
+            'status_complete' => new \Zend_Db_Expr(
+                'COUNT(
                             IF(
                                 status = '. OperationInterface::STATUS_TYPE_COMPLETE .',
                                 1,
                                 NULL
                             )
                         )'
-                    ),
-                    'status_failed' => new \Zend_Db_Expr(
-                        'COUNT(
+            ),
+            'status_failed' => new \Zend_Db_Expr(
+                'COUNT(
                             IF(
                                 status IN ('.
-                                    implode(',', [
-                                        OperationInterface::STATUS_TYPE_RETRIABLY_FAILED,
-                                        OperationInterface::STATUS_TYPE_NOT_RETRIABLY_FAILED,
-                                        OperationInterface::STATUS_TYPE_REJECTED,
-                                    ])
-                                .'),
+                implode(',', [
+                    OperationInterface::STATUS_TYPE_RETRIABLY_FAILED,
+                    OperationInterface::STATUS_TYPE_NOT_RETRIABLY_FAILED,
+                    OperationInterface::STATUS_TYPE_REJECTED,
+                ])
+                .'),
                                 1,
                                 NULL
                             )
                         )'
-                    ),
-                    'status_open' => new \Zend_Db_Expr(
-                        'COUNT(
+            ),
+            'status_open' => new \Zend_Db_Expr(
+                'COUNT(
                             IF(
                                 status = '. OperationInterface::STATUS_TYPE_OPEN .',
                                 1,
                                 NULL
                             )
                         )'
-                    ),
-                    'all_count' => new \Zend_Db_Expr('COUNT(*)'),
-                    'allowed_topic_count' => new \Zend_Db_Expr(
-                        'COUNT(
+            ),
+            'all_count' => new \Zend_Db_Expr('COUNT(*)'),
+            'allowed_topic_count' => new \Zend_Db_Expr(
+                'COUNT(
                             IF(
                                 topic_name LIKE "'. BulkOperationManagement::OPERATION_TOPIC_PREFIX .'%",
                                 1,
                                 NULL
                             )
                         )'
-                    ),
-                ]
-            )
+            ),
+        ];
+
+        if ($this->operationResourceConfig->isStartedAtColumnExists()) {
+            $columns['last_time'] = new \Zend_Db_Expr('MAX(started_at)');
+        }
+
+        return $collection->getSelect()
+            ->reset(Select::COLUMNS)
+            ->columns($columns)
             ->group('bulk_uuid');
     }
 }

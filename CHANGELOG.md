@@ -5,7 +5,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+
+## [0.4.1] - 2023-09-27
+
+## FIXES
+* __fix: remove dependency on CatalogStaging module__
+  ([f755f93](https://github.com/hawksearch/esindexing-magento-2/commit/f755f9310c551984fa7330b9a1a655bc4ac16f0c))
+  
+  Unable to install the extension because of compatibility issue:
+  magento/module-catalog-staging is exclusive to Adobe Commerce only.
+  Make v0.4.0 features compatible with Magento Open Source.
+
+  Ref #HC-1480
+
+* __fix: open links in new tab__ ([8d2f64f](https://github.com/hawksearch/esindexing-magento-2/commit/8d2f64f3762c4fca59a1870f1f663fd191804b22))
+  
+  There were not possible to open links
+  Fix issues in @hawksearch/vue library and update it to v0.9.98
+
+  Fixes HC-1474, HS-2601
+
+* __fix: unknown column started_at__ ([49a358e](https://github.com/hawksearch/esindexing-magento-2/commit/49a358ea999c26b050dbe9ed2c973bd268e14d9a))
+  
+  On Magento Open Source and Adobe Commerce version 2.4.3 and less
+  was no column ‘started_at’ in the  magento_operation table.
+  As a result, an error occurred on the page Indexing Bulks
+
+  Fixes HC-1472
+
+* __fix: make Indexing Bulks menu visible on Magento Open Source__ ([803a986](https://github.com/hawksearch/esindexing-magento-2/commit/803a986227f3f4f02a8f2ffea816854fed5af7e4))
+
+* __fix: js error cannot read properties of undefined in getID function__ ([07f5351](https://github.com/hawksearch/esindexing-magento-2/commit/07f53511d998841896f57a0e05c8497652634877))
 
 ## [0.4.0] - 2023-07-07
 
@@ -97,6 +127,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.1.0
 Initial stable release
 
-[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.4.0...HEAD
-[0.3.0]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.3.0...v0.4.0
+[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.4.0...v0.4.1
+[0.4.0]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.2.0...v0.3.0
