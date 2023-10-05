@@ -67,4 +67,38 @@
             </argument>
         </arguments>
     </virtualType>
+
+    <virtualType name="HawkSearchCartItemsToAddDataStorage" type="HawkSearch\EsIndexing\Service\DataStorage">
+        <arguments>
+            <argument name="name" xsi:type="string">HawkSearchCartItemsToAddDataStorage</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearchCartItemsToRemoveDataStorage" type="HawkSearch\EsIndexing\Service\DataStorage">
+        <arguments>
+            <argument name="name" xsi:type="string">HawkSearchCartItemsToRemoveDataStorage</argument>
+        </arguments>
+    </virtualType>
+    <type name="HawkSearch\EsIndexing\Plugin\Quote\OnCartAddTrackingEventPlugin">
+        <arguments>
+            <argument name="cartItemsToAddDataStorage" xsi:type="object">HawkSearchCartItemsToAddDataStorage</argument>
+        </arguments>
+    </type>
+    <type name="HawkSearch\EsIndexing\Plugin\Quote\OnCartRemoveTrackingEventPlugin">
+        <arguments>
+            <argument name="cartItemsToRemoveDataStorage" xsi:type="object">HawkSearchCartItemsToRemoveDataStorage</argument>
+        </arguments>
+    </type>
+    <type name="HawkSearch\EsIndexing\Observer\SendCookieOnCartCompleteObserver">
+        <arguments>
+            <argument name="cartItemsToAddDataStorage" xsi:type="object">HawkSearchCartItemsToAddDataStorage</argument>
+            <argument name="cartItemsToRemoveDataStorage" xsi:type="object">HawkSearchCartItemsToRemoveDataStorage</argument>
+        </arguments>
+    </type>
+
+    <!-- Plugins -->
+    <type name="Magento\Quote\Model\Quote">
+        <plugin name="hawksearch_tracking_event_on_cart_add" type="HawkSearch\EsIndexing\Plugin\Quote\OnCartAddTrackingEventPlugin" />
+        <plugin name="hawksearch_tracking_event_on_cart_remove" type="HawkSearch\EsIndexing\Plugin\Quote\OnCartRemoveTrackingEventPlugin" />
+    </type>
+    <!-- END Plugins -->
 </config>

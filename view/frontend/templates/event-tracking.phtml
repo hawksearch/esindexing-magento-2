@@ -1,0 +1,40 @@
+<?php
+/**
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ */
+declare(strict_types=1);
+
+/** @var \HawkSearch\EsIndexing\Block\Tracking $block */
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Magento\Framework\Serialize\SerializerInterface $serializer */
+
+use HawkSearch\EsIndexing\Model\Config\EventTracking;
+
+$serializer = $block->getData('serializer');
+?>
+
+<script type="text/x-magento-init">
+{
+    "*": {
+        "HawkSearch_EsIndexing/js/event-tracking": {
+            "excludeEvents": [],
+            "currencyCode":  "<?= $escaper->escapeJs($block->getCurrencyCode()) ?>",
+            "orderData": <?= /* @noEscape */ $serializer->serialize($block->getOrderData()) ?>
+        },
+        "HawkSearch_EsIndexing/js/event-tracking-cart": {
+            "currencyCode":  "<?= $escaper->escapeJs($block->getCurrencyCode()) ?>",
+            "cookieAddToCart": "<?= /* @noEscape */ EventTracking::COOKIE_ADD_TO_CART_NAME ?>",
+            "cookieRemoveFromCart": "<?= /* @noEscape */ EventTracking::COOKIE_REMOVE_FROM_CART_NAME ?>",
+            "productIdTemplate": "<?= $escaper->escapeJs($block->getProductIdTemplate()) ?>"
+        }
+    }
+}
+</script>

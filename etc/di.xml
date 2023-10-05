@@ -82,6 +82,12 @@
             <argument name="configGroup" xsi:type="string">advanced</argument>
         </arguments>
     </type>
+    <type name="HawkSearch\EsIndexing\Model\Config\EventTracking">
+        <arguments>
+            <argument name="configRootPath" xsi:type="string">hawksearch_event_tracking_settings</argument>
+            <argument name="configGroup" xsi:type="string">general</argument>
+        </arguments>
+    </type>
     <!-- Configs -->
 
     <!-- Instructions infrastructure -->

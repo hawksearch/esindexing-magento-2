@@ -33,7 +33,19 @@
                     <argument name="id" xsi:type="string">results</argument>
                 </action>
             </block>
+            <block class="Magento\Framework\View\Element\Template"
+                   template="HawkSearch_EsIndexing::js.phtml"
+                   name="hawksearch.esindexing.js"
+                   as="hawksearch.esindexing.js">
+            </block>
         </referenceBlock>
+        <referenceContainer name="after.body.start">
+            <block class="HawkSearch\EsIndexing\Block\Tracking"
+                   template="HawkSearch_EsIndexing::event-tracking.phtml"
+                   name="hawksearch.esindexing.eventtracking"
+                   as="hawksearch.esindexing.eventtracking">
+            </block>
+        </referenceContainer>
         <referenceBlock name="top.search">
             <action method="setTemplate">
                 <argument name="template" xsi:type="string">HawkSearch_EsIndexing::top-search.phtml</argument>

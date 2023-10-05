@@ -16,4 +16,13 @@
     <event name="layout_load_before">
         <observer name="hawksearch_esindexing_layout" instance="HawkSearch\EsIndexing\Observer\LayoutUpdateHandler" />
     </event>
+    <event name="checkout_onepage_controller_success_action">
+        <observer name="hawksearch_tracking_order_success" instance="HawkSearch\EsIndexing\Observer\TrackSaleEventOnOrderSuccessObserver" />
+    </event>
+    <event name="multishipping_checkout_controller_success_action">
+        <observer name="hawksearch_tracking_order_success" instance="HawkSearch\EsIndexing\Observer\TrackSaleEventOnOrderSuccessObserver" />
+    </event>
+    <event name="controller_action_postdispatch">
+        <observer name="hawksearch_tracking_postdispatch" instance="HawkSearch\EsIndexing\Observer\SendCookieOnCartCompleteObserver" />
+    </event>
 </config>
