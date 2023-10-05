@@ -15,7 +15,6 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Logger;
 
 use HawkSearch\Connector\Logger\LoggerFactory as ParentLoggerFactory;
-use HawkSearch\EsIndexing\Logger\LoggerFactoryInterface;
 
 /**
  * Factory produces logger based on runtime configuration.
