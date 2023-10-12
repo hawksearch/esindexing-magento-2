@@ -14,21 +14,17 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Ui\Component\DataProvider\Operation;
 
-use Magento\AsynchronousOperations\Model\BulkStatus\CalculatedStatusSql;
-use Magento\AsynchronousOperations\Model\ResourceModel\Operation\CollectionFactory as OperationCollectionFactory;
-use Magento\AsynchronousOperations\Model\StatusMapper;
 use Magento\AsynchronousOperations\Ui\Component\DataProvider\Bulk\IdentifierResolver;
-use Magento\Authorization\Model\UserContextInterface;
+use Magento\AsynchronousOperations\Ui\Component\DataProvider\Operation\Failed\SearchResult as SearchResultParent;
 use Magento\Framework\Bulk\OperationInterface;
 use Magento\Framework\Data\Collection\Db\FetchStrategyInterface as FetchStrategy;
 use Magento\Framework\Data\Collection\EntityFactoryInterface as EntityFactory;
 use Magento\Framework\DB\Select;
 use Magento\Framework\Event\ManagerInterface as EventManager;
 use Magento\Framework\Json\Helper\Data as JsonHelper;
-use Magento\Framework\Serialize\Serializer\Json;
 use Psr\Log\LoggerInterface as Logger;
 
-class SearchResult extends \Magento\AsynchronousOperations\Ui\Component\DataProvider\Operation\Failed\SearchResult
+class SearchResult extends SearchResultParent
 {
     /**
      * @var IdentifierResolver

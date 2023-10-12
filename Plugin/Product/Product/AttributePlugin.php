@@ -16,7 +16,6 @@ namespace HawkSearch\EsIndexing\Plugin\Product\Product;
 
 use HawkSearch\EsIndexing\Model\Product\Attributes;
 use HawkSearch\EsIndexing\Plugin\Product\AbstractPlugin;
-use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ResourceModel\Attribute as AttributeResourceModel;
 use Magento\Eav\Model\Entity\Attribute;
 use Magento\Framework\Indexer\IndexerRegistry;
@@ -85,7 +84,8 @@ class AttributePlugin extends AbstractPlugin
 
     /**
      * Check if product index should be invalidated
-     * Do not invalidate index for new attributes becasue new attributes should be added to indexed attributes list first
+     * Do not invalidate index for new attributes
+     * becasue new attributes should be added to indexed attributes list first
      *
      * @param Attribute $attribute
      * @return bool

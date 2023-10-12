@@ -5,12 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.2] - 2023-10-12
+
+## FIXES
+* __fix: remove hierarchyRebuild message form the queue__ ([c480c34](https://github.com/hawksearch/esindexing-magento-2/commit/c480c343825fc6f8a68b241366cf34df594ca024))
+
+  Ref ([#HC-1494](https://bridgeline.atlassian.net/browse/HC-1494))
+
+* __fix: syntax error on PHP less than 8.0__ ([dfd0a71](https://github.com/hawksearch/esindexing-magento-2/commit/dfd0a71135c592787592ba3685480df4cf5f521f))
+  
+  Fixes ([#HC-1495](https://bridgeline.atlassian.net/browse/HC-1495))
 
 ## [0.4.1] - 2023-09-27
 
 ## FIXES
-* __fix: remove dependency on CatalogStaging module__
-  ([f755f93](https://github.com/hawksearch/esindexing-magento-2/commit/f755f9310c551984fa7330b9a1a655bc4ac16f0c))
+* __fix: remove dependency on CatalogStaging module__ ([f755f93](https://github.com/hawksearch/esindexing-magento-2/commit/f755f9310c551984fa7330b9a1a655bc4ac16f0c))
   
   Unable to install the extension because of compatibility issue:
   magento/module-catalog-staging is exclusive to Adobe Commerce only.
@@ -127,7 +136,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.1.0
 Initial stable release
 
-[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.4.1...HEAD
+[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.4.2...HEAD
+[0.4.2]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.2.0...v0.3.0

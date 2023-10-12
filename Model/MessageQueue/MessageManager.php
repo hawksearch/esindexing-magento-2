@@ -44,15 +44,18 @@ class MessageManager extends AbstractSimpleObject implements MessageManagerInter
      * @param StoreManagerInterface $storeManager
      * @param LoggerFactoryInterface $loggerFactory
      * @param IndexManagementInterface $indexManagement
+     * @param array $data
      */
     public function __construct(
         StoreManagerInterface $storeManager,
         LoggerFactoryInterface $loggerFactory,
-        IndexManagementInterface $indexManagement
+        IndexManagementInterface $indexManagement,
+        array $data = []
     ) {
         $this->storeManager = $storeManager;
         $this->logger = $loggerFactory->create();
         $this->indexManagement = $indexManagement;
+        parent::__construct($data);
     }
 
     /**

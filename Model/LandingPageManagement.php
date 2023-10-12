@@ -15,7 +15,6 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model;
 
 use HawkSearch\Connector\Gateway\Instruction\InstructionManagerPool;
-use HawkSearch\EsIndexing\Api\Data\LandingPageInterface;
 use HawkSearch\EsIndexing\Api\LandingPageManagementInterface;
 
 class LandingPageManagement implements LandingPageManagementInterface
@@ -40,7 +39,7 @@ class LandingPageManagement implements LandingPageManagementInterface
      */
     public function getLandingPages()
     {
-        return $hawkFieldsResponse = $this->instructionManagerPool->get('hawksearch-esindexing')
+        return $this->instructionManagerPool->get('hawksearch-esindexing')
             ->executeByCode('getLandingPages')->get();
     }
 
@@ -49,7 +48,7 @@ class LandingPageManagement implements LandingPageManagementInterface
      */
     public function getLandingPageUrls()
     {
-        return $hawkFieldsResponse = $this->instructionManagerPool->get('hawksearch-esindexing')
+        return $this->instructionManagerPool->get('hawksearch-esindexing')
             ->executeByCode('getLandingPageUrls')->get();
     }
 
@@ -58,7 +57,7 @@ class LandingPageManagement implements LandingPageManagementInterface
      */
     public function addLandingPages(array $landingPages)
     {
-        $hawkFieldsResponse = $this->instructionManagerPool->get('hawksearch-esindexing')
+        $this->instructionManagerPool->get('hawksearch-esindexing')
             ->executeByCode('addLandingPagesBulk', $landingPages)->get();
     }
 
@@ -67,7 +66,7 @@ class LandingPageManagement implements LandingPageManagementInterface
      */
     public function updateLandingPages(array $landingPages)
     {
-        return $hawkFieldsResponse = $this->instructionManagerPool->get('hawksearch-esindexing')
+        return $this->instructionManagerPool->get('hawksearch-esindexing')
             ->executeByCode('updateLandingPagesBulk', $landingPages)->get();
     }
 
