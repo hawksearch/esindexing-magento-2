@@ -15,7 +15,6 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model;
 
-use HawkSearch\EsIndexing\Api\Data\IndexItemInterface;
 use HawkSearch\EsIndexing\Api\Data\IndexItemsContextInterface;
 use Magento\Framework\Api\AbstractSimpleObject;
 

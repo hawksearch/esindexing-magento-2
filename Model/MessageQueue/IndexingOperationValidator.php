@@ -34,7 +34,7 @@ class IndexingOperationValidator
      * @param BulkOperationManagement $bulkOperationManagement
      */
     public function __construct(
-        BulkOperationManagement $bulkOperationManagement,
+        BulkOperationManagement $bulkOperationManagement
     ) {
         $this->bulkOperationManagement = $bulkOperationManagement;
     }
