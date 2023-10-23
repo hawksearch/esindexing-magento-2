@@ -65,7 +65,7 @@ $getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
 <script id="vue-hawksearch-result-item-grid" type="x-template">
     <div class="item product product-item">
         <div class="product-item-info" data-container="product-grid">
-            <a :href="getLink()" @click="onClick" class="product photo product-item-photo">
+            <a :href="link" @click="onClick" class="product photo product-item-photo">
                 <span class="product-image-container" style="width:215px;">
                     <span class="product-image-wrapper" style="padding-bottom: 125%;">
                         <img class="product-image-photo" v-bind:src="getField('image_url')" />
@@ -76,7 +76,7 @@ $getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
                 <span class="product name product-item-name"><a
                         class="product-item-link"
                         :title="getField('name')"
-                        :href="getLink()"
+                        :href="link"
                         @click="onClick">
                         {{ getField('name') }}</a>
 
@@ -113,7 +113,7 @@ $getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
 <script id="vue-hawksearch-result-item-list" type="x-template">
     <div class="item product product-item">
         <div class="product-item-info" data-container="product-grid">
-            <a :href="getLink()" @click="onClick" class="product photo product-item-photo">
+            <a :href="link" @click="onClick" class="product photo product-item-photo">
                 <span class="product-image-container" style="width:215px;">
                     <span class="product-image-wrapper" style="padding-bottom: 125%;">
                         <img class="product-image-photo" v-bind:src="getField('image_url')" />
@@ -124,7 +124,7 @@ $getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
                 <span class="product name product-item-name"><a
                         class="product-item-link"
                         :title="getField('name')"
-                        :href="getLink()"
+                        :href="link"
                         @click="onClick">
                         {{ getField('name') }}</a>
                 </span>

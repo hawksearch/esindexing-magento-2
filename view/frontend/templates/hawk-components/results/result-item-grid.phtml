@@ -1,0 +1,66 @@
+<?php
+/**
+ * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ */
+
+use Magento\Framework\App\ActionInterface;
+
+/** @var $block \Magento\Catalog\Block\Product\AbstractProduct */
+/** @var \Magento\Framework\Escaper $escaper */
+?>
+<!-- ResultItem component -->
+<script id="vue-hawksearch-result-item-grid" type="x-template">
+    <div class="item product product-item">
+        <div class="product-item-info" data-container="product-grid">
+            <a :href="link" @click="onClick" class="product photo product-item-photo">
+                <span class="product-image-container" style="width:215px;">
+                    <span class="product-image-wrapper" style="padding-bottom: 125%;">
+                        <img class="product-image-photo" v-bind:src="getField('image_url')" />
+                    </span>
+                </span>
+            </a>
+            <div class="product details product-item-details">
+                <span class="product name product-item-name"><a
+                        class="product-item-link"
+                        :title="getField('name')"
+                        :href="link"
+                        @click="onClick">
+                        {{ getField('name') }}</a>
+
+                </span>
+                <div class="price-box price-final_price" data-role="priceBox" data-product-id="260" data-price-box="product-id-260">
+                    <span class="normal-price">
+                        <span class="price-container price-final_price tax weee">
+                            <span class="price-label">As low as</span>
+                            <span id="product-price-260" :data-price-amount="getField('price_final')" data-price-type="finalPrice" class="price-wrapper "><span class="price">{{getField('price_final_formatted')}}</span></span>
+                        </span>
+                    </span>
+                </div>
+                <div class="product-item-inner">
+                    <div class="product actions product-item-actions">
+                        <div class="actions-primary">
+                            <add-to-cart class="action tocart primary" :add-fn="addToCart" :add-args="{}" />
+
+                            <form ref="add-to-cart-form" style="display: none;" data-role="tocart-form" method="post" :data-product-sku="getField('sku')" :action="'<?= $getAddTocartUrl() ?>' + 'product/' + getID(getField('__uid')) + '/'">
+                                <input type="hidden" name="product" :value="getField('sku')">
+                                <input type="hidden" name="<?= /* @noEscape */ ActionInterface::PARAM_NAME_URL_ENCODED ?>" :value="'<?= $getAddTocartUrl() ?>' + 'product/' + getID(getField('__uid')) + '/'">
+                                <?= $block->getBlockHtml('formkey') ?>
+                                <button type="submit" title="<?= $escaper->escapeHtmlAttr(__('Add to Cart')) ?>" class="action tocart primary">
+                                    <span><?= $escaper->escapeHtml(__('Add to Cart')) ?></span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
