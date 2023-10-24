@@ -1130,6 +1130,8 @@
     <type name="Magento\Store\Model\ResourceModel\Store">
         <plugin name="hawksearchStoreView"
                 type="HawkSearch\EsIndexing\Plugin\Store\StoreViewPlugin"/>
+        <plugin name="hawksearchStoreViewDisableIndexing"
+                type="HawkSearch\EsIndexing\Plugin\Store\StoreViewDisableIndexingPlugin"/>
     </type>
     <type name="Magento\Store\Model\ResourceModel\Group">
         <plugin name="hawksearchStoreGroup"

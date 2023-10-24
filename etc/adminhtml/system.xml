@@ -26,9 +26,13 @@
             <label>Indexing</label>
             <tab>hawksearch</tab>
             <resource>HawkSearch_EsIndexing::config</resource>
-            <group id="indexing" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="indexing" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Indexing</label>
-                <field id="enable_indexing" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <comment><![CDATA[
+                    To <b>Eenable Indexing</b> please switch to Store View configuration scope
+                    ]]>
+                </comment>
+                <field id="enable_indexing" translate="label comment" type="select" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
                     <label>Enable Indexing</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Enables indexing of your data by Hawksearch.</comment>
