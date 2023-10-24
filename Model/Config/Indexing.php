@@ -27,6 +27,8 @@ class Indexing extends ConfigProvider
     public const CONFIG_PRODUCTS_INCLUDE_CATEGORIES_HIERARCHY = 'products_include_categories_hierarchy';
     /**#@-*/
 
+    public const ENABLE_INDEXING_DEFAULT = 0;
+
     /**
      * Return items batch size for indexing job single operation
      * @param null|int|string $store
