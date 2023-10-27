@@ -15,8 +15,11 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Product\Attribute\Handler;
 
 use HawkSearch\EsIndexing\Model\Indexing\AttributeHandlerInterface;
+use HawkSearch\EsIndexing\Model\Product\Attribute\ValueProcessorInterface;
 use HawkSearch\EsIndexing\Model\Product\ProductTypePoolInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Model\ResourceModel\Eav\Attribute as AttributeResource;
+use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
 use Magento\Framework\DataObject;
 use Magento\Framework\ObjectManagerInterface;
 
@@ -28,18 +31,27 @@ class Composite extends \HawkSearch\EsIndexing\Model\Indexing\AttributeHandler\C
     private $productTypePool;
 
     /**
+     * @var ValueProcessorInterface
+     */
+    private $valueProcessor;
+
+    /**
      * AttributeHandlerComposite constructor.
      *
+     * @param ObjectManagerInterface $objectManager
      * @param ProductTypePoolInterface $productTypePool
+     * @param ValueProcessorInterface $valueProcessor
      * @param AttributeHandlerInterface[] $handlers
      */
     public function __construct(
         ObjectManagerInterface $objectManager,
         ProductTypePoolInterface $productTypePool,
+        ValueProcessorInterface $valueProcessor,
         array $handlers = []
     ) {
         parent::__construct($objectManager, $handlers);
         $this->productTypePool = $productTypePool;
+        $this->valueProcessor = $valueProcessor;
     }
 
     /**
@@ -48,16 +60,23 @@ class Composite extends \HawkSearch\EsIndexing\Model\Indexing\AttributeHandler\C
      */
     public function handle(DataObject $item, string $attributeCode)
     {
-        $value = parent::handle($item, $attributeCode);
+        $value = $this->formatValue(parent::handle($item, $attributeCode));
+        $relatedValues = [];
 
         $productType = $this->productTypePool->get($item->getTypeId());
         if ($children = $productType->getChildProducts($item)) {
-            $value = $this->castChildValueType($value);
             foreach ($children as $child) {
-                $value = array_merge($value, $this->castChildValueType($this->handle($child, $attributeCode)));
+                $relatedValues = array_merge($relatedValues, $this->formatValue($this->handle($child, $attributeCode)));
             }
+        }
 
-            //$value = array_unique($value);
+        /** @var ProductResource $productResource */
+        $productResource = $item->getResource();
+        /** @var AttributeResource $attributeResource */
+        $attributeResource = $productResource->getAttribute($attributeCode);
+
+        if ($attributeResource) {
+            $value = $this->valueProcessor->process($attributeResource, $value, $relatedValues);
         }
 
         return $value;
@@ -65,16 +84,17 @@ class Composite extends \HawkSearch\EsIndexing\Model\Indexing\AttributeHandler\C
 
     /**
      * Safely apply values of array type.
-     * @param $value
+     *
+     * @param mixed $value
      * @return array
      */
-    private function castChildValueType($value)
+    private function formatValue($value)
     {
         $result = [];
         if (is_array($value)) {
             array_push($result, ...$value);
         } else {
-            $result[] = $value;
+            $result = (array)$value;
         }
 
         return $result;

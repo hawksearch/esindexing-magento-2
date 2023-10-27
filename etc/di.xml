@@ -52,10 +52,10 @@
                 type="HawkSearch\EsIndexing\Logger\LoggerFactory"/>
     <preference for="HawkSearch\EsIndexing\Model\Indexing\AttributeHandlerInterface"
                 type="HawkSearch\EsIndexing\Model\Indexing\AttributeHandler\DataObjectHandler"/>
-
     <preference for="HawkSearch\EsIndexing\Model\Indexing\ItemsIndexerInterface"
                 type="HawkSearch\EsIndexing\Model\Indexing\ItemsIndexer\SearchedItemsIndexer"/>
-
+    <preference for="HawkSearch\EsIndexing\Model\Product\Attribute\ValueProcessorInterface"
+                type="HawkSearch\EsIndexing\Model\Product\Attribute\ValueProcessor"/>
 
     <!-- Configs -->
     <type name="HawkSearch\EsIndexing\Model\Config\Products">
