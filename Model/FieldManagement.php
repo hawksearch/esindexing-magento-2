@@ -17,10 +17,11 @@ namespace HawkSearch\EsIndexing\Model;
 
 use HawkSearch\Connector\Gateway\Instruction\InstructionManagerPool;
 use HawkSearch\Connector\Gateway\InstructionException;
-use HawkSearch\EsIndexing\Api\FieldsManagementInterface;
+use HawkSearch\EsIndexing\Api\Data\FieldInterface;
+use HawkSearch\EsIndexing\Api\FieldManagementInterface;
 use Magento\Framework\Exception\NotFoundException;
 
-class FieldsManagement implements FieldsManagementInterface
+class FieldManagement implements FieldManagementInterface
 {
     /**
      * @var InstructionManagerPool
@@ -43,9 +44,14 @@ class FieldsManagement implements FieldsManagementInterface
      * @throws InstructionException
      * @throws NotFoundException
      */
-    public function getHawkSearchFields()
+    public function getHawkSearchFields(): array
     {
-        return $this->instructionManagerPool->get('hawksearch')
+        return $this->instructionManagerPool->get('hawksearch-esindexing')
             ->executeByCode('getFields')->get();
+    }
+
+    public function addField(FieldInterface $field): FieldInterface
+    {
+        // TODO: Implement addField() method.
     }
 }

@@ -17,11 +17,11 @@ namespace HawkSearch\EsIndexing\Gateway\Instruction\Result;
 use HawkSearch\Connector\Gateway\Helper\HttpResponseReader;
 use HawkSearch\Connector\Gateway\Instruction\ResultInterface;
 use HawkSearch\Connector\Helper\DataObjectHelper as HawkSearchDataObjectHelper;
-use HawkSearch\EsIndexing\Api\Data\FieldInterfaceFactory;
-use HawkSearch\EsIndexing\Api\Data\FieldInterface;
+use HawkSearch\EsIndexing\Api\Data\FacetInterfaceFactory;
+use HawkSearch\EsIndexing\Api\Data\FacetInterface;
 use Magento\Framework\Api\DataObjectHelper;
 
-class FieldListResult implements ResultInterface
+class FacetResult implements ResultInterface
 {
     /**
      * @var array
@@ -29,9 +29,9 @@ class FieldListResult implements ResultInterface
     private array $result;
 
     /**
-     * @var FieldInterfaceFactory
+     * @var FacetInterfaceFactory
      */
-    private FieldInterfaceFactory $fieldFactory;
+    private FacetInterfaceFactory $facetFactory;
 
     /**
      * @var DataObjectHelper
@@ -49,54 +49,44 @@ class FieldListResult implements ResultInterface
     private HttpResponseReader $httpResponseReader;
 
     /**
-     * @param FieldInterfaceFactory $fieldInterfaceFactory
+     * @param FacetInterfaceFactory $facetFactory
      * @param DataObjectHelper $dataObjectHelper
      * @param HawkSearchDataObjectHelper $hawksearchDataObjectHelper
      * @param HttpResponseReader $httpResponseReader
      * @param array $result
      */
     public function __construct(
-        FieldInterfaceFactory $fieldInterfaceFactory,
+        FacetInterfaceFactory $facetFactory,
         DataObjectHelper $dataObjectHelper,
         HawkSearchDataObjectHelper $hawksearchDataObjectHelper,
         HttpResponseReader $httpResponseReader,
         array $result = []
     ) {
         $this->result = $result;
-        $this->fieldFactory = $fieldInterfaceFactory;
+        $this->facetFactory = $facetFactory;
         $this->dataObjectHelper = $dataObjectHelper;
         $this->hawksearchDataObjectHelper = $hawksearchDataObjectHelper;
         $this->httpResponseReader = $httpResponseReader;
     }
 
     /**
-     * Returns result interpretation
+     * Returns facet result interpretation
      *
-     * @return FieldInterface[]
+     * @return FacetInterface
      */
-    public function get(): array
+    public function get(): FacetInterface
     {
         $response = $this->httpResponseReader->readResponseData($this->result);
-        if (!is_array($response)) {
-            return [];
+        if ($response instanceof FacetInterface) {
+            return $response;
         }
 
-        $result = [];
-        foreach ($response as $field) {
-            if ($field instanceof FieldInterface) {
-                $result[] = $field;
-                continue;
-            }
-
-            $dataObject = $this->fieldFactory->create();
-            $this->dataObjectHelper->populateWithArray(
-                $dataObject,
-                $this->hawksearchDataObjectHelper->convertArrayToSnakeCase($field),
-                FieldInterface::class
-            );
-            $result[] = $dataObject;
-        }
-
-        return $result;
+        $dataObject = $this->facetFactory->create();
+        $this->dataObjectHelper->populateWithArray(
+            $dataObject,
+            $this->hawksearchDataObjectHelper->convertArrayToSnakeCase($response),
+            FacetInterface::class
+        );
+        return $dataObject;
     }
 }

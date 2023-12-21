@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -14,34 +14,35 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Config\Source;
 
-use HawkSearch\Connector\Api\Data\HawkSearchFieldInterface;
-use HawkSearch\EsIndexing\Api\FieldsManagementInterface;
+use HawkSearch\EsIndexing\Api\Data\FieldInterface;
+use HawkSearch\EsIndexing\Api\FieldManagementInterface;
 use Magento\Framework\Data\OptionSourceInterface;
 
 class HawksearchFields implements OptionSourceInterface
 {
     /**
-     * @var FieldsManagementInterface
+     * @var array|null
      */
-    private $fieldsManagement;
+    private ?array $fieldsCache = null;
 
     /**
-     * @var array
+     * @var FieldManagementInterface
      */
-    private $fieldsCache;
+    private FieldManagementInterface $fieldManagement;
 
     /**
-     * @param FieldsManagementInterface $fieldsManagement
+     * @param FieldManagementInterface $fieldManagement
      */
     public function __construct(
-        FieldsManagementInterface $fieldsManagement
+        FieldManagementInterface $fieldManagement
 
     ) {
-        $this->fieldsManagement = $fieldsManagement;
+        $this->fieldManagement = $fieldManagement;
     }
 
     /**
      * @inheritdoc
+     * @noinspection PhpMissingReturnTypeInspection
      */
     public function toOptionArray()
     {
@@ -61,12 +62,12 @@ class HawksearchFields implements OptionSourceInterface
     }
 
     /**
-     * @return HawkSearchFieldInterface[]
+     * @return FieldInterface[]
      */
-    private function getFields()
+    private function getFields(): array
     {
         if ($this->fieldsCache === null) {
-            $this->fieldsCache = $this->fieldsManagement->getHawkSearchFields();
+            $this->fieldsCache = $this->fieldManagement->getFields();
         }
 
         return $this->fieldsCache;

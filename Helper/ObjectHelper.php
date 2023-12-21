@@ -140,4 +140,22 @@ class ObjectHelper
 
         return $value;
     }
+
+    /**
+     * Validate array values to be an instance of a class
+     *
+     * @param object $item
+     * @param int $key
+     * @param string $className
+     * @return void
+     * @throws \InvalidArgumentException
+     */
+    public static function validateObjectValue($item, $key, string $className)
+    {
+        if (!$item instanceof $className) {
+            throw new \InvalidArgumentException(
+                __('Array element value with key %1 is not an instance of %2 interface', $key, $className)
+            );
+        }
+    }
 }

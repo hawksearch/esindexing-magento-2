@@ -14,13 +14,11 @@
   -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="HawkSearch\EsIndexing\Api\FieldsManagementInterface"
-                type="HawkSearch\EsIndexing\Model\FieldsManagement"/>
     <preference for="HawkSearch\EsIndexing\Api\Data\IndexItemsContextInterface"
                 type="HawkSearch\EsIndexing\Model\IndexItemsContext"/>
     <preference for="HawkSearch\EsIndexing\Api\Data\IndexListInterface"
                 type="HawkSearch\EsIndexing\Model\IndexList"/>
-    <preference for="HawkSearch\EsIndexing\Api\Data\IndexItemsInterface"
+    <preference for="HawkSearch\EsIndexing\Api\Data\IndexItemInterface"
                 type="HawkSearch\EsIndexing\Model\IndexItem"/>
     <preference for="HawkSearch\EsIndexing\Api\Data\EsIndexInterface"
                 type="HawkSearch\EsIndexing\Model\EsIndex"/>
@@ -28,10 +26,27 @@
                 type="HawkSearch\EsIndexing\Model\LandingPage"/>
     <preference for="HawkSearch\EsIndexing\Api\Data\QueueOperationDataInterface"
                 type="HawkSearch\EsIndexing\Model\MessageQueue\QueueOperationData"/>
-    <preference for="HawkSearch\EsIndexing\Api\IndexManagementInterface"
-                type="HawkSearch\EsIndexing\Model\IndexManagement"/>
+    <preference for="HawkSearch\EsIndexing\Api\Data\FacetBoostBuryInterface"
+                type="HawkSearch\EsIndexing\Model\FacetBoostBury"/>
+    <preference for="HawkSearch\EsIndexing\Api\Data\FacetInterface"
+                type="HawkSearch\EsIndexing\Model\Facet"/>
+    <preference for="HawkSearch\EsIndexing\Api\Data\FacetRangeModelInterface"
+                type="HawkSearch\EsIndexing\Model\FacetRangeModel"/>
+    <preference for="HawkSearch\EsIndexing\Api\Data\FacetValueOrderInfoInterface"
+                type="HawkSearch\EsIndexing\Model\FacetValueOrderInfo"/>
+    <preference for="HawkSearch\EsIndexing\Api\Data\FieldInterface"
+                type="HawkSearch\EsIndexing\Model\Field"/>
+
+    <preference for="HawkSearch\EsIndexing\Api\FacetManagementInterface"
+                type="HawkSearch\EsIndexing\Model\FacetManagement"/>
+    <preference for="HawkSearch\EsIndexing\Api\FieldManagementInterface"
+                type="HawkSearch\EsIndexing\Model\FieldManagement"/>
     <preference for="HawkSearch\EsIndexing\Api\HierarchyManagementInterface"
                 type="HawkSearch\EsIndexing\Model\HierarchyManagement"/>
+    <preference for="HawkSearch\EsIndexing\Api\IndexManagementInterface"
+                type="HawkSearch\EsIndexing\Model\IndexManagement"/>
+    <preference for="HawkSearch\EsIndexing\Api\LandingPageManagementInterface"
+                type="HawkSearch\EsIndexing\Model\LandingPageManagement"/>
     <preference for="HawkSearch\EsIndexing\Model\Indexing\EntityTypePoolInterface"
                 type="HawkSearch\EsIndexing\Model\Indexing\EntityTypePool"/>
     <preference for="HawkSearch\EsIndexing\Model\Indexing\ContextInterface"
@@ -46,8 +61,6 @@
                 type="HawkSearch\EsIndexing\Model\Product\ProductType\Simple"/>
     <preference for="HawkSearch\EsIndexing\Model\Product\ProductTypePoolInterface"
                 type="HawkSearch\EsIndexing\Model\Product\ProductTypePool"/>
-    <preference for="HawkSearch\EsIndexing\Api\LandingPageManagementInterface"
-                type="HawkSearch\EsIndexing\Model\LandingPageManagement"/>
     <preference for="HawkSearch\EsIndexing\Logger\LoggerFactoryInterface"
                 type="HawkSearch\EsIndexing\Logger\LoggerFactory"/>
     <preference for="HawkSearch\EsIndexing\Model\Indexing\AttributeHandlerInterface"
@@ -114,6 +127,10 @@
                 <item name="addLandingPagesBulk" xsi:type="string">HawkSearchEsIndexingAddLandingPagesBulkInstruction</item>
                 <item name="updateLandingPagesBulk" xsi:type="string">HawkSearchEsIndexingUpdateLandingPagesBulkInstruction</item>
                 <item name="deleteLandingPagesBulk" xsi:type="string">HawkSearchEsIndexingDeleteLandingPagesBulkInstruction</item>
+                <!-- Fields -->
+                <item name="getFields" xsi:type="string">HawkSearchEsIndexingGetFieldsInstruction</item>
+                <!-- Facets -->
+                <item name="addFacet" xsi:type="string">HawkSearchEsIndexingAddFacetInstruction</item>
             </argument>
         </arguments>
     </virtualType>
@@ -343,26 +360,6 @@
     </virtualType>
     <!-- END deleteItems Instruction  -->
 
-    <!-- postFields Instruction  -->
-    <virtualType name="HawkSearchPostFieldInstruction">
-        <arguments>
-            <argument name="validator" xsi:type="object">HawkSearchEsIndexingFieldBadResponseValidator</argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="HawkSearchEsIndexingFieldBadResponseValidator"
-                 type="HawkSearch\Connector\Gateway\Validator\ValidatorComposite">
-        <arguments>
-            <argument name="validators" xsi:type="array">
-                <item name="badRequestValidator" xsi:type="string">HawkSearch\EsIndexing\Gateway\Validator\FieldsBadRequestValidator</item>
-            </argument>
-            <argument name="chainBreakingValidators" xsi:type="array">
-                <item name="httpCodeValidator" xsi:type="string">httpCodeValidator</item>
-                <item name="badRequestValidator" xsi:type="string">badRequestValidator</item>
-            </argument>
-        </arguments>
-    </virtualType>
-    <!-- END postFields Instruction  -->
-
     <!-- hierarchyUpsert Instruction  -->
     <virtualType name="HawkSearchEsIndexingUpsertHierarchyInstruction"
                  type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
@@ -580,33 +577,108 @@
     <!-- deleteLandingPagesBulk Instruction  -->
 
     <!-- getFields Instruction  -->
+    <virtualType name="HawkSearchEsIndexingGetFieldsInstruction" type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">HawkSearch\Connector\Gateway\Request\BuilderComposite</argument>
+            <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingGetFieldsTransferFactory</argument>
+            <argument name="resultFactory" xsi:type="object">HawkSearchEsIndexingGetFieldsResultFactory</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearchEsIndexingGetFieldsTransferFactory" type="HawkSearch\Connector\Gateway\Http\DashboardApiTransferFactory">
+        <arguments>
+            <argument name="path" xsi:type="string">api/v11/Field</argument>
+            <argument name="method" xsi:type="string">GET</argument>
+        </arguments>
+    </virtualType>
     <virtualType name="HawkSearchEsIndexingGetFieldsResultFactory"
                  type="HawkSearch\Connector\Gateway\Instruction\ResultInterfaceFactory">
         <arguments>
             <argument xsi:type="string" name="instanceName">HawkSearch\EsIndexing\Gateway\Instruction\Result\FieldListResult</argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchGetFieldsInstruction">
-        <arguments>
-            <argument name="resultFactory" xsi:type="object">HawkSearchEsIndexingGetFieldsResultFactory</argument>
-        </arguments>
-    </virtualType>
     <!-- END getFields Instruction  -->
 
     <!-- postField Instruction  -->
+    <!--<virtualType name="HawkSearchPostFieldInstruction" type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">HawkSearchPostFieldRequestBuilder</argument>
+            <argument name="transferFactory" xsi:type="object">HawkSearchPostFieldTransferFactory</argument>
+            <argument name="handler" xsi:type="object">HawkSearchPostFieldHandler</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearchPostFieldRequestBuilder" type="HawkSearch\Connector\Gateway\Request\BuilderComposite">
+        <arguments>
+            <argument name="builders" xsi:type="array">
+                <item name="field_object" xsi:type="string">HawkSearch\Connector\Gateway\Request\FieldDataBuilder</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearchPostFieldTransferFactory" type="HawkSearch\Connector\Gateway\Http\DashboardApiTransferFactory">
+        <arguments>
+            <argument name="path" xsi:type="string">api/v9/Field</argument>
+            <argument name="method" xsi:type="string">POST</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearchPostFieldHandler" type="HawkSearch\Connector\Gateway\Response\HandlerChain">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="field_data" xsi:type="string">HawkSearch\Connector\Gateway\Response\FieldHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>-->
+    <!-- END postField Instruction  -->
+
+    <!-- postField Instruction  -->
+    <virtualType name="HawkSearchPostFieldInstruction">
+        <arguments>
+            <argument name="validator" xsi:type="object">HawkSearchEsIndexingFieldBadResponseValidator</argument>
+            <argument name="resultFactory" xsi:type="object">HawkSearchEsIndexingPostFieldResultFactory</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearchEsIndexingFieldBadResponseValidator"
+                 type="HawkSearch\Connector\Gateway\Validator\ValidatorComposite">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="badRequestValidator" xsi:type="string">HawkSearch\EsIndexing\Gateway\Validator\FieldsBadRequestValidator</item>
+            </argument>
+            <argument name="chainBreakingValidators" xsi:type="array">
+                <item name="httpCodeValidator" xsi:type="string">httpCodeValidator</item>
+                <item name="badRequestValidator" xsi:type="string">badRequestValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
     <virtualType name="HawkSearchEsIndexingPostFieldResultFactory"
                  type="HawkSearch\Connector\Gateway\Instruction\ResultInterfaceFactory">
         <arguments>
             <argument xsi:type="string" name="instanceName">HawkSearch\EsIndexing\Gateway\Instruction\Result\FieldResult</argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchPostFieldInstruction">
-        <arguments>
-            <argument name="resultFactory" xsi:type="object">HawkSearchEsIndexingPostFieldResultFactory</argument>
-        </arguments>
-    </virtualType>
     <!-- END postField Instruction  -->
 
+    <!-- addFacet Instruction  -->
+    <virtualType name="HawkSearchEsIndexingAddFacetInstruction"
+                 type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">HawkSearch\Connector\Gateway\Request\StrictDataBuilder</argument>
+            <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingAddFacetTransferFactory</argument>
+            <argument name="validator" xsi:type="object">HawkSearchEsIndexingBadResponseValidator</argument>
+            <argument name="resultFactory" xsi:type="object">HawkSearchEsIndexingAddFacetResultFactory</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearchEsIndexingAddFacetTransferFactory"
+                 type="HawkSearch\Connector\Gateway\Http\DashboardApiTransferFactory">
+        <arguments>
+            <argument name="path" xsi:type="string">api/v11/Facet</argument>
+            <argument name="method" xsi:type="string">POST</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearchEsIndexingAddFacetResultFactory"
+                 type="HawkSearch\Connector\Gateway\Instruction\ResultInterfaceFactory">
+        <arguments>
+            <argument xsi:type="string" name="instanceName">HawkSearch\EsIndexing\Gateway\Instruction\Result\FacetResult</argument>
+        </arguments>
+    </virtualType>
+    <!-- END addFacet Instruction  -->
 
     <!-- END Instructions  -->
 
