@@ -23,16 +23,12 @@
             <!--<referenceBlock name="search.result" remove="true" />-->
         </referenceContainer>
         <referenceBlock name="head.additional">
-            <block class="HawkSearch\EsIndexing\Block\Html\Head\VueConfig\Searchbox" name="hawksearch.vue.config.searchbox" template="HawkSearch_EsIndexing::vueconfig.phtml">
-                <action method="setConfigId">
-                    <argument name="id" xsi:type="string">searchbox</argument>
-                </action>
-            </block>
-            <block class="HawkSearch\EsIndexing\Block\Html\Head\VueConfig\Results" name="hawksearch.vue.config.results" template="HawkSearch_EsIndexing::vueconfig.phtml">
-                <action method="setConfigId">
-                    <argument name="id" xsi:type="string">results</argument>
-                </action>
-            </block>
+            <block class="HawkSearch\EsIndexing\Block\Html\Head\JsConfig\VueSearchbox"
+                   name="hawksearch-vue-config-searchbox" template="HawkSearch_EsIndexing::vueconfig.phtml"/>
+            <block class="HawkSearch\EsIndexing\Block\Html\Head\JsConfig\VueResults"
+                   name="hawksearch-vue-config-results" template="HawkSearch_EsIndexing::vueconfig.phtml"/>
+            <block class="HawkSearch\EsIndexing\Block\Html\Head\JsConfig\JsGlobal"
+                   name="hawksearch-js-config" template="HawkSearch_EsIndexing::jsconfig.phtml"/>
         </referenceBlock>
         <referenceBlock name="top.search">
             <action method="setTemplate">
