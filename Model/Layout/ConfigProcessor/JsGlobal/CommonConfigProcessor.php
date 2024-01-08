@@ -10,10 +10,23 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+declare(strict_types=1);
 
-/* @var $block \HawkSearch\EsIndexing\Block\Html\Head\JsConfig
- * @var $escaper \Magento\Framework\Escaper */
-?>
-<script id="<?= $escaper->escapeHtml($block->getNameInLayout())?>" type="application/json">
-    <?= $block->getJsLayout(); ?>
-</script>
+namespace HawkSearch\EsIndexing\Model\Layout\ConfigProcessor\JsGlobal;
+
+use HawkSearch\EsIndexing\Model\Layout\LayoutConfigProcessorInterface;
+
+class CommonConfigProcessor implements LayoutConfigProcessorInterface
+{
+    /**
+     * @inheritDoc
+     */
+    public function process($jsConfig)
+    {
+        $config = [
+            'vueComponent' => 'results'
+        ];
+
+        return array_merge_recursive($jsConfig ?? [], $config);
+    }
+}
