@@ -236,7 +236,7 @@ define([
         _convertItemProduct: function (productData) {
             return {
                 uniqueId: mageTemplate.template(this.options.productIdTemplate, {id: productData['product_id']}),
-                price: productData['product_price_value'],
+                price: productData['product_price_calculated'],
                 quantity: productData['qty']
             }
         },
