@@ -51,7 +51,7 @@ class Cart
         if (is_array($result['items'])) {
             foreach ($result['items'] as $key => $itemAsArray) {
                 if ($item = $this->findItemById((int)$itemAsArray['item_id'], $items)) {
-                    $result['items'][$key]['product_price_calculated'] = $item->getCalculationPrice();
+                    $result['items'][$key]['product_price_incl_tax'] = $item->getPriceInclTax();
                 }
             }
         }
