@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -70,6 +70,15 @@ interface FieldInterface
     const MODIFY_DATE = 'ModifyDate';
     const IS_CHILD = 'IsChild';
     const IS_HIERARCHICAL = 'IsHierarchical';
+    /**#@-*/
+
+    /**#@+
+     * Field Type Constants
+     */
+    const FIELD_TYPE_FACET = 'facet';
+    const FIELD_TYPE_KEYWORD = 'keyword';
+    const FIELD_TYPE_UNINDEXED = 'unindexed';
+    const FIELD_TYPE_TEXT = 'text';
     /**#@-*/
 
     /**

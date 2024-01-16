@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
   /**
-   * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
+   * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
    *
    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -47,6 +47,7 @@
                 type="HawkSearch\EsIndexing\Model\IndexManagement"/>
     <preference for="HawkSearch\EsIndexing\Api\LandingPageManagementInterface"
                 type="HawkSearch\EsIndexing\Model\LandingPageManagement"/>
+
     <preference for="HawkSearch\EsIndexing\Model\Indexing\EntityTypePoolInterface"
                 type="HawkSearch\EsIndexing\Model\Indexing\EntityTypePool"/>
     <preference for="HawkSearch\EsIndexing\Model\Indexing\ContextInterface"
@@ -69,6 +70,13 @@
                 type="HawkSearch\EsIndexing\Model\Indexing\ItemsIndexer\SearchedItemsIndexer"/>
     <preference for="HawkSearch\EsIndexing\Model\Product\Attribute\ValueProcessorInterface"
                 type="HawkSearch\EsIndexing\Model\Product\Attribute\ValueProcessor"/>
+    <preference for="HawkSearch\EsIndexing\Model\Field\FieldExtendedInterface"
+                type="HawkSearch\EsIndexing\Model\Field\FieldExtended"/>
+
+    <!-- Overwrites -->
+    <preference for="HawkSearch\Connector\Gateway\Http\TransferBuilder"
+                type="HawkSearch\EsIndexing\Gateway\Http\TransferBuilder"/>
+    <!-- END Overwrites -->
 
     <!-- Configs -->
     <type name="HawkSearch\EsIndexing\Model\Config\Products">
@@ -129,8 +137,12 @@
                 <item name="deleteLandingPagesBulk" xsi:type="string">HawkSearchEsIndexingDeleteLandingPagesBulkInstruction</item>
                 <!-- Fields -->
                 <item name="getFields" xsi:type="string">HawkSearchEsIndexingGetFieldsInstruction</item>
+                <item name="addField" xsi:type="string">HawkSearchEsIndexingAddFieldInstruction</item>
+                <item name="updateField" xsi:type="string">HawkSearchEsIndexingUpdateFieldInstruction</item>
                 <!-- Facets -->
                 <item name="addFacet" xsi:type="string">HawkSearchEsIndexingAddFacetInstruction</item>
+                <item name="getFacets" xsi:type="string">HawkSearchEsIndexingGetFacetsInstruction</item>
+                <item name="updateFacet" xsi:type="string">HawkSearchEsIndexingUpdateFacetInstruction</item>
             </argument>
         </arguments>
     </virtualType>
@@ -598,41 +610,21 @@
     </virtualType>
     <!-- END getFields Instruction  -->
 
-    <!-- postField Instruction  -->
-    <!--<virtualType name="HawkSearchPostFieldInstruction" type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
+    <!-- addField Instruction  -->
+    <virtualType name="HawkSearchEsIndexingAddFieldInstruction"
+                 type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
         <arguments>
-            <argument name="requestBuilder" xsi:type="object">HawkSearchPostFieldRequestBuilder</argument>
-            <argument name="transferFactory" xsi:type="object">HawkSearchPostFieldTransferFactory</argument>
-            <argument name="handler" xsi:type="object">HawkSearchPostFieldHandler</argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="HawkSearchPostFieldRequestBuilder" type="HawkSearch\Connector\Gateway\Request\BuilderComposite">
-        <arguments>
-            <argument name="builders" xsi:type="array">
-                <item name="field_object" xsi:type="string">HawkSearch\Connector\Gateway\Request\FieldDataBuilder</item>
-            </argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="HawkSearchPostFieldTransferFactory" type="HawkSearch\Connector\Gateway\Http\DashboardApiTransferFactory">
-        <arguments>
-            <argument name="path" xsi:type="string">api/v9/Field</argument>
-            <argument name="method" xsi:type="string">POST</argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="HawkSearchPostFieldHandler" type="HawkSearch\Connector\Gateway\Response\HandlerChain">
-        <arguments>
-            <argument name="handlers" xsi:type="array">
-                <item name="field_data" xsi:type="string">HawkSearch\Connector\Gateway\Response\FieldHandler</item>
-            </argument>
-        </arguments>
-    </virtualType>-->
-    <!-- END postField Instruction  -->
-
-    <!-- postField Instruction  -->
-    <virtualType name="HawkSearchPostFieldInstruction">
-        <arguments>
+            <argument name="requestBuilder" xsi:type="object">HawkSearch\Connector\Gateway\Request\StrictDataBuilder</argument>
+            <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingAddFieldTransferFactory</argument>
             <argument name="validator" xsi:type="object">HawkSearchEsIndexingFieldBadResponseValidator</argument>
-            <argument name="resultFactory" xsi:type="object">HawkSearchEsIndexingPostFieldResultFactory</argument>
+            <argument name="resultFactory" xsi:type="object">HawkSearchEsIndexingFieldResultFactory</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearchEsIndexingAddFieldTransferFactory"
+                 type="HawkSearch\Connector\Gateway\Http\DashboardApiTransferFactory">
+        <arguments>
+            <argument name="path" xsi:type="string">api/v11/Field</argument>
+            <argument name="method" xsi:type="string">POST</argument>
         </arguments>
     </virtualType>
     <virtualType name="HawkSearchEsIndexingFieldBadResponseValidator"
@@ -647,13 +639,57 @@
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingPostFieldResultFactory"
+    <virtualType name="HawkSearchEsIndexingFieldResultFactory"
                  type="HawkSearch\Connector\Gateway\Instruction\ResultInterfaceFactory">
         <arguments>
             <argument xsi:type="string" name="instanceName">HawkSearch\EsIndexing\Gateway\Instruction\Result\FieldResult</argument>
         </arguments>
     </virtualType>
-    <!-- END postField Instruction  -->
+    <!-- END addField Instruction  -->
+
+    <!-- updateField Instruction  -->
+    <virtualType name="HawkSearchEsIndexingUpdateFieldInstruction"
+                 type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">HawkSearch\Connector\Gateway\Request\StrictDataBuilder</argument>
+            <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingUpdateFieldTransferFactory</argument>
+            <argument name="validator" xsi:type="object">HawkSearchEsIndexingFieldBadResponseValidator</argument>
+            <argument name="resultFactory" xsi:type="object">HawkSearchEsIndexingFieldResultFactory</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearchEsIndexingUpdateFieldTransferFactory"
+                 type="HawkSearch\Connector\Gateway\Http\DashboardApiTransferFactory">
+        <arguments>
+            <argument name="path" xsi:type="string"><![CDATA[api/v11/Field/{{FieldId}}]]></argument>
+            <argument name="method" xsi:type="string">PUT</argument>
+        </arguments>
+    </virtualType>
+    <!-- END updateField Instruction  -->
+
+
+    <!-- getFacets Instruction  -->
+    <virtualType name="HawkSearchEsIndexingGetFacetsInstruction"
+                 type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">HawkSearch\Connector\Gateway\Request\BuilderComposite</argument>
+            <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingGetFacetsTransferFactory</argument>
+            <argument name="resultFactory" xsi:type="object">HawkSearchEsIndexingGetFacetsResultFactory</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearchEsIndexingGetFacetsTransferFactory"
+                 type="HawkSearch\Connector\Gateway\Http\DashboardApiTransferFactory">
+        <arguments>
+            <argument name="path" xsi:type="string">api/v11/Facet</argument>
+            <argument name="method" xsi:type="string">GET</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearchEsIndexingGetFacetsResultFactory"
+                 type="HawkSearch\Connector\Gateway\Instruction\ResultInterfaceFactory">
+        <arguments>
+            <argument xsi:type="string" name="instanceName">HawkSearch\EsIndexing\Gateway\Instruction\Result\FacetListResult</argument>
+        </arguments>
+    </virtualType>
+    <!-- END getFacets Instruction  -->
 
     <!-- addFacet Instruction  -->
     <virtualType name="HawkSearchEsIndexingAddFacetInstruction"
@@ -662,7 +698,7 @@
             <argument name="requestBuilder" xsi:type="object">HawkSearch\Connector\Gateway\Request\StrictDataBuilder</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingAddFacetTransferFactory</argument>
             <argument name="validator" xsi:type="object">HawkSearchEsIndexingBadResponseValidator</argument>
-            <argument name="resultFactory" xsi:type="object">HawkSearchEsIndexingAddFacetResultFactory</argument>
+            <argument name="resultFactory" xsi:type="object">HawkSearchEsIndexingFacetResultFactory</argument>
         </arguments>
     </virtualType>
     <virtualType name="HawkSearchEsIndexingAddFacetTransferFactory"
@@ -672,7 +708,7 @@
             <argument name="method" xsi:type="string">POST</argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearchEsIndexingAddFacetResultFactory"
+    <virtualType name="HawkSearchEsIndexingFacetResultFactory"
                  type="HawkSearch\Connector\Gateway\Instruction\ResultInterfaceFactory">
         <arguments>
             <argument xsi:type="string" name="instanceName">HawkSearch\EsIndexing\Gateway\Instruction\Result\FacetResult</argument>
@@ -680,6 +716,24 @@
     </virtualType>
     <!-- END addFacet Instruction  -->
 
+    <!-- updateFacet Instruction  -->
+    <virtualType name="HawkSearchEsIndexingUpdateFacetInstruction"
+                 type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">HawkSearch\Connector\Gateway\Request\StrictDataBuilder</argument>
+            <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingUpdateFacetTransferFactory</argument>
+            <argument name="validator" xsi:type="object">HawkSearchEsIndexingBadResponseValidator</argument>
+            <argument name="resultFactory" xsi:type="object">HawkSearchEsIndexingFacetResultFactory</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearchEsIndexingUpdateFacetTransferFactory"
+                 type="HawkSearch\Connector\Gateway\Http\DashboardApiTransferFactory">
+        <arguments>
+            <argument name="path" xsi:type="string"><![CDATA[api/v11/Facet/{{FacetId}}]]></argument>
+            <argument name="method" xsi:type="string">PUT</argument>
+        </arguments>
+    </virtualType>
+    <!-- END updateFacet Instruction  -->
     <!-- END Instructions  -->
 
     <!-- Instruction global validators   -->
@@ -1150,12 +1204,6 @@
         </arguments>
     </type>
 
-    <type name="HawkSearch\EsIndexing\Observer\Indexer\ScheduleHierarchyRebuild">
-        <arguments>
-            <argument name="messageTopicResolver" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicByEntityTypeResolver</argument>
-        </arguments>
-    </type>
-
     <type name="Magento\CatalogStaging\Model\Mview\View\SubscriptionFactory">
         <arguments>
             <argument name="subscriptionModels" xsi:type="array">
@@ -1223,6 +1271,10 @@
     <type name="Magento\Framework\Mview\View\Subscription">
         <plugin name="hawksearchStagingSubscription" type="HawkSearch\EsIndexing\Plugin\Mview\View\StagingSubscriptionPlugin"/>
     </type>
+    <type name="HawkSearch\Connector\Gateway\Http\TransferInterface">
+        <plugin name="hawksearchIdBuilderPlugin" type="HawkSearch\EsIndexing\Plugin\Gateway\Http\TransferIdBuilderPlugin"/>
+    </type>
+
 
     <!-- END Plugins -->
 </config>
