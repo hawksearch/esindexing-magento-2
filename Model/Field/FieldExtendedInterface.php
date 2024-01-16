@@ -12,27 +12,31 @@
  */
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Config\Backend\Serialized\Processor;
+namespace HawkSearch\EsIndexing\Model\Field;
 
-use Magento\Framework\App\Config\ValueInterface;
+use HawkSearch\EsIndexing\Api\Data\FieldInterface;
 
-interface ValueProcessorInterface
+interface FieldExtendedInterface
 {
-    /**#@+
-     * Constants
+    /**
+     * @return bool
      */
-    const COLUMN_ATTRIBUTE = 'attribute';
-    const COLUMN_FIELD = 'field';
-    const COLUMN_FIELD_NEW = 'field_new';
-    const SELECT_OPTION_NEW_FILED_VALUE = '--insert--new--';
-    /**#@-*/
+    public function isSearchable(): bool;
 
     /**
-     * Process config value before serialization
-     *
-     * @param array $value
-     * @param ValueInterface $configValue
-     * @return array
+     * @return bool
      */
-    public function process(array $value, ValueInterface $configValue): array;
+    public function isFilterable(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isSortable(): bool;
+
+    /**
+     * Return initial field
+     *
+     * @return FieldInterface
+     */
+    public function getField(): FieldInterface;
 }

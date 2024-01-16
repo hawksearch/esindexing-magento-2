@@ -12,27 +12,29 @@
  */
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Config\Backend\Serialized\Processor;
+namespace HawkSearch\EsIndexing\Api;
 
-use Magento\Framework\App\Config\ValueInterface;
+use HawkSearch\EsIndexing\Api\Data\FacetInterface;
+use Magento\Framework\Exception\CouldNotSaveException;
 
-interface ValueProcessorInterface
+interface FacetManagementInterface
 {
-    /**#@+
-     * Constants
+    /**
+     * @return FacetInterface[]
      */
-    const COLUMN_ATTRIBUTE = 'attribute';
-    const COLUMN_FIELD = 'field';
-    const COLUMN_FIELD_NEW = 'field_new';
-    const SELECT_OPTION_NEW_FILED_VALUE = '--insert--new--';
-    /**#@-*/
+    public function getFacets(): array;
 
     /**
-     * Process config value before serialization
-     *
-     * @param array $value
-     * @param ValueInterface $configValue
-     * @return array
+     * @param FacetInterface $facet
+     * @return FacetInterface
+     * @throws CouldNotSaveException
      */
-    public function process(array $value, ValueInterface $configValue): array;
+    public function addFacet(FacetInterface $facet): FacetInterface;
+
+    /**
+     * @param FacetInterface $facet
+     * @return FacetInterface
+     * @throws CouldNotSaveException
+     */
+    public function updateFacet(FacetInterface $facet): FacetInterface;
 }
