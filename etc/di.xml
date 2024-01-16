@@ -1220,6 +1220,11 @@
         </arguments>
     </virtualType>
 
+    <type name="HawkSearch\EsIndexing\Model\Cron\RetryFailedOperations">
+        <arguments>
+            <argument name="bulkRetryManagement" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\RetryBulkManagement</argument>
+        </arguments>
+    </type>
     <!-- END Types -->
 
     <!-- Plugins -->
