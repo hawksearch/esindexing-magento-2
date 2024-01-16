@@ -21,7 +21,7 @@ class MessageTopicResolverComposite implements MessageTopicResolverInterface
     /**
      * @var MessageTopicResolverInterface[]
      */
-    private $resolvers = [];
+    private $resolvers;
 
     /**
      * MessageTopicResolverComposite constructor.

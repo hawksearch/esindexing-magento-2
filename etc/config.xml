@@ -16,6 +16,7 @@
     <default>
         <hawksearch_indexing_settings>
             <indexing>
+                <enable_indexing>0</enable_indexing>
                 <items_batch_size>125</items_batch_size>
             </indexing>
         </hawksearch_indexing_settings>
@@ -24,5 +25,10 @@
                 <remove_pub_assets_url>1</remove_pub_assets_url>
             </advanced>
         </hawksearch_advanced_settings>
+        <hawksearch_event_tracking_settings>
+            <general>
+                <enable>1</enable>
+            </general>
+        </hawksearch_event_tracking_settings>
     </default>
 </config>

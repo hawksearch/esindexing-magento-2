@@ -19,7 +19,7 @@ class MessageTopicByObjectResolver implements MessageTopicResolverInterface
     /**
      * @var string
      */
-    private $topic = '';
+    private $topic;
 
     /**
      * @var string

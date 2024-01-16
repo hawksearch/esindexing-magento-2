@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -17,8 +17,8 @@ namespace HawkSearch\EsIndexing\Gateway\Instruction\Result;
 use HawkSearch\Connector\Gateway\Helper\HttpResponseReader;
 use HawkSearch\Connector\Gateway\Instruction\ResultInterface;
 use HawkSearch\Connector\Helper\DataObjectHelper as HawkSearchDataObjectHelper;
-use HawkSearch\Connector\Api\Data\HawkSearchFieldInterfaceFactory;
-use HawkSearch\Connector\Api\Data\HawkSearchFieldInterface;
+use HawkSearch\EsIndexing\Api\Data\FieldInterface;
+use HawkSearch\EsIndexing\Api\Data\FieldInterfaceFactory;
 use Magento\Framework\Api\DataObjectHelper;
 
 class FieldResult implements ResultInterface
@@ -26,44 +26,44 @@ class FieldResult implements ResultInterface
     /**
      * @var array
      */
-    private $result;
+    private array $result;
 
     /**
-     * @var HawkSearchFieldInterfaceFactory
+     * @var FieldInterfaceFactory
      */
-    private $fieldFactory;
+    private FieldInterfaceFactory $fieldFactory;
 
     /**
      * @var DataObjectHelper
      */
-    private $dataObjectHelper;
+    private DataObjectHelper $dataObjectHelper;
 
     /**
      * @var HawkSearchDataObjectHelper
      */
-    private $hawksearchDataObjectHelper;
+    private HawkSearchDataObjectHelper $hawksearchDataObjectHelper;
 
     /**
      * @var HttpResponseReader
      */
-    private $httpResponseReader;
+    private HttpResponseReader $httpResponseReader;
 
     /**
-     * @param HawkSearchFieldInterfaceFactory $fieldInterfaceFactory
+     * @param FieldInterfaceFactory $fieldFactory
      * @param DataObjectHelper $dataObjectHelper
      * @param HawkSearchDataObjectHelper $hawksearchDataObjectHelper
      * @param HttpResponseReader $httpResponseReader
      * @param array $result
      */
     public function __construct(
-        HawkSearchFieldInterfaceFactory $fieldInterfaceFactory,
+        FieldInterfaceFactory $fieldFactory,
         DataObjectHelper $dataObjectHelper,
         HawkSearchDataObjectHelper $hawksearchDataObjectHelper,
         HttpResponseReader $httpResponseReader,
         array $result = []
     ) {
         $this->result = $result;
-        $this->fieldFactory = $fieldInterfaceFactory;
+        $this->fieldFactory = $fieldFactory;
         $this->dataObjectHelper = $dataObjectHelper;
         $this->hawksearchDataObjectHelper = $hawksearchDataObjectHelper;
         $this->httpResponseReader = $httpResponseReader;
@@ -72,12 +72,12 @@ class FieldResult implements ResultInterface
     /**
      * Returns result interpretation
      *
-     * @return HawkSearchFieldInterface
+     * @return FieldInterface
      */
-    public function get()
+    public function get(): FieldInterface
     {
         $response = $this->httpResponseReader->readResponseData($this->result);
-        if ($response instanceof HawkSearchFieldInterface) {
+        if ($response instanceof FieldInterface) {
             return $response;
         }
 
@@ -85,7 +85,7 @@ class FieldResult implements ResultInterface
         $this->dataObjectHelper->populateWithArray(
             $dataObject,
             $this->hawksearchDataObjectHelper->convertArrayToSnakeCase($response),
-            HawkSearchFieldInterface::class
+            FieldInterface::class
         );
         return $dataObject;
     }

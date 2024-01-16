@@ -19,10 +19,6 @@
         <observer name="hawksearch_esindexng_init_full_reindexing"
                   instance="HawkSearch\EsIndexing\Observer\Indexer\InitializeFullReindexing"/>
     </event>
-    <event name="hawksearch_esindexing_schedule_entity_items_after">
-        <observer name="hawksearch_esindexng_hierarchy_rebuild"
-                  instance="HawkSearch\EsIndexing\Observer\Indexer\ScheduleHierarchyRebuild" />
-    </event>
     <event name="hawksearch_esindexing_convert_entity_item_after">
         <observer name="hawksearch_esindexing_add_pricing"
                   instance="HawkSearch\EsIndexing\Model\Product\EntityPriceObserver" />

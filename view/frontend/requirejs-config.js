@@ -12,7 +12,8 @@
 var config = {
     "map": {
         "*": {
-            "hawksearchVueSDK": "HawkSearch_EsIndexing/js/vue-hawksearch-app"
+            "hawksearchVueSDK": "HawkSearch_EsIndexing/js/vue-hawksearch-app",
+            "hawksearchCommon": "HawkSearch_EsIndexing/js/common"
         }
     }
 };

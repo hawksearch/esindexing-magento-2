@@ -23,17 +23,25 @@
             <!--<referenceBlock name="search.result" remove="true" />-->
         </referenceContainer>
         <referenceBlock name="head.additional">
-            <block class="HawkSearch\EsIndexing\Block\Html\Head\VueConfig\Searchbox" name="hawksearch.vue.config.searchbox" template="HawkSearch_EsIndexing::vueconfig.phtml">
-                <action method="setConfigId">
-                    <argument name="id" xsi:type="string">searchbox</argument>
-                </action>
-            </block>
-            <block class="HawkSearch\EsIndexing\Block\Html\Head\VueConfig\Results" name="hawksearch.vue.config.results" template="HawkSearch_EsIndexing::vueconfig.phtml">
-                <action method="setConfigId">
-                    <argument name="id" xsi:type="string">results</argument>
-                </action>
+            <block class="HawkSearch\EsIndexing\Block\Html\Head\JsConfig\VueSearchbox"
+                   name="hawksearch-vue-config-searchbox" template="HawkSearch_EsIndexing::vueconfig.phtml"/>
+            <block class="HawkSearch\EsIndexing\Block\Html\Head\JsConfig\VueResults"
+                   name="hawksearch-vue-config-results" template="HawkSearch_EsIndexing::vueconfig.phtml"/>
+            <block class="HawkSearch\EsIndexing\Block\Html\Head\JsConfig\JsGlobal"
+                   name="hawksearch-js-config" template="HawkSearch_EsIndexing::jsconfig.phtml"/>
+            <block class="Magento\Framework\View\Element\Template"
+                   template="HawkSearch_EsIndexing::js.phtml"
+                   name="hawksearch.esindexing.js"
+                   as="hawksearch.esindexing.js">
             </block>
         </referenceBlock>
+        <referenceContainer name="after.body.start">
+            <block class="HawkSearch\EsIndexing\Block\Tracking"
+                   template="HawkSearch_EsIndexing::event-tracking.phtml"
+                   name="hawksearch.esindexing.eventtracking"
+                   as="hawksearch.esindexing.eventtracking">
+            </block>
+        </referenceContainer>
         <referenceBlock name="top.search">
             <action method="setTemplate">
                 <argument name="template" xsi:type="string">HawkSearch_EsIndexing::top-search.phtml</argument>

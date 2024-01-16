@@ -108,7 +108,7 @@ abstract class DefaultType implements ProductTypeInterface
         //add formatted prices (this step should be the last one)
         $this->addFormattedPrices($product, $priceData);
 
-        $currencyList = $store->getAvailableCurrencyCodes();
+        //$currencyList = $store->getAvailableCurrencyCodes();
         /*foreach ($currencyList as $currencyCode) {
             $priceData[$currencyCode] = [];
 
