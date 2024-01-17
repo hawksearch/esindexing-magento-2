@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -11,24 +11,12 @@
  * IN THE SOFTWARE.
  */
 
-/* @var $block \Magento\Catalog\Block\Product\AbstractProduct */
-/* @var \Magento\Framework\Escaper $escaper */
-
+use Magento\Catalog\Block\Product\AbstractProduct;
 use Magento\Framework\App\ActionInterface;
+use Magento\Framework\Escaper;
 
-$om = \Magento\Framework\App\ObjectManager::getInstance();
-$escaper = $om->get(\Magento\Framework\Escaper::class);
-$urlBuilder = $om->get(\Magento\Framework\UrlInterface::class);
-$request = $om->get(\Magento\Framework\App\RequestInterface::class);
-
-$getAddTocartUrl = function () use ($request, $urlBuilder)
-{
-    $routeParams = [
-        '_secure' => $request->isSecure(),
-        '_escape' => false
-    ];
-    return $urlBuilder->getUrl('checkout/cart/add', $routeParams);
-};
+/* @var $block AbstractProduct */
+/* @var Escaper $escaper */
 ?>
 
 <!-- HawkSearch Vue SDK part -->
@@ -146,11 +134,11 @@ $getAddTocartUrl = function () use ($request, $urlBuilder)
     <form ref="add-to-cart-form"
           data-role="tocart-form"
           method="post"
-          :action="'<?= $getAddTocartUrl() ?>' + 'product/' + $attrs['data-product-id'] + '/'"
+          :action="hawksearchConfig.request.addToCartUrl + 'product/' + $attrs['data-product-id'] + '/'"
           @submit="addToCart">
-        <input type="hidden" name="product" :value="$attrs['data-product-sku']">
-        <input type="hidden" name="<?= /* @noEscape */ ActionInterface::PARAM_NAME_URL_ENCODED ?>" :value="hawksearch.getRedirectUrlEncoded()">
-        <?= $block->getBlockHtml('formkey') ?>
+        <input type="hidden" name="product" :value="$attrs['data-product-sku']" />
+        <input type="hidden" name="<?= /* @noEscape */ ActionInterface::PARAM_NAME_URL_ENCODED ?>" :value="hawksearch.getRedirectUrlEncoded()" />
+        <input name="form_key" type="hidden" :value="hawksearch.getFormKey()" />
         <button type="submit" title="<?= $escaper->escapeHtmlAttr(__('Add to Cart')) ?>" class="action tocart primary">
             <span><?= $escaper->escapeHtml(__('Add to Cart')) ?></span>
         </button>
