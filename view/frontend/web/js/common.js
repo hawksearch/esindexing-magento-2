@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -40,6 +40,21 @@ define([
         getRedirectUrlEncoded: function() {
             const url = hawksearchConfig.request.url + window.location.search;
             return window.Base64.encode(url);
+        },
+
+        /**
+         * Return valid form_key
+         *
+         * @returns {string}
+         */
+        getFormKey: function () {
+            const updatedFormKey = $('input[name="form_key"]').val();
+
+            if (updatedFormKey && updatedFormKey !== hawksearchConfig.request.formKey) {
+                return updatedFormKey;
+            }
+
+            return hawksearchConfig.request.formKey;
         }
     }
 
