@@ -5,6 +5,73 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2024-01-18
+
+## FEATURES
+
+* __feat: add tracking for add2cart and sale events__ ([#34](https://github.com/hawksearch/esindexing-magento-2/pull/34))
+
+  - Implement event-tracking javascript library.
+  - Add an ability to exclude events which won't be fired.
+  - Add DataStorage service.
+  - Support [sale](https://developerdocs.hawksearch.com/docs/event-tracking-api#sale-event) tracking event on Order complete (Order Success Page).
+  - Support [add2cart](https://developerdocs.hawksearch.com/docs/event-tracking-api#add-to-cart-event) tracking event.
+
+  Refs: HC-1392
+* __feat: update hawksearch/vue lib to version 0.9.101__ ([#34](https://github.com/hawksearch/esindexing-magento-2/pull/34))
+
+  - let firing tracking events on search item link click ([821b418](https://github.com/hawksearch/vue-hawksearch/commit/821b418396f334134509d3285029b15e3b49b686))
+  - allow item to be opened in new tab by short key ([821b418](https://github.com/hawksearch/vue-hawksearch/commit/821b418396f334134509d3285029b15e3b49b686))
+  - change 'getLink()' method by computed property 'link' in :href attribute ([bc51ed7](https://github.com/hawksearch/vue-hawksearch/commit/bc51ed762d895a68be804bbab9822210b2fce0f5))
+
+    Refs: HC-1392
+* __feat: disable indexing by default__
+
+  - '_Enable Indexing_' config now only available on Store View scope.
+  - '_Enable Indexing_ config default value  is changed to "No".
+  - Indexing is disable by default for a new created store. It prevents indexing to be started on new Stores
+
+  Refs: HC-1449
+* __feat: sync attribute properties to field and facet on config save__
+
+  Field properties in Hawksearch are synchronized with Magento's attribute properties 'Is Filterable', 'Is Searchable' 
+  and ‘Used for Sorting in Product Listing’ when HawkSearch Products > Products > Attributes setting is saved.
+  'Is Filterable' property of an attribute also synced to a facet associated with the field.
+
+  Add Field add Facet interfaces for API. Do not use \HawkSearch\Connector\Api\Data\HawkSearchFieldInterface anymore.
+
+  Refs: HC-1407
+* __feat: add crontab to retry failed indexing operations__ ([#41](https://github.com/hawksearch/esindexing-magento-2/pull/41))
+
+  Refs HC-1447
+
+## FIXES
+
+* __fix: cannot read properties of undefined in getID function__ ([#26](https://github.com/hawksearch/esindexing-magento-2/pull/26))
+
+  Refs: HC-1460
+* __fix: make attribute values of complex products unique__ ([#36](https://github.com/hawksearch/esindexing-magento-2/pull/36))
+
+  - Do not roll-up values of SKU attribute of children to parent
+  - Roll-up attribute values of children to parent and make them unique
+
+  Refs: HC-1394, HC-1501, HC-1502, RR-14
+* __fix: bad request on add2cart event tracking request__ ([#38](https://github.com/hawksearch/esindexing-magento-2/pull/38))
+
+  Refs: HC-1453
+* __fix: use price including tax on add2cart event tracking request__ ([#39](https://github.com/hawksearch/esindexing-magento-2/pull/39))
+* __fix: add missing cronjob argument__ ([#42](https://github.com/hawksearch/esindexing-magento-2/pull/42))
+* __fix: wrong page redirect after adding product to cart__ ([6d88bbb](https://github.com/hawksearch/esindexing-magento-2/commit/6d88bbbc3bef0e1b4fab5ddd2bfde1430261406d))
+
+  When product was added to cart from the page rendered by Vue application with changed URL parameters, 
+  then browser redirected to the initial page rendered by force page reloading. Now `uenc` parameter in `tocart-form` 
+  is updated according to changed URL parameters.
+
+  Refs: HC-1534, AIC-20
+* __fix: invalid form key on add to cart form__([#44](https://github.com/hawksearch/esindexing-magento-2/pull/44))
+
+  Refs: HC-1542, AIC-19
+
 ## [0.4.2] - 2023-10-12
 
 ## FIXES
@@ -136,7 +203,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.1.0
 Initial stable release
 
-[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.4.2...HEAD
+[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.4.2...v0.5.0
 [0.4.2]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.3.0...v0.4.0
