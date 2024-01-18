@@ -21,13 +21,18 @@
                 <group id="hawk_url" showInDefault="0" showInWebsite="0" showInStore="0"  />
             </group>
         </section>
+
         <section id="hawksearch_indexing_settings" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Indexing</label>
             <tab>hawksearch</tab>
             <resource>HawkSearch_EsIndexing::config</resource>
-            <group id="indexing" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="indexing" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Indexing</label>
-                <field id="enable_indexing" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <comment><![CDATA[
+                    To <b>Eenable Indexing</b> please switch to Store View configuration scope
+                    ]]>
+                </comment>
+                <field id="enable_indexing" translate="label comment" type="select" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
                     <label>Enable Indexing</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Enables indexing of your data by Hawksearch.</comment>
@@ -35,26 +40,22 @@
                 <field id="items_batch_size" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Maximum number of items per iteration</label>
                     <comment>Default value is 125.</comment>
-                    <comment>
-                        <![CDATA[
-                            Specify product attributes.
-                        ]]>
-                    </comment>
                 </field>
-                <field id="products_include_categories_hierarchy" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="products_include_categories_hierarchy" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Include all parent categories for products</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Include all parent categories in the hierarchy when indexing products, even if they are not selected for the product directly.</comment>
                 </field>
             </group>
         </section>
+
         <section id="hawksearch_search_settings" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Search</label>
             <tab>hawksearch</tab>
             <resource>HawkSearch_EsIndexing::config</resource>
             <group id="search" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Search</label>
-                <field id="enable_search" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="enable_search" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable Search</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>
@@ -72,7 +73,7 @@
             <resource>HawkSearch_EsIndexing::config</resource>
             <group id="products" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Products</label>
-                <field id="custom_attributes" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="custom_attributes" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Attributes</label>
                     <frontend_model>HawkSearch\EsIndexing\Block\Adminhtml\System\Config\Product\CustomAttributes</frontend_model>
                     <backend_model>HawkSearch\EsIndexing\Model\Config\Backend\Serialized\ProductAttributes</backend_model>
@@ -85,6 +86,7 @@
 
             </group>
         </section>
+
         <section id="hawksearch_advanced_settings" translate="label" type="text" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Advanced</label>
             <tab>hawksearch</tab>
@@ -102,6 +104,19 @@
                                 is transformed to http://example.com/media/catalog/product/image.jpg
                             ]]>
                     </comment>
+                </field>
+            </group>
+        </section>
+
+        <section id="hawksearch_event_tracking_settings" translate="label" type="text" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Event Tracking</label>
+            <tab>hawksearch</tab>
+            <resource>HawkSearch_EsIndexing::config</resource>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+                <field id="enable" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Event Tracking</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
         </section>

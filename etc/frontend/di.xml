@@ -26,19 +26,21 @@
         </arguments>
     </type>
 
-    <type name="HawkSearch\EsIndexing\Block\Html\Head\VueConfig">
-        <arguments>
-            <argument name="serializer" xsi:type="object">Magento\Framework\Serialize\Serializer\JsonHexTag</argument>
-        </arguments>
-    </type>
-    <virtualType name="HawkSearch\EsIndexing\Block\Html\Head\VueConfig\Searchbox" type="HawkSearch\EsIndexing\Block\Html\Head\VueConfig">
+    <virtualType name="HawkSearch\EsIndexing\Block\Html\Head\JsConfig\VueSearchbox" type="HawkSearch\EsIndexing\Block\Html\Head\JsConfig">
         <arguments>
             <argument name="configProcessor" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueSearchboxConfigProcessorComposite</argument>
+            <argument name="serializer" xsi:type="object">Magento\Framework\Serialize\Serializer\JsonHexTag</argument>
         </arguments>
     </virtualType>
-    <virtualType name="HawkSearch\EsIndexing\Block\Html\Head\VueConfig\Results" type="HawkSearch\EsIndexing\Block\Html\Head\VueConfig">
+    <virtualType name="HawkSearch\EsIndexing\Block\Html\Head\JsConfig\VueResults" type="HawkSearch\EsIndexing\Block\Html\Head\JsConfig">
         <arguments>
             <argument name="configProcessor" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueResultsConfigProcessorComposite</argument>
+            <argument name="serializer" xsi:type="object">Magento\Framework\Serialize\Serializer\JsonHexTag</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearch\EsIndexing\Block\Html\Head\JsConfig\JsGlobal" type="HawkSearch\EsIndexing\Block\Html\Head\JsConfig">
+        <arguments>
+            <argument name="configProcessor" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\JsGlobalConfigProcessorComposite</argument>
         </arguments>
     </virtualType>
 
@@ -46,25 +48,70 @@
                  type="HawkSearch\EsIndexing\Model\Layout\CompositeConfigProcessor">
         <arguments>
             <argument name="configProcessors"  xsi:type="array">
-                <item name="VueConnection" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueConnectionConfigProcessor</item>
-                <item name="VueSearchBox" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueSearchBoxConfigProcessor</item>
-                <item name="VueParamsMapping" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueParamsMappingProcessor</item>
-                <item name="VueSuggestionItem" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueSuggestionItemConfigProcessor</item>
+                <item name="VueConnection" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\ConfigProcessor\Vue\VueConnectionConfigProcessor</item>
+                <item name="VueSearchBox" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\ConfigProcessor\Vue\VueSearchBoxConfigProcessor</item>
+                <item name="VueParamsMapping" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\ConfigProcessor\Vue\VueParamsMappingProcessor</item>
+                <item name="VueSuggestionItem" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\ConfigProcessor\Vue\VueSuggestionItemConfigProcessor</item>
             </argument>
         </arguments>
     </virtualType>
-
     <virtualType name="HawkSearch\EsIndexing\Model\Layout\VueResultsConfigProcessorComposite"
                  type="HawkSearch\EsIndexing\Model\Layout\CompositeConfigProcessor">
         <arguments>
             <argument name="configProcessors"  xsi:type="array">
-                <item name="VueConnection" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueConnectionConfigProcessor</item>
-                <item name="VueTab" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueTabConfigProcessor</item>
-                <item name="VueSearch" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueSearchConfigProcessor</item>
-                <item name="VueParamsMapping" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueParamsMappingProcessor</item>
-                <item name="VueResultItem" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueResultItemConfigProcessor</item>
-                <item name="VueAdditionalParameters" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\VueAdditionalParametersProcessor</item>
+                <item name="VueConnection" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\ConfigProcessor\Vue\VueConnectionConfigProcessor</item>
+                <item name="VueTab" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\ConfigProcessor\Vue\VueTabConfigProcessor</item>
+                <item name="VueSearch" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\ConfigProcessor\Vue\VueSearchConfigProcessor</item>
+                <item name="VueParamsMapping" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\ConfigProcessor\Vue\VueParamsMappingProcessor</item>
+                <item name="VueResultItem" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\ConfigProcessor\Vue\VueResultItemConfigProcessor</item>
+                <item name="VueAdditionalParameters" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\ConfigProcessor\Vue\VueAdditionalParametersProcessor</item>
             </argument>
         </arguments>
     </virtualType>
+    <virtualType name="HawkSearch\EsIndexing\Model\Layout\JsGlobalConfigProcessorComposite"
+                 type="HawkSearch\EsIndexing\Model\Layout\CompositeConfigProcessor">
+        <arguments>
+            <argument name="configProcessors" xsi:type="array">
+                <item name="common" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\ConfigProcessor\JsGlobal\CommonConfigProcessor</item>
+                <item name="request" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\ConfigProcessor\JsGlobal\RequestConfigProcessor</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="HawkSearchCartItemsToAddDataStorage" type="HawkSearch\EsIndexing\Service\DataStorage">
+        <arguments>
+            <argument name="name" xsi:type="string">HawkSearchCartItemsToAddDataStorage</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearchCartItemsToRemoveDataStorage" type="HawkSearch\EsIndexing\Service\DataStorage">
+        <arguments>
+            <argument name="name" xsi:type="string">HawkSearchCartItemsToRemoveDataStorage</argument>
+        </arguments>
+    </virtualType>
+    <type name="HawkSearch\EsIndexing\Plugin\Quote\OnCartAddTrackingEventPlugin">
+        <arguments>
+            <argument name="cartItemsToAddDataStorage" xsi:type="object">HawkSearchCartItemsToAddDataStorage</argument>
+        </arguments>
+    </type>
+    <type name="HawkSearch\EsIndexing\Plugin\Quote\OnCartRemoveTrackingEventPlugin">
+        <arguments>
+            <argument name="cartItemsToRemoveDataStorage" xsi:type="object">HawkSearchCartItemsToRemoveDataStorage</argument>
+        </arguments>
+    </type>
+    <type name="HawkSearch\EsIndexing\Observer\SendCookieOnCartCompleteObserver">
+        <arguments>
+            <argument name="cartItemsToAddDataStorage" xsi:type="object">HawkSearchCartItemsToAddDataStorage</argument>
+            <argument name="cartItemsToRemoveDataStorage" xsi:type="object">HawkSearchCartItemsToRemoveDataStorage</argument>
+        </arguments>
+    </type>
+
+    <!-- Plugins -->
+    <type name="Magento\Quote\Model\Quote">
+        <plugin name="hawksearch_tracking_event_on_cart_add" type="HawkSearch\EsIndexing\Plugin\Quote\OnCartAddTrackingEventPlugin" />
+        <plugin name="hawksearch_tracking_event_on_cart_remove" type="HawkSearch\EsIndexing\Plugin\Quote\OnCartRemoveTrackingEventPlugin" />
+    </type>
+    <type name="Magento\Checkout\CustomerData\Cart">
+        <plugin name="hawksearch_tracking_price_data" type="HawkSearch\EsIndexing\Plugin\Checkout\CustomerData\Cart"/>
+    </type>
+    <!-- END Plugins -->
 </config>

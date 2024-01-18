@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -11,42 +11,27 @@
  * IN THE SOFTWARE.
  */
 
-/* @var $block \Magento\Catalog\Block\Product\AbstractProduct */
-/* @var \Magento\Framework\Escaper $escaper */
-
+use Magento\Catalog\Block\Product\AbstractProduct;
 use Magento\Framework\App\ActionInterface;
+use Magento\Framework\Escaper;
 
-$om = \Magento\Framework\App\ObjectManager::getInstance();
-$escaper = $om->get(\Magento\Framework\Escaper::class);
-$urlHelper = $om->get(\Magento\Framework\Url\Helper\Data::class);
-$urlBuilder = $om->get(\Magento\Framework\UrlInterface::class);
-$request = $om->get(\Magento\Framework\App\RequestInterface::class);
-
-$getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
-{
-    $currentUrl = $urlHelper->getEncodedUrl($urlBuilder->getCurrentUrl());
-    $urlParamName = ActionInterface::PARAM_NAME_URL_ENCODED;
-
-    $routeParams = [
-        $urlParamName => $currentUrl,
-        '_secure' => $request->isSecure(),
-    ];
-    $additional = ['_escape' => false];
-    $routeParams = array_merge($routeParams, $additional);
-
-
-    return $urlBuilder->getUrl('checkout/cart/add', $routeParams);
-};
+/* @var $block AbstractProduct */
+/* @var Escaper $escaper */
 ?>
 
 <!-- HawkSearch Vue SDK part -->
 <script>
     function addToCart(args) {
-        if (this.$parent && this.$parent.$refs.hasOwnProperty('add-to-cart-form')) {
-            var form = this.$parent.$refs['add-to-cart-form'];
+        if (this.$refs.hasOwnProperty('add-to-cart-form')) {
+            var form = this.$refs['add-to-cart-form'];
 
             if (form.requestSubmit) {
-                form.requestSubmit();
+                let button = form.querySelector('button.action.tocart')
+                if (button) {
+                    form.requestSubmit(button);
+                } else {
+                    form.requestSubmit();
+                }
             }
             else {
                 form.submit();
@@ -65,7 +50,7 @@ $getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
 <script id="vue-hawksearch-result-item-grid" type="x-template">
     <div class="item product product-item">
         <div class="product-item-info" data-container="product-grid">
-            <a :href="getLink()" @click="onClick" class="product photo product-item-photo">
+            <a :href="link" @click="onClick" class="product photo product-item-photo">
                 <span class="product-image-container" style="width:215px;">
                     <span class="product-image-wrapper" style="padding-bottom: 125%;">
                         <img class="product-image-photo" v-bind:src="getField('image_url')" />
@@ -76,7 +61,7 @@ $getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
                 <span class="product name product-item-name"><a
                         class="product-item-link"
                         :title="getField('name')"
-                        :href="getLink()"
+                        :href="link"
                         @click="onClick">
                         {{ getField('name') }}</a>
 
@@ -92,16 +77,10 @@ $getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
                 <div class="product-item-inner">
                     <div class="product actions product-item-actions">
                         <div class="actions-primary">
-                            <add-to-cart class="action tocart primary" :add-fn="addToCart" :add-args="{}" />
-
-                            <form ref="add-to-cart-form" style="display: none;" data-role="tocart-form" method="post" :data-product-sku="getField('sku')" :action="'<?= $getAddTocartUrl() ?>' + 'product/' + getID(getField('__uid')) + '/'">
-                                <input type="hidden" name="product" :value="getField('sku')">
-                                <input type="hidden" name="<?= /* @noEscape */ ActionInterface::PARAM_NAME_URL_ENCODED ?>" :value="'<?= $getAddTocartUrl() ?>' + 'product/' + getID(getField('__uid')) + '/'">
-                                <?= $block->getBlockHtml('formkey') ?>
-                                <button type="submit" title="<?= $escaper->escapeHtmlAttr(__('Add to Cart')) ?>" class="action tocart primary">
-                                    <span><?= $escaper->escapeHtml(__('Add to Cart')) ?></span>
-                                </button>
-                            </form>
+                            <add-to-cart :add-fn="addToCart"
+                                         :add-args="{}"
+                                         :data-product-sku="getField('sku')"
+                                         :data-product-id="getID(getField('__uid'))"/>
                         </div>
                     </div>
                 </div>
@@ -113,7 +92,7 @@ $getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
 <script id="vue-hawksearch-result-item-list" type="x-template">
     <div class="item product product-item">
         <div class="product-item-info" data-container="product-grid">
-            <a :href="getLink()" @click="onClick" class="product photo product-item-photo">
+            <a :href="link" @click="onClick" class="product photo product-item-photo">
                 <span class="product-image-container" style="width:215px;">
                     <span class="product-image-wrapper" style="padding-bottom: 125%;">
                         <img class="product-image-photo" v-bind:src="getField('image_url')" />
@@ -124,7 +103,7 @@ $getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
                 <span class="product name product-item-name"><a
                         class="product-item-link"
                         :title="getField('name')"
-                        :href="getLink()"
+                        :href="link"
                         @click="onClick">
                         {{ getField('name') }}</a>
                 </span>
@@ -139,16 +118,10 @@ $getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
                 <div class="product-item-inner">
                     <div class="product actions product-item-actions">
                         <div class="actions-primary">
-                            <add-to-cart class="action tocart primary" :add-fn="addToCart" :add-args="{}" />
-
-                            <form ref="add-to-cart-form" style="display: none;" data-role="tocart-form" method="post" :data-product-sku="getField('sku')" :action="'<?= $getAddTocartUrl() ?>' + 'product/' + getID(getField('__uid')) + '/'">
-                                <input type="hidden" name="product" :value="getField('sku')">
-                                <input type="hidden" name="<?= /* @noEscape */ ActionInterface::PARAM_NAME_URL_ENCODED ?>" :value="'<?= $getAddTocartUrl() ?>' + 'product/' + getID(getField('__uid')) + '/'">
-                                <?= $block->getBlockHtml('formkey') ?>
-                                <button type="submit" title="<?= $escaper->escapeHtmlAttr(__('Add to Cart')) ?>" class="action tocart primary">
-                                    <span><?= $escaper->escapeHtml(__('Add to Cart')) ?></span>
-                                </button>
-                            </form>
+                            <add-to-cart :add-fn="addToCart"
+                                         :add-args="{}"
+                                         :data-product-sku="getField('sku')"
+                                         :data-product-id="getID(getField('__uid'))"/>
                         </div>
                     </div>
                 </div>
@@ -157,12 +130,28 @@ $getAddTocartUrl = function () use ($urlHelper, $request, $urlBuilder)
     </div>
 </script>
 
-
+<script id="vue-hawksearch-AddToCart" type="x-template">
+    <form ref="add-to-cart-form"
+          data-role="tocart-form"
+          method="post"
+          :action="hawksearchConfig.request.addToCartUrl + 'product/' + $attrs['data-product-id'] + '/'"
+          @submit="addToCart">
+        <input type="hidden" name="product" :value="$attrs['data-product-sku']" />
+        <input type="hidden" name="<?= /* @noEscape */ ActionInterface::PARAM_NAME_URL_ENCODED ?>" :value="hawksearch.getRedirectUrlEncoded()" />
+        <input name="form_key" type="hidden" :value="hawksearch.getFormKey()" />
+        <button type="submit" title="<?= $escaper->escapeHtmlAttr(__('Add to Cart')) ?>" class="action tocart primary">
+            <span><?= $escaper->escapeHtml(__('Add to Cart')) ?></span>
+        </button>
+    </form>
+</script>
 <script type="text/x-magento-init">
 {
     "[data-role=tocart-form], .form.map.checkout": {
         "catalogAddToCart": {
         }
+    },
+    "*": {
+        "hawksearchCommon": {}
     }
 }
 </script>

@@ -46,6 +46,9 @@ class DefaultHandler implements AttributeHandlerInterface
             if ($value !== null) {
                 if (!is_array($value) && $attributeResource->usesSource()) {
                     $value = $item->getAttributeText($attributeCode);
+                    if (!is_scalar($value) && !is_array($value)) {
+                        $value = (string)$value;
+                    }
                 }
 
                 if ($value === false) {
