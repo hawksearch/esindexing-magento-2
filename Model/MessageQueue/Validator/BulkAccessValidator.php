@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -12,34 +12,36 @@
  */
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\MessageQueue;
+namespace HawkSearch\EsIndexing\Model\MessageQueue\Validator;
 
+use HawkSearch\EsIndexing\Model\MessageQueue\Exception\InvalidBulkOperationException;
 use Magento\AsynchronousOperations\Model\BulkOperationsStatus;
+use Magento\Framework\Bulk\OperationInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 
 class BulkAccessValidator
 {
     /**
-     * @var IndexingOperationValidator
+     * @var OperationValidatorInterface
      */
-    private $operationValidator;
+    private OperationValidatorInterface $operationTopicValidator;
 
     /**
      * @var BulkOperationsStatus
      */
-    private $bulkOperationsStatus;
+    private BulkOperationsStatus $bulkOperationsStatus;
 
     /**
      * BulkAccessValidator Constructor
      *
-     * @param IndexingOperationValidator $operationValidator
+     * @param OperationValidatorInterface $operationTopicValidator
      * @param BulkOperationsStatus $bulkOperationsStatus
      */
     public function __construct(
-        IndexingOperationValidator $operationValidator,
+        OperationValidatorInterface $operationTopicValidator,
         BulkOperationsStatus $bulkOperationsStatus
     ) {
-        $this->operationValidator = $operationValidator;
+        $this->operationTopicValidator = $operationTopicValidator;
         $this->bulkOperationsStatus = $bulkOperationsStatus;
     }
 
@@ -49,15 +51,31 @@ class BulkAccessValidator
      * @param string $bulkUuid
      * @return bool
      */
-    public function isAllowed(string $bulkUuid)
+    public function isAllowed(string $bulkUuid): bool
     {
         $isAllowed = true;
         try {
             $bulk = $this->bulkOperationsStatus->getBulkDetailedStatus($bulkUuid);
             foreach ($bulk->getOperationsList() as $operation) {
-                $isAllowed = $isAllowed && $this->operationValidator->isOperationTopicAllowed($operation);
+                $isAllowed = $isAllowed && $this->isTopicAllowed($operation);
             }
         } catch (NoSuchEntityException $e) {
+            $isAllowed = false;
+        }
+
+        return $isAllowed;
+    }
+
+    /**
+     * @param OperationInterface $operation
+     * @return bool
+     */
+    private function isTopicAllowed(OperationInterface $operation): bool
+    {
+        $isAllowed = true;
+        try {
+            $this->operationTopicValidator->validate($operation);
+        } catch (InvalidBulkOperationException $e) {
             $isAllowed = false;
         }
 

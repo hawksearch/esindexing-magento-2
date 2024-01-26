@@ -1225,6 +1225,20 @@
             <argument name="bulkRetryManagement" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\RetryBulkManagement</argument>
         </arguments>
     </type>
+
+    <type name="HawkSearch\EsIndexing\Model\MessageQueue\Validator\BulkAccessValidator">
+        <arguments>
+            <argument name="operationTopicValidator" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\Validator\OperationTopicValidator</argument>
+        </arguments>
+    </type>
+
+    <type name="HawkSearch\EsIndexing\Plugin\AsynchronousOperationProcessorPlugin">
+        <arguments>
+            <argument name="bulkAllOperationCompleteValidator" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\Validator\BulkAllOperationCompleteValidator</argument>
+            <argument name="operationTopicValidator" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\Validator\OperationTopicValidator</argument>
+            <argument name="operationOpenStatusValidator" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\Validator\OperationOpenStatusValidator</argument>
+        </arguments>
+    </type>
     <!-- END Types -->
 
     <!-- Plugins -->

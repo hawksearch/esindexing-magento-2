@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Controller\Adminhtml\Bulkoperations;
 
-use HawkSearch\EsIndexing\Model\MessageQueue\BulkAccessValidator;
+use HawkSearch\EsIndexing\Model\MessageQueue\Validator\BulkAccessValidator;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\Action\HttpGetActionInterface;
@@ -33,17 +33,17 @@ class Details extends Action implements HttpGetActionInterface
     /**
      * @var PageFactory
      */
-    private $resultPageFactory;
+    private PageFactory $resultPageFactory;
 
     /**
      * @var string
      */
-    private $menuId;
+    private string $menuId;
 
     /**
      * @var BulkAccessValidator
      */
-    private $bulkAccessValidator;
+    private BulkAccessValidator $bulkAccessValidator;
 
     /**
      * Index constructor.
@@ -57,16 +57,17 @@ class Details extends Action implements HttpGetActionInterface
         Context $context,
         PageFactory $resultPageFactory,
         BulkAccessValidator $bulkAccessValidator,
-        $menuId = 'HawkSearch_EsIndexing::bulk_operations'
+        string $menuId = 'HawkSearch_EsIndexing::bulk_operations'
     ) {
         $this->resultPageFactory = $resultPageFactory;
-        $this->menuId = $menuId;
         $this->bulkAccessValidator = $bulkAccessValidator;
+        $this->menuId = $menuId;
         parent::__construct($context);
     }
 
     /**
      * @inheritDoc
+     * @noinspection PhpMissingReturnTypeInspection
      */
     protected function _isAllowed()
     {
@@ -77,6 +78,7 @@ class Details extends Action implements HttpGetActionInterface
      * Bulk list action
      *
      * @return Page
+     * @noinspection PhpMissingReturnTypeInspection
      */
     public function execute()
     {
