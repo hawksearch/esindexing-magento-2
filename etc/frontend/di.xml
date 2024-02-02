@@ -74,6 +74,7 @@
             <argument name="configProcessors" xsi:type="array">
                 <item name="common" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\ConfigProcessor\JsGlobal\CommonConfigProcessor</item>
                 <item name="request" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\ConfigProcessor\JsGlobal\RequestConfigProcessor</item>
+                <item name="pricing" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\ConfigProcessor\JsGlobal\PricingConfigProcessor</item>
             </argument>
         </arguments>
     </virtualType>

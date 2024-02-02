@@ -13,9 +13,11 @@
 define([
     'jquery',
     'underscore',
+    'mage/utils/template',
+    'priceUtils',
     'hawksearchVueSDK',
     'mage/adminhtml/tools'
-], function ($, _) {
+], function ($, _, mageTemplate, priceUtils) {
     window.hawksearch = {
         /**
          * Find Vue app widget in registered widget instances
@@ -55,6 +57,89 @@ define([
             }
 
             return hawksearchConfig.request.formKey;
+        },
+
+        /**
+         *
+         * @param document Result Document
+         * @returns {string|null}
+         */
+        extractId: function(document) {
+            const uuid = this.getDocumentField(document, '__uid');
+            if (uuid && uuid.includes('_')) {
+                return uuid.split('_').pop();
+            }
+
+            return null;
+        },
+
+        /**
+         * Apply pricing template
+         *
+         * @param document results Document
+         * @returns {*}
+         */
+        formatItemPrice: function (document) {
+            const templateType = (
+                _.indexOf(
+                    _.keys(hawksearchConfig.pricing.priceTemplates),
+                    this.getDocumentField(document, "type_id")
+                ) !== -1
+            ) ?
+                this.getDocumentField(document, "type_id") :
+                'default';
+            /**
+             * We use regular price template for now
+             * @todo select price template regular or special depending on price
+             */
+            const priceTemplate = hawksearchConfig.pricing.priceTemplates[templateType]['regular'];
+
+            return mageTemplate.template(
+                priceTemplate,
+                {
+                    uid: this.extractId(document),
+                    price_regular: this.getDocumentField(document, "price_regular"),
+                    price_regular_include_tax: this.getDocumentField(document, "price_regular_include_tax"),
+                    price_final: this.getDocumentField(document, "price_final"),
+                    price_final_include_tax: this.getDocumentField(document, "price_final_include_tax"),
+
+                    //priceUtils.formatPrice(item.price, currencyFormat)
+                    price_regular_formatted: priceUtils.formatPriceLocale(
+                        this.getDocumentField(document, "price_regular"),
+                        hawksearchConfig.pricing.priceFormat
+                    ),
+                    price_regular_include_tax_formatted: priceUtils.formatPriceLocale(
+                        this.getDocumentField(document, "price_regular_include_tax"),
+                        hawksearchConfig.pricing.priceFormat
+                    ),
+                    price_final_formatted: priceUtils.formatPriceLocale(
+                        this.getDocumentField(document, "price_final"),
+                        hawksearchConfig.pricing.priceFormat
+                    ),
+                    price_final_include_tax_formatted: priceUtils.formatPriceLocale(
+                        this.getDocumentField(document, "price_final_include_tax"),
+                        hawksearchConfig.pricing.priceFormat
+                    ),
+                    //currency_code: hawksearchConfig.pricing.currencyCode
+                }
+            )
+        },
+
+        /**
+         * Return field value from the Document
+         *
+         * @param document results Document
+         * @param {string} field
+         * @returns {*|null}
+         */
+        getDocumentField: function (document, field) {
+            if (document &&
+                document[field] &&
+                document[field].length) {
+                return document[field][0];
+            }
+
+            return null;
         }
     }
 

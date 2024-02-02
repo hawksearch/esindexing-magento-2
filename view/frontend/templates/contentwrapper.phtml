@@ -66,21 +66,14 @@ use Magento\Framework\Escaper;
                         {{ getField('name') }}</a>
 
                 </span>
-                <div class="price-box price-final_price" data-role="priceBox" data-product-id="260" data-price-box="product-id-260">
-                    <span class="normal-price">
-                        <span class="price-container price-final_price tax weee">
-                            <span class="price-label">As low as</span>
-                            <span id="product-price-260" :data-price-amount="getField('price_final')" data-price-type="finalPrice" class="price-wrapper "><span class="price">{{getField('price_final_formatted')}}</span></span>
-                        </span>
-                    </span>
-                </div>
+                <span v-html="hawksearch.formatItemPrice(result.Document || {})"/>
                 <div class="product-item-inner">
                     <div class="product actions product-item-actions">
                         <div class="actions-primary">
                             <add-to-cart :add-fn="addToCart"
                                          :add-args="{}"
                                          :data-product-sku="getField('sku')"
-                                         :data-product-id="getID(getField('__uid'))"/>
+                                         :data-product-id="hawksearch.extractId(result.Document || {})"/>
                         </div>
                     </div>
                 </div>
@@ -107,21 +100,14 @@ use Magento\Framework\Escaper;
                         @click="onClick">
                         {{ getField('name') }}</a>
                 </span>
-                <div class="price-box price-final_price" data-role="priceBox" data-product-id="260" data-price-box="product-id-260">
-                    <span class="normal-price">
-                        <span class="price-container price-final_price tax weee">
-                            <span class="price-label">As low as</span>
-                            <span id="product-price-260" :data-price-amount="getField('price_final')" data-price-type="finalPrice" class="price-wrapper "><span class="price">{{getField('price_final_formatted')}}</span></span>
-                        </span>
-                    </span>
-                </div>
+                <span v-html="hawksearch.formatItemPrice(result.Document || {})"/>
                 <div class="product-item-inner">
                     <div class="product actions product-item-actions">
                         <div class="actions-primary">
                             <add-to-cart :add-fn="addToCart"
                                          :add-args="{}"
                                          :data-product-sku="getField('sku')"
-                                         :data-product-id="getID(getField('__uid'))"/>
+                                         :data-product-id="hawksearch.extractId(result.Document || {})"/>
                         </div>
                     </div>
                 </div>
