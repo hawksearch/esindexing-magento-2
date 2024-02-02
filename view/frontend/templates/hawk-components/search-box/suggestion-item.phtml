@@ -1,9 +1,12 @@
 <!-- SuggestionItem component -->
 <script id="vue-hawksearch-suggestion-item" type="x-template">
     <li @click="onClick">
-        <template v-if="getThumb('thumbnail_url')">
-            <img class="hawk-sqItemImage-thumb" :src="getThumb('thumbnail_url')" />
-        </template>
-        <span class="p-name">{{ getTitle() }}</span>
+        <div class="item product product-item">
+            <template v-if="getThumb('thumbnail_url')">
+                <img class="hawk-sqItemImage-thumb" :src="getThumb('thumbnail_url')" />
+            </template>
+            <span class="p-name">{{ getTitle() }}</span>
+            <span v-html="hawksearch.formatItemPrice(item.Results.Document || {})"/>
+        </div>
     </li>
 </script>
