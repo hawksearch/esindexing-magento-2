@@ -58,7 +58,23 @@ define([
         }
     }
 
+    function initVueWidget() {
+        const components = $('[data-vue-hawksearch-component]');
+
+        $.each(components, function (index, component) {
+            try {
+                const configId = $(component).data('vueHawksearchConfig');
+                const config = JSON.parse($('#' + configId).html());
+                HawksearchVue.createWidget(component, {config, dataLayer: configId});
+            } catch (e) {
+                console.error(e);
+            }
+        });
+    }
+
     $(function ($) {
+        initVueWidget();
+
         let isFetchResultsDispatched = false;
         if (hawksearch.getVueWidget(hawksearchConfig.vueComponent).config.searchConfig.initialSearch) {
             HawksearchVue.getWidgetStore(hawksearch.getVueWidget(hawksearchConfig.vueComponent)).subscribeAction({
