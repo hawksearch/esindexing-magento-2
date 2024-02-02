@@ -25,4 +25,17 @@ class Configurable extends CompositeType
     {
         return $product->getTypeInstance()->getUsedProducts($product);
     }
+
+    /**
+     * Avoid returning final price including tax
+     * Force to load min_price from price index
+     *
+     * @param ProductInterface $product
+     * @return float
+     * @see \Magento\ConfigurableProduct\Model\Product\Type\Configurable\Price::getFinalPrice
+     */
+    public function getPriceFinal(ProductInterface $product): float
+    {
+        return max($this->getPriceMin($product), 0);
+    }
 }
