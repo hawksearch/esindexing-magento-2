@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -24,7 +24,7 @@ abstract class CompositeType extends DefaultType
      * @param Product|ProductInterface $product
      * @return float[]|array [min, max]
      */
-    protected function getMinMaxPrice(ProductInterface $product)
+    protected function getMinMaxPrice(ProductInterface $product): array
     {
         $min = PHP_INT_MAX;
         $max = 0;
@@ -34,7 +34,7 @@ abstract class CompositeType extends DefaultType
                 if ($subProduct->isDisabled()) {
                     continue;
                 }
-                $price     = $this->handleTax($product, (float)$subProduct->getFinalPrice());
+                $price = $this->handleTax($product, (float)$subProduct->getFinalPrice());
                 $min = min($min, $price);
                 $max = max($max, $price);
             }
@@ -50,7 +50,7 @@ abstract class CompositeType extends DefaultType
     /**
      * @inheritdoc
      */
-    protected function getCustomerGroupPrices($product)
+    protected function getCustomerGroupPrices(ProductInterface $product): array
     {
         $groupPrices = [];
         foreach ($this->getCustomerGroups() as $group) {
@@ -89,11 +89,28 @@ abstract class CompositeType extends DefaultType
     public function getPriceData(ProductInterface $product): array
     {
         $result = parent::getPriceData($product);
-        [$minPrice, $maxPrice] = $this->getMinMaxPrice($product);
-        $result['price_min'] = $minPrice;
-        $result['price_max'] = $maxPrice;
+        $result['price_min'] = $this->handleTax($product, $this->getPriceMin($product));
+        $result['price_max'] = $this->handleTax($product, $this->getPriceMax($product));
 
         return $result;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getPriceRegular(ProductInterface $product): float
+    {
+        $basePrice = parent::getPriceRegular($product);
+        return $basePrice ?: max($this->getPriceMin($product), 0);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getPriceFinal(ProductInterface $product): float
+    {
+        $basePrice = parent::getPriceFinal($product);
+        return $basePrice ?: $this->getPriceRegular($product);
     }
 
 }

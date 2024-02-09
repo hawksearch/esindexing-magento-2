@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -23,24 +23,29 @@ use Magento\CatalogSearch\Model\ResourceModel\Fulltext as FulltextResource;
 class Product
 {
     /**
-     * @var ProductFactory
+     * @var AbstractType[]|null
      */
-    private $productFactory;
+    private ?array $compositeTypes = null;
 
     /**
-     * @var AbstractType[]
+     * @var AbstractType[]|null
      */
-    private $compositeTypes;
+    private ?array $productAllTypes = null;
+
+    /**
+     * @var ProductFactory
+     */
+    private ProductFactory $productFactory;
 
     /**
      * @var Type
      */
-    private $productType;
+    private Type $productType;
 
     /**
      * @var FulltextResource
      */
-    private $fulltextResource;
+    private FulltextResource $fulltextResource;
 
     /**
      * Product constructor.
@@ -62,7 +67,7 @@ class Product
     /**
      * @return AbstractType[]|null
      */
-    public function getCompositeTypes()
+    public function getCompositeTypes(): ?array
     {
         if ($this->compositeTypes === null) {
             $productMock = $this->productFactory->create();
@@ -76,10 +81,26 @@ class Product
     }
 
     /**
+     * @return AbstractType[]|null
+     */
+    public function getAllTypes(): ?array
+    {
+        if ($this->productAllTypes === null) {
+            $productMock = $this->productFactory->create();
+            foreach ($this->productType->getTypes() as $typeId => $typeInfo) {
+                $productMock->setTypeId($typeId);
+                $this->productAllTypes[$typeId] = $this->productType->factory($productMock);
+            }
+        }
+
+        return $this->productAllTypes;
+    }
+
+    /**
      * @param array $ids
      * @return array
      */
-    public function getParentProductIds(array $ids)
+    public function getParentProductIds(array $ids): array
     {
         return $this->fulltextResource->getRelationsByChild($ids);
     }

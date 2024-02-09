@@ -7,6 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 See tasks currently in development on [Unreleased] changes page.
 
+## [0.6.0] - 2024-02-09
+
+## FEATURES
+
+* __feat: add price to suggestion item (autocomplete)__ ([#47](https://github.com/hawksearch/esindexing-magento-2/pull/47))
+  
+  Ref: HC-1561
+* __feat: update hawksearch-vue lib to version 0.9.102__ ([220d34e](https://github.com/hawksearch/vue-hawksearch/commit/220d34e39a413cf86961ee07deddaa486b6ab2c7)) ([a3385bb](https://github.com/hawksearch/vue-hawksearch/commit/a3385bb8f466a0d070ace9d98220e28886ff1c89)) ([0.9.80...v0.9.102](https://github.com/hawksearch/vue-hawksearch/compare/0.9.80...v0.9.102))
+
+    - implementation of Size Facet type
+    - fix html entities were not decoded
+    - color swatch facet values were not filtered to result
+    - hierarchical facet check boxes could not be updated
+    - fix striking through the text of option which negated
+    - fix unchecking of checkbox for Nested Facets
+
+Ref: HC-1573, HC-1559, HC-1560, HC-1203, HC-1557
+
+* __feat: add Size facet type__ ([#47](https://github.com/hawksearch/esindexing-magento-2/pull/47))
+
+  - move Vue widget initialization out of bundled vue-hawksearch-app.js file to common.js file
+
+  Ref: HC-1204
+
+## FIXES
+
+* __fix: zero price for complex products__ ([#47](https://github.com/hawksearch/esindexing-magento-2/pull/47))
+  
+  Configurable, Bundle and Grouped products displayed price as zero
+  in catalog
+
+  Ref: HC-1574
+* __fix: display price label based on product type__ ([#47](https://github.com/hawksearch/esindexing-magento-2/pull/47))
+  
+  Price label on search results is displayed based on product type:
+  - Simple products - $###
+  - Configurable products - As low as: $###
+
+  Ref: HC-1562
+
 ## [0.5.1] - 2024-01-18
 
 ## FIXES
@@ -26,7 +66,7 @@ __fix: minimal compatible version of connector package is 2.8.0__ ([#45](https:/
   - Support [add2cart](https://developerdocs.hawksearch.com/docs/event-tracking-api#add-to-cart-event) tracking event.
 
   Refs: HC-1392
-* __feat: update hawksearch/vue lib to version 0.9.101__ ([#34](https://github.com/hawksearch/esindexing-magento-2/pull/34))
+* __feat: update hawksearch-vue lib to version 0.9.101__ ([#34](https://github.com/hawksearch/esindexing-magento-2/pull/34))
 
   - let firing tracking events on search item link click ([821b418](https://github.com/hawksearch/vue-hawksearch/commit/821b418396f334134509d3285029b15e3b49b686))
   - allow item to be opened in new tab by short key ([821b418](https://github.com/hawksearch/vue-hawksearch/commit/821b418396f334134509d3285029b15e3b49b686))
@@ -211,7 +251,8 @@ __fix: minimal compatible version of connector package is 2.8.0__ ([#45](https:/
 ## 0.1.0
 Initial stable release
 
-[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.5.1...HEAD
+[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.5.1...v0.6.0
 [0.5.1]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.4.2...v0.5.0
 [0.4.2]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.4.1...v0.4.2
