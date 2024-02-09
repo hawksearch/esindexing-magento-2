@@ -3,7 +3,7 @@
     "license": "proprietary",
     "description": "Hawksearch ES Indexing module for Magento Open Source and Adobe Commerce",
     "type": "magento2-module",
-    "version": "0.5.1",
+    "version": "0.6.0",
     "require": {
         "magento/framework": "^103.0",
         "magento/module-asynchronous-operations": "~100.3",
