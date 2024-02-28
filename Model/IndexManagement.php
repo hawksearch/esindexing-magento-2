@@ -162,11 +162,12 @@ class IndexManagement implements IndexManagementInterface
         $this->hawkLogger->info("--- switchIndices STARTED ---");
 
         $indexName = $this->getIndexName();
-        $this->hawkLogger->info(sprintf("Non current index selected: %s", $indexName));
-
         if ($indexName) {
+            $this->hawkLogger->info(sprintf("Non current index selected: %s", $indexName));
             $this->setCurrentIndex($indexName);
             $this->resetIndexCache();
+        } else {
+            $this->hawkLogger->info(sprintf("There is no temporary index in HawkSearch engine yet."));
         }
 
         $this->hawkLogger->info("--- switchIndices FINISHED ---");
