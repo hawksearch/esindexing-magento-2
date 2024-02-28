@@ -14,10 +14,9 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Field\Product;
 
-use Magento\Catalog\Api\Data\ProductAttributeInterface;
+use Magento\Catalog\Api\Data\ProductAttributeInterfaceFactory;
 use Magento\Catalog\Api\ProductAttributeRepositoryInterface;
 use Magento\Framework\App\ObjectManager;
-use Magento\Framework\DataObjectFactory;
 use Magento\Framework\Exception\NoSuchEntityException;
 
 class AttributeProvider
@@ -25,7 +24,7 @@ class AttributeProvider
     /**
      * @var array
      */
-    private $cachedAttributes = [];
+    private array $cachedAttributes = [];
 
     /**
      * @var ProductAttributeRepositoryInterface
@@ -33,9 +32,9 @@ class AttributeProvider
     private ProductAttributeRepositoryInterface $productAttributeRepository;
 
     /**
-     * @var DataObjectFactory
+     * @var ProductAttributeInterfaceFactory
      */
-    private DataObjectFactory $dataObjectFactory;
+    private ProductAttributeInterfaceFactory $productAttributeFactory;
 
     /**
      * @var string
@@ -44,15 +43,17 @@ class AttributeProvider
 
     /**
      * @param ProductAttributeRepositoryInterface $productAttributeRepository
+     * @param ProductAttributeInterfaceFactory $productAttributeFactory
+     * @param string $instanceName
      */
     public function __construct(
         ProductAttributeRepositoryInterface $productAttributeRepository,
-        DataObjectFactory $dataObjectFactory,
-        $instanceName = AttributeAdapter::class
+        ProductAttributeInterfaceFactory $productAttributeFactory,
+        string $instanceName = AttributeAdapter::class
     )
     {
         $this->productAttributeRepository = $productAttributeRepository;
-        $this->dataObjectFactory = $dataObjectFactory;
+        $this->productAttributeFactory = $productAttributeFactory;
         $this->instanceName = $instanceName;
     }
 
@@ -69,9 +70,7 @@ class AttributeProvider
                 $attribute = null;
             }
 
-            if (null === $attribute) {
-                $attribute = $this->dataObjectFactory->create();
-            }
+            $attribute = $attribute ?? $this->productAttributeFactory->create();
 
             $this->cachedAttributes[$attributeCode] = ObjectManager::getInstance()->create(
                 $this->instanceName,
