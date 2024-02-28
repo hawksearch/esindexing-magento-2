@@ -137,7 +137,11 @@ class ProductAttributes implements ValueProcessorInterface
     public function process(array $value, ValueInterface $configValue): array
     {
         $value = $resultSave = $this->filterValue($value);
-        $oldValue = (array)$this->serializer->unserialize($configValue->getOldValue() ?? []);
+        try {
+            $oldValue = (array)$this->serializer->unserialize($configValue->getOldValue());
+        } catch (\InvalidArgumentException $e) {
+            $oldValue = [];
+        }
         $updatedRows = $this->getRowsUpdated(
             $value,
             $oldValue);
@@ -145,7 +149,7 @@ class ProductAttributes implements ValueProcessorInterface
         $resultSave = array_diff_key($resultSave, $createdRows);
 
         $errors = [];
-        foreach ($updatedRows as $id => $row) {
+        foreach ($updatedRows as $row) {
             try {
                 $updatedField = $this->updateFiled($row);
                 $extendedField = $this->fieldExtendedFactory->create(['field' => $updatedField]);
