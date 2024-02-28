@@ -1,4 +1,4 @@
-# Hawksearch for Magento Open Source and Adobe Commerce (ElasticSearch based Version)
+# Hawksearch for Magento Open Source and Adobe Commerce (Elastic based Version)
 
 ## Introduction
 The Hawksearch service enables online retailers and publishers the ability to drive a rich, compelling user experience. 
@@ -16,8 +16,7 @@ If you have any questions please read our [Support FAQ](https://hawksearch.atlas
 
 ## Documentation
 
-Check out our [Getting Started](https://hawksearch.atlassian.net/wiki/spaces/CON/pages/1626112046/Getting+Started+with+Hawksearch+ES) 
-guide and start using [HawkSearch](https://www.hawksearch.com/ ) for Magento 2.
+Check out our [Getting Started](https://developerdocs.hawksearch.com/docs/magento-getting-started) guide and start using [HawkSearch](https://www.hawksearch.com/ ) for Magento 2.
 
 ## Platform Version Support
 
