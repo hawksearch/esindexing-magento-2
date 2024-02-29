@@ -27,9 +27,10 @@ define([
          */
         getVueWidget: function(component) {
             let searchCriteria = function (item) {
+                let byName = component === undefined || item.$el.dataset.vueHawksearchComponent === component
                 return !_.isUndefined(item._isVue)
                     && item._isVue
-                    && item.$el.dataset.vueHawksearchComponent === component;
+                    && byName;
             }
             return _.find(HawksearchVue.widgetInstances, searchCriteria) || {};
         },
@@ -161,8 +162,10 @@ define([
         initVueWidget();
 
         let isFetchResultsDispatched = false;
-        if (hawksearch.getVueWidget(hawksearchConfig.vueComponent).config.searchConfig.initialSearch) {
-            HawksearchVue.getWidgetStore(hawksearch.getVueWidget(hawksearchConfig.vueComponent)).subscribeAction({
+        let vueWidget = hawksearch.getVueWidget(hawksearchConfig.vueComponent);
+
+        if (!_.isEmpty(vueWidget) && vueWidget.config.searchConfig.initialSearch) {
+            HawksearchVue.getWidgetStore(vueWidget).subscribeAction({
                 after: (action, state) => {
                     if (action.type !== 'fetchResults') {
                         return;
@@ -170,7 +173,7 @@ define([
                     isFetchResultsDispatched = true;
                 }
             });
-            hawksearch.getVueWidget(hawksearchConfig.vueComponent).$on('urlUpdated', () => {
+            vueWidget.$on('urlUpdated', () => {
                 if (!isFetchResultsDispatched) {
                     return;
                 }

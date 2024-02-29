@@ -13,7 +13,7 @@
 define([
     'jquery',
     'underscore',
-    'hawksearchVueSDK',
+    'hawksearchCommon',
 ], function ($, _) {
     'use strict';
 
@@ -28,12 +28,9 @@ define([
      * @return {Object}
      */
     function getTrackingFromVueWidget() {
-        let searchCriteria = function (item) {
-            return !_.isUndefined(item._isVue) && item._isVue;
-        }
-        let widget = _.find(HawksearchVue.widgetInstances, searchCriteria) || {};
+        let widget = hawksearch.getVueWidget();
 
-        return widget.trackEvent;
+        return !_.isUndefined(widget.trackEvent) ? widget.trackEvent : null;
     }
 
     /**
