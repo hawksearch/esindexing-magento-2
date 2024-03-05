@@ -91,6 +91,12 @@
             <argument name="configGroup" xsi:type="string">indexing</argument>
         </arguments>
     </type>
+    <type name="HawkSearch\EsIndexing\Model\Config\Indexing\FailureRecovery">
+        <arguments>
+            <argument name="configRootPath" xsi:type="string">hawksearch_indexing_settings</argument>
+            <argument name="configGroup" xsi:type="string">indexing</argument>
+        </arguments>
+    </type>
     <type name="HawkSearch\EsIndexing\Model\Config\Search">
         <arguments>
             <argument name="configRootPath" xsi:type="string">hawksearch_search_settings</argument>

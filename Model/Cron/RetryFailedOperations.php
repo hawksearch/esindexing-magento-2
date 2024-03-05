@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -17,13 +17,16 @@ namespace HawkSearch\EsIndexing\Model\Cron;
 use HawkSearch\EsIndexing\Api\Data\QueueOperationDataInterface;
 use HawkSearch\EsIndexing\Api\Data\QueueOperationDataInterfaceFactory;
 use HawkSearch\EsIndexing\Model\BulkOperation\BulkOperationManagement;
+use HawkSearch\EsIndexing\Model\Config\Indexing\FailureRecovery as FailureRecoveryConfig;
 use Magento\AsynchronousOperations\Api\Data\OperationInterface;
+use Magento\AsynchronousOperations\Model\BulkSummary;
 use Magento\AsynchronousOperations\Model\ConfigInterface as AsyncConfig;
 use Magento\AsynchronousOperations\Model\ResourceModel\Operation;
 use Magento\AsynchronousOperations\Model\ResourceModel\Operation\Collection as OperationCollection;
 use Magento\AsynchronousOperations\Model\ResourceModel\Operation\CollectionFactory as OperationCollectionFactory;
 use Magento\Framework\Bulk\BulkManagementInterface;
 use Magento\Framework\Bulk\OperationManagementInterface;
+use Magento\Framework\DB\Select;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\MessageQueue\MessageEncoder;
 use Magento\Framework\MessageQueue\MessageValidator;
@@ -34,16 +37,6 @@ use Psr\Log\LoggerInterface;
 class RetryFailedOperations
 {
     /**
-     * Default operation number of trials. Default to 3
-     */
-    private const DEFAULT_OPERATION_NUMBER_OF_TRIALS = 3;
-
-    /**
-     * Default maximum processing time of not started operations. Default to 12h
-     */
-    private const DEFAULT_OPERATION_NOT_STARTED_MAX_PROCESSING_TIME = 43200;
-
-    /**
      * Default error code
      */
     private const ERROR_CODE = 0;
@@ -51,72 +44,67 @@ class RetryFailedOperations
     /**
      * @var MessageEncoder
      */
-    private $messageEncoder;
+    private MessageEncoder $messageEncoder;
 
     /**
      * @var MessageValidator
      */
-    private $messageValidator;
+    private MessageValidator $messageValidator;
 
     /**
      * @var BulkOperationManagement
      */
-    private $bulkOperationManagement;
+    private BulkOperationManagement $bulkOperationManagement;
 
     /**
      * @var OperationManagementInterface
      */
-    private $operationManagement;
+    private OperationManagementInterface $operationManagement;
 
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
 
     /**
      * @var SerializerInterface
      */
-    private $serializer;
+    private SerializerInterface $serializer;
 
     /**
      * @var QueueOperationDataInterfaceFactory
      */
-    private $operationDataFactory;
+    private QueueOperationDataInterfaceFactory $operationDataFactory;
 
     /**
      * @var BulkManagementInterface
      */
-    private $bulkRetryManagement;
+    private BulkManagementInterface $bulkRetryManagement;
 
     /**
      * @var DateTime
      */
-    private $dateTime;
+    private DateTime $dateTime;
 
     /**
      * @var Operation
      */
-    private $operationResource;
+    private Operation $operationResource;
 
     /**
      * @var OperationCollectionFactory
      */
-    private $operationCollectionFactory;
+    private OperationCollectionFactory $operationCollectionFactory;
+
+    /**
+     * @var FailureRecoveryConfig
+     */
+    private FailureRecoveryConfig $failureRecoveryConfig;
 
     /**
      * @var int
      */
-    private $numberOfTrials;
-
-    /**
-     * @var int
-     */
-    private $notStartedMaxProcessingTime;
-
-    /**
-     * @var int
-     */
-    private $errorCode;
+    private int $errorCode;
 
     /**
      * @param MessageEncoder $messageEncoder
@@ -130,8 +118,7 @@ class RetryFailedOperations
      * @param DateTime $dateTime
      * @param Operation $operationResource
      * @param OperationCollectionFactory $operationCollectionFactory
-     * @param int $numberOfTrials
-     * @param int $notStartedMaxProcessingTime
+     * @param FailureRecoveryConfig $failureRecoveryConfig
      * @param int $errorCode
      */
     public function __construct(
@@ -146,8 +133,7 @@ class RetryFailedOperations
         DateTime $dateTime,
         Operation $operationResource,
         OperationCollectionFactory $operationCollectionFactory,
-        int $numberOfTrials = self::DEFAULT_OPERATION_NUMBER_OF_TRIALS,
-        int $notStartedMaxProcessingTime = self::DEFAULT_OPERATION_NOT_STARTED_MAX_PROCESSING_TIME,
+        FailureRecoveryConfig $failureRecoveryConfig,
         int $errorCode = self::ERROR_CODE
 
     ) {
@@ -162,20 +148,23 @@ class RetryFailedOperations
         $this->dateTime = $dateTime;
         $this->operationResource = $operationResource;
         $this->operationCollectionFactory = $operationCollectionFactory;
-        $this->numberOfTrials = $numberOfTrials;
-        $this->notStartedMaxProcessingTime = $notStartedMaxProcessingTime;
+        $this->failureRecoveryConfig = $failureRecoveryConfig;
         $this->errorCode = $errorCode;
     }
 
     /**
      * Automatically retry failed and not started operations.
-     * When numberOfTrials limit is reached then operation is rejected and can be retried manually
+     * When trials limit is reached then operation is rejected and can be recovered manually
      *
      * @return void
      * @throws LocalizedException
      */
     public function execute(): void
     {
+        if (!$this->failureRecoveryConfig->isEnabled()) {
+            return;
+        }
+
         $operationsToProcess = array_merge(
             $this->getFailedOperations(),
             $this->getNotStartedOperations()
@@ -201,15 +190,17 @@ class RetryFailedOperations
     }
 
     /**
+     * Get operations with failed statuses
+     *
      * @return OperationInterface[]
      */
-    protected function getFailedOperations()
+    protected function getFailedOperations(): array
     {
         /** @var OperationCollection $collection */
         $collection = $this->operationCollectionFactory->create();
 
         $collection->getSelect()
-            ->reset(\Magento\Framework\DB\Select::COLUMNS)
+            ->reset(Select::COLUMNS)
             ->columns(
                 [
                     '*',
@@ -233,20 +224,21 @@ class RetryFailedOperations
     }
 
     /**
-     *
+     * Get operations with open status
      *
      * @return OperationInterface[]
      * @throws LocalizedException
      * @see \Magento\AsynchronousOperations\Cron\MarkIncompleteOperationsAsFailed
      */
-    protected function getNotStartedOperations()
+    protected function getNotStartedOperations(): array
     {
         $bulks = $this->bulkOperationManagement->getAllBulksCollection();
         $now = $this->dateTime->gmtTimestamp();
 
         $bulkUuidSet = [];
+        /** @var BulkSummary $bulk */
         foreach ($bulks as $bulk) {
-            if ($this->dateTime->gmtTimestamp($bulk->getStartTime()) < ($now - $this->notStartedMaxProcessingTime)) {
+            if ($this->dateTime->gmtTimestamp($bulk->getStartTime()) <= ($now - $this->failureRecoveryConfig->getMaximumOpenDelay())) {
                 $bulkUuidSet[] = $bulk->getBulkId();
             }
         }
@@ -255,7 +247,7 @@ class RetryFailedOperations
         $collection = $this->operationCollectionFactory->create();
 
         $collection->getSelect()
-            ->reset(\Magento\Framework\DB\Select::COLUMNS)
+            ->reset(Select::COLUMNS)
             ->columns(
                 [
                     '*',
@@ -285,13 +277,13 @@ class RetryFailedOperations
     }
 
     /**
-     * Mark operation as retriable
+     * Make operation retrial
      *
      * @param OperationInterface $operation
      * @return bool
      * @throws LocalizedException
      */
-    protected function retryOperation(OperationInterface $operation)
+    protected function retryOperation(OperationInterface $operation): bool
     {
         try {
             $this->messageValidator->validate(AsyncConfig::SYSTEM_TOPIC_NAME, $operation);
@@ -306,7 +298,7 @@ class RetryFailedOperations
 
         $numberOfTrials = $this->getOperationTrials($operationData);
 
-        if ($numberOfTrials < $this->numberOfTrials) {
+        if ($numberOfTrials < $this->failureRecoveryConfig->getMaximumRetries()) {
             $operationData = $this->increaseOperationTrials($operationData);
             $data['meta_information'] = $this->messageEncoder->encode($operation->getTopicName(), [$operationData]);
             $serializedData = $this->serializer->serialize($data);
@@ -324,7 +316,7 @@ class RetryFailedOperations
      * @param QueueOperationDataInterface $operation
      * @return int
      */
-    protected function getOperationTrials(QueueOperationDataInterface $operation)
+    protected function getOperationTrials(QueueOperationDataInterface $operation): int
     {
         $data = $this->serializer->unserialize($operation->getData());
 
@@ -337,7 +329,7 @@ class RetryFailedOperations
      * @param QueueOperationDataInterface $operationData
      * @return QueueOperationDataInterface
      */
-    protected function increaseOperationTrials(QueueOperationDataInterface $operationData)
+    protected function increaseOperationTrials(QueueOperationDataInterface $operationData): QueueOperationDataInterface
     {
         $data = $this->serializer->unserialize($operationData->getData());
         $data['number_of_trials'] =  ($data['number_of_trials'] ?? 0) + 1;
@@ -353,7 +345,7 @@ class RetryFailedOperations
      * @param string|null $message
      * @return bool
      */
-    protected function rejectOperation(OperationInterface  $operation, $errorCode = null, $message = null)
+    protected function rejectOperation(OperationInterface  $operation, int $errorCode = null, string $message = null): bool
     {
         $this->logger->critical(__('Message has been rejected: %1', $message));
 
