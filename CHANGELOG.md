@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 See tasks currently in development on [Unreleased] changes page.
 
+## [0.6.1] - 2024-03-05
+
+## FIXES
+
+* __fix: popular searches and content matches not clickable__ ([#51](https://github.com/hawksearch/esindexing-magento-2/pull/51))
+  
+  Update hawksearch-vue lib to version 0.9.103
+
+  ref: HC-1264, AIC-30, HC-1587
+
+* __fix: wrong interface for non-product attributes on field mapping saving__ ([e958760](https://github.com/hawksearch/esindexing-magento-2/commit/e9587604bdd049b7df43159ccbd2cf904e7285ed))
+  
+  ref: HC-1595
+
+* __fix: empty field mapping configuration breaks on saving__ ([#50](https://github.com/hawksearch/esindexing-magento-2/pull/50))
+
+  ref: HC-1590
+
+* __fix: consumer processes only open bulk operations__ ([#49](https://github.com/hawksearch/esindexing-magento-2/pull/49))
+
+  If there were "not started" messages in message queue but these
+  messages were linked to completed, failed or rejected bulk operations
+  then consumer processed such operations again. This behavior is fixed.
+
+  ref: HC-1552
+
 ## [0.6.0] - 2024-02-09
 
 ## FEATURES
@@ -14,6 +40,7 @@ See tasks currently in development on [Unreleased] changes page.
 * __feat: add price to suggestion item (autocomplete)__ ([#47](https://github.com/hawksearch/esindexing-magento-2/pull/47))
   
   Ref: HC-1561
+
 * __feat: update hawksearch-vue lib to version 0.9.102__ ([220d34e](https://github.com/hawksearch/vue-hawksearch/commit/220d34e39a413cf86961ee07deddaa486b6ab2c7)) ([a3385bb](https://github.com/hawksearch/vue-hawksearch/commit/a3385bb8f466a0d070ace9d98220e28886ff1c89)) ([0.9.80...v0.9.102](https://github.com/hawksearch/vue-hawksearch/compare/0.9.80...v0.9.102))
 
     - implementation of Size Facet type
@@ -23,7 +50,7 @@ See tasks currently in development on [Unreleased] changes page.
     - fix striking through the text of option which negated
     - fix unchecking of checkbox for Nested Facets
 
-Ref: HC-1573, HC-1559, HC-1560, HC-1203, HC-1557
+  Ref: HC-1573, HC-1559, HC-1560, HC-1203, HC-1557
 
 * __feat: add Size facet type__ ([#47](https://github.com/hawksearch/esindexing-magento-2/pull/47))
 
@@ -251,7 +278,8 @@ __fix: minimal compatible version of connector package is 2.8.0__ ([#45](https:/
 ## 0.1.0
 Initial stable release
 
-[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.6.1...HEAD
+[0.6.1]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.5.1...v0.6.0
 [0.5.1]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.4.2...v0.5.0
