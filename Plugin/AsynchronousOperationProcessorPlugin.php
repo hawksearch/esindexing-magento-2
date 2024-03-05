@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -16,18 +16,19 @@ namespace HawkSearch\EsIndexing\Plugin;
 
 use HawkSearch\EsIndexing\Api\HierarchyManagementInterface;
 use HawkSearch\EsIndexing\Api\IndexManagementInterface;
+use HawkSearch\EsIndexing\Model\BulkOperation\BulkOperationManagement;
 use HawkSearch\EsIndexing\Model\Indexing;
-use HawkSearch\EsIndexing\Model\MessageQueue\IndexingOperationValidator;
+use HawkSearch\EsIndexing\Model\Indexing\Context;
+use HawkSearch\EsIndexing\Model\MessageQueue\Exception\InvalidBulkOperationException;
+use HawkSearch\EsIndexing\Model\MessageQueue\Validator\OperationValidatorInterface;
 use Magento\AsynchronousOperations\Api\Data\OperationInterface;
 use Magento\AsynchronousOperations\Model\ConfigInterface as AsyncConfig;
 use Magento\AsynchronousOperations\Model\OperationProcessor;
 use Magento\Framework\Bulk\OperationManagementInterface;
-use Magento\Framework\Exception\BulkException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\MessageQueue\MessageEncoder;
 use Magento\Framework\MessageQueue\MessageValidator;
-use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Store\Model\App\Emulation;
 use Magento\Store\Model\StoreManagerInterface;
 
@@ -36,17 +37,26 @@ class AsynchronousOperationProcessorPlugin
     /**
      * @var MessageEncoder
      */
-    private $messageEncoder;
+    private MessageEncoder $messageEncoder;
 
     /**
      * @var OperationManagementInterface
      */
-    private $operationManagement;
+    private OperationManagementInterface $operationManagement;
 
     /**
-     * @var IndexingOperationValidator
+     * @var OperationValidatorInterface
      */
-    private $indexingOperationValidator;
+    private OperationValidatorInterface $bulkAllOperationCompleteValidator;
+
+    /**
+     * @var OperationValidatorInterface
+     */
+    private OperationValidatorInterface $operationTopicValidator;
+    /**
+     * @var OperationValidatorInterface
+     */
+    private OperationValidatorInterface $operationOpenStatusValidator;
 
     /**
      * @var HierarchyManagementInterface
@@ -57,11 +67,6 @@ class AsynchronousOperationProcessorPlugin
      * @var IndexManagementInterface
      */
     private IndexManagementInterface $indexManagement;
-
-    /**
-     * @var SerializerInterface
-     */
-    private SerializerInterface $serializer;
 
     /**
      * @var MessageValidator
@@ -77,48 +82,59 @@ class AsynchronousOperationProcessorPlugin
      * @var Indexing\Context
      */
     private Indexing\Context $indexingContext;
-
     /**
      * @var Emulation
      */
     private Emulation $emulation;
 
     /**
+     * @var BulkOperationManagement
+     */
+    private BulkOperationManagement $bulkOperationManagement;
+
+    /**
      * AsynchronousOperationProcessorPlugin constructor.
      *
      * @param MessageEncoder $messageEncoder
      * @param OperationManagementInterface $operationManagement
-     * @param IndexingOperationValidator $indexingOperationValidator
+     * @param OperationValidatorInterface $bulkAllOperationCompleteValidator
+     * @param OperationValidatorInterface $operationTopicValidator
+     * @param OperationValidatorInterface $operationOpenStatusValidator
      * @param HierarchyManagementInterface $hierarchyManagement
      * @param IndexManagementInterface $indexManagement
-     * @param SerializerInterface $serializer
      * @param MessageValidator $messageValidator
      * @param StoreManagerInterface $storeManager
-     * @param Indexing\Context $indexingContext
+     * @param Context $indexingContext
+     * @param Emulation $emulation
+     * @param BulkOperationManagement $bulkOperationManagement
      */
     public function __construct(
         MessageEncoder $messageEncoder,
         OperationManagementInterface $operationManagement,
-        IndexingOperationValidator $indexingOperationValidator,
+        OperationValidatorInterface $bulkAllOperationCompleteValidator,
+        OperationValidatorInterface $operationTopicValidator,
+        OperationValidatorInterface $operationOpenStatusValidator,
         HierarchyManagementInterface $hierarchyManagement,
         IndexManagementInterface $indexManagement,
-        SerializerInterface $serializer,
         MessageValidator $messageValidator,
         StoreManagerInterface $storeManager,
         Indexing\Context $indexingContext,
-        Emulation $emulation
+        Emulation $emulation,
+        BulkOperationManagement $bulkOperationManagement
     )
     {
         $this->messageEncoder = $messageEncoder;
         $this->operationManagement = $operationManagement;
-        $this->indexingOperationValidator = $indexingOperationValidator;
+        $this->bulkAllOperationCompleteValidator = $bulkAllOperationCompleteValidator;
+        $this->operationTopicValidator = $operationTopicValidator;
+        $this->operationOpenStatusValidator = $operationOpenStatusValidator;
         $this->hierarchyManagement = $hierarchyManagement;
         $this->indexManagement = $indexManagement;
-        $this->serializer = $serializer;
         $this->messageValidator = $messageValidator;
         $this->storeManager = $storeManager;
         $this->indexingContext = $indexingContext;
         $this->emulation = $emulation;
+        $this->bulkOperationManagement = $bulkOperationManagement;
     }
 
     /**
@@ -134,38 +150,15 @@ class AsynchronousOperationProcessorPlugin
         $operation = $this->messageEncoder->decode(AsyncConfig::SYSTEM_TOPIC_NAME, $encodedMessage);
         $this->messageValidator->validate(AsyncConfig::SYSTEM_TOPIC_NAME, $operation);
 
-        if (!$this->indexingOperationValidator->isOperationTopicAllowed($operation)) {
+        if (!$this->isAllowed($operation)) {
             return null;
         }
 
-        try {
-            if (!$this->indexingOperationValidator->isValidOperation($operation)) {
-                throw new BulkException(
-                    __(
-                        'Can\'t process operation Bulk UUID: %1, key: %2',
-                        $operation->getBulkUuid(),
-                        $operation->getId()
-                    )
-                );
-            }
-        } catch (BulkException | NoSuchEntityException $e) {
-            //@TODO Add error code mapping
-            $errorCode = 100;
-            $serializedData = (isset($errorCode)) ? $operation->getSerializedData() : null;
-            $this->operationManagement->changeOperationStatus(
-                $operation->getBulkUuid(),
-                $operation->getId(),
-                OperationInterface::STATUS_TYPE_RETRIABLY_FAILED,
-                $errorCode,
-                implode('; ', array_merge([], ...[[$e->getMessage()]])),
-                $serializedData
-            );
+        $this->updateOperationStatus($operation);
+        // do not change operation status if operation status is not open
+        $this->operationOpenStatusValidator->validate($operation);
 
-            //re-throw exception
-            throw $e;
-        }
-
-        return null;
+        return [$this->messageEncoder->encode(AsyncConfig::SYSTEM_TOPIC_NAME, $operation)];
     }
 
     /**
@@ -181,7 +174,7 @@ class AsynchronousOperationProcessorPlugin
         $operation = $this->messageEncoder->decode(AsyncConfig::SYSTEM_TOPIC_NAME, $encodedMessage);
         $this->messageValidator->validate(AsyncConfig::SYSTEM_TOPIC_NAME, $operation);
 
-        if (!$this->indexingOperationValidator->isOperationTopicAllowed($operation)) {
+        if (!$this->isAllowed($operation)) {
             return;
         }
 
@@ -200,7 +193,7 @@ class AsynchronousOperationProcessorPlugin
      *
      * @param OperationInterface $operation
      * @return void
-     * @throws NoSuchEntityException
+     * @throws NoSuchEntityException|InvalidBulkOperationException
      */
     private function finalizeFullReindexing(OperationInterface $operation)
     {
@@ -208,7 +201,7 @@ class AsynchronousOperationProcessorPlugin
             return;
         }
 
-        if (!$this->indexingOperationValidator->isAllBulkOperationsComplete($operation)) {
+        if (!$this->bulkAllOperationCompleteValidator->validate($operation)) {
             return;
         }
 
@@ -221,7 +214,7 @@ class AsynchronousOperationProcessorPlugin
             $errorCode = $e->getCode();
             $serializedData = $operation->getSerializedData();
             $messages = [
-                [__('Error before compliting reindexing process')],
+                [__('Error before completing reindexing process')],
                 [$e->getMessage()],
             ];
             $this->operationManagement->changeOperationStatus(
@@ -235,6 +228,41 @@ class AsynchronousOperationProcessorPlugin
 
             //re-throw exception
             throw $e;
+        }
+    }
+
+    /**
+     * @param OperationInterface $operation
+     * @return bool
+     */
+    private function isAllowed(OperationInterface $operation): bool
+    {
+        $isAllowed = true;
+        try {
+            $this->operationTopicValidator->validate($operation);
+        } catch (InvalidBulkOperationException $e) {
+            $isAllowed = false;
+        }
+
+        return $isAllowed;
+    }
+
+    /**
+     * Update operation status from magento_operation table
+     *
+     * @param OperationInterface $operation
+     * @return void
+     */
+    private function updateOperationStatus(OperationInterface $operation)
+    {
+        try {
+            $loadedOperation = $this->bulkOperationManagement->getOperationByBulkAndKey(
+                $operation->getBulkUuid(),
+                $operation->getId()
+            );
+            $operation->setStatus($loadedOperation->getStatus());
+        } catch (NoSuchEntityException $e) {
+            //operation is not created in the bulk yet
         }
     }
 }
