@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -18,6 +18,7 @@ use Magento\AsynchronousOperations\Api\BulkStatusInterface;
 use Magento\AsynchronousOperations\Api\Data\BulkSummaryInterface;
 use Magento\AsynchronousOperations\Api\Data\BulkSummaryInterfaceFactory;
 use Magento\Framework\Bulk\BulkManagementInterface;
+use Magento\Framework\Bulk\OperationInterface;
 use Magento\Framework\EntityManager\EntityManager;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Symfony\Component\Console\Command\Command;
@@ -30,29 +31,33 @@ class RetryBulk extends Command
     /**#@+
      * Constants for keys of data array
      */
-    public const INPUT_BULK_UUID = 'bulk-uuid';
-    public const INPUT_STATUSES = 'statuses';
+    private const INPUT_BULK_UUID = 'bulk-uuid';
+    private const INPUT_STATUSES = 'statuses';
     /**#@-*/
+
+    private const FORBIDDEN_STATUSES = [
+        OperationInterface::STATUS_TYPE_COMPLETE
+    ];
 
     /**
      * @var BulkManagementInterface
      */
-    private $bulkManagement;
+    private BulkManagementInterface $bulkManagement;
 
     /**
      * @var BulkStatusInterface
      */
-    private $bulkStatus;
+    private BulkStatusInterface $bulkStatus;
 
     /**
      * @var BulkSummaryInterfaceFactory
      */
-    private $bulkSummaryFactory;
+    private BulkSummaryInterfaceFactory $bulkSummaryFactory;
 
     /**
      * @var EntityManager
      */
-    private $entityManager;
+    private EntityManager $entityManager;
 
     /**
      * RetryBulk constructor.
@@ -92,7 +97,7 @@ class RetryBulk extends Command
             )->addArgument(
                 self::INPUT_STATUSES,
                 InputArgument::OPTIONAL | InputArgument::IS_ARRAY,
-                'Space-separated list of bulk operation statuses. Default statuses are 2 and 3 if empty.'
+                'Space-separated list of bulk operation statuses. Default statuses are 2 and 3 if empty. Status 1 is forbidden for retrial.'
             );
         parent::configure();
     }
@@ -109,6 +114,13 @@ class RetryBulk extends Command
             $operations = [];
             if ($statuses) {
                 foreach ($statuses as $status) {
+                    if (in_array($status, self::FORBIDDEN_STATUSES)) {
+                        $output->writeln(__(
+                            'Status "%1" is skipped. Operations with such status can\'t be retried.',
+                            $status
+                        ));
+                        continue;
+                    }
                     $operations = array_merge(
                         $operations,
                         $this->bulkStatus->getFailedOperationsByBulkId($bulkUuid, $status)
@@ -117,6 +129,7 @@ class RetryBulk extends Command
             } else {
                 $operations = $this->bulkStatus->getFailedOperationsByBulkId($bulkUuid);
             }
+
 
             /** @var BulkSummaryInterface $bulkSummary */
             $bulkSummary = $this->bulkSummaryFactory->create();
