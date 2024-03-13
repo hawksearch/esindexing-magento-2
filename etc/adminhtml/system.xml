@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
   /**
-   * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+   * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
    *
    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -27,9 +27,9 @@
             <tab>hawksearch</tab>
             <resource>HawkSearch_EsIndexing::config</resource>
             <group id="indexing" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Indexing</label>
+                <label>General Indexing Settings</label>
                 <comment><![CDATA[
-                    To <b>Eenable Indexing</b> please switch to Store View configuration scope
+                    To <b>Eenable Indexing</b> please switch to Store View configuration scope.
                     ]]>
                 </comment>
                 <field id="enable_indexing" translate="label comment" type="select" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
@@ -45,6 +45,51 @@
                     <label>Include all parent categories for products</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Include all parent categories in the hierarchy when indexing products, even if they are not selected for the product directly.</comment>
+                </field>
+                <field id="allow_retry_failed_operations" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Automatically retry failed indexing operations</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If any indexing operation has been failed </comment>
+                </field>
+            </group>
+            <group id="failure_recovery" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Failure Recovery</label>
+                <comment><![CDATA[
+                    Control over failure in data indexing process.
+                    ]]>
+                </comment>
+                <field id="enable" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Allow recovering failed events</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="maximum_retries" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Retry attempts</label>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                    <validate>validate-zero-or-greater validate-digits</validate>
+                    <comment>The maximum number of times to retry processing an event after an error occurs. Default is 3.</comment>
+                </field>
+                <field id="maximum_open_delay" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Maximum holding time of incomplete events</label>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                    <validate>validate-zero-or-greater validate-digits</validate>
+                    <comment><![CDATA[
+                        Start recovering incomplete events <b>"Maximum holding time of incomplete events"</b> seconds after bulk creation time. Default is 12h.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="cron_expr" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Cron Schedule</label>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                    <comment><![CDATA[
+                    Define recovery interval. This should contain a valid <a target="_blank" href="https://crontab.guru/">crontab</a> expression.
+                    ]]>
+                    </comment>
                 </field>
             </group>
         </section>

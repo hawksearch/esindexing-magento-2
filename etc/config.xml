@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
   /**
-   * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+   * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
    *
    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -19,6 +19,12 @@
                 <enable_indexing>0</enable_indexing>
                 <items_batch_size>125</items_batch_size>
             </indexing>
+            <failure_recovery>
+                <enable>1</enable>
+                <maximum_retries>3</maximum_retries>
+                <maximum_open_delay>43200</maximum_open_delay>
+                <cron_expr>*/5 * * * *</cron_expr>
+            </failure_recovery>
         </hawksearch_indexing_settings>
         <hawksearch_advanced_settings>
             <advanced>
