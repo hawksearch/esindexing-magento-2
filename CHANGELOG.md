@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 See tasks currently in development on [Unreleased] changes page.
 
+## [0.6.2] - 2024-03-20
+
+## FIXES
+
+* __fix: sql error on indexing product with no categories__ ([9989ea6](https://github.com/hawksearch/esindexing-magento-2/commit/9989ea64562a190ee80ea03395ad7b52f0ce6bea))
+  
+  ref: HC-1606
+
+
 ## [0.6.1] - 2024-03-05
 
 ## FIXES
@@ -278,7 +287,8 @@ __fix: minimal compatible version of connector package is 2.8.0__ ([#45](https:/
 ## 0.1.0
 Initial stable release
 
-[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.6.1...HEAD
+[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.6.2...HEAD
+[0.6.2]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.5.1...v0.6.0
 [0.5.1]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.5.0...v0.5.1
