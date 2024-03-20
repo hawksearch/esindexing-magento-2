@@ -138,6 +138,10 @@ class ItemsDataProvider implements ItemsDataProviderInterface
         }
         $categoryIds = array_keys($categoryIds);
 
+        if (!$categoryIds) {
+            return;
+        }
+
         // Get all categories used in products at once
         $collection = $this->categoryCollectionFactory->create();
         $collection->addFieldToFilter('entity_id', $categoryIds);
