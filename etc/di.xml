@@ -1133,21 +1133,18 @@
                  type="HawkSearch\EsIndexing\Model\Indexer\Entities\ActionEntityDefault">
         <arguments>
             <argument name="entityScheduler" xsi:type="object">HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\Product</argument>
-            <argument name="publisher" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher\Delta</argument>
         </arguments>
     </virtualType>
     <virtualType name="HawkSearch\EsIndexing\Model\Indexer\Entities\ActionEntityContentPage"
                  type="HawkSearch\EsIndexing\Model\Indexer\Entities\ActionEntityDefault">
         <arguments>
             <argument name="entityScheduler" xsi:type="object">HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\ContentPage</argument>
-            <argument name="publisher" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher\Delta</argument>
         </arguments>
     </virtualType>
     <virtualType name="HawkSearch\EsIndexing\Model\Indexer\Entities\ActionEntityCategory"
                  type="HawkSearch\EsIndexing\Model\Indexer\Entities\ActionEntityDefault">
         <arguments>
             <argument name="entityScheduler" xsi:type="object">HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\Category</argument>
-            <argument name="publisher" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher\Delta</argument>
         </arguments>
     </virtualType>
 

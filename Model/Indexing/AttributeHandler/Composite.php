@@ -71,7 +71,7 @@ class Composite implements AttributeHandlerInterface
      */
     public function handle(DataObject $item, string $attributeCode)
     {
-        $handler = $this->getObject( $this->handlers[$attributeCode] ?? $this->handlers[self::HANDLER_DEFAULT_NAME]);
+        $handler = $this->getHandler($attributeCode);
 
         return $handler->handle($item, $attributeCode);
     }
@@ -80,7 +80,7 @@ class Composite implements AttributeHandlerInterface
      * @param string $attributeCode
      * @return AttributeHandlerInterface
      */
-    protected function getHandler(string $attributeCode)
+    protected function getHandler(string $attributeCode): AttributeHandlerInterface
     {
         return $this->getObject( $this->handlers[$attributeCode] ?? $this->handlers[self::HANDLER_DEFAULT_NAME]);
     }
@@ -88,8 +88,9 @@ class Composite implements AttributeHandlerInterface
     /**
      * @param string $instanceName
      * @return AttributeHandlerInterface
+     * @throws \InvalidArgumentException
      */
-    private function getObject(string $instanceName)
+    private function getObject(string $instanceName): AttributeHandlerInterface
     {
         $instance = $this->objectManager->create($instanceName);
         if (!$instance instanceof AttributeHandlerInterface) {
