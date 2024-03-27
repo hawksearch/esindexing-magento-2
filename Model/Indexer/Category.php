@@ -62,7 +62,8 @@ class Category implements IndexerActionInterface, MviewActionInterface
     {
         $this->output->writeln(
             sprintf(
-                'To trigger full reindex please use `%s` indexer.',
+                '<comment>Indexer `%s` can\'t be run for full reindexing. Please run `%s` indexer instead.</comment>',
+                self::INDEXER_ID,
                 EntitiesIndexer::INDEXER_ID
             )
         );
