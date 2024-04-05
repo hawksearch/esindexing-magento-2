@@ -15,9 +15,10 @@ define([
     'underscore',
     'mage/utils/template',
     'priceUtils',
+    'uiEvents',
     'hawksearchVueSDK',
     'mage/adminhtml/tools'
-], function ($, _, mageTemplate, priceUtils) {
+], function ($, _, mageTemplate, priceUtils, Events) {
     window.hawksearch = {
         /**
          * Find Vue app widget in registered widget instances
@@ -164,9 +165,16 @@ define([
         let isFetchResultsDispatched = false;
         let vueWidget = hawksearch.getVueWidget(hawksearchConfig.vueComponent);
 
+        Events.on.call(vueWidget, 'fetchResults:after', function() {
+            $(vueWidget.$el).trigger('contentUpdated');
+        });
+
         if (!_.isEmpty(vueWidget) && vueWidget.config.searchConfig.initialSearch) {
             HawksearchVue.getWidgetStore(vueWidget).subscribeAction({
                 after: (action, state) => {
+                    let eventName = action.type + ':' + 'after';
+                    Events.trigger.call(vueWidget, eventName, action.payload, state);
+
                     if (action.type !== 'fetchResults') {
                         return;
                     }
