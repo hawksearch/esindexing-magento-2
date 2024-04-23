@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -14,91 +14,19 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexing\AttributeHandler;
 
-use HawkSearch\EsIndexing\Model\Indexing\AttributeHandlerInterface;
-use Magento\Framework\DataObject;
-use Magento\Framework\ObjectManagerInterface;
+use HawkSearch\Connector\Compatibility\PublicContractDeprecation;
 
-class Composite implements AttributeHandlerInterface
+PublicContractDeprecation::triggerClassDeprecationMessage(
+    Composite::class,
+    '0.7.0',
+    \HawkSearch\EsIndexing\Model\Indexing\FieldHandler\Composite::class,
+    'In favour of a new Field Handlers logic.'
+);
+
+/**
+ * @deprecated 0.7.0 In favour of a new Field Handlers logic
+ * @see \HawkSearch\EsIndexing\Model\Indexing\FieldHandler\Composite
+ */
+class Composite extends \HawkSearch\EsIndexing\Model\Indexing\FieldHandler\Composite
 {
-    /**#@+
-     * Constants
-     */
-    public const HANDLER_DEFAULT_NAME = '__DEFAULT_HANDLER__';
-    /**#@-*/
-
-    /**
-     * @var string[]
-     */
-    protected $handlers = [
-        self::HANDLER_DEFAULT_NAME => DataObjectHandler::class
-    ];
-
-    /**
-     * @var ObjectManagerInterface
-     */
-    private $objectManager;
-
-    /**
-     * AttributeHandlerComposite constructor.
-     * @param AttributeHandlerInterface[] $handlers
-     */
-    public function __construct(
-        ObjectManagerInterface $objectManager,
-        array $handlers = []
-    ) {
-        $this->objectManager = $objectManager;
-        $this->mergeTypes($handlers);
-    }
-
-    /**
-     * Add or override handlers
-     *
-     * @param array $handlers
-     * @return void
-     */
-    protected function mergeTypes(array $handlers)
-    {
-        foreach ($handlers as $handler) {
-            if (isset($handler['attribute']) && isset($handler['class'])) {
-                $this->handlers[$handler['attribute']] = $handler['class'];
-            }
-        }
-    }
-
-    /**
-     * @inheritDoc
-     * @param DataObject $item
-     */
-    public function handle(DataObject $item, string $attributeCode)
-    {
-        $handler = $this->getHandler($attributeCode);
-
-        return $handler->handle($item, $attributeCode);
-    }
-
-    /**
-     * @param string $attributeCode
-     * @return AttributeHandlerInterface
-     */
-    protected function getHandler(string $attributeCode): AttributeHandlerInterface
-    {
-        return $this->getObject( $this->handlers[$attributeCode] ?? $this->handlers[self::HANDLER_DEFAULT_NAME]);
-    }
-
-    /**
-     * @param string $instanceName
-     * @return AttributeHandlerInterface
-     * @throws \InvalidArgumentException
-     */
-    private function getObject(string $instanceName): AttributeHandlerInterface
-    {
-        $instance = $this->objectManager->create($instanceName);
-        if (!$instance instanceof AttributeHandlerInterface) {
-            throw new \InvalidArgumentException(
-                get_class($instance) . ' isn\'t instance of ' . AttributeHandlerInterface::class
-            );
-        }
-
-        return $instance;
-    }
 }

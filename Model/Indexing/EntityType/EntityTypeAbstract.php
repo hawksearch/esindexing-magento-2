@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -15,8 +15,10 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexing\EntityType;
 
+use HawkSearch\Connector\Compatibility\ParameterDeprecation;
+use HawkSearch\Connector\Compatibility\PublicMethodDeprecationTrait;
 use HawkSearch\EsIndexing\Model\Indexing\AbstractConfigHelper;
-use HawkSearch\EsIndexing\Model\Indexing\AttributeHandlerInterface;
+use HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface;
 use HawkSearch\EsIndexing\Model\Indexing\EntityRebuildInterface;
 use HawkSearch\EsIndexing\Model\Indexing\EntityTypeInterface;
 use HawkSearch\EsIndexing\Model\Indexing\ItemsDataProviderInterface;
@@ -24,6 +26,16 @@ use HawkSearch\EsIndexing\Model\Indexing\ItemsIndexerInterface;
 
 abstract class EntityTypeAbstract implements EntityTypeInterface
 {
+    use PublicMethodDeprecationTrait;
+
+    private $deprecatedMethods = [
+        'getAttributeHandler' => [
+            'since' => '0.7.0',
+            'replacement' => __CLASS__ . '::getFieldHandler()',
+            'description' => 'In favour of a new Field Handlers logic'
+        ],
+    ];
+
     /**
      * @var EntityRebuildInterface
      */
@@ -40,9 +52,9 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
     private $typeName;
 
     /**
-     * @var AttributeHandlerInterface
+     * @var FieldHandlerInterface
      */
-    private $attributeHandler;
+    private $fieldHandler;
 
     /**
      * @var ItemsIndexerInterface
@@ -59,7 +71,7 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
      *
      * @param EntityRebuildInterface $rebuilder
      * @param ItemsDataProviderInterface $itemsDataProvider
-     * @param AttributeHandlerInterface $attributeHandler
+     * @param FieldHandlerInterface $fieldHandler
      * @param ItemsIndexerInterface $itemsIndexer
      * @param AbstractConfigHelper $configHelper
      * @param null $typeName
@@ -67,14 +79,36 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
     public function __construct(
         EntityRebuildInterface $rebuilder,
         ItemsDataProviderInterface $itemsDataProvider,
-        AttributeHandlerInterface $attributeHandler,
+        FieldHandlerInterface $fieldHandler,
         ItemsIndexerInterface $itemsIndexer,
         AbstractConfigHelper $configHelper,
-        $typeName = null
+        $typeName = null,
+        /**
+         * @deprecated 0.7.0 in favour of a new Field Handlers logic.
+         * @see $fieldHandler
+         * Update dependencies in di.xml file.
+         */
+        $attributeHandler = null
     ) {
         $this->rebuilder = $rebuilder;
         $this->itemsDataProvider = $itemsDataProvider;
-        $this->attributeHandler = $attributeHandler;
+        $this->fieldHandler = $fieldHandler;
+        if ($attributeHandler !== null) {
+            ParameterDeprecation::triggerDeprecationMessage(
+                __METHOD__,
+                '$attributeHandler',
+                '0.7.0',
+                '$fieldHandler',
+                'Update dependencies in di.xml file.'
+            );
+            if ($attributeHandler instanceof FieldHandlerInterface) {
+                $this->fieldHandler = $attributeHandler;
+            } else {
+                throw new \InvalidArgumentException(
+                    __('$attributeHandler parameter is not an instance of %2', FieldHandlerInterface::class)
+                );
+            }
+        }
         $this->itemsIndexer = $itemsIndexer;
         $this->configHelper = $configHelper;
         $this->typeName = $typeName;
@@ -131,10 +165,21 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
 
     /**
      * @inheritDoc
+     * @deprecated 0.7.0 In favour of a new Field Handlers logic
+     * @see self::getFieldHandler()
      */
-    public function getAttributeHandler() : AttributeHandlerInterface
+    public function getAttributeHandler() : FieldHandlerInterface
     {
-        return $this->attributeHandler;
+        $this->triggerPublicMethodDeprecationMessage(__FUNCTION__);
+        return $this->getFieldHandler();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getFieldHandler() : FieldHandlerInterface
+    {
+        return $this->fieldHandler;
     }
 
     /**
