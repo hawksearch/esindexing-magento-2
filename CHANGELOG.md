@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 See tasks currently in development on [Unreleased] changes page.
 
+## [0.6.3] - 2024-04-25
+
+## FIXES
+
+* __fix: minicart not updated after adding product to cart__ ([#57](https://github.com/hawksearch/esindexing-magento-2/pull/57))
+
+  ref: HC-1612
+
 ## [0.6.2] - 2024-03-20
 
 ## FIXES
@@ -287,7 +295,8 @@ __fix: minimal compatible version of connector package is 2.8.0__ ([#45](https:/
 ## 0.1.0
 Initial stable release
 
-[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.6.2...HEAD
+[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.6.3...HEAD
+[0.6.3]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.6.2...v0.6.3
 [0.6.2]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.5.1...v0.6.0
