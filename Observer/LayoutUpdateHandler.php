@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -13,6 +13,8 @@
 namespace HawkSearch\EsIndexing\Observer;
 
 use HawkSearch\EsIndexing\Model\Config\Search as SearchConfig;
+use Magento\Catalog\Helper\Data as CatalogHelper;
+use Magento\Catalog\Model\Category;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\View\Layout;
@@ -22,16 +24,25 @@ class LayoutUpdateHandler implements ObserverInterface
     /**
      * @var SearchConfig
      */
-    private $searchConfig;
+    private SearchConfig $searchConfig;
+
+    /**
+     * @var CatalogHelper
+     */
+    private CatalogHelper $catalogHelper;
 
     /**
      * LayoutUpdateHandler constructor.
+     *
      * @param SearchConfig $searchConfig
+     * @param CatalogHelper $catalogHelper
      */
     public function __construct(
-        SearchConfig $searchConfig
+        SearchConfig $searchConfig,
+        CatalogHelper $catalogHelper
     ) {
         $this->searchConfig = $searchConfig;
+        $this->catalogHelper = $catalogHelper;
     }
 
     /**
@@ -43,29 +54,72 @@ class LayoutUpdateHandler implements ObserverInterface
         $layout = $observer->getData('layout');
         $action = $observer->getData('full_action_name');
 
-        /** @TODO Create a configuration setting to track if Categories are managed by Hawksearch */
-        $isManageCategories = true;
         $handles = [];
-        switch ($action) {
-            case 'catalogsearch_result_index':
-                if ($this->searchConfig->isSearchEnabled()) {
-                    $handles[] = 'hawksearch_catalogsearch_result_index';
-                }
-                break;
-            case 'catalog_category_view':
-                if ($isManageCategories) {
-                    $handles[] = 'hawksearch_catalog_category_view';
-                }
-                break;
-            case 'hawksearch_landingPage_view':
-                break;
-        }
-
-        if ($this->searchConfig->isSearchEnabled() || $isManageCategories) {
+        if ($this->searchConfig->isSearchEnabled() || $this->isCategoriesEnabled()) {
             $handles[] = 'hawksearch_esindexing_default_handle';
             $handles[] = 'hawksearch_esindexing_components';
         }
+        $handles = array_merge($handles, $this->getResultsHandles($action));
 
         $layout->getUpdate()->addHandle($handles);
+    }
+
+    /**
+     * @param string $action
+     * @return array
+     */
+    private function getResultsHandles(string $action): array
+    {
+        $allowedActions = [
+            'catalogsearch_result_index',
+            'catalog_category_view',
+            //'hawksearch_landingPage_view'
+        ];
+        $isCategoryPage = $action === 'catalog_category_view';
+        $handles = [];
+
+        if (!in_array($action, $allowedActions)) {
+            return $handles;
+        }
+
+        if ($isCategoryPage) {
+            if (!$this->isCategoriesEnabled()) {
+                return $handles;
+            }
+        }
+        else {
+            if (!$this->searchConfig->isSearchEnabled()) {
+                return $handles;
+            }
+        }
+
+        $handles[] = 'hawksearch_esindexing_results';
+
+        return $handles;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isCategoriesEnabled(): bool
+    {
+        $category = $this->catalogHelper->getCategory();
+        if (!$category) {
+            return false;
+        }
+
+        /**
+         * @todo Create a configuration setting to track if Categories are managed by Hawksearch
+         */
+        /*if (!<configurationValue>) {
+            return false;
+        }*/
+
+        $isContentMode = $category->getDisplayMode() === Category::DM_PAGE;
+        if ($isContentMode) {
+            return false;
+        }
+
+        return true;
     }
 }

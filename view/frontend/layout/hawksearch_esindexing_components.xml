@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
   /**
-   * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+   * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
    *
    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -28,6 +28,12 @@
             <block class="Magento\Framework\View\Element\Template"
                    name="hawksearch.component.results.tools.pager"
                    template="HawkSearch_EsIndexing::hawk-components/results/tools/pager.phtml"/>
+            <block class="Magento\Framework\View\Element\Template"
+                   name="hawksearch.component.results.result-item-grid"
+                   template="HawkSearch_EsIndexing::hawk-components/results/result-item-grid.phtml"/>
+            <block class="Magento\Framework\View\Element\Template"
+                   name="hawksearch.component.results.add-to-cart"
+                   template="HawkSearch_EsIndexing::hawk-components/results/add-to-cart.phtml"/>
             <block class="Magento\Framework\View\Element\Template"
                    name="hawksearch.component.search-box.suggestion-item"
                    template="HawkSearch_EsIndexing::hawk-components/search-box/suggestion-item.phtml"/>
