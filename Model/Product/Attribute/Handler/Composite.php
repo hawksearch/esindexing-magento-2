@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -15,25 +15,38 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Product\Attribute\Handler;
 
 use HawkSearch\EsIndexing\Model\Indexing\AttributeHandlerInterface;
+use HawkSearch\EsIndexing\Model\Indexing\Entity\Product\ItemsDataProvider;
 use HawkSearch\EsIndexing\Model\Product\Attribute\ValueProcessorInterface;
 use HawkSearch\EsIndexing\Model\Product\ProductTypePoolInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\ResourceModel\Eav\Attribute as AttributeResource;
 use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DataObject;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\ObjectManagerInterface;
 
 class Composite extends \HawkSearch\EsIndexing\Model\Indexing\AttributeHandler\Composite
 {
     /**
+     * @var array
+     */
+    private array $childrenCache = [];
+
+    /**
      * @var ProductTypePoolInterface
      */
-    private $productTypePool;
+    private ProductTypePoolInterface $productTypePool;
 
     /**
      * @var ValueProcessorInterface
      */
-    private $valueProcessor;
+    private ValueProcessorInterface $valueProcessor;
+
+    /**
+     * @var ItemsDataProvider
+     */
+    private ItemsDataProvider $childrenItemsDataProvider;
 
     /**
      * AttributeHandlerComposite constructor.
@@ -42,32 +55,33 @@ class Composite extends \HawkSearch\EsIndexing\Model\Indexing\AttributeHandler\C
      * @param ProductTypePoolInterface $productTypePool
      * @param ValueProcessorInterface $valueProcessor
      * @param AttributeHandlerInterface[] $handlers
+     * @param ItemsDataProvider|null $childrenItemsDataProvider
      */
     public function __construct(
         ObjectManagerInterface $objectManager,
         ProductTypePoolInterface $productTypePool,
         ValueProcessorInterface $valueProcessor,
-        array $handlers = []
+        array $handlers = [],
+        ItemsDataProvider $childrenItemsDataProvider = null
     ) {
         parent::__construct($objectManager, $handlers);
         $this->productTypePool = $productTypePool;
         $this->valueProcessor = $valueProcessor;
+        $this->childrenItemsDataProvider = $childrenItemsDataProvider ?: ObjectManager::getInstance()->get(ItemsDataProvider::class);
     }
 
     /**
      * @inheritDoc
      * @param ProductInterface $item
+     * @throws LocalizedException
      */
     public function handle(DataObject $item, string $attributeCode)
     {
         $value = $this->formatValue(parent::handle($item, $attributeCode));
         $relatedValues = [];
 
-        $productType = $this->productTypePool->get($item->getTypeId());
-        if ($children = $productType->getChildProducts($item)) {
-            foreach ($children as $child) {
-                $relatedValues = array_merge($relatedValues, $this->formatValue($this->handle($child, $attributeCode)));
-            }
+        foreach ($this->getChildren($item) as $child) {
+            $relatedValues = array_merge($relatedValues, $this->formatValue($this->handle($child, $attributeCode)));
         }
 
         /** @var ProductResource $productResource */
@@ -98,5 +112,28 @@ class Composite extends \HawkSearch\EsIndexing\Model\Indexing\AttributeHandler\C
         }
 
         return $result;
+    }
+
+    /**
+     * @param ProductInterface|DataObject $item
+     * @return ProductInterface[]
+     */
+    private function getChildren(DataObject $item): array
+    {
+        if (!isset($this->childrenCache[$item->getId()])) {
+            $productType = $this->productTypePool->get($item->getTypeId());
+            $childrenCollection = [];
+            if ($children = $productType->getChildProducts($item)) {
+                $childIds = [];
+                foreach ($children as $child) {
+                    $childIds[] = $child->getId();
+                }
+                $childrenCollection = $this->childrenItemsDataProvider->getItems($item->getStoreId(), $childIds);
+            }
+
+            $this->childrenCache[$item->getId()] = $childrenCollection;
+        }
+
+        return $this->childrenCache[$item->getId()];
     }
 }
