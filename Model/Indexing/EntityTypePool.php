@@ -18,12 +18,20 @@ use Magento\Framework\Exception\NotFoundException;
 use Magento\Framework\ObjectManager\TMap;
 use Magento\Framework\ObjectManager\TMapFactory;
 
+/**
+ * @internal
+ */
 class EntityTypePool implements EntityTypePoolInterface
 {
     /**
      * @var EntityTypeInterface[] | TMap
      */
     private $types;
+
+    /**
+     * @var TMapFactory
+     */
+    private TMapFactory $tmapFactory;
 
     /**
      * EntityTypePool constructor.
@@ -34,6 +42,7 @@ class EntityTypePool implements EntityTypePoolInterface
         TMapFactory $tmapFactory,
         array $types = []
     ) {
+        $this->tmapFactory = $tmapFactory;
         $this->types = $tmapFactory->createSharedObjectsMap(
             [
                 'array' => $types,
@@ -57,7 +66,7 @@ class EntityTypePool implements EntityTypePoolInterface
     /**
      * @inheritDoc
      */
-    public function get($entityTypeName)
+    public function get(string $entityTypeName): EntityTypeInterface
     {
         $types = $this->getList();
         if (isset($types[$entityTypeName])) {
@@ -65,6 +74,22 @@ class EntityTypePool implements EntityTypePoolInterface
         }
 
         throw new NotFoundException(__('Unknown Entity Type %1', $entityTypeName));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function create(string $entityTypeName): EntityTypeInterface
+    {
+        $entityType = $this->get($entityTypeName);
+        $instances = $this->tmapFactory->create(
+            [
+                'array' => [$entityTypeName => get_class($entityType)],
+                'type' => EntityTypeInterface::class
+            ]
+        );
+
+        return $instances[$entityTypeName];
     }
 
     /**
