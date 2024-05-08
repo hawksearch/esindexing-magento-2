@@ -37,6 +37,11 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     private $itemsToIndexCache = [];
 
     /**
+     * @var EntityTypeInterface
+     */
+    private $entityType;
+
+    /**
      * @var EntityTypePoolInterface
      */
     protected $entityTypePool;
@@ -383,23 +388,31 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
      */
     protected function getEntityType(): EntityTypeInterface
     {
-        foreach ($this->entityTypePool->getList() as $entityType) {
-            $rebuilder = $entityType->getRebuilder();
-            if ($this instanceof $rebuilder) {
-                return $entityType;
-            }
+        if ($this->entityType === null) {
+            foreach ($this->entityTypePool->getList() as $entityType) {
+                $rebuilder = $entityType->getRebuilder();
+                if ($this instanceof $rebuilder) {
+                    break;
+                }
 
-            //check if $rebuilder is instance of Proxy class
-            $proxyPosition = strlen(get_class($rebuilder)) - strlen('\Proxy');
-            if (strpos(get_class($rebuilder), '\Proxy', -$proxyPosition) === $proxyPosition) {
-                $parentClass = get_parent_class($rebuilder);
-                if ($this instanceof $parentClass || is_subclass_of($this, $parentClass)) {
-                    return $entityType;
+                //check if $rebuilder is instance of Proxy class
+                $proxyPosition = strlen(get_class($rebuilder)) - strlen('\Proxy');
+                if (strpos(get_class($rebuilder), '\Proxy', -$proxyPosition) === $proxyPosition) {
+                    $parentClass = get_parent_class($rebuilder);
+                    if ($this instanceof $parentClass || is_subclass_of($this, $parentClass)) {
+                        break;
+                    }
                 }
             }
+
+            if (empty($entityType)){
+                throw new NotFoundException(__('Unregistered Entity Indexer "%1"', get_class($this)));
+            }
+
+            $this->entityType = $this->entityTypePool->create($entityType->getTypeName());
         }
 
-        throw new NotFoundException(__('Unregistered Entity Indexer "%1"', get_class($this)));
+        return $this->entityType;
     }
 
     /**

@@ -15,7 +15,11 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Indexing;
 
 use Magento\Framework\Exception\NotFoundException;
+use Magento\Framework\ObjectManager\TMap;
 
+/**
+ * @internal
+ */
 interface EntityTypePoolInterface
 {
     /**
@@ -25,11 +29,21 @@ interface EntityTypePoolInterface
      * @return EntityTypeInterface
      * @throws NotFoundException
      */
-    public function get($entityTypeName);
+    public function get(string $entityTypeName): EntityTypeInterface;
 
     /**
      * Get a list of entity types
-     * @return EntityTypeInterface[]
+     *
+     * @return EntityTypeInterface[]|TMap
      */
     public function getList();
+
+    /**
+     * Create not shared entity type instance by its type name
+     *
+     * @param string $entityTypeName
+     * @return EntityTypeInterface
+     * @throws NotFoundException
+     */
+    public function create(string $entityTypeName): EntityTypeInterface;
 }

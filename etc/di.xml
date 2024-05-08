@@ -72,6 +72,8 @@
                 type="HawkSearch\EsIndexing\Model\Product\Attribute\ValueProcessor"/>
     <preference for="HawkSearch\EsIndexing\Model\Field\FieldExtendedInterface"
                 type="HawkSearch\EsIndexing\Model\Field\FieldExtended"/>
+    <preference for="HawkSearch\EsIndexing\Model\Product\Attribute\ExcludeNotVisibleProductsFlagInterface"
+                type="HawkSearch\EsIndexing\Model\Product\Attribute\ExcludeNotVisibleProductsFlag\DefaultProvider"/>
 
     <!-- Overwrites -->
     <preference for="HawkSearch\Connector\Gateway\Http\TransferBuilder"
@@ -829,7 +831,7 @@
         <arguments>
             <argument name="rebuilder" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Product\EntityRebuild\Proxy</argument>
             <argument name="itemsDataProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Product\ItemsDataProvider</argument>
-            <argument name="attributeHandler" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\Composite</argument>
+            <argument name="attributeHandler" shared="false" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\Composite</argument>
             <argument name="configHelper" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Product\ConfigHelper</argument>
             <argument name="itemsIndexer" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ItemsIndexer\SearchedItemsIndexer</argument>
             <argument name="typeName" xsi:type="const">HawkSearch\EsIndexing\Model\Indexing\EntityType\ProductEntityType::ENTITY_TYPE_NAME</argument>
@@ -969,8 +971,16 @@
                     <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\Category</item>
                 </item>
             </argument>
+            <argument name="childrenItemsDataProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Product\ChildrenItemsDataProvider</argument>
         </arguments>
     </type>
+    <virtualType
+        name="HawkSearch\EsIndexing\Model\Indexing\Entity\Product\ChildrenItemsDataProvider"
+        type="HawkSearch\EsIndexing\Model\Indexing\Entity\Product\ItemsDataProvider">
+        <arguments>
+            <argument name="excludeNotVisibleProductsFlag" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\ExcludeNotVisibleProductsFlag\IncludeProvider</argument>
+        </arguments>
+    </virtualType>
 
     <virtualType name="HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicByEntityTypeResolver"
                  type="HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicResolverComposite">
@@ -1293,7 +1303,5 @@
     <type name="HawkSearch\Connector\Gateway\Http\TransferInterface">
         <plugin name="hawksearchIdBuilderPlugin" type="HawkSearch\EsIndexing\Plugin\Gateway\Http\TransferIdBuilderPlugin"/>
     </type>
-
-
     <!-- END Plugins -->
 </config>
