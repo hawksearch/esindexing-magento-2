@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -17,59 +17,70 @@ namespace HawkSearch\EsIndexing\Model\Indexing\Entity\Product;
 
 use HawkSearch\EsIndexing\Model\Config\Indexing;
 use HawkSearch\EsIndexing\Model\Indexing\ItemsDataProviderInterface;
+use HawkSearch\EsIndexing\Model\Product\Attribute\ExcludeNotVisibleProductsFlagInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\Product\Visibility;
 use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCollectionFactory;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\App\ObjectManager;
 
 class ItemsDataProvider implements ItemsDataProviderInterface
 {
     /**
      * @var ProductRepositoryInterface
      */
-    private $productRepository;
+    private ProductRepositoryInterface $productRepository;
 
     /**
      * @var SearchCriteriaBuilder
      */
-    private $searchCriteriaBuilder;
+    private SearchCriteriaBuilder $searchCriteriaBuilder;
 
     /**
      * @var Visibility
      */
-    private $visibility;
+    private Visibility $visibility;
 
     /**
      * @var Indexing
      */
-    private $indexingConfig;
+    private Indexing $indexingConfig;
 
     /**
      * @var CategoryCollectionFactory
      */
-    private $categoryCollectionFactory;
+    private CategoryCollectionFactory $categoryCollectionFactory;
+
+    /**
+     * @var ExcludeNotVisibleProductsFlagInterface
+     */
+    private ExcludeNotVisibleProductsFlagInterface $excludeNotVisibleProductsFlag;
 
     /**
      * ProductItems constructor.
+     *
      * @param ProductRepositoryInterface $productRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param Visibility $visibility
      * @param Indexing $indexingConfig
      * @param CategoryCollectionFactory $categoryCollectionFactory
+     * @param ExcludeNotVisibleProductsFlagInterface|null $excludeNotVisibleProductsFlag
      */
     public function __construct(
         ProductRepositoryInterface $productRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         Visibility $visibility,
         Indexing $indexingConfig,
-        CategoryCollectionFactory $categoryCollectionFactory
+        CategoryCollectionFactory $categoryCollectionFactory,
+        ExcludeNotVisibleProductsFlagInterface $excludeNotVisibleProductsFlag = null
     ) {
         $this->productRepository = $productRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->visibility = $visibility;
         $this->indexingConfig = $indexingConfig;
         $this->categoryCollectionFactory = $categoryCollectionFactory;
+        $this->excludeNotVisibleProductsFlag = $excludeNotVisibleProductsFlag ?: ObjectManager::getInstance()->get(ExcludeNotVisibleProductsFlagInterface::class);
     }
 
     /**
@@ -96,8 +107,7 @@ class ItemsDataProvider implements ItemsDataProviderInterface
             $this->searchCriteriaBuilder->addFilter('entity_id', $productIds, 'in');
         }
 
-        //@TODO Define $excludeNotVisibleProducts in system configuration
-        $excludeNotVisibleProducts = true;
+        $excludeNotVisibleProducts = $this->excludeNotVisibleProductsFlag->execute();
 
         if ($excludeNotVisibleProducts) {
             $this->searchCriteriaBuilder->addFilter(

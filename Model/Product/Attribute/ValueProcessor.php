@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -18,6 +18,16 @@ use Magento\Catalog\Model\ResourceModel\Eav\Attribute;
 
 class ValueProcessor implements ValueProcessorInterface
 {
+    private const SYSTEM_ATTRIBUTES = [
+        'type_id',
+        'thumbnail_url',
+        'image_url',
+        'category',
+        'url',
+        'visibility',
+        'status'
+    ];
+
     /**
      * @inheritDoc
      */
@@ -40,7 +50,9 @@ class ValueProcessor implements ValueProcessorInterface
      */
     protected function isRollUpAttributeStrategy(Attribute $attribute)
     {
-        return $attribute->getBackendType() !== 'static';
+        $isStatic = $attribute->getBackendType() === 'static';
+        $isSystemAttribute = in_array($attribute->getAttributeCode(), self::SYSTEM_ATTRIBUTES);
+        return !$isStatic && !$isSystemAttribute;
     }
 
     /**

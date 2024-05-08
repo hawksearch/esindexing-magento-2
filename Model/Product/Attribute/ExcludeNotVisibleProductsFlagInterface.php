@@ -10,15 +10,14 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-?>
-<div data-vue-hawksearch-component="facets" data-vue-hawksearch-config="hawksearch-vue-config-results">
-    <div class="hawk">
-        <div class="hawk__body">
-            <banner zone="FeaturedLeftTop" />
+declare(strict_types=1);
 
-            <facet-list />
+namespace HawkSearch\EsIndexing\Model\Product\Attribute;
 
-            <banner zone="FeaturedLeftBottom" />
-        </div>
-    </div>
-</div>
+interface ExcludeNotVisibleProductsFlagInterface
+{
+    /**
+     * @return bool
+     */
+    public function execute(): bool;
+}

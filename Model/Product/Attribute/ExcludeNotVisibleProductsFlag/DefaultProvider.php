@@ -10,15 +10,20 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-?>
-<div data-vue-hawksearch-component="facets" data-vue-hawksearch-config="hawksearch-vue-config-results">
-    <div class="hawk">
-        <div class="hawk__body">
-            <banner zone="FeaturedLeftTop" />
+declare(strict_types=1);
 
-            <facet-list />
+namespace HawkSearch\EsIndexing\Model\Product\Attribute\ExcludeNotVisibleProductsFlag;
 
-            <banner zone="FeaturedLeftBottom" />
-        </div>
-    </div>
-</div>
+use HawkSearch\EsIndexing\Model\Product\Attribute\ExcludeNotVisibleProductsFlagInterface;
+
+class DefaultProvider implements ExcludeNotVisibleProductsFlagInterface
+{
+    /**
+     * @inheritDoc
+     */
+    public function execute(): bool
+    {
+        //@TODO Define $excludeNotVisibleProducts in system configuration
+        return true;
+    }
+}
