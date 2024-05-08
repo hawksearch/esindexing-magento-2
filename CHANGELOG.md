@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 See tasks currently in development on [Unreleased] changes page.
 
+## [0.6.4] - 2024-05-08
+
+## FIXES
+
+* __fix: shared entity type cache not updating attributes__ ([3787516](https://github.com/hawksearch/esindexing-magento-2/commit/378751629cb40300dd650c55b159720b332bbbf7))
+  
+  Shared EntityType per long running consumer brought an issue with
+  cached private properties.
+  Make AttributeHandler for ProductEntityType not shared.
+
+  Ref: HC-1630
+
+* __fix: don't rollup system attribute values to parent product__ ([96b30e4](https://github.com/hawksearch/esindexing-magento-2/commit/96b30e41189990798889b817a26510d9b8b30091))
+  
+  Values of system attributes shouldn’t be rolled up to the parent product.
+  System attributes are: category, status, visibility, url , image_url,
+  thumbnail_url, type_id
+
+  Ref: HC-1503
+
+* __fix: child attribute values doesn't roll-up to parent product__ ([62170fc](https://github.com/hawksearch/esindexing-magento-2/commit/62170fc2b1293182bf0a4fc6dd4575b33c2a1da5))
+  
+  Ref: HC-1630
+
+
 ## [0.6.3] - 2024-04-25
 
 ## FIXES
@@ -295,7 +320,8 @@ __fix: minimal compatible version of connector package is 2.8.0__ ([#45](https:/
 ## 0.1.0
 Initial stable release
 
-[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.6.3...HEAD
+[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.6.4...HEAD
+[0.6.4]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.6.3...v0.6.4
 [0.6.3]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.6.2...v0.6.3
 [0.6.2]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.6.0...v0.6.1
