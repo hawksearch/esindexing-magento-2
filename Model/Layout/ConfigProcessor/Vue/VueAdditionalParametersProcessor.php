@@ -61,8 +61,16 @@ class VueAdditionalParametersProcessor implements LayoutConfigProcessorInterface
     public function process($jsConfig)
     {
         $params = [];
+        $queryParam = [];
         if ($category = $this->getCategoryPage()) {
             $params['CustomUrl'] = $this->getCategoryPath($category);
+            $queryParam[] = 'visibility_catalog:true';
+        } else {
+            $queryParam[] = 'visibility_search:true';
+        }
+
+        if ($queryParam) {
+            $params['Query'] = implode(' AND ', $queryParam);
         }
 
         $jsConfig = $jsConfig ?? [];
