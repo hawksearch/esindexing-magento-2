@@ -95,6 +95,7 @@ class ItemsDataProvider implements ItemsDataProviderInterface
         $pathFilterRegex = "(" . implode('|', $pathRegexGroups) . ")";
         $categories = $category->getCategories($category->getParentId(), 0, false, true, false);
         $categories->addPathFilter($pathFilterRegex)
+            ->addAttributeToSelect('name')
             ->addAttributeToSort('entity_id')
             ->addAttributeToSort('parent_id')
             ->addAttributeToSort('position');
