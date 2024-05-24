@@ -1036,6 +1036,14 @@
                     <item name="attribute" xsi:type="string">category</item>
                     <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Field\Handler\Category</item>
                 </item>
+                <item name="visibility_search" xsi:type="array">
+                    <item name="attribute" xsi:type="string">visibility_search</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Field\Handler\VisibilitySearch</item>
+                </item>
+                <item name="visibility_catalog" xsi:type="array">
+                    <item name="attribute" xsi:type="string">visibility_catalog</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Field\Handler\VisibilityCatalog</item>
+                </item>
             </argument>
             <argument name="childrenItemsDataProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Product\ChildrenItemsDataProvider</argument>
         </arguments>

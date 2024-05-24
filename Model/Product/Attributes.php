@@ -106,7 +106,8 @@ class Attributes
             'name',
             'category',
             'url',
-            'visibility'
+            'visibility_search',
+            'visibility_catalog',
         ];
     }
 
