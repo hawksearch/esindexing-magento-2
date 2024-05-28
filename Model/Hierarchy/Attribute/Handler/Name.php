@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -14,24 +14,19 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler;
 
-use HawkSearch\EsIndexing\Model\Indexing\AttributeHandlerInterface;
-use Magento\Catalog\Api\Data\CategoryInterface;
-use Magento\Framework\DataObject;
+use HawkSearch\Connector\Compatibility\PublicContractDeprecation;
 
-class Name implements AttributeHandlerInterface
+PublicContractDeprecation::triggerClassDeprecationMessage(
+    Name::class,
+    '0.7.0',
+    \HawkSearch\EsIndexing\Model\Hierarchy\Field\Handler\Name::class,
+    'In favour of a new Field Handlers logic.'
+);
+
+/**
+ * @deprecated 0.7.0 In favour of a new Field Handlers logic
+ * @see \HawkSearch\EsIndexing\Model\Hierarchy\Field\Handler\Name
+ */
+class Name extends \HawkSearch\EsIndexing\Model\Hierarchy\Field\Handler\Name
 {
-    public const PARENT_HIERARCHY_NAME = 'category';
-
-    /**
-     * @inheritDoc
-     * @param CategoryInterface $item
-     */
-    public function handle(DataObject $item, string $attributeCode)
-    {
-        if ($item->getLevel() == 1) {
-            return self::PARENT_HIERARCHY_NAME;
-        } else {
-            return $item->getName();
-        }
-    }
 }

@@ -65,7 +65,9 @@
     <preference for="HawkSearch\EsIndexing\Logger\LoggerFactoryInterface"
                 type="HawkSearch\EsIndexing\Logger\LoggerFactory"/>
     <preference for="HawkSearch\EsIndexing\Model\Indexing\AttributeHandlerInterface"
-                type="HawkSearch\EsIndexing\Model\Indexing\AttributeHandler\DataObjectHandler"/>
+                type="HawkSearch\EsIndexing\Model\Indexing\FieldHandler\DataObjectHandler"/>
+    <preference for="HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface"
+                type="HawkSearch\EsIndexing\Model\Indexing\FieldHandler\DataObjectHandler"/>
     <preference for="HawkSearch\EsIndexing\Model\Indexing\ItemsIndexerInterface"
                 type="HawkSearch\EsIndexing\Model\Indexing\ItemsIndexer\SearchedItemsIndexer"/>
     <preference for="HawkSearch\EsIndexing\Model\Product\Attribute\ValueProcessorInterface"
@@ -826,7 +828,13 @@
         <arguments>
             <argument name="rebuilder" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Hierarchy\EntityRebuild\Proxy</argument>
             <argument name="itemsDataProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Hierarchy\ItemsDataProvider</argument>
-            <argument name="attributeHandler" xsi:type="object">HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler\Composite</argument>
+            <!--
+            @deprecated 0.7.0 parameter value will be changed
+            @see HawkSearch\EsIndexing\Model\Hierarchy\Field\Handler\Composite
+            @todo Replace by HawkSearch\EsIndexing\Model\Hierarchy\Field\Handler\Composite type after ending the deprecation period
+            -->
+            <argument name="fieldHandler" xsi:type="object">HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler\Composite</argument>
+            <!--<argument name="fieldHandler" xsi:type="object">HawkSearch\EsIndexing\Model\Hierarchy\Field\Handler\Composite</argument>-->
             <argument name="configHelper" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Hierarchy\ConfigHelper</argument>
             <argument name="itemsIndexer" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ItemsIndexer\HierarchyItemsIndexer</argument>
             <argument name="typeName" xsi:type="const">HawkSearch\EsIndexing\Model\Indexing\EntityType\HierarchyEntityType::ENTITY_TYPE_NAME</argument>
@@ -837,7 +845,13 @@
         <arguments>
             <argument name="rebuilder" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Product\EntityRebuild\Proxy</argument>
             <argument name="itemsDataProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Product\ItemsDataProvider</argument>
-            <argument name="attributeHandler" shared="false" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\Composite</argument>
+            <!--
+            @deprecated 0.7.0 parameter value will be changed
+            @see HawkSearch\EsIndexing\Model\Product\Field\Handler\Composite
+            @todo Replace by HawkSearch\EsIndexing\Model\Product\Field\Handler\Composite type after ending the deprecation period
+            -->
+            <argument name="fieldHandler" shared="false" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\Composite</argument>
+            <!--<argument name="fieldHandler" shared="false" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Field\Handler\Composite</argument>-->
             <argument name="configHelper" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Product\ConfigHelper</argument>
             <argument name="itemsIndexer" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ItemsIndexer\SearchedItemsIndexer</argument>
             <argument name="typeName" xsi:type="const">HawkSearch\EsIndexing\Model\Indexing\EntityType\ProductEntityType::ENTITY_TYPE_NAME</argument>
@@ -848,7 +862,13 @@
         <arguments>
             <argument name="rebuilder" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\ContentPage\EntityRebuild\Proxy</argument>
             <argument name="itemsDataProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\ContentPage\ItemsDataProvider</argument>
-            <argument name="attributeHandler" xsi:type="object">HawkSearch\EsIndexing\Model\ContentPage\Attribute\Handler\Composite</argument>
+            <!--
+            @deprecated 0.7.0 parameter value will be changed
+            @see HawkSearch\EsIndexing\Model\ContentPage\Field\Handler\Composite
+            @todo Replace by HawkSearch\EsIndexing\Model\ContentPage\Field\Handler\Composite type after ending the deprecation period
+            -->
+            <argument name="fieldHandler" xsi:type="object">HawkSearch\EsIndexing\Model\ContentPage\Attribute\Handler\Composite</argument>
+            <!--<argument name="fieldHandler" xsi:type="object">HawkSearch\EsIndexing\Model\ContentPage\Field\Handler\Composite</argument>-->
             <argument name="configHelper" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\ContentPage\ConfigHelper</argument>
             <argument name="itemsIndexer" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ItemsIndexer\SearchedItemsIndexer</argument>
             <argument name="typeName" xsi:type="const">HawkSearch\EsIndexing\Model\Indexing\EntityType\ContentPageEntityType::ENTITY_TYPE_NAME</argument>
@@ -859,7 +879,13 @@
         <arguments>
             <argument name="rebuilder" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\LandingPage\EntityRebuild\Proxy</argument>
             <argument name="itemsDataProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\LandingPage\ItemsDataProvider</argument>
-            <argument name="attributeHandler" xsi:type="object">HawkSearch\EsIndexing\Model\LandingPage\Attribute\Handler\Composite</argument>
+            <!--
+            @deprecated 0.7.0 parameter value will be changed
+            @see HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\Composite
+            @todo Replace by HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\Composite type after ending the deprecation period
+            -->
+            <argument name="fieldHandler" xsi:type="object">HawkSearch\EsIndexing\Model\LandingPage\Attribute\Handler\Composite</argument>
+            <!--<argument name="fieldHandler" xsi:type="object">HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\Composite</argument>-->
             <argument name="configHelper" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\LandingPage\ConfigHelper</argument>
             <argument name="itemsIndexer" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ItemsIndexer\LandingPageItemsIndexer</argument>
             <argument name="typeName" xsi:type="const">HawkSearch\EsIndexing\Model\Indexing\EntityType\LandingPageEntityType::ENTITY_TYPE_NAME</argument>
@@ -893,88 +919,130 @@
         </arguments>
     </type>
 
+    <!--
+    @deprecated 0.7.0 will be replaced by HawkSearch\EsIndexing\Model\Hierarchy\Field\Handler\Composite virtual type
+    @see HawkSearch\EsIndexing\Model\Hierarchy\Field\Handler\Composite
+     Move your type updates to HawkSearch\EsIndexing\Model\Hierarchy\Field\Handler\Composite virtual type.
+    -->
     <virtualType name="HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler\Composite"
-                 type="HawkSearch\EsIndexing\Model\Indexing\AttributeHandler\Composite">
+                 type="HawkSearch\EsIndexing\Model\Hierarchy\Field\Handler\Composite"/>
+
+    <virtualType name="HawkSearch\EsIndexing\Model\Hierarchy\Field\Handler\Composite"
+                 type="HawkSearch\EsIndexing\Model\Indexing\FieldHandler\Composite">
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="hierarchy_id" xsi:type="array">
                     <item name="attribute" xsi:type="const">HawkSearch\EsIndexing\Api\Data\HierarchyInterface::FIELD_HIERARCHY_ID</item>
-                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler\HierarchyId</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Hierarchy\Field\Handler\HierarchyId</item>
                 </item>
                 <item name="name" xsi:type="array">
                     <item name="attribute" xsi:type="const">HawkSearch\EsIndexing\Api\Data\HierarchyInterface::FIELD_NAME</item>
-                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler\Name</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Hierarchy\Field\Handler\Name</item>
                 </item>
                 <item name="parent_hierarchy_id" xsi:type="array">
                     <item name="attribute" xsi:type="const">HawkSearch\EsIndexing\Api\Data\HierarchyInterface::FIELD_PARENT_HIERARCHY_ID</item>
-                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler\ParentHierarchyId</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Hierarchy\Field\Handler\ParentHierarchyId</item>
                 </item>
                 <item name="is_active" xsi:type="array">
                     <item name="attribute" xsi:type="const">HawkSearch\EsIndexing\Api\Data\HierarchyInterface::FIELD_IS_ACTIVE</item>
-                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler\IsActive</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Hierarchy\Field\Handler\IsActive</item>
                 </item>
             </argument>
         </arguments>
     </virtualType>
 
+    <!--
+    @deprecated 0.7.0 will be replaced by HawkSearch\EsIndexing\Model\ContentPage\Field\Handler\Composite virtual type
+    @see HawkSearch\EsIndexing\Model\ContentPage\Field\Handler\Composite
+     Move your type updates to HawkSearch\EsIndexing\Model\ContentPage\Field\Handler\Composite virtual type.
+    -->
     <virtualType name="HawkSearch\EsIndexing\Model\ContentPage\Attribute\Handler\Composite"
-                 type="HawkSearch\EsIndexing\Model\Indexing\AttributeHandler\Composite">
+                 type="HawkSearch\EsIndexing\Model\ContentPage\Field\Handler\Composite" />
+
+    <virtualType name="HawkSearch\EsIndexing\Model\ContentPage\Field\Handler\Composite"
+                 type="HawkSearch\EsIndexing\Model\Indexing\FieldHandler\Composite">
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="url" xsi:type="array">
                     <item name="attribute" xsi:type="string">url</item>
-                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\ContentPage\Attribute\Handler\Url</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\ContentPage\Field\Handler\Url</item>
                 </item>
             </argument>
         </arguments>
     </virtualType>
 
+    <!--
+    @deprecated 0.7.0 will be replaced by HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\Composite virtual type
+    @see HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\Composite
+     Move your type updates to HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\Composite virtual type.
+    -->
     <virtualType name="HawkSearch\EsIndexing\Model\LandingPage\Attribute\Handler\Composite"
-                 type="HawkSearch\EsIndexing\Model\Indexing\AttributeHandler\Composite">
+                 type="HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\Composite" />
+
+    <virtualType name="HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\Composite"
+                 type="HawkSearch\EsIndexing\Model\Indexing\FieldHandler\Composite">
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="name" xsi:type="array">
-                    <item name="attribute" xsi:type="const">HawkSearch\EsIndexing\Model\Indexing\AttributeHandler\Composite::HANDLER_DEFAULT_NAME</item>
-                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\LandingPage\Attribute\Handler\DefaultHandler</item>
+                    <item name="attribute" xsi:type="const">HawkSearch\EsIndexing\Model\Indexing\FieldHandler\Composite::HANDLER_DEFAULT_NAME</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\DefaultHandler</item>
                 </item>
                 <item name="custom_url" xsi:type="array">
                     <item name="attribute" xsi:type="const">HawkSearch\EsIndexing\Api\Data\LandingPageInterface::FIELD_CUSTOM_URL</item>
-                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\LandingPage\Attribute\Handler\CustomUrl</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\CustomUrl</item>
                 </item>
                 <item name="narrow_xml" xsi:type="array">
                     <item name="attribute" xsi:type="const">HawkSearch\EsIndexing\Api\Data\LandingPageInterface::FIELD_NARROW_XML</item>
-                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\LandingPage\Attribute\Handler\NarrowXml</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\NarrowXml</item>
                 </item>
                 <item name="custom_sort_list" xsi:type="array">
                     <item name="attribute" xsi:type="const">HawkSearch\EsIndexing\Api\Data\LandingPageInterface::FIELD_CUSTOM_SORT_LIST</item>
-                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\LandingPage\Attribute\Handler\CustomSortList</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\CustomSortList</item>
                 </item>
             </argument>
         </arguments>
     </virtualType>
 
+    <!--
+    @deprecated 0.7.0 will be replaced by HawkSearch\EsIndexing\Model\Product\Field\Handler\Composite type
+    @see HawkSearch\EsIndexing\Model\Product\Field\Handler\Composite
+    Move your type updates to HawkSearch\EsIndexing\Model\Product\Field\Handler\Composite
+    -->
     <type name="HawkSearch\EsIndexing\Model\Product\Attribute\Handler\Composite">
+        <!--
+        Arguments definition has been moved to HawkSearch\EsIndexing\Model\Product\Field\Handler\Composite
+        -->
+    </type>
+    <type name="HawkSearch\EsIndexing\Model\Product\Field\Handler\Composite">
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="name" xsi:type="array">
-                    <item name="attribute" xsi:type="const">HawkSearch\EsIndexing\Model\Indexing\AttributeHandler\Composite::HANDLER_DEFAULT_NAME</item>
-                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\DefaultHandler</item>
+                    <item name="attribute" xsi:type="const">HawkSearch\EsIndexing\Model\Indexing\FieldHandler\Composite::HANDLER_DEFAULT_NAME</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Field\Handler\DefaultHandler</item>
                 </item>
                 <item name="url" xsi:type="array">
                     <item name="attribute" xsi:type="string">url</item>
-                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\Url</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Field\Handler\Url</item>
                 </item>
                 <item name="thumbnail_url" xsi:type="array">
                     <item name="attribute" xsi:type="string">thumbnail_url</item>
-                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\ImageUrl</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Field\Handler\ImageUrl</item>
                 </item>
                 <item name="image_url" xsi:type="array">
                     <item name="attribute" xsi:type="string">image_url</item>
-                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\ImageUrl</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Field\Handler\ImageUrl</item>
                 </item>
                 <item name="category" xsi:type="array">
                     <item name="attribute" xsi:type="string">category</item>
-                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\Category</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Field\Handler\Category</item>
+                </item>
+                <item name="visibility_search" xsi:type="array">
+                    <item name="attribute" xsi:type="string">visibility_search</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Field\Handler\VisibilitySearch</item>
+                </item>
+                <item name="visibility_catalog" xsi:type="array">
+                    <item name="attribute" xsi:type="string">visibility_catalog</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\Product\Field\Handler\VisibilityCatalog</item>
                 </item>
             </argument>
             <argument name="childrenItemsDataProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Product\ChildrenItemsDataProvider</argument>
@@ -1133,21 +1201,18 @@
                  type="HawkSearch\EsIndexing\Model\Indexer\Entities\ActionEntityDefault">
         <arguments>
             <argument name="entityScheduler" xsi:type="object">HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\Product</argument>
-            <argument name="publisher" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher\Delta</argument>
         </arguments>
     </virtualType>
     <virtualType name="HawkSearch\EsIndexing\Model\Indexer\Entities\ActionEntityContentPage"
                  type="HawkSearch\EsIndexing\Model\Indexer\Entities\ActionEntityDefault">
         <arguments>
             <argument name="entityScheduler" xsi:type="object">HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\ContentPage</argument>
-            <argument name="publisher" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher\Delta</argument>
         </arguments>
     </virtualType>
     <virtualType name="HawkSearch\EsIndexing\Model\Indexer\Entities\ActionEntityCategory"
                  type="HawkSearch\EsIndexing\Model\Indexer\Entities\ActionEntityDefault">
         <arguments>
             <argument name="entityScheduler" xsi:type="object">HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\Category</argument>
-            <argument name="publisher" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisher\Delta</argument>
         </arguments>
     </virtualType>
 

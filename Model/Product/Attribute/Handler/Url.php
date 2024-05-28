@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -14,37 +14,19 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Product\Attribute\Handler;
 
-use HawkSearch\EsIndexing\Model\Indexing\AttributeHandlerInterface;
-use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Framework\DataObject;
-use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Store\Model\StoreManagerInterface;
+use HawkSearch\Connector\Compatibility\PublicContractDeprecation;
 
-class Url implements AttributeHandlerInterface
+PublicContractDeprecation::triggerClassDeprecationMessage(
+    Url::class,
+    '0.7.0',
+    \HawkSearch\EsIndexing\Model\Product\Field\Handler\Url::class,
+    'In favour of a new Field Handlers logic.'
+);
+
+/**
+ * @deprecated 0.7.0 In favour of a new Field Handlers logic
+ * @see \HawkSearch\EsIndexing\Model\Product\Field\Handler\Url
+ */
+class Url extends \HawkSearch\EsIndexing\Model\Product\Field\Handler\Url
 {
-    /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
-
-    /**
-     * Url constructor.
-     * @param StoreManagerInterface $storeManager
-     */
-    public function __construct(
-        StoreManagerInterface $storeManager)
-    {
-        $this->storeManager = $storeManager;
-    }
-
-    /**
-     * @inheritDoc
-     * @param ProductInterface $item
-     * @throws NoSuchEntityException
-     */
-    public function handle(DataObject $item, string $attributeCode)
-    {
-        $store = $this->storeManager->getStore($item->getStoreId());
-        return substr($item->getProductUrl(true), strlen($store->getBaseUrl()));
-    }
 }

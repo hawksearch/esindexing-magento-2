@@ -12,21 +12,18 @@
  */
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Product\Attribute\Handler;
+namespace HawkSearch\EsIndexing\Model\Indexing\FieldHandler;
 
-use HawkSearch\Connector\Compatibility\PublicContractDeprecation;
+use HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface;
+use Magento\Framework\DataObject;
 
-PublicContractDeprecation::triggerClassDeprecationMessage(
-    Composite::class,
-    '0.7.0',
-    \HawkSearch\EsIndexing\Model\Product\Field\Handler\Composite::class,
-    'In favour of a new Field Handlers logic.'
-);
-
-/**
- * @deprecated 0.7.0 In favour of a new Field Handlers logic
- * @see \HawkSearch\EsIndexing\Model\Product\Field\Handler\Composite
- */
-class Composite extends \HawkSearch\EsIndexing\Model\Product\Field\Handler\Composite
+class DataObjectHandler implements FieldHandlerInterface
 {
+    /**
+     * @inheritDoc
+     */
+    public function handle(DataObject $item, string $attributeCode)
+    {
+        return $item->getData($attributeCode);
+    }
 }

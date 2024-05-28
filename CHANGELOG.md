@@ -7,6 +7,66 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 See tasks currently in development on [Unreleased] changes page.
 
+## 0.7.0 - [Unreleased]
+
+### DEPRECATIONS
+
+* Class changes:
+  - HawkSearch\EsIndexing\Model\ContentPage\Attribute\Handler\Url is deprecated,
+    use HawkSearch\EsIndexing\Model\ContentPage\Field\Handler\Url
+  - HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler\HierarchyId is deprecated,
+    use HawkSearch\EsIndexing\Model\Hierarchy\Field\Handler\HierarchyId
+  - HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler\IsActive is deprecated,
+    use HawkSearch\EsIndexing\Model\Hierarchy\Field\Handler\IsActive
+  - HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler\Name is deprecated,
+    use HawkSearch\EsIndexing\Model\Hierarchy\Field\Handler\Name
+  - HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler\ParentHierarchyId is deprecated,
+    use HawkSearch\EsIndexing\Model\Hierarchy\Field\Handler\ParentHierarchyId
+  - HawkSearch\EsIndexing\Model\Indexing\AttributeHandler\Composite is deprecated,
+    use HawkSearch\EsIndexing\Model\Indexing\FieldHandler\Composite
+  - HawkSearch\EsIndexing\Model\Indexing\AttributeHandler\DataObjectHandler is deprecated,
+    use HawkSearch\EsIndexing\Model\Indexing\FieldHandler\DataObjectHandler
+  - HawkSearch\EsIndexing\Model\LandingPage\Attribute\Handler\CustomSortList is deprecated,
+    use HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\CustomSortList
+  - HawkSearch\EsIndexing\Model\LandingPage\Attribute\Handler\CustomUrl is deprecated,
+    use HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\CustomUrl
+  - HawkSearch\EsIndexing\Model\LandingPage\Attribute\Handler\DefaultHandler is deprecated,
+    use HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\DefaultHandler
+  - HawkSearch\EsIndexing\Model\LandingPage\Attribute\Handler\NarrowXml is deprecated,
+    use HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\NarrowXml
+  - HawkSearch\EsIndexing\Model\Product\Attribute\Handler\Category is deprecated,
+    use HawkSearch\EsIndexing\Model\Product\Field\Handler\Category
+  - HawkSearch\EsIndexing\Model\Product\Attribute\Handler\Composite is deprecated,
+    use HawkSearch\EsIndexing\Model\Product\Field\Handler\Composite
+  - HawkSearch\EsIndexing\Model\Product\Attribute\Handler\DefaultHandler is deprecated,
+    use HawkSearch\EsIndexing\Model\Product\Field\Handler\DefaultHandler
+  - HawkSearch\EsIndexing\Model\Product\Attribute\Handler\ImageUrl is deprecated,
+    use HawkSearch\EsIndexing\Model\Product\Field\Handler\ImageUrl
+  - HawkSearch\EsIndexing\Model\Product\Attribute\Handler\Url is deprecated,
+    use HawkSearch\EsIndexing\Model\Product\Field\Handler\Url
+  - Parameter $attributeHandler is deprecated in method
+    HawkSearch\EsIndexing\Model\Indexing\EntityType::__construct(),
+    use $fieldHandler
+  - HawkSearch\EsIndexing\Model\Indexing\EntityType\EntityTypeAbstract::getAttributeHandler()
+    is deprecated,
+    use HawkSearch\EsIndexing\Model\Indexing\EntityType\EntityTypeAbstract::getFieldHandler()
+
+* Interface changes:
+  - HawkSearch\EsIndexing\Model\Indexing\AttributeHandlerInterface is
+    deprecated,
+    use HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface
+  - HawkSearch\EsIndexing\Model\Indexing\EntityTypeInterface::getAttributeHandler()
+    is deprecated,
+    use HawkSearch\EsIndexing\Model\Indexing\EntityTypeInterface::getFieldHandler()
+
+* Di changes:
+  - HawkSearch\EsIndexing\Model\Hierarchy\Attribute\Handler\Composite virtual type is deprecated
+    use HawkSearch\EsIndexing\Model\Hierarchy\Field\Handler\Composite
+  - HawkSearch\EsIndexing\Model\ContentPage\Attribute\Handler\Composite virtual type is deprecated
+    use HawkSearch\EsIndexing\Model\ContentPage\Field\Handler\Composite
+  - HawkSearch\EsIndexing\Model\LandingPage\Attribute\Handler\Composite virtual type is deprecated
+    use HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\Composite
+
 ## [0.6.4] - 2024-05-08
 
 ## FIXES
@@ -34,7 +94,7 @@ See tasks currently in development on [Unreleased] changes page.
 
 ## [0.6.3] - 2024-04-25
 
-## FIXES
+### FIXES
 
 * __fix: minicart not updated after adding product to cart__ ([#57](https://github.com/hawksearch/esindexing-magento-2/pull/57))
 
@@ -42,7 +102,7 @@ See tasks currently in development on [Unreleased] changes page.
 
 ## [0.6.2] - 2024-03-20
 
-## FIXES
+### FIXES
 
 * __fix: sql error on indexing product with no categories__ ([9989ea6](https://github.com/hawksearch/esindexing-magento-2/commit/9989ea64562a190ee80ea03395ad7b52f0ce6bea))
   
@@ -51,7 +111,7 @@ See tasks currently in development on [Unreleased] changes page.
 
 ## [0.6.1] - 2024-03-05
 
-## FIXES
+### FIXES
 
 * __fix: popular searches and content matches not clickable__ ([#51](https://github.com/hawksearch/esindexing-magento-2/pull/51))
   
@@ -77,7 +137,7 @@ See tasks currently in development on [Unreleased] changes page.
 
 ## [0.6.0] - 2024-02-09
 
-## FEATURES
+### FEATURES
 
 * __feat: add price to suggestion item (autocomplete)__ ([#47](https://github.com/hawksearch/esindexing-magento-2/pull/47))
   
@@ -100,7 +160,7 @@ See tasks currently in development on [Unreleased] changes page.
 
   Ref: HC-1204
 
-## FIXES
+### FIXES
 
 * __fix: zero price for complex products__ ([#47](https://github.com/hawksearch/esindexing-magento-2/pull/47))
   
@@ -118,13 +178,13 @@ See tasks currently in development on [Unreleased] changes page.
 
 ## [0.5.1] - 2024-01-18
 
-## FIXES
+### FIXES
 
 __fix: minimal compatible version of connector package is 2.8.0__ ([#45](https://github.com/hawksearch/esindexing-magento-2/pull/45))
 
 ## [0.5.0] - 2024-01-18
 
-## FEATURES
+### FEATURES
 
 * __feat: add tracking for add2cart and sale events__ ([#34](https://github.com/hawksearch/esindexing-magento-2/pull/34))
 
@@ -162,7 +222,7 @@ __fix: minimal compatible version of connector package is 2.8.0__ ([#45](https:/
 
   Refs HC-1447
 
-## FIXES
+### FIXES
 
 * __fix: cannot read properties of undefined in getID function__ ([#26](https://github.com/hawksearch/esindexing-magento-2/pull/26))
 
@@ -191,7 +251,7 @@ __fix: minimal compatible version of connector package is 2.8.0__ ([#45](https:/
 
 ## [0.4.2] - 2023-10-12
 
-## FIXES
+### FIXES
 * __fix: remove hierarchyRebuild message form the queue__ ([c480c34](https://github.com/hawksearch/esindexing-magento-2/commit/c480c343825fc6f8a68b241366cf34df594ca024))
 
   Ref ([#HC-1494](https://bridgeline.atlassian.net/browse/HC-1494))
@@ -202,7 +262,7 @@ __fix: minimal compatible version of connector package is 2.8.0__ ([#45](https:/
 
 ## [0.4.1] - 2023-09-27
 
-## FIXES
+### FIXES
 * __fix: remove dependency on CatalogStaging module__ ([f755f93](https://github.com/hawksearch/esindexing-magento-2/commit/f755f9310c551984fa7330b9a1a655bc4ac16f0c))
   
   Unable to install the extension because of compatibility issue:
@@ -232,13 +292,13 @@ __fix: minimal compatible version of connector package is 2.8.0__ ([#45](https:/
 
 ## [0.4.0] - 2023-07-07
 
-## FEATURES
+### FEATURES
 - update parent products index when child is changed ([48019c6](https://github.com/hawksearch/esindexing-magento-2/commit/48019c6b78330033dbd59c7cc971a6bb6c518c81))
   When child product is updated/removed then all parents are updated in the index.
   When child product is assigned to parent product then parent one is updated in the index.
   Refs: [#HC-1403](https://bridgeline.atlassian.net/browse/HC-1403)
 
-## FIXES
+### FIXES
 - duplicate async operations with the same ID in collection ([163daf5](https://github.com/hawksearch/esindexing-magento-2/commit/163daf5b25894bc9fd903b267cfc83c60198c322))
 - invalid array index because of nonexistent category when indexing ([ed3253b](https://github.com/hawksearch/esindexing-magento-2/commit/ed3253b00786c27ed98687bb48cb15cc4bf037ac))
   Refs: [#HC-1437](https://bridgeline.atlassian.net/browse/HC-1437)

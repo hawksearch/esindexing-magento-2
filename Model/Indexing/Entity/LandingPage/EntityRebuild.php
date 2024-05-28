@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -22,7 +22,7 @@ use HawkSearch\Connector\Logger\LoggerFactoryInterface;
 use HawkSearch\EsIndexing\Model\Indexing\AbstractEntityRebuild;
 use HawkSearch\EsIndexing\Model\Indexing\ContextInterface;
 use HawkSearch\EsIndexing\Model\Indexing\EntityTypePoolInterface;
-use HawkSearch\EsIndexing\Model\LandingPage\Attribute\Handler\CustomUrl;
+use HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\CustomUrl;
 use Magento\Catalog\Api\Data\CategoryInterface;
 use Magento\Catalog\Model\Category;
 use Magento\Framework\App\CacheInterface as Cache;
@@ -78,7 +78,7 @@ class EntityRebuild extends AbstractEntityRebuild
     /**
      * @var CustomUrl
      */
-    private $customUrlAttribute;
+    private $customUrlHandler;
 
     /**
      * @param EntityTypePoolInterface $entityTypePool
@@ -91,7 +91,7 @@ class EntityRebuild extends AbstractEntityRebuild
      * @param SerializerInterface $serializer
      * @param LandingPageManagementInterface $landingPageManagement
      * @param LandingPageInterfaceFactory $landingPageFactory
-     * @param CustomUrl $customUrlAttribute
+     * @param CustomUrl $customUrlHandler
      */
     public function __construct(
         EntityTypePoolInterface $entityTypePool,
@@ -104,7 +104,7 @@ class EntityRebuild extends AbstractEntityRebuild
         SerializerInterface $serializer,
         LandingPageManagementInterface $landingPageManagement,
         LandingPageInterfaceFactory $landingPageFactory,
-        CustomUrl $customUrlAttribute
+        CustomUrl $customUrlHandler
     ) {
         parent::__construct(
             $entityTypePool,
@@ -118,7 +118,7 @@ class EntityRebuild extends AbstractEntityRebuild
         $this->serializer = $serializer;
         $this->landingPageManagement = $landingPageManagement;
         $this->landingPageFactory = $landingPageFactory;
-        $this->customUrlAttribute = $customUrlAttribute;
+        $this->customUrlHandler = $customUrlHandler;
     }
 
     /**
@@ -159,7 +159,7 @@ class EntityRebuild extends AbstractEntityRebuild
      */
     protected function isItemNew(DataObject $item): bool
     {
-        $customUrl = $this->customUrlAttribute->handle($item, LandingPageInterface::FIELD_CUSTOM_URL);
+        $customUrl = $this->customUrlHandler->handle($item, LandingPageInterface::FIELD_CUSTOM_URL);
 
         return !array_key_exists($this->getEntityUniqueId($item), $this->getCustomFieldMap())
             && !array_key_exists($customUrl, $this->getCustomUrlMap());

@@ -149,7 +149,7 @@ class RetryBulk extends Command
                 $output->writeln(__('No operations found to retry'));
             }
         } catch (\Exception $exception) {
-            $output->writeln(__('An error occurred: %1', $exception->getMessage()));
+            $output->writeln(__('<error>An error occurred: %1</error>', $exception->getMessage()));
             return 1;
         }
         return 0;

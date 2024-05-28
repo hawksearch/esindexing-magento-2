@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -14,18 +14,20 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Product\Attribute\Handler;
 
-use HawkSearch\EsIndexing\Model\Indexing\AttributeHandlerInterface;
-use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Framework\DataObject;
+use HawkSearch\Connector\Compatibility\PublicContractDeprecation;
 
-class Category implements AttributeHandlerInterface
+PublicContractDeprecation::triggerClassDeprecationMessage(
+    Category::class,
+    '0.7.0',
+    \HawkSearch\EsIndexing\Model\Product\Field\Handler\Category::class,
+    'In favour of a new Field Handlers logic.'
+);
+
+/**
+ * @deprecated 0.7.0 In favour of a new Field Handlers logic
+ * @see \HawkSearch\EsIndexing\Model\Product\Field\Handler\Category
+ */
+
+class Category extends \HawkSearch\EsIndexing\Model\Product\Field\Handler\Category
 {
-    /**
-     * @inheritDoc
-     * @param ProductInterface $item
-     */
-    public function handle(DataObject $item, string $attributeCode)
-    {
-        return $item->getCategoryIds();
-    }
 }
