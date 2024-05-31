@@ -22,8 +22,8 @@ class DataObjectHandler implements FieldHandlerInterface
     /**
      * @inheritDoc
      */
-    public function handle(DataObject $item, string $attributeCode)
+    public function handle(DataObject $item, string $fieldName)
     {
-        return $item->getData($attributeCode);
+        return $item->getData($fieldName);
     }
 }

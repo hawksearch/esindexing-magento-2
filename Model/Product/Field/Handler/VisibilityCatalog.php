@@ -40,7 +40,7 @@ class VisibilityCatalog implements FieldHandlerInterface
      * @inheritDoc
      * @param ProductInterface $item
      */
-    public function handle(DataObject $item, string $attributeCode)
+    public function handle(DataObject $item, string $fieldName)
     {
         return in_array($item->getVisibility(), $this->visibility->getVisibleInCatalogIds());
     }

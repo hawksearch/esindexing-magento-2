@@ -55,11 +55,11 @@ class Composite implements FieldHandlerInterface
      * @inheritDoc
      * @param DataObject $item
      */
-    public function handle(DataObject $item, string $attributeCode)
+    public function handle(DataObject $item, string $fieldName)
     {
-        $handler = $this->getHandler($attributeCode);
+        $handler = $this->getHandler($fieldName);
 
-        return $handler->handle($item, $attributeCode);
+        return $handler->handle($item, $fieldName);
     }
 
     /**

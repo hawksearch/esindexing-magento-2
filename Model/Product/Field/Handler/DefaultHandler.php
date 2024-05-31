@@ -29,7 +29,7 @@ class DefaultHandler implements FieldHandlerInterface
      * @param ProductInterface $item
      * @throws LocalizedException
      */
-    public function handle(DataObject $item, string $attributeCode)
+    public function handle(DataObject $item, string $fieldName)
     {
         $value = '';
 
@@ -37,15 +37,15 @@ class DefaultHandler implements FieldHandlerInterface
         $productResource = $item->getResource();
 
         /** @var AttributeResource $attributeResource */
-        $attributeResource = $productResource->getAttribute($attributeCode);
+        $attributeResource = $productResource->getAttribute($fieldName);
         if ($attributeResource) {
             $attributeResource->setData('store_id', $item->getStoreId());
 
-            $value = $item->getData($attributeCode);
+            $value = $item->getData($fieldName);
 
             if ($value !== null) {
                 if (!is_array($value) && $attributeResource->usesSource()) {
-                    $value = $item->getAttributeText($attributeCode);
+                    $value = $item->getAttributeText($fieldName);
                     if (!is_scalar($value) && !is_array($value)) {
                         $value = (string)$value;
                     }

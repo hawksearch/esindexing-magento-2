@@ -40,7 +40,7 @@ class CustomSortList implements FieldHandlerInterface
      * @inheritDoc
      * @param CategoryInterface|Category $item
      */
-    public function handle(DataObject $item, string $attributeCode)
+    public function handle(DataObject $item, string $fieldName)
     {
         $positionsHash = $item->getProductsPosition();
         $productIds = array_keys($positionsHash);

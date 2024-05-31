@@ -24,7 +24,7 @@ class NarrowXml implements FieldHandlerInterface
      * @inheritDoc
      * @param CategoryInterface $item
      */
-    public function handle(DataObject $item, string $attributeCode)
+    public function handle(DataObject $item, string $fieldName)
     {
         $xml = simplexml_load_string(
             '<?xml version="1.0" encoding="UTF-8"?>

@@ -20,8 +20,8 @@ interface FieldHandlerInterface
 {
     /**
      * @param DataObject $item
-     * @param string $attributeCode
+     * @param string $fieldName
      * @return mixed
      */
-    public function handle(DataObject $item, string $attributeCode);
+    public function handle(DataObject $item, string $fieldName);
 }

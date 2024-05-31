@@ -43,7 +43,7 @@ class Url implements FieldHandlerInterface
      * @param PageInterface $item
      * @throws NoSuchEntityException
      */
-    public function handle(DataObject $item, string $attributeCode)
+    public function handle(DataObject $item, string $fieldName)
     {
         $store = $this->storeManager->getStore();
         return $store->getBaseUrl() . $item->getIdentifier();

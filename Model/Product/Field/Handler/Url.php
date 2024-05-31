@@ -42,7 +42,7 @@ class Url implements FieldHandlerInterface
      * @param ProductInterface $item
      * @throws NoSuchEntityException
      */
-    public function handle(DataObject $item, string $attributeCode)
+    public function handle(DataObject $item, string $fieldName)
     {
         $store = $this->storeManager->getStore($item->getStoreId());
         return substr($item->getProductUrl(true), strlen($store->getBaseUrl()));
