@@ -76,6 +76,8 @@
                 type="HawkSearch\EsIndexing\Model\Field\FieldExtended"/>
     <preference for="HawkSearch\EsIndexing\Model\Product\Attribute\ExcludeNotVisibleProductsFlagInterface"
                 type="HawkSearch\EsIndexing\Model\Product\Attribute\ExcludeNotVisibleProductsFlag\DefaultProvider"/>
+    <preference for="HawkSearch\EsIndexing\Model\Indexing\Field\NameProviderInterface"
+                type="HawkSearch\EsIndexing\Model\Indexing\Field\DefaultNameProvider"/>
 
     <!-- Overwrites -->
     <preference for="HawkSearch\Connector\Gateway\Http\TransferBuilder"
@@ -838,6 +840,7 @@
             <argument name="configHelper" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Hierarchy\ConfigHelper</argument>
             <argument name="itemsIndexer" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ItemsIndexer\HierarchyItemsIndexer</argument>
             <argument name="typeName" xsi:type="const">HawkSearch\EsIndexing\Model\Indexing\EntityType\HierarchyEntityType::ENTITY_TYPE_NAME</argument>
+            <argument name="fieldNameProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Hierarchy\FieldNameProvider</argument>
         </arguments>
     </type>
 
@@ -855,6 +858,7 @@
             <argument name="configHelper" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Product\ConfigHelper</argument>
             <argument name="itemsIndexer" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ItemsIndexer\SearchedItemsIndexer</argument>
             <argument name="typeName" xsi:type="const">HawkSearch\EsIndexing\Model\Indexing\EntityType\ProductEntityType::ENTITY_TYPE_NAME</argument>
+            <argument name="fieldNameProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Product\FieldNameProvider</argument>
         </arguments>
     </type>
 
@@ -872,6 +876,7 @@
             <argument name="configHelper" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\ContentPage\ConfigHelper</argument>
             <argument name="itemsIndexer" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ItemsIndexer\SearchedItemsIndexer</argument>
             <argument name="typeName" xsi:type="const">HawkSearch\EsIndexing\Model\Indexing\EntityType\ContentPageEntityType::ENTITY_TYPE_NAME</argument>
+            <argument name="fieldNameProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\ContentPage\FieldNameProvider</argument>
         </arguments>
     </type>
 
@@ -889,6 +894,7 @@
             <argument name="configHelper" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\LandingPage\ConfigHelper</argument>
             <argument name="itemsIndexer" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ItemsIndexer\LandingPageItemsIndexer</argument>
             <argument name="typeName" xsi:type="const">HawkSearch\EsIndexing\Model\Indexing\EntityType\LandingPageEntityType::ENTITY_TYPE_NAME</argument>
+            <argument name="fieldNameProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\LandingPage\FieldNameProvider</argument>
         </arguments>
     </type>
 
