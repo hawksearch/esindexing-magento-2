@@ -24,7 +24,7 @@ class Category implements FieldHandlerInterface
      * @inheritDoc
      * @param ProductInterface $item
      */
-    public function handle(DataObject $item, string $attributeCode)
+    public function handle(DataObject $item, string $fieldName)
     {
         return $item->getCategoryIds();
     }

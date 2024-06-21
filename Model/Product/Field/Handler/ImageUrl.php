@@ -75,11 +75,11 @@ class ImageUrl implements FieldHandlerInterface
      * @param ProductInterface $item
      * @throws NoSuchEntityException
      */
-    public function handle(DataObject $item, string $attributeCode)
+    public function handle(DataObject $item, string $fieldName)
     {
         $value = '';
-        if (array_key_exists($attributeCode, static::ATTRIBUTE_IMAGE_ID_MAP)) {
-            $value = $this->getImageIdUrl($item, static::ATTRIBUTE_IMAGE_ID_MAP[$attributeCode]);
+        if (array_key_exists($fieldName, static::ATTRIBUTE_IMAGE_ID_MAP)) {
+            $value = $this->getImageIdUrl($item, static::ATTRIBUTE_IMAGE_ID_MAP[$fieldName]);
         }
 
         return $value;

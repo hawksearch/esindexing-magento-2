@@ -12,18 +12,22 @@
  */
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Indexing\FieldHandler;
+namespace HawkSearch\EsIndexing\Model\Indexing\Field;
 
-use HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface;
-use Magento\Framework\DataObject;
-
-class DataObjectHandler implements FieldHandlerInterface
+interface NameProviderInterface
 {
     /**
-     * @inheritDoc
+     * Get list of field names
+     * Resulting list should be in format
+     * [
+     *      'fieldName' =>
+     *      [
+     *          // extra options
+     *      ],
+     *      ...
+     * ]
+     *
+     * @return array
      */
-    public function handle(DataObject $item, string $fieldName)
-    {
-        return $item->getData($fieldName);
-    }
+    public function getList(): array;
 }

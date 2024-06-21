@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexing;
 
+use HawkSearch\Connector\Compatibility\PublicMethodDeprecationTrait;
 use HawkSearch\Connector\Logger\LoggerFactoryInterface;
 use HawkSearch\EsIndexing\Helper\ObjectHelper;
 use Magento\Framework\Api\SearchCriteriaInterface;
@@ -23,9 +24,24 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NotFoundException;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
+use HawkSearch\EsIndexing\Model\Indexing\Field\NameProviderInterface as FieldNameProviderInterface;
 
 abstract class AbstractEntityRebuild implements EntityRebuildInterface
 {
+    use PublicMethodDeprecationTrait;
+    private $deprecatedMethods = [
+        'getAttributeValue' => [
+            'since' => '0.7.0',
+            'replacement' => __CLASS__ . '::getFieldValue()',
+            'description' => 'In favour of a new Field Handlers logic'
+        ],
+        'getIndexedAttributes' => [
+            'since' => '0.7.0',
+            'replacement' => FieldNameProviderInterface::class,
+            'description' => "The method will be removed. Using of 'code' and 'value' options is deprecated. Use " . FieldHandlerInterface::class . " to migrate fields with values."
+        ]
+    ];
+
     /**
      * @var array
      */
@@ -108,7 +124,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
 
     /**
      * Check if item is new or existing one.
-     * By default it is considered that new and existing items are updated through the same indexing endpoint.
+     * By default, it is considered that new and existing items are updated through the same indexing endpoint.
      *
      * @param DataObject $item
      * @return bool
@@ -311,16 +327,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
         $itemData = [];
         $itemData[$this->getEntityIdField()] = $this->getEntityUniqueId($item);
         $itemData[$this->getEntityTypeField()] = $this->getEntityType()->getTypeName();
-        foreach ($this->getIndexedAttributes($item) as $attribute) {
-            if (!$attribute) {
-                continue;
-            }
-            if (is_array($attribute) && !empty($attribute['code'])) {
-                $itemData[$attribute['code']] = $attribute['value'] ?? null;
-            } else {
-                $itemData[$attribute] = $this->getAttributeValue($item, $attribute);
-            }
-        }
+        $itemData = array_merge($itemData, $this->processFields($item));
 
         $transport = new DataObject($itemData);
         $this->eventManager->dispatch(
@@ -339,6 +346,52 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
         }
 
         return $itemDataResult;
+    }
+
+    /**
+     * @param DataObject $item
+     * @return array
+     * @throws NotFoundException
+     */
+    private function processFields(DataObject $item): array
+    {
+        $itemData = [];
+        if (method_exists($this->getEntityType(), 'getFieldNameProvider')) {
+            foreach ($this->getEntityType()->getFieldNameProvider()->getList() as $fieldName => $fieldOptions) {
+                $itemData[$fieldName] = $this->getAttributeValueDeprecatedWrapper($item, $fieldName);
+            }
+        }
+
+        $itemData = array_merge($itemData, $this->processDeprecatedAttributes($item));
+        return $itemData;
+    }
+
+    /**
+     * Temporary method to overcome deprecation of getIndexedAttributes() method
+     * @param DataObject $item
+     * @return array
+     * @throws NotFoundException
+     */
+    private function processDeprecatedAttributes(DataObject $item): array
+    {
+        $itemData = [];
+        if (!$this->isMethodOverwritten('getIndexedAttributes')) {
+            return $itemData;
+        }
+
+        $this->triggerDerivedMethodDeprecationMessage('getIndexedAttributes');
+        foreach ($this->getIndexedAttributes($item) as $attribute) {
+            if (!$attribute) {
+                continue;
+            }
+            if (is_array($attribute) && !empty($attribute['code'])) {
+                $itemData[$attribute['code']] = $attribute['value'] ?? null;
+            } else {
+                $itemData[$attribute] = $this->getAttributeValueDeprecatedWrapper($item, $attribute);
+            }
+        }
+
+        return $itemData;
     }
 
     /**
@@ -364,6 +417,9 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     /**
      * @param DataObject|null $item
      * @return array
+     * @deprecated 0.7.0 method will be removed.
+     *      Using of 'code' and 'value' options is deprecated. Use @see FieldHandlerInterface to migrate fields with values.
+     * @see FieldNameProviderInterface
      */
     protected function getIndexedAttributes(DataObject $item = null): array
     {
@@ -372,13 +428,52 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
 
     /**
      * @param DataObject $item
+     * @param string $fieldName
+     * @return mixed
+     * @throws NotFoundException
+     */
+    private function getFieldValue(DataObject $item, string $fieldName)
+    {
+        $entityType = $this->getEntityType();
+        if (method_exists($entityType, 'getFieldHandler')) {
+            return $entityType->getFieldHandler()->handle($item, $fieldName);
+        } else {
+            return $entityType->getAttributeHandler()->handle($item, $fieldName);
+        }
+    }
+
+    /**
+     * Temporary function to call deprecated getAttributeValue()
+     *
+     * @param DataObject $item
      * @param string $attribute
      * @return mixed
      * @throws NotFoundException
      */
+    private function getAttributeValueDeprecatedWrapper(DataObject $item, string $attribute)
+    {
+        if ($this->isMethodOverwritten('getAttributeValue')) {
+            $this->triggerDerivedMethodDeprecationMessage('getAttributeValue');
+            $itemDataAttributeValue = $this->getAttributeValue($item, $attribute);
+        } else {
+            $itemDataAttributeValue = $this->getFieldValue($item, $attribute);
+        }
+
+        return $itemDataAttributeValue;
+    }
+
+    /**
+     * @param DataObject $item
+     * @param string $attribute
+     * @return mixed
+     * @throws NotFoundException
+     * @deprecated 0.7.0 method will be removed
+     * @see self::getFieldValue()
+     */
     protected function getAttributeValue(DataObject $item, string $attribute)
     {
-        return $this->getEntityType()->getFieldHandler()->handle($item, $attribute);
+        $this->triggerPublicMethodDeprecationMessage(__FUNCTION__);
+        return $this->getFieldValue($item, $attribute);
     }
 
     /**

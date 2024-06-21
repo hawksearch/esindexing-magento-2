@@ -26,7 +26,7 @@ class CustomUrl implements FieldHandlerInterface
      * @todo implement handler which can get other attribute values or has access to the final entity
      * @param CategoryInterface $item
      */
-    public function handle(DataObject $item, string $attributeCode)
+    public function handle(DataObject $item, string $fieldName)
     {
         return sprintf("%s", $this->getUrl($item));
     }

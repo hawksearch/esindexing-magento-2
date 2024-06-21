@@ -75,19 +75,19 @@ class Composite extends \HawkSearch\EsIndexing\Model\Indexing\FieldHandler\Compo
      * @param ProductInterface $item
      * @throws LocalizedException
      */
-    public function handle(DataObject $item, string $attributeCode)
+    public function handle(DataObject $item, string $fieldName)
     {
-        $value = $this->formatValue(parent::handle($item, $attributeCode));
+        $value = $this->formatValue(parent::handle($item, $fieldName));
         $relatedValues = [];
 
         foreach ($this->getChildren($item) as $child) {
-            $relatedValues = array_merge($relatedValues, $this->formatValue($this->handle($child, $attributeCode)));
+            $relatedValues = array_merge($relatedValues, $this->formatValue($this->handle($child, $fieldName)));
         }
 
         /** @var ProductResource $productResource */
         $productResource = $item->getResource();
         /** @var AttributeResource $attributeResource */
-        $attributeResource = $productResource->getAttribute($attributeCode);
+        $attributeResource = $productResource->getAttribute($fieldName);
 
         if ($attributeResource) {
             $value = $this->valueProcessor->process($attributeResource, $value, $relatedValues);

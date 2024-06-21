@@ -154,7 +154,7 @@ class ObjectHelper
     {
         if (!$item instanceof $className) {
             throw new \InvalidArgumentException(
-                __('Array element value with key %1 is not an instance of %2 interface', $key, $className)
+                __('Array element value with key %1 is not an instance of %2 interface', $key, $className)->render()
             );
         }
     }

@@ -25,7 +25,7 @@ class ParentHierarchyId implements FieldHandlerInterface
      * @inheritDoc
      * @param CategoryInterface $item
      */
-    public function handle(DataObject $item, string $attributeCode)
+    public function handle(DataObject $item, string $fieldName)
     {
         if ($item->getLevel() == 1) {
             return 0;

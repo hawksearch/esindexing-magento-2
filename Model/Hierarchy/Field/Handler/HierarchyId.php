@@ -25,7 +25,7 @@ class HierarchyId implements FieldHandlerInterface
      * @inheritDoc
      * @param CategoryInterface $item
      */
-    public function handle(DataObject $item, string $attributeCode)
+    public function handle(DataObject $item, string $fieldName)
     {
         return (int)$item->getId();
     }

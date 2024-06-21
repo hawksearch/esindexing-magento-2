@@ -42,17 +42,4 @@ class EntityRebuild extends AbstractEntityRebuild
     {
         return (int)$entityItem->getId();
     }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getIndexedAttributes(DataObject $item = null): array
-    {
-        return [
-            'title',
-            'content_heading',
-            'content',
-            'url'
-        ];
-    }
 }

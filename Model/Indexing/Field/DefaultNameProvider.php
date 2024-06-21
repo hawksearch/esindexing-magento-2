@@ -10,20 +10,29 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-declare(strict_types=1);
+namespace HawkSearch\EsIndexing\Model\Indexing\Field;
 
-namespace HawkSearch\EsIndexing\Model\Indexing\FieldHandler;
-
-use HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface;
-use Magento\Framework\DataObject;
-
-class DataObjectHandler implements FieldHandlerInterface
+class DefaultNameProvider implements NameProviderInterface
 {
+    /**
+     * @var array
+     */
+    private array $names;
+
+    /**
+     * @param array $names
+     */
+    public function __construct(array $names = [])
+    {
+        $this->names = $names;
+    }
+
     /**
      * @inheritDoc
      */
-    public function handle(DataObject $item, string $fieldName)
+    public function getList(): array
     {
-        return $item->getData($fieldName);
+        return $this->names;
     }
+
 }

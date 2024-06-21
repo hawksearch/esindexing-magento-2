@@ -15,9 +15,12 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Indexing;
 
 
+use HawkSearch\EsIndexing\Model\Indexing\Field\NameProviderInterface as FieldNameProviderInterface;
+
 /**
  * @method FieldHandlerInterface getFieldHandler() Use this method in your class implementations for smooth transitions
- *          since 0.9.0
+ *          since 0.9.0. Method will be added in 0.9.0
+ * @method FieldNameProviderInterface getFieldNameProvider() Method will be added in 0.9.0
  */
 interface EntityTypeInterface
 {
@@ -69,4 +72,9 @@ interface EntityTypeInterface
      * @return AbstractConfigHelper
      */
     public function getConfigHelper() : AbstractConfigHelper;
+
+    /**
+     * @return FieldNameProviderInterface
+     */
+    /*public function getFieldNameProvider(): FieldNameProviderInterface;*/
 }

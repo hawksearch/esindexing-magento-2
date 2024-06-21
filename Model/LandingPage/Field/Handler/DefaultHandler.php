@@ -33,9 +33,9 @@ class DefaultHandler extends DataObjectHandler
     /**
      * @inheritDoc
      */
-    public function handle(DataObject $item, string $attributeCode)
+    public function handle(DataObject $item, string $fieldName)
     {
-        $attributeCode = $this->dataObjectHelper->camelCaseToSnakeCase($attributeCode);
-        return parent::handle($item, $attributeCode);
+        $fieldName = $this->dataObjectHelper->camelCaseToSnakeCase($fieldName);
+        return parent::handle($item, $fieldName);
     }
 }
