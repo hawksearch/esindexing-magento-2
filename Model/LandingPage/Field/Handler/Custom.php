@@ -12,34 +12,22 @@
  */
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Indexing\Entity\ContentPage;
+namespace HawkSearch\EsIndexing\Model\LandingPage\Field\Handler;
 
-use HawkSearch\EsIndexing\Model\Indexing\AbstractEntityRebuild;
-use Magento\Cms\Api\Data\PageInterface;
-use Magento\Cms\Model\Page;
+use HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface;
+use Magento\Catalog\Api\Data\CategoryInterface;
 use Magento\Framework\DataObject;
 
-class EntityRebuild extends AbstractEntityRebuild
+class Custom implements FieldHandlerInterface
 {
-    /**
-     * @param PageInterface|Page|DataObject $item
-     * @inheritDoc
-     */
-    protected function isAllowedItem(DataObject $item): bool
-    {
-        if (!$item->isActive()) {
-            return false;
-        }
-
-        return true;
-    }
+    public const CUSTOM_FIELD_PREFIX = "__mage_catid__";
 
     /**
-     * @param PageInterface|Page|DataObject $entityItem
      * @inheritDoc
+     * @param CategoryInterface $item
      */
-    protected function getEntityId(DataObject $entityItem): ?int
+    public function handle(DataObject $item, string $fieldName)
     {
-        return (int)$entityItem->getId();
+        return self::CUSTOM_FIELD_PREFIX . $item->getId();
     }
 }

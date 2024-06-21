@@ -12,34 +12,20 @@
  */
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Indexing\Entity\ContentPage;
+namespace HawkSearch\EsIndexing\Model\LandingPage\Field\Handler;
 
-use HawkSearch\EsIndexing\Model\Indexing\AbstractEntityRebuild;
-use Magento\Cms\Api\Data\PageInterface;
-use Magento\Cms\Model\Page;
+use HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface;
+use Magento\Catalog\Api\Data\CategoryInterface;
 use Magento\Framework\DataObject;
 
-class EntityRebuild extends AbstractEntityRebuild
+class PageType implements FieldHandlerInterface
 {
     /**
-     * @param PageInterface|Page|DataObject $item
      * @inheritDoc
+     * @param CategoryInterface $item
      */
-    protected function isAllowedItem(DataObject $item): bool
+    public function handle(DataObject $item, string $fieldName)
     {
-        if (!$item->isActive()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @param PageInterface|Page|DataObject $entityItem
-     * @inheritDoc
-     */
-    protected function getEntityId(DataObject $entityItem): ?int
-    {
-        return (int)$entityItem->getId();
+        return 'ProductListing';
     }
 }

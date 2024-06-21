@@ -52,19 +52,6 @@ class EntityRebuild extends AbstractEntityRebuild
     }
 
     /**
-     * @inheritDoc
-     */
-    protected function getIndexedAttributes(DataObject $item = null): array
-    {
-        return [
-            'HierarchyId',
-            'Name',
-            'ParentHierarchyId',
-            'IsActive',
-        ];
-    }
-
-    /**
      * @inheritdoc
      */
     protected function castAttributeValue($value)

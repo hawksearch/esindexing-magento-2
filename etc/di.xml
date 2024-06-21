@@ -1005,6 +1005,18 @@
                     <item name="attribute" xsi:type="const">HawkSearch\EsIndexing\Api\Data\LandingPageInterface::FIELD_CUSTOM_SORT_LIST</item>
                     <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\CustomSortList</item>
                 </item>
+                <item name="custom" xsi:type="array">
+                    <item name="attribute" xsi:type="const">HawkSearch\EsIndexing\Api\Data\LandingPageInterface::FIELD_CUSTOM</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\Custom</item>
+                </item>
+                <item name="is_facet_override" xsi:type="array">
+                    <item name="attribute" xsi:type="const">HawkSearch\EsIndexing\Api\Data\LandingPageInterface::FIELD_IS_FACET_OVERRIDE</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\IsFacetOverride</item>
+                </item>
+                <item name="page_type" xsi:type="array">
+                    <item name="attribute" xsi:type="const">HawkSearch\EsIndexing\Api\Data\LandingPageInterface::FIELD_PAGE_TYPE</item>
+                    <item name="class" xsi:type="string">HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\PageType</item>
+                </item>
             </argument>
         </arguments>
     </virtualType>
@@ -1059,6 +1071,49 @@
         type="HawkSearch\EsIndexing\Model\Indexing\Entity\Product\ItemsDataProvider">
         <arguments>
             <argument name="excludeNotVisibleProductsFlag" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\ExcludeNotVisibleProductsFlag\IncludeProvider</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType
+        name="HawkSearch\EsIndexing\Model\Indexing\Entity\ContentPage\FieldNameProvider"
+        type="HawkSearch\EsIndexing\Model\Indexing\Field\DefaultNameProvider">
+        <arguments>
+            <argument name="names" xsi:type="array">
+                <item name="title" xsi:type="array"/>
+                <item name="content_heading" xsi:type="array"/>
+                <item name="content" xsi:type="array"/>
+                <item name="url" xsi:type="array"/>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType
+        name="HawkSearch\EsIndexing\Model\Indexing\Entity\Hierarchy\FieldNameProvider"
+        type="HawkSearch\EsIndexing\Model\Indexing\Field\DefaultNameProvider">
+        <arguments>
+            <argument name="names" xsi:type="array">
+                <item name="HierarchyId" xsi:type="array"/>
+                <item name="Name" xsi:type="array"/>
+                <item name="ParentHierarchyId" xsi:type="array"/>
+                <item name="IsActive" xsi:type="array"/>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType
+        name="HawkSearch\EsIndexing\Model\Indexing\Entity\LandingPage\FieldNameProvider"
+        type="HawkSearch\EsIndexing\Model\Indexing\Field\DefaultNameProvider">
+        <arguments>
+            <argument name="names" xsi:type="array">
+                <item name="Name" xsi:type="array"/>
+                <item name="CustomUrl" xsi:type="array"/>
+                <item name="NarrowXml" xsi:type="array"/>
+                <item name="PageId" xsi:type="array"/>
+                <item name="CustomSortList" xsi:type="array"/>
+                <item name="Custom" xsi:type="array"/>
+                <item name="IsFacetOverride" xsi:type="array"/>
+                <item name="PageType" xsi:type="array"/>
+            </argument>
         </arguments>
     </virtualType>
 

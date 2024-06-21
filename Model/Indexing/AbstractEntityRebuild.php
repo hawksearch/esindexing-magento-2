@@ -361,6 +361,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
                 $itemData[$fieldName] = $this->getAttributeValueDeprecatedWrapper($item, $fieldName);
             }
         }
+
         $itemData = array_merge($itemData, $this->processDeprecatedAttributes($item));
         return $itemData;
     }
