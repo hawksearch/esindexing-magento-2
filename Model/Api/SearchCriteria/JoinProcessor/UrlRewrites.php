@@ -10,31 +10,24 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Product\ProductType;
+namespace HawkSearch\EsIndexing\Model\Api\SearchCriteria\JoinProcessor;
 
-use Magento\Bundle\Model\Product\Price;
-use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Model\ResourceModel\Product\Collection as ProductCollection;
+use Magento\Framework\Api\SearchCriteria\CollectionProcessor\JoinProcessor\CustomJoinInterface;
+use Magento\Framework\Data\Collection\AbstractDb;
 
-class Bundle extends CompositeType
+class UrlRewrites implements CustomJoinInterface
 {
-    /**
-     * @var string
-     * @deprecated since 0.7.0 will be removed
-     */
-    protected string $keySelectionsCollection = '_cache_instance_selections_collection_hawksearch';
 
     /**
      * @inheritDoc
+     * @param ProductCollection $collection
      */
-    protected function getMinMaxPrice(ProductInterface $product): array
+    public function apply(AbstractDb $collection)
     {
-        /** @var Price $priceModel */
-        $priceModel = $product->getPriceModel();
-        [$min, $max] = $priceModel->getTotalPrices($product, null, true, true);
-
-        return [(float)$min, (float)$max];
+        $collection->addUrlRewrite();
     }
-
 }

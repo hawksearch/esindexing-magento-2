@@ -20,6 +20,13 @@ use Magento\Catalog\Model\Product;
 abstract class CompositeType extends DefaultType
 {
     /**
+     * @inheritDoc
+     */
+    public function getChildProducts(ProductInterface $product): array
+    {
+        return $product->hasData('child_products') ? $product->getData('child_products') : [];
+    }
+    /**
      * Get minimal and maximal prices for composite products
      * @param Product|ProductInterface $product
      * @return float[]|array [min, max]

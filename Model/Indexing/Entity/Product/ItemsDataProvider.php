@@ -15,13 +15,16 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexing\Entity\Product;
 
+use Exception;
 use HawkSearch\EsIndexing\Model\Config\Indexing;
 use HawkSearch\EsIndexing\Model\Indexing\ItemsDataProviderInterface;
+use HawkSearch\EsIndexing\Model\Product as ProductDataProvider;
 use HawkSearch\EsIndexing\Model\Product\Attribute\ExcludeNotVisibleProductsFlagInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\Product\Visibility;
 use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCollectionFactory;
+use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\ObjectManager;
 
@@ -58,6 +61,11 @@ class ItemsDataProvider implements ItemsDataProviderInterface
     private ExcludeNotVisibleProductsFlagInterface $excludeNotVisibleProductsFlag;
 
     /**
+     * @var ProductDataProvider
+     */
+    private ProductDataProvider $productDataProvider;
+
+    /**
      * ProductItems constructor.
      *
      * @param ProductRepositoryInterface $productRepository
@@ -66,6 +74,7 @@ class ItemsDataProvider implements ItemsDataProviderInterface
      * @param Indexing $indexingConfig
      * @param CategoryCollectionFactory $categoryCollectionFactory
      * @param ExcludeNotVisibleProductsFlagInterface|null $excludeNotVisibleProductsFlag
+     * @param ProductDataProvider|null $productDataProvider
      */
     public function __construct(
         ProductRepositoryInterface $productRepository,
@@ -73,7 +82,8 @@ class ItemsDataProvider implements ItemsDataProviderInterface
         Visibility $visibility,
         Indexing $indexingConfig,
         CategoryCollectionFactory $categoryCollectionFactory,
-        ExcludeNotVisibleProductsFlagInterface $excludeNotVisibleProductsFlag = null
+        ExcludeNotVisibleProductsFlagInterface $excludeNotVisibleProductsFlag = null,
+        ProductDataProvider $productDataProvider = null
     ) {
         $this->productRepository = $productRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
@@ -81,15 +91,27 @@ class ItemsDataProvider implements ItemsDataProviderInterface
         $this->indexingConfig = $indexingConfig;
         $this->categoryCollectionFactory = $categoryCollectionFactory;
         $this->excludeNotVisibleProductsFlag = $excludeNotVisibleProductsFlag ?: ObjectManager::getInstance()->get(ExcludeNotVisibleProductsFlagInterface::class);
+        $this->productDataProvider = $productDataProvider ?: ObjectManager::getInstance()->get(ProductDataProvider::class);
     }
 
     /**
      * @inheritDoc
      * @return ProductInterface[]
+     * @throws Exception
      */
     public function getItems($storeId, $entityIds = null, $currentPage = 1, $pageSize = 0)
     {
-        return $this->getProductCollection($storeId, $entityIds, $currentPage, $pageSize);
+        $items = $this->getProductCollection($storeId, $entityIds, $currentPage, $pageSize);
+
+        // Add all parent categories if config flag is set
+        if ($this->indexingConfig->isProductsIncludeCategoriesHierarchy()) {
+            $this->addParentCategoriesToProducts($items);
+        }
+
+        $this->addParentIds($items);
+        $this->addChildProducts($items);
+
+        return $items;
     }
 
     /**
@@ -121,14 +143,16 @@ class ItemsDataProvider implements ItemsDataProviderInterface
         $searchCriteria->setCurrentPage($currentPage)
             ->setPageSize($pageSize);
 
-        $items = $this->productRepository->getList($searchCriteria)->getItems();
+        return $this->getProductItems($searchCriteria);
+    }
 
-        // Add all parent categories if config flag is set
-        if ($this->indexingConfig->isProductsIncludeCategoriesHierarchy()) {
-            $this->addParentCategoriesToProducts($items);
-        }
-
-        return $items;
+    /**
+     * @param SearchCriteria $searchCriteria
+     * @return ProductInterface[]
+     */
+    private function getProductItems(SearchCriteria $searchCriteria): array
+    {
+        return $this->productRepository->getList($searchCriteria)->getItems();
     }
 
     /**
@@ -172,6 +196,69 @@ class ItemsDataProvider implements ItemsDataProviderInterface
             }
             $newCategoryIds = array_unique($newCategoryIds);
             $product->setCategoryIds($newCategoryIds);
+        }
+    }
+
+    /**
+     * Add parent ids data to loaded items
+     *
+     * @param array $products
+     * @return void
+     * @throws Exception
+     */
+    private function addParentIds(array $products)
+    {
+        $parentsMap = $this->productDataProvider->getParentsByChildMap(array_keys($products));
+        /** @var ProductInterface $item */
+        foreach ($products as $item) {
+            if (isset($parentsMap[$item->getId()])) {
+                $item->setData('parent_ids', $parentsMap[$item->getId()]);
+            }
+        }
+    }
+
+    /**
+     * Load child products collection and add its data to loaded product items
+     *
+     * @param ProductInterface[] $products
+     * @return void
+     * @throws Exception
+     */
+    private function addChildProducts(array $products)
+    {
+        if (!$products) {
+            return;
+        }
+
+        $currentProduct = current($products);
+        $storeId = $currentProduct->getStoreId();
+        $this->searchCriteriaBuilder->addFilter('store_id', $storeId);
+
+        $childrenMap = $this->productDataProvider->getChildrenByParentMap(array_keys($products));
+        if (count($childrenMap) > 0) {
+            $this->searchCriteriaBuilder->addFilter('entity_id', array_merge([], ...$childrenMap), 'in');
+        }
+
+        $children = $this->getProductItems($this->searchCriteriaBuilder->create());
+
+        foreach ($childrenMap as $parentId => $childIds) {
+            if (isset($products[$parentId])) {
+                $products[$parentId]->setData(
+                    'child_products',
+                    $products[$parentId]->hasData('child_products')
+                        ? $products[$parentId]->getData('child_products')
+                        : []
+                );
+
+                $childrenSelected = [];
+                foreach ($childIds as $childId) {
+                    if (!isset($children[$childId])) {
+                        continue;
+                    }
+                    $childrenSelected[$childId] = $children[$childId];
+                }
+                $products[$parentId]->setData('child_products', $childrenSelected);
+            }
         }
     }
 }

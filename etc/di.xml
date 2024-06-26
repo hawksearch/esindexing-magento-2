@@ -793,6 +793,7 @@
     <virtualType name="HawkSearch\EsIndexing\Model\ProductRepository" type="Magento\Catalog\Model\ProductRepository">
         <arguments>
             <argument name="collectionProcessor" xsi:type="object">HawkSearch\EsIndexing\Model\Api\SearchCriteria\ProductCollectionProcessor</argument>
+            <argument name="readExtensions" xsi:type="object">HawkSearch\EsIndexing\Product\EntityManager\Operation\Read\ReadExtensions</argument>
         </arguments>
     </virtualType>
     <virtualType name="HawkSearch\EsIndexing\Model\Api\SearchCriteria\ProductCollectionProcessor"
@@ -809,12 +810,18 @@
             <argument name="customJoins" xsi:type="array">
                 <item name="price" xsi:type="object">HawkSearch\EsIndexing\Model\Api\SearchCriteria\JoinProcessor\ProductPrices</item>
                 <item name="review_summary" xsi:type="object">HawkSearch\EsIndexing\Model\Api\SearchCriteria\JoinProcessor\ReviewRatingSummary</item>
+                <item name="url_rewrites" xsi:type="object">HawkSearch\EsIndexing\Model\Api\SearchCriteria\JoinProcessor\UrlRewrites</item>
             </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearch\EsIndexing\Product\EntityManager\Operation\Read\ReadExtensions" type="Magento\Framework\EntityManager\Operation\Read\ReadExtensions">
+        <arguments>
+            <argument name="extensionPool" xsi:type="object">HawkSearch\EsIndexing\Model\Product\EntityManager\Operation\ExtensionPool</argument>
         </arguments>
     </virtualType>
     <!-- END Product indexing repository -->
 
-    <!-- Types -->
+    <!-- Types and Plugins -->
     <type name="HawkSearch\EsIndexing\Model\Indexing\EntityTypePool">
         <arguments>
             <argument name="types" xsi:type="array">
@@ -1381,9 +1388,7 @@
             <argument name="operationOpenStatusValidator" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\Validator\OperationOpenStatusValidator</argument>
         </arguments>
     </type>
-    <!-- END Types -->
 
-    <!-- Plugins -->
     <type name="Magento\Catalog\Model\ResourceModel\Product">
         <plugin name="hawksearchProduct"
                 type="HawkSearch\EsIndexing\Plugin\Product\ProductPlugin"/>
@@ -1435,5 +1440,5 @@
     <type name="HawkSearch\Connector\Gateway\Http\TransferInterface">
         <plugin name="hawksearchIdBuilderPlugin" type="HawkSearch\EsIndexing\Plugin\Gateway\Http\TransferIdBuilderPlugin"/>
     </type>
-    <!-- END Plugins -->
+    <!-- END Types and Plugins -->
 </config>
