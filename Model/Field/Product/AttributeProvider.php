@@ -19,6 +19,9 @@ use Magento\Catalog\Api\ProductAttributeRepositoryInterface;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\NoSuchEntityException;
 
+/**
+ * @internal experimental feature
+ */
 class AttributeProvider
 {
     /**

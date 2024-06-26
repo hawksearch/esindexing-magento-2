@@ -16,6 +16,9 @@ namespace HawkSearch\EsIndexing\Model\Product\Attribute;
 
 use Magento\Catalog\Model\ResourceModel\Eav\Attribute;
 
+/**
+ * @internal experimental feature
+ */
 class ValueProcessor implements ValueProcessorInterface
 {
     private const SYSTEM_ATTRIBUTES = [
