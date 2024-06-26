@@ -16,6 +16,7 @@ namespace HawkSearch\EsIndexing\Model\Product\Field\Handler;
 
 use HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Model\Product;
 use Magento\Framework\DataObject;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\StoreManagerInterface;
@@ -39,12 +40,18 @@ class Url implements FieldHandlerInterface
 
     /**
      * @inheritDoc
-     * @param ProductInterface $item
-     * @throws NoSuchEntityException
+     * @param ProductInterface|Product $item
+     * @param string $fieldName
+     * @return string
      */
     public function handle(DataObject $item, string $fieldName)
     {
-        $store = $this->storeManager->getStore($item->getStoreId());
-        return substr($item->getProductUrl(true), strlen($store->getBaseUrl()));
+        /**
+         * To avoid loading data from url_rewrite table twice set request_path attribute to false
+         */
+        if (!$item->hasData('request_path')) {
+            $item->setData('request_path', false);
+        }
+        return substr((string)$item->getProductUrl(true), strlen((string)$item->getStore()->getBaseUrl()));
     }
 }

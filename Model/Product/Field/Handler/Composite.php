@@ -14,25 +14,18 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Product\Field\Handler;
 
-use HawkSearch\EsIndexing\Model\Indexing\Entity\Product\ItemsDataProvider;
 use HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface;
 use HawkSearch\EsIndexing\Model\Product\Attribute\ValueProcessorInterface;
 use HawkSearch\EsIndexing\Model\Product\ProductTypePoolInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\ResourceModel\Eav\Attribute as AttributeResource;
 use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\ObjectManagerInterface;
 
 class Composite extends \HawkSearch\EsIndexing\Model\Indexing\FieldHandler\Composite
 {
-    /**
-     * @var array
-     */
-    private array $childrenCache = [];
-
     /**
      * @var ProductTypePoolInterface
      */
@@ -44,30 +37,22 @@ class Composite extends \HawkSearch\EsIndexing\Model\Indexing\FieldHandler\Compo
     private ValueProcessorInterface $valueProcessor;
 
     /**
-     * @var ItemsDataProvider
-     */
-    private ItemsDataProvider $childrenItemsDataProvider;
-
-    /**
      * Composite constructor.
      *
      * @param ObjectManagerInterface $objectManager
      * @param ProductTypePoolInterface $productTypePool
      * @param ValueProcessorInterface $valueProcessor
      * @param FieldHandlerInterface[] $handlers
-     * @param ItemsDataProvider|null $childrenItemsDataProvider
      */
     public function __construct(
         ObjectManagerInterface $objectManager,
         ProductTypePoolInterface $productTypePool,
         ValueProcessorInterface $valueProcessor,
-        array $handlers = [],
-        ItemsDataProvider $childrenItemsDataProvider = null
+        array $handlers = []
     ) {
         parent::__construct($objectManager, $handlers);
         $this->productTypePool = $productTypePool;
         $this->valueProcessor = $valueProcessor;
-        $this->childrenItemsDataProvider = $childrenItemsDataProvider ?: ObjectManager::getInstance()->get(ItemsDataProvider::class);
     }
 
     /**
@@ -120,20 +105,7 @@ class Composite extends \HawkSearch\EsIndexing\Model\Indexing\FieldHandler\Compo
      */
     private function getChildren(DataObject $item): array
     {
-        if (!isset($this->childrenCache[$item->getId()])) {
-            $productType = $this->productTypePool->get($item->getTypeId());
-            $childrenCollection = [];
-            if ($children = $productType->getChildProducts($item)) {
-                $childIds = [];
-                foreach ($children as $child) {
-                    $childIds[] = $child->getId();
-                }
-                $childrenCollection = $this->childrenItemsDataProvider->getItems($item->getStoreId(), $childIds);
-            }
-
-            $this->childrenCache[$item->getId()] = $childrenCollection;
-        }
-
-        return $this->childrenCache[$item->getId()];
+        $productType = $this->productTypePool->get($item->getTypeId());
+        return $productType->getChildProducts($item);
     }
 }

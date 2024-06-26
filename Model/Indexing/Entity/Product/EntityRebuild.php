@@ -129,7 +129,7 @@ class EntityRebuild extends AbstractEntityRebuild
             return false;
         }
 
-        $isChild = (bool)$this->productDataProvider->getParentProductIds([$item->getId()]);
+        $isChild = (bool)$item->getParentIds();
 
         if (!$isChild && !in_array($item->getVisibility(), $this->visibility->getVisibleInSiteIds())) {
             return false;

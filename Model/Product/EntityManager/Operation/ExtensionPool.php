@@ -12,29 +12,24 @@
  */
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Product\ProductType;
+namespace HawkSearch\EsIndexing\Model\Product\EntityManager\Operation;
 
-use Magento\Bundle\Model\Product\Price;
 use Magento\Catalog\Api\Data\ProductInterface;
 
-class Bundle extends CompositeType
+/**
+ * Do not process extension attributes for ProductRepository used for collecting products for indexing
+ */
+class ExtensionPool extends \Magento\Framework\EntityManager\Operation\ExtensionPool
 {
-    /**
-     * @var string
-     * @deprecated since 0.7.0 will be removed
-     */
-    protected string $keySelectionsCollection = '_cache_instance_selections_collection_hawksearch';
-
     /**
      * @inheritDoc
      */
-    protected function getMinMaxPrice(ProductInterface $product): array
+    public function getActions($entityType, $actionName)
     {
-        /** @var Price $priceModel */
-        $priceModel = $product->getPriceModel();
-        [$min, $max] = $priceModel->getTotalPrices($product, null, true, true);
-
-        return [(float)$min, (float)$max];
+        if ($entityType === ProductInterface::class && $actionName === 'read') {
+            return [];
+        } else {
+            return parent::getActions($entityType, $actionName);
+        }
     }
-
 }

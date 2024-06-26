@@ -14,16 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Product\ProductType;
 
-use Magento\Catalog\Api\Data\ProductInterface;
-
 class Grouped extends CompositeType
 {
 
-    /**
-     * @inheritDoc
-     */
-    public function getChildProducts(ProductInterface $product): array
-    {
-        return $product->getTypeInstance()->getAssociatedProducts($product);
-    }
 }
