@@ -12,7 +12,7 @@ search experience powered with HawkSearch ElasticSearch API v4.0+
 
 ## Support
 You can submit a new ticket through our [Support Center](https://support.bridgeline.com/)
-If you have any questions please read our [Support FAQ](https://hawksearch.atlassian.net/wiki/spaces/HSKB/pages/327719/Support%2BFAQ)
+If you have any questions please read our [Support FAQ](https://userguide.hawksearch.com/docs/support-fq)
 
 ## Documentation
 
@@ -38,7 +38,7 @@ bin/magento module:enable --clear-static-content HawkSearch_Connector HawkSearch
 bin/magento setup:upgrade
 bin/magento cache:flush
 ```
-3. Proceed with [Getting Started](https://bridgeline.atlassian.net/wiki/spaces/CON/pages/3468468312/Getting+Started+with+Hawksearch+ES) guide
+3. Proceed with [Getting Started](https://developerdocs.hawksearch.com/docs/magento-getting-started) guide
 
 ## Contribution
 Coming soon
