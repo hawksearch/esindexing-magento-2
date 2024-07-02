@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -14,33 +14,19 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\LandingPage\Attribute\Handler;
 
-use HawkSearch\EsIndexing\Model\Indexing\AttributeHandlerInterface;
-use Magento\Catalog\Api\Data\CategoryInterface;
-use Magento\Framework\DataObject;
+use HawkSearch\Connector\Compatibility\PublicContractDeprecation;
 
-class NarrowXml implements AttributeHandlerInterface
+PublicContractDeprecation::triggerClassDeprecationMessage(
+    NarrowXml::class,
+    '0.7.0',
+    \HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\NarrowXml::class,
+    'In favour of a new Field Handlers logic.'
+);
+
+/**
+ * @deprecated 0.7.0 In favour of a new Field Handlers logic
+ * @see \HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\NarrowXml
+ */
+class NarrowXml extends \HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\NarrowXml
 {
-    /**
-     * @inheritDoc
-     * @param CategoryInterface $item
-     */
-    public function handle(DataObject $item, string $attributeCode)
-    {
-        $xml = simplexml_load_string(
-            '<?xml version="1.0" encoding="UTF-8"?>
-<Rule xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-RuleType="Group" Operator="All" />'
-        );
-        $rules = $xml->addChild('Rules');
-        $rule = $rules->addChild('Rule');
-        $rule->addAttribute('RuleType', 'Eval');
-        $rule->addAttribute('Operator', 'None');
-        $rule->addChild('Field', 'facet:category');
-        $rule->addChild('Condition', 'is');
-        $rule->addChild('Value', $item->getId());
-        $xml->addChild('Field');
-        $xml->addChild('Condition');
-        $xml->addChild('Value');
-        return $xml->asXML();
-    }
 }

@@ -16,6 +16,9 @@ namespace HawkSearch\EsIndexing\Model\Product\Attribute;
 
 use Magento\Catalog\Model\ResourceModel\Eav\Attribute;
 
+/**
+ * @internal experimental feature
+ */
 interface ValueProcessorInterface
 {
     /**

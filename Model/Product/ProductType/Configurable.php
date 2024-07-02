@@ -19,14 +19,6 @@ use Magento\Catalog\Api\Data\ProductInterface;
 class Configurable extends CompositeType
 {
     /**
-     * @inheritdoc
-     */
-    public function getChildProducts(ProductInterface $product): array
-    {
-        return $product->getTypeInstance()->getUsedProducts($product);
-    }
-
-    /**
      * Avoid returning final price including tax
      * Force to load min_price from price index
      *

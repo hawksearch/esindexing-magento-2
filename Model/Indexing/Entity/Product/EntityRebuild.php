@@ -49,11 +49,6 @@ class EntityRebuild extends AbstractEntityRebuild
     private $stockRegistry;
 
     /**
-     * @var Product\Attributes
-     */
-    private $productAttributes;
-
-    /**
      * @var Product
      */
     private $productDataProvider;
@@ -70,7 +65,6 @@ class EntityRebuild extends AbstractEntityRebuild
      * @param Visibility $visibility
      * @param Configuration $catalogInventoryConfiguration
      * @param StockRegistryInterface $stockRegistry
-     * @param Product\Attributes $productAttributes
      * @param Product $productDataProvider
      */
     public function __construct(
@@ -98,16 +92,7 @@ class EntityRebuild extends AbstractEntityRebuild
         $this->visibility = $visibility;
         $this->catalogInventoryConfiguration = $catalogInventoryConfiguration;
         $this->stockRegistry = $stockRegistry;
-        $this->productAttributes = $productAttributes;
         $this->productDataProvider = $productDataProvider;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function getIndexedAttributes(DataObject $item = null): array
-    {
-        return $this->productAttributes->getIndexedAttributes();
     }
 
     /**
@@ -144,7 +129,7 @@ class EntityRebuild extends AbstractEntityRebuild
             return false;
         }
 
-        $isChild = (bool)$this->productDataProvider->getParentProductIds([$item->getId()]);
+        $isChild = (bool)$item->getParentIds();
 
         if (!$isChild && !in_array($item->getVisibility(), $this->visibility->getVisibleInSiteIds())) {
             return false;

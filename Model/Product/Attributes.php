@@ -98,15 +98,23 @@ class Attributes
      */
     public function getMandatoryAttributes()
     {
+        return array_filter(array_values($this->getMandatoryFieldMap()));
+    }
+
+    /**
+     * @return array
+     */
+    public function getMandatoryFieldMap()
+    {
         return [
-            //'entity_id',
-            'type_id',
-            'thumbnail_url',
-            'image_url',
-            'name',
-            'category',
-            'url',
-            'visibility'
+            'type_id' => 'type_id',
+            'thumbnail_url' => 'thumbnail_url',
+            'image_url' => 'image_url',
+            'name' => 'name',
+            'category' => '',
+            'url' => '',
+            'visibility_search' => '',
+            'visibility_catalog' => '',
         ];
     }
 
@@ -120,26 +128,32 @@ class Attributes
     }
 
     /**
-     * @param $forceMandatory
-     * @return array|string[]
+     * @return array
      */
-    public function getIndexedAttributes($forceMandatory = true)
+    public function getIndexedAttributes()
+    {
+        return array_filter(array_values($this->getFieldToAttributeMap()));
+    }
+
+    /**
+     * Return mapping hash.
+     * Keys of the hash represent fields, values represent attributes.
+     *
+     * @return array
+     */
+    public function getFieldToAttributeMap(): array
     {
         $currentAttributesConfig = $this->jsonSerializer->unserialize(
             $this->attributesConfigProvider->getAttributes()
         );
 
-        $attributes = [];
+        $map = [];
         foreach ($currentAttributesConfig as $configItem) {
-            if (isset($configItem['attribute'])) {
-                $attributes[] = $configItem['attribute'];
+            if (isset($configItem['field'])) {
+                $map[$configItem['field']] = $configItem['attribute'] ?? '';
             }
         }
 
-        if ($forceMandatory) {
-            $attributes = array_merge($attributes, $this->getMandatoryAttributes());
-        }
-
-        return $attributes;
+        return array_merge($map, $this->getMandatoryFieldMap());
     }
 }

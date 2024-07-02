@@ -17,6 +17,9 @@ namespace HawkSearch\EsIndexing\Model\Field\Product;
 use Magento\Catalog\Api\Data\ProductAttributeInterface;
 use Magento\Framework\DataObject;
 
+/**
+ * @internal experimental feature
+ */
 class AttributeAdapter
 {
     /**

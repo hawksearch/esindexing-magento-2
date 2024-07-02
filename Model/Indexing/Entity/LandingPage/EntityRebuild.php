@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -14,15 +14,16 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexing\Entity\LandingPage;
 
-use HawkSearch\EsIndexing\Api\Data\LandingPageInterface;
-use HawkSearch\EsIndexing\Api\LandingPageManagementInterface;
-use HawkSearch\EsIndexing\Api\Data\LandingPageInterfaceFactory;
-use HawkSearch\EsIndexing\Helper\ObjectHelper;
 use HawkSearch\Connector\Logger\LoggerFactoryInterface;
+use HawkSearch\EsIndexing\Api\Data\LandingPageInterface;
+use HawkSearch\EsIndexing\Api\Data\LandingPageInterfaceFactory;
+use HawkSearch\EsIndexing\Api\LandingPageManagementInterface;
+use HawkSearch\EsIndexing\Helper\ObjectHelper;
 use HawkSearch\EsIndexing\Model\Indexing\AbstractEntityRebuild;
 use HawkSearch\EsIndexing\Model\Indexing\ContextInterface;
 use HawkSearch\EsIndexing\Model\Indexing\EntityTypePoolInterface;
-use HawkSearch\EsIndexing\Model\LandingPage\Attribute\Handler\CustomUrl;
+use HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\Custom;
+use HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\CustomUrl;
 use Magento\Catalog\Api\Data\CategoryInterface;
 use Magento\Catalog\Model\Category;
 use Magento\Framework\App\CacheInterface as Cache;
@@ -38,7 +39,6 @@ class EntityRebuild extends AbstractEntityRebuild
 {
     private const CACHE_KEY = 'HAWKSEARCH_LP_INDEXING';
     private const CACHE_LIFETIME = 300;
-    private const CUSTOM_FIELD_PREFIX = "__mage_catid__";
 
     /**
      * @var LandingPageInterface[]
@@ -78,7 +78,7 @@ class EntityRebuild extends AbstractEntityRebuild
     /**
      * @var CustomUrl
      */
-    private $customUrlAttribute;
+    private $customUrlHandler;
 
     /**
      * @param EntityTypePoolInterface $entityTypePool
@@ -91,7 +91,7 @@ class EntityRebuild extends AbstractEntityRebuild
      * @param SerializerInterface $serializer
      * @param LandingPageManagementInterface $landingPageManagement
      * @param LandingPageInterfaceFactory $landingPageFactory
-     * @param CustomUrl $customUrlAttribute
+     * @param CustomUrl $customUrlHandler
      */
     public function __construct(
         EntityTypePoolInterface $entityTypePool,
@@ -104,7 +104,7 @@ class EntityRebuild extends AbstractEntityRebuild
         SerializerInterface $serializer,
         LandingPageManagementInterface $landingPageManagement,
         LandingPageInterfaceFactory $landingPageFactory,
-        CustomUrl $customUrlAttribute
+        CustomUrl $customUrlHandler
     ) {
         parent::__construct(
             $entityTypePool,
@@ -118,7 +118,7 @@ class EntityRebuild extends AbstractEntityRebuild
         $this->serializer = $serializer;
         $this->landingPageManagement = $landingPageManagement;
         $this->landingPageFactory = $landingPageFactory;
-        $this->customUrlAttribute = $customUrlAttribute;
+        $this->customUrlHandler = $customUrlHandler;
     }
 
     /**
@@ -159,7 +159,7 @@ class EntityRebuild extends AbstractEntityRebuild
      */
     protected function isItemNew(DataObject $item): bool
     {
-        $customUrl = $this->customUrlAttribute->handle($item, LandingPageInterface::FIELD_CUSTOM_URL);
+        $customUrl = $this->customUrlHandler->handle($item, LandingPageInterface::FIELD_CUSTOM_URL);
 
         return !array_key_exists($this->getEntityUniqueId($item), $this->getCustomFieldMap())
             && !array_key_exists($customUrl, $this->getCustomUrlMap());
@@ -172,33 +172,6 @@ class EntityRebuild extends AbstractEntityRebuild
     protected function getEntityId(DataObject $entityItem): ?int
     {
         return (int)$entityItem->getId();
-    }
-
-    /**
-     * @inheritDoc
-     * @throws NotFoundException
-     */
-    protected function getIndexedAttributes(DataObject $item = null): array
-    {
-        return [
-            LandingPageInterface::FIELD_NAME,
-            LandingPageInterface::FIELD_CUSTOM_URL,
-            LandingPageInterface::FIELD_NARROW_XML,
-            LandingPageInterface::FIELD_PAGE_ID,
-            LandingPageInterface::FIELD_CUSTOM_SORT_LIST,
-            [
-                'code' => LandingPageInterface::FIELD_CUSTOM,
-                'value' => $this->getEntityUniqueId($item)
-            ],
-            [
-                'code' => LandingPageInterface::FIELD_IS_FACET_OVERRIDE,
-                'value' => false
-            ],
-            [
-                'code' => LandingPageInterface::FIELD_PAGE_TYPE,
-                'value' => 'ProductListing'
-            ],
-        ];
     }
 
     /**
@@ -312,7 +285,7 @@ class EntityRebuild extends AbstractEntityRebuild
      */
     protected function addTypePrefix(string $value)
     {
-        return self::CUSTOM_FIELD_PREFIX . $value;
+        return Custom::CUSTOM_FIELD_PREFIX . $value;
     }
 
     /**

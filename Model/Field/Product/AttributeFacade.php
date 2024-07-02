@@ -16,6 +16,9 @@ namespace HawkSearch\EsIndexing\Model\Field\Product;
 
 use HawkSearch\EsIndexing\Api\Data\FieldInterface;
 
+/**
+ * @internal experimental feature
+ */
 class AttributeFacade
 {
     /**

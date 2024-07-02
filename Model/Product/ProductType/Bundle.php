@@ -21,24 +21,9 @@ class Bundle extends CompositeType
 {
     /**
      * @var string
+     * @deprecated since 0.7.0 will be removed
      */
     protected string $keySelectionsCollection = '_cache_instance_selections_collection_hawksearch';
-
-    /**
-     * @inheritDoc
-     */
-    public function getChildProducts(ProductInterface $product): array
-    {
-        if (!$product->hasData($this->keySelectionsCollection)) {
-            $selectionsCollection = $product->getTypeInstance()->getSelectionsCollection(
-                $product->getTypeInstance()->getOptionsIds($product),
-                $product
-            );
-            $product->setData($this->keySelectionsCollection, $selectionsCollection);
-        }
-
-        return $product->getData($this->keySelectionsCollection)->getItems();
-    }
 
     /**
      * @inheritDoc

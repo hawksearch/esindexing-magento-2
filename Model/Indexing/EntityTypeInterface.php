@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -14,6 +14,14 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexing;
 
+
+use HawkSearch\EsIndexing\Model\Indexing\Field\NameProviderInterface as FieldNameProviderInterface;
+
+/**
+ * @method FieldHandlerInterface getFieldHandler() Use this method in your class implementations for smooth transitions
+ *          since 0.9.0. Method will be added in 0.9.0
+ * @method FieldNameProviderInterface getFieldNameProvider() Method will be added in 0.9.0
+ */
 interface EntityTypeInterface
 {
     /**
@@ -49,9 +57,24 @@ interface EntityTypeInterface
     public function getItemsIndexer() : ItemsIndexerInterface;
 
     /**
-     * @return AttributeHandlerInterface
+     * @deprecated 0.7.0 in favour of a new Field Handlers logic
+     * @see self::getFieldHandler()
+     * @return AttributeHandlerInterface|FieldHandlerInterface
      */
-    public function getAttributeHandler() : AttributeHandlerInterface;
+    public function getAttributeHandler() : FieldHandlerInterface;
 
+    /**
+     * @return FieldHandlerInterface
+     */
+    /*public function getFieldHandler() : FieldHandlerInterface;*/
+
+    /**
+     * @return AbstractConfigHelper
+     */
     public function getConfigHelper() : AbstractConfigHelper;
+
+    /**
+     * @return FieldNameProviderInterface
+     */
+    /*public function getFieldNameProvider(): FieldNameProviderInterface;*/
 }
