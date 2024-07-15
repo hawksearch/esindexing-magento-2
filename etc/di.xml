@@ -930,6 +930,8 @@
         <arguments>
             <argument name="productRepository" xsi:type="object">HawkSearch\EsIndexing\Model\ProductRepository</argument>
         </arguments>
+        <plugin name="hawksearchIsReturnableAttributeModifierPlugin"
+                type="HawkSearch\EsIndexing\Plugin\Indexing\Entity\Product\ItemsDataProvider\IsReturnableAttributeModifierPlugin"/>
     </type>
 
     <!--
