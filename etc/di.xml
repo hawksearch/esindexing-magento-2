@@ -1442,5 +1442,9 @@
     <type name="HawkSearch\Connector\Gateway\Http\TransferInterface">
         <plugin name="hawksearchIdBuilderPlugin" type="HawkSearch\EsIndexing\Plugin\Gateway\Http\TransferIdBuilderPlugin"/>
     </type>
+    <type name="Magento\Eav\Model\Entity\Attribute\Source\Table">
+        <plugin name="hawksearchSpecificOptions"
+                type="HawkSearch\EsIndexing\Plugin\Eav\Entity\Attribute\Source\Table\SpecificOptionsPlugin"/>
+    </type>
     <!-- END Types and Plugins -->
 </config>
