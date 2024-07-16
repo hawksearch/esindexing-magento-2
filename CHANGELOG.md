@@ -7,12 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 See tasks currently in development on [Unreleased] changes page.
 
-## [0.7.1] - 2024-07-15
+## [0.7.1] - 2024-07-16
 
 ### FIXES
 * **fix: yes/no attribute value is incorrect when not defined** ([#66](https://github.com/hawksearch/esindexing-magento-2/pull/66))  
   Add specific logic for `is_returnable` attribute, considering "Use Config Settings" option  
   Ref: HC-1656
+* **fix: convert Phrase objects to string when handling attribute** ([1d13746](https://github.com/hawksearch/esindexing-magento-2/commit/1d13746a6bb72a6986c0fc17a38e3c714972d503))
+
 
 ## [0.7.0] - 2024-07-02
 
