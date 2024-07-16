@@ -27,11 +27,6 @@ use Magento\Framework\Exception\LocalizedException;
 class DefaultHandler implements FieldHandlerInterface
 {
     /**
-     * @var array
-     */
-    private array $attributeValues = [];
-
-    /**
      * @var ProductAttributesProvider
      */
     private ProductAttributesProvider $productAttributes;
@@ -78,66 +73,33 @@ class DefaultHandler implements FieldHandlerInterface
      * @param ProductInterface|Product $product
      * @param AttributeResource $attribute
      * @return mixed
-     * @throws LocalizedException
      */
     private function getProductAttributeText(ProductInterface $product, AttributeResource $attribute)
     {
         $value = $product->getData($attribute->getAttributeCode());
+        $valueText = null;
 
-        if ($value !== null) {
-            if (!is_array($value)) {
-                $attributeValues = $this->getAttributeOptionValues($attribute, $product->getStoreId());
-                if ($attributeValues) {
-                    //work on multiselect values
-                    $valueIds = explode(',', (string)$value);
-                    $oldValue = $value;
-                    $value = [];
-                    foreach ($valueIds as $id) {
-                        if (!isset($attributeValues[$id])) {
-                            continue;
-                        }
-                        $value[] = $attributeValues[$id];
-                    }
-                    $value = count($value) ? $value : $oldValue;
+        if (!is_array($value)) {
+            if ($value === null && in_array($attribute->getFrontendInput(), ['select', 'multiselect'])) {
+                $valueText = $value;
+            } elseif ($attribute->getFrontendInput() == 'multiselect') {
+                $valueText = $product->getAttributeText($attribute->getAttributeCode());
+            } elseif ($attribute->usesSource()) {
+                $valueText = $attribute->getFrontend()->getValue($product);
+                if ($valueText === false) {
+                    $valueText = null;
                 }
-
-                if (!is_scalar($value) && !is_array($value)) {
-                    $value = (string)$value;
-                }
-
-                //last resort
-                if ($value === false) {
-                    $value = $attribute->getFrontend()->getValue($product);
-                }
+            } else {
+                $valueText = $value;
             }
         }
 
-        return $value;
-    }
-
-    /**
-     * @param AttributeResource $attribute
-     * @param $storeId
-     * @return array
-     * @throws LocalizedException
-     */
-    private function getAttributeOptionValues(AttributeResource $attribute, $storeId): array
-    {
-        if (!isset($this->attributeValues[$attribute->getAttributeCode()][$storeId])) {
-            $values = [];
-            if ($attribute->usesSource()) {
-                $options = $attribute->getSource()->getAllOptions();
-                foreach ($options as $option) {
-                    if (isset($option['value'])) {
-                        $values[$option['value']] = $option['label'] ?? $option['value'];
-                    }
-                }
-            }
-
-            $values = array_filter(array_filter($values), 'trim');
-            $this->attributeValues[$attribute->getAttributeCode()][$storeId] = $values;
+        if (is_object($valueText) && method_exists($valueText, '__toString')) {
+            $valueText = $valueText->__toString();
+        } elseif (is_object($valueText)) {
+            $valueText = null;
         }
 
-        return $this->attributeValues[$attribute->getAttributeCode()][$storeId];
+        return $valueText;
     }
 }

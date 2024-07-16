@@ -7,21 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 See tasks currently in development on [Unreleased] changes page.
 
-## 0.7.0 - 2024-07-02
+## [0.7.1] - 2024-07-16
+
+### FIXES
+* **fix: yes/no attribute value is incorrect when not defined** ([#66](https://github.com/hawksearch/esindexing-magento-2/pull/66))  
+  Add specific logic for `is_returnable` attribute, considering "Use Config Settings" option  
+  Ref: HC-1656
+* **fix: convert Phrase objects to string when handling attribute** ([1d13746](https://github.com/hawksearch/esindexing-magento-2/commit/1d13746a6bb72a6986c0fc17a38e3c714972d503))
+
+
+## [0.7.0] - 2024-07-02
 
 Starting version 0.7.0 we follow [Backward compatibility policy](https://developerdocs.hawksearch.com/docs/magento-developers-bc-policy). 
 
 ### FEATURES
-* disable hawksearch_retry_failed_operations cron by config ([#53](https://github.com/hawksearch/esindexing-magento-2/pull/53))  
+* **disable hawksearch_retry_failed_operations cron by config** ([#53](https://github.com/hawksearch/esindexing-magento-2/pull/53))  
   ref: HC-1556
-* product visibility attribute indexing logic changed ([#61](https://github.com/hawksearch/esindexing-magento-2/pull/61))  
+* **product visibility attribute indexing logic changed** ([#61](https://github.com/hawksearch/esindexing-magento-2/pull/61))  
   Field visibility has been replaced by visibility_search, visibility_catalog fields
   add field specific search for product visibility:
   visibility_search:true Query condition is used for main search request.
   visibility_catalog:true Query condition is used for category pages requests.  
   Ref: HC-1572, HC-1639, HC-1638
-* update hawksearch/connector dependency version ([3f89512](https://github.com/hawksearch/esindexing-magento-2/commit/3f89512264771ee5958f650a6a87300c4067bff2), [7fc7bdd](https://github.com/hawksearch/esindexing-magento-2/commit/7fc7bdd2020ef459c04df7101f1c7cc2ddd40bbc))
-* add field name provider ([#62](https://github.com/hawksearch/esindexing-magento-2/pull/62))  
+* **update hawksearch/connector dependency version** ([3f89512](https://github.com/hawksearch/esindexing-magento-2/commit/3f89512264771ee5958f650a6a87300c4067bff2), [7fc7bdd](https://github.com/hawksearch/esindexing-magento-2/commit/7fc7bdd2020ef459c04df7101f1c7cc2ddd40bbc))
+* **add field name provider** ([#62](https://github.com/hawksearch/esindexing-magento-2/pull/62))  
   * replace attributes with field name providers:  
   After deprecation of AbstractEntityRebuild::getIndexedAttributes() method
   attributes should be replaced by instance of interface
@@ -34,20 +43,20 @@ Starting version 0.7.0 we follow [Backward compatibility policy](https://develop
   has been renamed to $fieldName
 
   refs: HC-1459
-* update hawksearch-vue lib to version 0.9.105 ([#64](https://github.com/hawksearch/esindexing-magento-2/pull/64))  
+* **update hawksearch-vue lib to version 0.9.105** ([#64](https://github.com/hawksearch/esindexing-magento-2/pull/64))  
   Fix did you mean links not clickable  
   Ref: HC-1154
 
 ### FIXES
-* forbid retrying completed operations ([#54](https://github.com/hawksearch/esindexing-magento-2/pull/54))  
+* **forbid retrying completed operations** ([#54](https://github.com/hawksearch/esindexing-magento-2/pull/54))  
   ref: HC-1445
-* rename config group to failure_recovery ([#56](https://github.com/hawksearch/esindexing-magento-2/pull/56))
-* name category attribute is not added to collection ([34548ad](https://github.com/hawksearch/esindexing-magento-2/commit/34548ad27acd71152f15268c89aaa9528c556946))  
+* **rename config group to failure_recovery** ([#56](https://github.com/hawksearch/esindexing-magento-2/pull/56))
+* **name category attribute is not added to collection** ([34548ad](https://github.com/hawksearch/esindexing-magento-2/commit/34548ad27acd71152f15268c89aaa9528c556946))  
   When EAV category collection is used, then name attribute is not added to
   selected attributes. As a result Category facet displays category ID's
   instead of Names (based on Hierarchy API). Landing pages API also breaks
   on reindexing.
-* optimise product collection loading and attributes processing ([#63](https://github.com/hawksearch/esindexing-magento-2/pull/63))  
+* **optimise product collection loading and attributes processing** ([#63](https://github.com/hawksearch/esindexing-magento-2/pull/63))  
   ref: HC-1644
 
 ### DEPRECATIONS
@@ -434,7 +443,9 @@ __fix: minimal compatible version of connector package is 2.8.0__ ([#45](https:/
 ## 0.1.0
 Initial stable release
 
-[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.6.4...HEAD
+[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.7.1...HEAD
+[0.7.1]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.7.0...v0.7.1
+[0.7.0]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.6.4...v0.7.0
 [0.6.4]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.6.3...v0.6.4
 [0.6.3]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.6.2...v0.6.3
 [0.6.2]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.6.1...v0.6.2

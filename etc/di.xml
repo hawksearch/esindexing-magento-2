@@ -930,6 +930,8 @@
         <arguments>
             <argument name="productRepository" xsi:type="object">HawkSearch\EsIndexing\Model\ProductRepository</argument>
         </arguments>
+        <plugin name="hawksearchIsReturnableAttributeModifierPlugin"
+                type="HawkSearch\EsIndexing\Plugin\Indexing\Entity\Product\ItemsDataProvider\IsReturnableAttributeModifierPlugin"/>
     </type>
 
     <!--
@@ -1439,6 +1441,10 @@
     </type>
     <type name="HawkSearch\Connector\Gateway\Http\TransferInterface">
         <plugin name="hawksearchIdBuilderPlugin" type="HawkSearch\EsIndexing\Plugin\Gateway\Http\TransferIdBuilderPlugin"/>
+    </type>
+    <type name="Magento\Eav\Model\Entity\Attribute\Source\Table">
+        <plugin name="hawksearchSpecificOptions"
+                type="HawkSearch\EsIndexing\Plugin\Eav\Entity\Attribute\Source\Table\SpecificOptionsPlugin"/>
     </type>
     <!-- END Types and Plugins -->
 </config>
