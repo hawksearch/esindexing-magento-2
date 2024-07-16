@@ -94,6 +94,12 @@ class DefaultHandler implements FieldHandlerInterface
             }
         }
 
+        if (is_object($valueText) && method_exists($valueText, '__toString')) {
+            $valueText = $valueText->__toString();
+        } elseif (is_object($valueText)) {
+            $valueText = null;
+        }
+
         return $valueText;
     }
 }
