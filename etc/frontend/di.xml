@@ -114,5 +114,9 @@
     <type name="Magento\Checkout\CustomerData\Cart">
         <plugin name="hawksearch_tracking_price_data" type="HawkSearch\EsIndexing\Plugin\Checkout\CustomerData\Cart"/>
     </type>
+    <type name="Magento\CatalogSearch\Controller\Result\Index">
+        <plugin name="hawksearch_allow_empty_query"
+                type="HawkSearch\EsIndexing\Plugin\CatalogSearch\ResultIndexPlugin"/>
+    </type>
     <!-- END Plugins -->
 </config>
