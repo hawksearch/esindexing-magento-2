@@ -30,6 +30,9 @@
             <advanced>
                 <remove_pub_assets_url>1</remove_pub_assets_url>
             </advanced>
+            <category>
+                <product_url_rewrite_exceptions_threshold>1000</product_url_rewrite_exceptions_threshold>
+            </category>
         </hawksearch_advanced_settings>
         <hawksearch_event_tracking_settings>
             <general>

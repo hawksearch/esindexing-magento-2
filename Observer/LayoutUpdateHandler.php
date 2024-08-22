@@ -103,6 +103,7 @@ class LayoutUpdateHandler implements ObserverInterface
      */
     private function isCategoriesEnabled(): bool
     {
+        //@todo replace with \HawkSearch\EsIndexing\Registry\CurrentCategory::get()
         $category = $this->catalogHelper->getCategory();
         if (!$category) {
             return false;

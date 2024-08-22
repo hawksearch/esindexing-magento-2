@@ -19,6 +19,9 @@ use HawkSearch\EsIndexing\Model\Layout\LayoutConfigProcessorInterface;
 use Magento\Framework\Locale\Format as LocaleFormat;
 use Magento\Store\Model\StoreManagerInterface;
 
+/**
+ * Render product pricing related Javascript configurations
+ */
 class PricingConfigProcessor implements LayoutConfigProcessorInterface
 {
     private LocaleFormat $localeFormat;
@@ -41,6 +44,9 @@ class PricingConfigProcessor implements LayoutConfigProcessorInterface
     }
 
     /**
+     * Process configurations
+     * Uses format supported by mage/utils/template templates syntax
+     *
      * @inheritDoc
      */
     public function process($jsConfig)
