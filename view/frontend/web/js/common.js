@@ -127,6 +127,12 @@ define([
             )
         },
 
+        /**
+         * Modify Document.url field in searchOutput state depending on
+         * hawksearchConfig.catalog.useCategoryPathInProductUrl setting
+         *
+         * @param document results Document
+         */
         formatItemUrl: function (document) {
             const replaceProductUrl = hawksearchConfig.catalog?.isCategoryPage
                 && hawksearchConfig.catalog?.useCategoryPathInProductUrl
@@ -156,6 +162,13 @@ define([
             this.setDocumentField(document, 'url', productUrl);
         },
 
+        /**
+         * Initialize Document.url_slug field in searchOutput state.
+         * It is a helper function for formatItemUrl()
+         *
+         * @see this.formatItemUrl
+         * @param document
+         */
         initItemUrlSlug: function(document) {
             if (!this.getDocumentField(document, 'url_slug')) {
                 this.setDocumentField(
@@ -166,6 +179,11 @@ define([
             }
         },
 
+        /**
+         * Loop over Results in searchOutput state and make updates
+         *
+         * @param searchOutput
+         */
         updateSearchOutput: function (searchOutput) {
             if (!searchOutput?.Results?.length) {
                 return;
@@ -211,6 +229,9 @@ define([
         }
     }
 
+    /**
+     * Initialize Vue widgets based on configs placed in DOM components
+     */
     function initVueWidget() {
         const components = $('[data-vue-hawksearch-component]');
 
