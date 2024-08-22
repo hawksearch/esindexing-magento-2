@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
   /**
-   * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+   * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
    *
    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -24,5 +24,8 @@
     </event>
     <event name="controller_action_postdispatch">
         <observer name="hawksearch_tracking_postdispatch" instance="HawkSearch\EsIndexing\Observer\SendCookieOnCartCompleteObserver" />
+    </event>
+    <event name="catalog_controller_category_init_after">
+        <observer name="hawksearch_inti_current_category" instance="HawkSearch\EsIndexing\Observer\InitCurrentCategoryObserver"/>
     </event>
 </config>

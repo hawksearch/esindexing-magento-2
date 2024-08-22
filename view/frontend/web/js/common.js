@@ -15,7 +15,7 @@ define([
     'underscore',
     'mage/utils/template',
     'priceUtils',
-    'uiEvents',
+    'hawksearchVueEvents',
     'hawksearchVueSDK',
     'mage/adminhtml/tools'
 ], function ($, _, mageTemplate, priceUtils, Events) {
@@ -128,6 +128,74 @@ define([
         },
 
         /**
+         * Modify Document.url field in searchOutput state depending on
+         * hawksearchConfig.catalog.useCategoryPathInProductUrl setting
+         *
+         * @param document results Document
+         */
+        formatItemUrl: function (document) {
+            const replaceProductUrl = hawksearchConfig.catalog?.isCategoryPage
+                && hawksearchConfig.catalog?.useCategoryPathInProductUrl
+                && this.getDocumentField(document, '__type') === 'product',
+                id = this.extractId(document);
+
+            if (!replaceProductUrl || !id) {
+                return;
+            }
+
+            this.initItemUrlSlug(document);
+
+            let productUrl = this.getDocumentField(document, 'url');
+            if (hawksearchConfig.catalog.categoryProducts?.productUrlRewriteExceptions[id] !== undefined) {
+                //use custom url rewrite
+                productUrl = hawksearchConfig.catalog.categoryProducts.productUrlRewriteExceptions[id];
+            } else if (!(hawksearchConfig.catalog.categoryProducts?.noUrlRewriteProducts.indexOf(parseInt(id)) !== -1 ||
+                hawksearchConfig.catalog.categoryProducts?.noUrlRewriteProducts.indexOf(String(id)) !== -1)) {
+                //use URL template
+                productUrl = mageTemplate.template(
+                    hawksearchConfig.catalog.productUrlTemplate,
+                    {
+                        product_url_slug: this.getDocumentField(document, 'url_slug')
+                    }
+                );
+            }
+            this.setDocumentField(document, 'url', productUrl);
+        },
+
+        /**
+         * Initialize Document.url_slug field in searchOutput state.
+         * It is a helper function for formatItemUrl()
+         *
+         * @see this.formatItemUrl
+         * @param document
+         */
+        initItemUrlSlug: function(document) {
+            if (!this.getDocumentField(document, 'url_slug')) {
+                this.setDocumentField(
+                    document,
+                    'url_slug',
+                    this.getDocumentField(document, 'url')
+                );
+            }
+        },
+
+        /**
+         * Loop over Results in searchOutput state and make updates
+         *
+         * @param searchOutput
+         */
+        updateSearchOutput: function (searchOutput) {
+            if (!searchOutput?.Results?.length) {
+                return;
+            }
+            var results = searchOutput.Results;
+
+            results.forEach(function updateResultItem(item) {
+                this.formatItemUrl(item.Document);
+            }, this);
+        },
+
+        /**
          * Return field value from the Document
          *
          * @param document results Document
@@ -142,9 +210,28 @@ define([
             }
 
             return null;
+        },
+
+        /**
+         * Set field value in the Document
+         *
+         * @param document results Document
+         * @param {string} field
+         * @param {*} value
+         */
+        setDocumentField: function (document, field, value) {
+            if (document) {
+                if (document[field] === undefined) {
+                    document[field] = [];
+                }
+                document[field][0] = value;
+            }
         }
     }
 
+    /**
+     * Initialize Vue widgets based on configs placed in DOM components
+     */
     function initVueWidget() {
         const components = $('[data-vue-hawksearch-component]');
 
@@ -152,36 +239,51 @@ define([
             try {
                 const configId = $(component).data('vueHawksearchConfig');
                 const config = JSON.parse($('#' + configId).html());
-                HawksearchVue.createWidget(component, {config, dataLayer: configId});
+
+                Events.trigger('createWidget:before', {
+                    component: component,
+                    config: config
+                });
+                widget = HawksearchVue.createWidget(component, {config, dataLayer: configId});
+                Events.trigger('createWidget:after', {
+                    vueWidget: widget
+                });
             } catch (e) {
                 console.error(e);
             }
         });
     }
 
-    $(function ($) {
-        initVueWidget();
+    let isFetchResultsDispatched = false;
 
-        let isFetchResultsDispatched = false;
-        let vueWidget = hawksearch.getVueWidget(hawksearchConfig.vueComponent);
+    /**
+     * Attach event handlers to HawkSearch Vue SDK events.
+     *
+     * To subscribe to Vuex store actions use the following format of an event name:
+     *  action:<vuex-store-action>:<action-position>
+     *      <vuex-store-action> is any Vuex action name
+     *      <action-position> could be 'before' or 'after'
+     *  Example of an action: action:fetchResults:after
+     *
+     * To subscribe to custom Vue events triggered by $emit() method put all of your
+     * custom event handlers inside the event 'createWidget:after', i.e.
+     * Events.on('createWidget:after', function(args) {
+     *      args.vueWidget.$on('<vueCustomEventName>', () => {
+     *          // custom event handler logic
+     *      }
+     * }
+     *
+     */
+    function bindEvents() {
+        Events.on('action:fetchResults:after', function(args) {
+            $(args.vueWidget.$el).trigger('contentUpdated');
+            isFetchResultsDispatched = true;
 
-        Events.on.call(vueWidget, 'fetchResults:after', function() {
-            $(vueWidget.$el).trigger('contentUpdated');
+
         });
 
-        if (!_.isEmpty(vueWidget) && vueWidget.config.searchConfig.initialSearch) {
-            HawksearchVue.getWidgetStore(vueWidget).subscribeAction({
-                after: (action, state) => {
-                    let eventName = action.type + ':' + 'after';
-                    Events.trigger.call(vueWidget, eventName, action.payload, state);
-
-                    if (action.type !== 'fetchResults') {
-                        return;
-                    }
-                    isFetchResultsDispatched = true;
-                }
-            });
-            vueWidget.$on('urlUpdated', () => {
+        Events.on('createWidget:after', function(args) {
+            args.vueWidget.$on('urlUpdated', () => {
                 if (!isFetchResultsDispatched) {
                     return;
                 }
@@ -191,6 +293,50 @@ define([
                     form.elements[hawksearchConfig.request.urlEncodedParam].value = hawksearch.getRedirectUrlEncoded();
                 });
                 isFetchResultsDispatched = false;
+            });
+
+            args.vueWidget.$on('resultsupdate', (searchOutput) => {
+                if (searchOutput) {
+                    hawksearch.updateSearchOutput(searchOutput);
+                }
+            });
+        });
+    }
+
+    $(function ($) {
+        if (typeof hawksearchConfig === 'undefined') {
+            console.warn("'hawksearchConfig' is not defined. HawkSearch Vue SDK initialization is terminated.");
+            return;
+        }
+
+        bindEvents();
+        initVueWidget();
+
+        let vueWidget = hawksearch.getVueWidget(hawksearchConfig.vueComponent);
+        if (!_.isEmpty(vueWidget) && vueWidget.config.searchConfig.initialSearch) {
+
+            /**
+             *
+             * @param {String} actionHandler defines whether the subscribe handler is called before or after an action dispatch
+             * @param {Object} action Store action descriptor
+             * @param {Object} state Store state
+             */
+            let triggerEvent = (actionHandler, action, state) => {
+                let eventName = 'action' + ':' + action.type + ':' + actionHandler;
+                Events.trigger(eventName, {
+                    payload: action.payload,
+                    state: state,
+                    vueWidget: hawksearch.getVueWidget(hawksearchConfig.vueComponent)
+                });
+            };
+
+            HawksearchVue.getWidgetStore(vueWidget).subscribeAction({
+                before: (action, state) => {
+                    triggerEvent('before', action, state);
+                },
+                after: (action, state) => {
+                    triggerEvent('after', action, state);
+                }
             });
         }
     });
