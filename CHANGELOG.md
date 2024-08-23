@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 See tasks currently in development on [Unreleased] changes page.
 
+## [0.7.2] - 2024-08-23
+
+### FIXES
+* **fix: update hawksearch-vue lib to version 0.9.107** ([#71](https://github.com/hawksearch/esindexing-magento-2/pull/71))
+* **fix: make item clickable in AC Top Categories** ([#70](https://github.com/hawksearch/esindexing-magento-2/pull/70))  
+  Refs: HC-1675
+* **fix: use category paths for product urls** ([#69](https://github.com/hawksearch/esindexing-magento-2/pull/69))  
+  Refs: HC-1668
+* **fix: top categories links in AC redirect** ([#68](https://github.com/hawksearch/esindexing-magento-2/pull/68))  
+  Links in Top Categories block in autocomplete has no 'q' parameter
+  in the URL. It redirects all these links to home page because Magento
+  doesn't allow Search Results page URL without 'q' parameter.
+  This update changes the default logic of Magento and allows
+  Search Results page to be opened without 'q' parameter accessing
+  all results from the Hawksearch index.
+* **fix: pager chevrons style issue** ([1802738](https://github.com/hawksearch/esindexing-magento-2/commit/1802738c92e1a008ef28ae2b60e9399b1fadc582))
+
 ## [0.7.1] - 2024-07-16
 
 ### FIXES
@@ -443,7 +460,8 @@ __fix: minimal compatible version of connector package is 2.8.0__ ([#45](https:/
 ## 0.1.0
 Initial stable release
 
-[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.7.1...HEAD
+[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.7.2...HEAD
+[0.7.2]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.6.4...v0.7.0
 [0.6.4]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.6.3...v0.6.4
