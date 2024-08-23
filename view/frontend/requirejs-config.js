@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -13,7 +13,8 @@ var config = {
     "map": {
         "*": {
             "hawksearchVueSDK": "HawkSearch_EsIndexing/js/vue-hawksearch-app",
-            "hawksearchCommon": "HawkSearch_EsIndexing/js/common"
+            "hawksearchCommon": "HawkSearch_EsIndexing/js/common",
+            "hawksearchVueEvents": "HawkSearch_EsIndexing/js/vue-hawksearch/events"
         }
     }
 };

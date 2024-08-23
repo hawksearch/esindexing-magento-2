@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
   /**
-   * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+   * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
    *
    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -75,6 +75,7 @@
                 <item name="common" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\ConfigProcessor\JsGlobal\CommonConfigProcessor</item>
                 <item name="request" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\ConfigProcessor\JsGlobal\RequestConfigProcessor</item>
                 <item name="pricing" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\ConfigProcessor\JsGlobal\PricingConfigProcessor</item>
+                <item name="catalog" xsi:type="object">HawkSearch\EsIndexing\Model\Layout\ConfigProcessor\JsGlobal\CatalogConfigProcessor</item>
             </argument>
         </arguments>
     </virtualType>
@@ -113,6 +114,10 @@
     </type>
     <type name="Magento\Checkout\CustomerData\Cart">
         <plugin name="hawksearch_tracking_price_data" type="HawkSearch\EsIndexing\Plugin\Checkout\CustomerData\Cart"/>
+    </type>
+    <type name="Magento\CatalogSearch\Controller\Result\Index">
+        <plugin name="hawksearch_allow_empty_query"
+                type="HawkSearch\EsIndexing\Plugin\CatalogSearch\ResultIndexPlugin"/>
     </type>
     <!-- END Plugins -->
 </config>
