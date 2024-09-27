@@ -124,7 +124,9 @@
                     <backend_model>HawkSearch\EsIndexing\Model\Config\Backend\Serialized\ProductAttributes</backend_model>
                     <comment>
                         <![CDATA[
-                            Specify product attributes.
+                            Specify product attributes users can search on, use for facets and sorting. Every Magento attribute should be mapped to a HawkSearch field.
+                            On configuration saving HawkSearch fields are synced with some Magento attribute properties. Learn more about syncing in
+                            <a href="https://developerdocs.hawksearch.com/docs/magento-indexing#fields--attributes">Fields & Attributes</a> documentation
                         ]]>
                     </comment>
                 </field>
