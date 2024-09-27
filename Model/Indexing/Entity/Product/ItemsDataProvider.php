@@ -230,14 +230,16 @@ class ItemsDataProvider implements ItemsDataProviderInterface
             return;
         }
 
+        $childrenMap = $this->productDataProvider->getChildrenByParentMap(array_keys($products));
+        if (!count($childrenMap)) {
+            return;
+        }
+
+        $this->searchCriteriaBuilder->addFilter('entity_id', array_merge([], ...$childrenMap), 'in');
+
         $currentProduct = current($products);
         $storeId = $currentProduct->getStoreId();
         $this->searchCriteriaBuilder->addFilter('store_id', $storeId);
-
-        $childrenMap = $this->productDataProvider->getChildrenByParentMap(array_keys($products));
-        if (count($childrenMap) > 0) {
-            $this->searchCriteriaBuilder->addFilter('entity_id', array_merge([], ...$childrenMap), 'in');
-        }
 
         $children = $this->getProductItems($this->searchCriteriaBuilder->create());
 
