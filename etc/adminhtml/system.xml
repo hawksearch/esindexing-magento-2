@@ -128,6 +128,10 @@
                         ]]>
                     </comment>
                 </field>
+                <!--<field id="add_reviews_data" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Add reviews data</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>-->
 
             </group>
         </section>
