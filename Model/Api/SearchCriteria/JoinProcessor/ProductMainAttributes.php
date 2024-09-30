@@ -15,12 +15,22 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Api\SearchCriteria\JoinProcessor;
 
+use HawkSearch\EsIndexing\Model\Product\Attributes;
 use Magento\Catalog\Model\ResourceModel\Product\Collection as ProductCollection;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessor\JoinProcessor\CustomJoinInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 
+/**
+ * Add only specific attribute to entities in collection.
+ */
 class ProductMainAttributes implements CustomJoinInterface
 {
+    private Attributes $attributes;
+
+    public function __construct(Attributes $attributes)
+    {
+        $this->attributes = $attributes;
+    }
 
     /**
      * @inheritDoc
@@ -28,16 +38,7 @@ class ProductMainAttributes implements CustomJoinInterface
      */
     public function apply(AbstractDb $collection)
     {
-        /*$collection->addAttributeToSelect('name')
-            ->addAttributeToSelect('url_key')
-            ->addAttributeToSelect('image')
-            ->addAttributeToSelect('small_image')
-            ->addAttributeToSelect('thumbnail')
-            ->addAttributeToSelect('msrp')
-            ->addAttributeToSelect('msrp_enabled')
-            ->addAttributeToSelect('short_description')
-            ->addAttributeToSelect('description')
-            ->addAttributeToSelect('meta_keyword')
-            ->addAttributeToSelect('qty');*/
+        $collection->removeAttributeToSelect();
+        $collection->addAttributeToSelect($this->attributes->getIndexedAttributes());
     }
 }

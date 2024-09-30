@@ -818,6 +818,7 @@
                 <item name="price" xsi:type="object">HawkSearch\EsIndexing\Model\Api\SearchCriteria\JoinProcessor\ProductPrices</item>
                 <item name="review_summary" xsi:type="object">HawkSearch\EsIndexing\Model\Api\SearchCriteria\JoinProcessor\ReviewRatingSummary</item>
                 <item name="url_rewrites" xsi:type="object">HawkSearch\EsIndexing\Model\Api\SearchCriteria\JoinProcessor\UrlRewrites</item>
+                <item name="select_attributes" xsi:type="object">HawkSearch\EsIndexing\Model\Api\SearchCriteria\JoinProcessor\ProductMainAttributes</item>
             </argument>
         </arguments>
     </virtualType>
