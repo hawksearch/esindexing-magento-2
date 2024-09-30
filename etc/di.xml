@@ -1303,10 +1303,45 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="HawkSearch\EsIndexing\Model\Indexing\EntityType\Scheduler\ProductEntityType"
+                 type="HawkSearch\EsIndexing\Model\Indexing\EntityType\ProductEntityType">
+        <arguments>
+            <argument name="itemsDataProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Product\Scheduler\ItemsDataProvider</argument>
+        </arguments>
+    </virtualType>
+    <type name="HawkSearch\EsIndexing\Model\Indexing\Entity\Product\Scheduler\ItemsDataProvider">
+        <arguments>
+            <argument name="productRepository" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Product\Scheduler\ProductRepository</argument>
+        </arguments>
+    </type>
+    <virtualType name="HawkSearch\EsIndexing\Model\Indexing\Entity\Product\Scheduler\ProductRepository" type="Magento\Catalog\Model\ProductRepository">
+        <arguments>
+            <argument name="collectionProcessor" xsi:type="object">HawkSearch\EsIndexing\Model\Api\SearchCriteria\Scheduler\ProductCollectionProcessor</argument>
+            <argument name="readExtensions" xsi:type="object">HawkSearch\EsIndexing\Product\EntityManager\Operation\Read\ReadExtensions</argument>
+            <argument name="collectionFactory" xsi:type="object">HawkSearch\EsIndexing\Model\ResourceModel\Product\CollectionFactory</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearch\EsIndexing\Model\Api\SearchCriteria\Scheduler\ProductCollectionProcessor"
+                 type="Magento\Catalog\Model\Api\SearchCriteria\ProductCollectionProcessor">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="joins" xsi:type="object">HawkSearch\EsIndexing\Model\Api\SearchCriteria\Scheduler\CollectionProcessor\ProductItemsJoinProcessor</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearch\EsIndexing\Model\Api\SearchCriteria\Scheduler\CollectionProcessor\ProductItemsJoinProcessor"
+                 type="HawkSearch\EsIndexing\Model\Api\SearchCriteria\CollectionProcessor\CustomJoinProcessor">
+        <arguments>
+            <argument name="customJoins" xsi:type="array">
+                <item name="clean_attributes" xsi:type="object">HawkSearch\EsIndexing\Model\Api\SearchCriteria\JoinProcessor\CleanAttributes</item>
+                <item name="skip_cetegory_ids" xsi:type="object">HawkSearch\EsIndexing\Model\Api\SearchCriteria\JoinProcessor\SkipCategoryIds</item>
+            </argument>
+        </arguments>
+    </virtualType>
     <virtualType name="HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\Product"
                  type="HawkSearch\EsIndexing\Model\Indexer\Entities\SchedulerAbstract">
         <arguments>
-            <argument name="entityType" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\EntityType\ProductEntityType</argument>
+            <argument name="entityType" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\EntityType\Scheduler\ProductEntityType</argument>
         </arguments>
     </virtualType>
     <virtualType name="HawkSearch\EsIndexing\Model\Indexer\Entities\Scheduler\ContentPage"
