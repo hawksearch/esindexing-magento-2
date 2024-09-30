@@ -111,6 +111,7 @@ class Attributes
             'thumbnail_url' => 'thumbnail_url',
             'image_url' => 'image_url',
             'name' => 'name',
+            'sku' => 'sku',
             'category' => '',
             'url' => '',
             'visibility_search' => '',
