@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 See tasks currently in development on [Unreleased] changes page.
 
+
+## [0.7.3] - 2024-10-02
+A performance update for product indexing. Due to some bugs in release 0.7.0 the performance in some edge cases was dramatically decreased.
+
+### FIXES
+* **fix: skip loading reviews data** [#73](https://github.com/hawksearch/esindexing-magento-2/pull/73)
+* **fix: loading the entire product collection when there are no children** [#74](https://github.com/hawksearch/esindexing-magento-2/pull/74)
+  This was a huge performance downside for any chunk which has
+  only simple products (no children). For such chunks there were
+  a performance degradation because of loading a full product collection.
+  Ref: HC-1687, HC-1686
+* **perf: do not load total product collection size** [#75](https://github.com/hawksearch/esindexing-magento-2/pull/75)
+* **perf: add only specific attributes to product collection** [#76](https://github.com/hawksearch/esindexing-magento-2/pull/76)
+  When product collection is loading all available product attributes are added to collection. This fix makes it loading only attributes
+  which are configured in Field-Attribute mapping configuration
+  Ref: HC-1689
+* **perf: optimize indexer:reindex command** [#78](https://github.com/hawksearch/esindexing-magento-2/pull/78)
+  Optimize product collection loading when `bin/magento indexer:reindex` command is executed. Avoid loading useless data because index scheduler just requires to know the collection size.
+  Ref: HC-1690
+* **fix: send sku field to index by default** [#79](https://github.com/hawksearch/esindexing-magento-2/pull/79)
+  Ref: HC-1695
+
+
 ## [0.7.2] - 2024-08-23
 
 ### FIXES
@@ -460,7 +483,8 @@ __fix: minimal compatible version of connector package is 2.8.0__ ([#45](https:/
 ## 0.1.0
 Initial stable release
 
-[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.7.2...HEAD
+[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.7.3...HEAD
+[0.7.3]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.7.2...v0.7.3
 [0.7.2]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.6.4...v0.7.0
