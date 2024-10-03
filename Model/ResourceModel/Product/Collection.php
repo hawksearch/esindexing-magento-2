@@ -10,24 +10,23 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Api\SearchCriteria\JoinProcessor;
+namespace HawkSearch\EsIndexing\Model\ResourceModel\Product;
 
-use Magento\Catalog\Model\ResourceModel\Product\Collection as ProductCollection;
-use Magento\Framework\Api\SearchCriteria\CollectionProcessor\JoinProcessor\CustomJoinInterface;
-use Magento\Framework\Data\Collection\AbstractDb;
-
-class ProductPrices implements CustomJoinInterface
+/**
+ * Class stub used for disabling plugin
+ * For performance reasons we disable methods which collect total size of the entire collection.
+ * For huge catalogs getting the total collection size is a performance degradation point.
+ * We don't use the total collection size ever, so it is safe to disable it's collecting.
+ */
+class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
 {
-
-    /**
-     * @inheritDoc
-     * @param ProductCollection $collection
+    /*
+     * We don't need total collection size
      */
-    public function apply(AbstractDb $collection)
+    public function getSize()
     {
-        $collection->addPriceData();
+        return 0;
     }
 }

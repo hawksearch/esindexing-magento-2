@@ -15,30 +15,21 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Api\SearchCriteria\JoinProcessor;
 
-use HawkSearch\EsIndexing\Model\Product\Attributes;
-use Magento\Catalog\Model\ResourceModel\Product\Collection as ProductCollection;
+use Magento\Eav\Model\Entity\Collection\AbstractCollection;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessor\JoinProcessor\CustomJoinInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 
 /**
- * Add only specific attribute to entities in collection.
+ * Skip loading category_ids attribute to product collection
  */
-class ProductMainAttributes implements CustomJoinInterface
+class SkipCategoryIds implements CustomJoinInterface
 {
-    private Attributes $attributes;
-
-    public function __construct(Attributes $attributes)
-    {
-        $this->attributes = $attributes;
-    }
-
     /**
      * @inheritDoc
-     * @param ProductCollection $collection
+     * @param AbstractCollection $collection
      */
     public function apply(AbstractDb $collection)
     {
-        $collection->removeAttributeToSelect();
-        $collection->addAttributeToSelect($this->attributes->getIndexedAttributes());
+        $collection->setFlag('category_ids_added', true);
     }
 }

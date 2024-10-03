@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2022 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -69,10 +69,16 @@ class ReviewRatingSummary implements CustomJoinInterface
         }
 
         //TODO: check if review_summary attribute is selected for indexing
-        $this->sumResourceFactory->create()->appendSummaryFieldsToCollection(
-            $collection,
-            $storeId,
-            \Magento\Review\Model\Review::ENTITY_PRODUCT_CODE
-        );
+        //TODO: push reviews data to the index https://bridgeline.atlassian.net/browse/HC-1693
+        //Since we do not push reviews data to the index yet disable data collecting as well
+        $addReviewData = false;
+
+        if ($addReviewData) {
+            $this->sumResourceFactory->create()->appendSummaryFieldsToCollection(
+                $collection,
+                $storeId,
+                \Magento\Review\Model\Review::ENTITY_PRODUCT_CODE
+            );
+        }
     }
 }

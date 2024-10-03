@@ -10,24 +10,14 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-
 declare(strict_types=1);
 
-namespace HawkSearch\EsIndexing\Model\Api\SearchCriteria\JoinProcessor;
+namespace HawkSearch\EsIndexing\Model\Indexing\Entity\Product\Scheduler;
 
-use Magento\Catalog\Model\ResourceModel\Product\Collection as ProductCollection;
-use Magento\Framework\Api\SearchCriteria\CollectionProcessor\JoinProcessor\CustomJoinInterface;
-use Magento\Framework\Data\Collection\AbstractDb;
-
-class ProductPrices implements CustomJoinInterface
+class ItemsDataProvider extends \HawkSearch\EsIndexing\Model\Indexing\Entity\Product\ItemsDataProvider
 {
-
-    /**
-     * @inheritDoc
-     * @param ProductCollection $collection
-     */
-    public function apply(AbstractDb $collection)
+    public function getItems($storeId, $entityIds = null, $currentPage = 1, $pageSize = 0)
     {
-        $collection->addPriceData();
+        return $this->getProductCollection($storeId, $entityIds, $currentPage, $pageSize);
     }
 }
