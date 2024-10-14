@@ -36,6 +36,16 @@
                 type="HawkSearch\EsIndexing\Model\FacetValueOrderInfo"/>
     <preference for="HawkSearch\EsIndexing\Api\Data\FieldInterface"
                 type="HawkSearch\EsIndexing\Model\Field"/>
+    <preference for="HawkSearch\EsIndexing\Api\Data\SearchRequestInterface"
+                type="HawkSearch\EsIndexing\Model\SearchRequest"/>
+    <preference for="HawkSearch\EsIndexing\Api\Data\VariantOptionsInterface"
+                type="HawkSearch\EsIndexing\Model\VariantOptions"/>
+    <preference for="HawkSearch\EsIndexing\Api\Data\BoostQueryInterface"
+                type="HawkSearch\EsIndexing\Model\BoostQuery"/>
+    <preference for="HawkSearch\EsIndexing\Api\Data\SmartBarInterface"
+                type="HawkSearch\EsIndexing\Model\SmartBar"/>
+    <preference for="HawkSearch\EsIndexing\Api\Data\ClientDataInterface"
+                type="HawkSearch\EsIndexing\Model\ClientData"/>
 
     <preference for="HawkSearch\EsIndexing\Api\FacetManagementInterface"
                 type="HawkSearch\EsIndexing\Model\FacetManagement"/>

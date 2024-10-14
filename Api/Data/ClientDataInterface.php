@@ -15,16 +15,27 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Api\Data;
 
+/**
+ * ClientData Interface used in SearchRequest
+ *
+ * @api v2
+ * @since 0.8.0
+ * @see https://developerdocs.hawksearch.com/reference/searchv2_search-1
+ * @see https://searchapi-dev.hawksearch.net/swagger/ui/index#!/SearchV2/SearchV2_Search
+ */
 interface ClientDataInterface
 {
     /**#@+
      * Constants for keys of data array
      */
     const FIELD_VISITOR_ID = 'VisitorId';
+    const FIELD_VISIT_ID = 'VisitId';
     const FIELD_CUSTOM = 'Custom';
-    const FIELD_HTTP_TRUE_CLIENT_IP = 'HttpTrueClientIp';
-    const FIELD_USER_AGENT = 'UserAgent';
+    const FIELD_EXTENDED_CUSTOM = 'ExtendedCustom';
+    const FIELD_PREVIEW_BUCKETS = 'PreviewBuckets';
     const FIELD_SOURCE = 'Source';
+    const FIELD_ORIGIN = 'Origin';
+    const FIELD_ZIP_CODE = 'ZipCode';
     /**#@-*/
 
     /**
@@ -33,43 +44,54 @@ interface ClientDataInterface
     public function getVisitorId(): string;
 
     /**
-     * @param string $value
+     * @param string|null $value
      * @return $this
      */
-    public function setVisitorId(string $value);
-
-    /**
-     * @return ClientDataCustomInterface
-     */
-    public function getCustom(): ClientDataCustomInterface;
-
-    /**
-     * @param ClientDataCustomInterface $value
-     * @return $this
-     */
-    public function setCustom(ClientDataCustomInterface $value);
+    public function setVisitorId(?string $value): self;
 
     /**
      * @return string
      */
-    public function getHttpTrueClientIp(): string;
+    public function getVisitId(): string;
 
     /**
-     * @param string $value
+     * @param string|null $value
      * @return $this
      */
-    public function setHttpTrueClientIp(string $value);
+    public function setVisitId(?string $value): self;
 
     /**
-     * @return string
+     * @return array
      */
-    public function getUserAgent(): string;
+    public function getCustom(): array;
 
     /**
-     * @param string $value
+     * @param array|null $value
      * @return $this
      */
-    public function setUserAgent(string $value);
+    public function setCustom(?array $value): self;
+
+    /**
+     * @return array
+     */
+    public function getExtendedCustom(): array;
+
+    /**
+     * @param array|null $value
+     * @return $this
+     */
+    public function setExtendedCustom(?array $value): self;
+
+    /**
+     * @return array
+     */
+    public function getPreviewBuckets(): array;
+
+    /**
+     * @param array|null $value
+     * @return $this
+     */
+    public function setPreviewBuckets(?array $value): self;
 
     /**
      * @return string
@@ -77,8 +99,30 @@ interface ClientDataInterface
     public function getSource(): string;
 
     /**
-     * @param string $value
+     * @param string|null $value
      * @return $this
      */
-    public function setSource(string $value);
+    public function setSource(?string $value): self;
+
+    /**
+     * @return \HawkSearch\EsIndexing\Api\Data\CoordinateInterface
+     */
+    public function getOrigin(): CoordinateInterface;
+
+    /**
+     * @param \HawkSearch\EsIndexing\Api\Data\CoordinateInterface|null $value
+     * @return $this
+     */
+    public function setOrigin(?CoordinateInterface $value): self;
+
+    /**
+     * @return string
+     */
+    public function getZipCode(): string;
+
+    /**
+     * @param string|null $value
+     * @return $this
+     */
+    public function setZipCode(?string $value): self;
 }
