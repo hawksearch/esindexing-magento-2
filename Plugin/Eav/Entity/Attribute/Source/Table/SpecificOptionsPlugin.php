@@ -21,7 +21,7 @@ use Magento\Eav\Model\Entity\Attribute\Source\Table;
 * Please note this around plugin doesn't call $proceed callable,
 * and it will prevent the execution of all the plugins next in the chain and the original method call
 *
-* @see https://github.com/magento/magento2/issues/38934
+* @link https://github.com/magento/magento2/issues/38934
 */
 class SpecificOptionsPlugin
 {

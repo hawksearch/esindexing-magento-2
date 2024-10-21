@@ -17,8 +17,8 @@ namespace HawkSearch\EsIndexing\Api\Data;
 /**
  * @api v11
  * @since 0.8.0
- * @see https://developerdocs.hawksearch.com/reference/field_post_value
- * @see https://dev.hawksearch.net/swagger/ui/index#!/Field/Field_Post_value
+ * @link https://developerdocs.hawksearch.com/reference/field_post_value
+ * @link https://dev.hawksearch.net/swagger/ui/index#!/Field/Field_Post_value
  *
  * Since properties in HawkSearch API can be nullable the following argument types in setters
  * should be nullable as well: strings, arrays and objects

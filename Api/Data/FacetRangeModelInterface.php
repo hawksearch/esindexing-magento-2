@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -19,8 +19,8 @@ namespace HawkSearch\EsIndexing\Api\Data;
  *
  * @api v11
  * @since 0.8.0
- * @see https://developerdocs.hawksearch.com/reference/facet_post_value
- * @see https://dev.hawksearch.net/swagger/ui/index#!/Facet/Facet_Post_value
+ * @link https://developerdocs.hawksearch.com/reference/facet_post_value
+ * @link https://dev.hawksearch.net/swagger/ui/index#!/Facet/Facet_Post_value
  *
  * Since properties in HawkSearch API can be nullable the following argument types in setters
  * should be nullable as well: strings, arrays and objects

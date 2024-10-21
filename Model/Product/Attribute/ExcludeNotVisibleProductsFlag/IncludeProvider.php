@@ -16,6 +16,9 @@ namespace HawkSearch\EsIndexing\Model\Product\Attribute\ExcludeNotVisibleProduct
 
 use HawkSearch\EsIndexing\Model\Product\Attribute\ExcludeNotVisibleProductsFlagInterface;
 
+/**
+ * Always include not visible products provider
+ */
 class IncludeProvider implements ExcludeNotVisibleProductsFlagInterface
 {
     /**
