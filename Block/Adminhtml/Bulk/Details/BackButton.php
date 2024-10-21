@@ -16,7 +16,8 @@ use HawkSearch\EsIndexing\Block\Adminhtml\Form\GenericButton;
 use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 
 /**
- * Class BackButton
+ * @api
+ * @since 0.8.0
  */
 class BackButton extends GenericButton implements ButtonProviderInterface
 {

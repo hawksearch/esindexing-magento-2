@@ -19,6 +19,10 @@ use HawkSearch\EsIndexing\Api\Data\FacetInterface;
 use HawkSearch\EsIndexing\Api\FacetManagementInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 class FacetManagement implements FacetManagementInterface
 {
     /**

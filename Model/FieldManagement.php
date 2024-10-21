@@ -20,6 +20,10 @@ use HawkSearch\EsIndexing\Api\Data\FieldInterface;
 use HawkSearch\EsIndexing\Api\FieldManagementInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 class FieldManagement implements FieldManagementInterface
 {
     /**

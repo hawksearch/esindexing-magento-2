@@ -18,6 +18,10 @@ use HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface;
 use Magento\Framework\DataObject;
 use Magento\Framework\ObjectManagerInterface;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 class Composite implements FieldHandlerInterface
 {
     /**#@+

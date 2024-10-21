@@ -17,6 +17,12 @@ namespace HawkSearch\EsIndexing\Api;
 use HawkSearch\EsIndexing\Api\Data\FacetInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
 
+/**
+ * Interface for managing Facets in HawkSearch
+ *
+ * @api
+ * @since 0.8.0
+ */
 interface FacetManagementInterface
 {
     /**

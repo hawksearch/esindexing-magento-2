@@ -14,16 +14,18 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Api\Data;
 
-use Magento\Framework\Api\ExtensibleDataInterface;
-
 /**
+ * FacetBoostBury Interface used in Facet
+ *
  * @api v11
- * @see https://developerdocs.hawksearch.com/docs/facet-object#facet-boost-bury
+ * @since 0.8.0
+ * @see https://developerdocs.hawksearch.com/reference/facet_post_value
+ * @see https://dev.hawksearch.net/swagger/ui/index#!/Facet/Facet_Post_value
  *
  * Since properties in HawkSearch API can be nullable the following argument types in setters
  * should be nullable as well: strings, arrays and objects
  */
-interface FacetBoostBuryInterface extends ExtensibleDataInterface
+interface FacetBoostBuryInterface
 {
     /**#@+
      * Constants for keys of data array

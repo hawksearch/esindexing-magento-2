@@ -22,6 +22,10 @@ use Magento\Store\Model\Store;
 use Magento\Tax\Helper\Data as TaxHelper;
 use Magento\Tax\Model\Config as TaxConfig;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 class PricingHelper extends AbstractHelper
 {
     /**

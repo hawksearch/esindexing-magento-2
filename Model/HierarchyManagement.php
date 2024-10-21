@@ -19,6 +19,10 @@ use HawkSearch\Connector\Gateway\InstructionException;
 use HawkSearch\EsIndexing\Api\HierarchyManagementInterface;
 use Magento\Framework\Exception\NotFoundException;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 class HierarchyManagement implements HierarchyManagementInterface
 {
     /**

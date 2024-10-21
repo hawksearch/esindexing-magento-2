@@ -15,6 +15,10 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexing;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 interface ItemsDataProviderInterface
 {
     /**

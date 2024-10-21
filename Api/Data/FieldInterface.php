@@ -16,8 +16,9 @@ namespace HawkSearch\EsIndexing\Api\Data;
 
 /**
  * @api v11
- * @see https://developerdocs.hawksearch.com/reference/field_get
- * @see https://developerdocs.hawksearch.com/docs/field-object
+ * @since 0.8.0
+ * @see https://developerdocs.hawksearch.com/reference/field_post_value
+ * @see https://dev.hawksearch.net/swagger/ui/index#!/Field/Field_Post_value
  *
  * Since properties in HawkSearch API can be nullable the following argument types in setters
  * should be nullable as well: strings, arrays and objects
@@ -29,13 +30,13 @@ interface FieldInterface
      */
     const FIELD_ID = 'FieldId';
     const SYNC_GUID = 'SyncGuid';
-    const NAME = 'Name';
-    const FIELD_TYPE = 'FieldType';
     const LABEL = 'Label';
+    const NAME = 'Name';
+    const IS_PRIMARY_KEY = 'IsPrimaryKey';
     const TYPE = 'Type';
+    const FIELD_TYPE = 'FieldType';
     const BOOST = 'Boost';
     const FACET_HANDLER = 'FacetHandler';
-    const IS_PRIMARY_KEY = 'IsPrimaryKey';
     const IS_OUTPUT = 'IsOutput';
     const IS_SHINGLE = 'IsShingle';
     const IS_BEST_FRAGMENT = 'IsBestFragment';
@@ -106,28 +107,6 @@ interface FieldInterface
     /**
      * @return string
      */
-    public function getName(): string;
-
-    /**
-     * @param string|null $value
-     * @return $this
-     */
-    public function setName(?string $value): FieldInterface;
-
-    /**
-     * @return string
-     */
-    public function getFieldType(): string;
-
-    /**
-     * @param string|null $value
-     * @return $this
-     */
-    public function setFieldType(?string $value): FieldInterface;
-
-    /**
-     * @return string
-     */
     public function getLabel(): string;
 
     /**
@@ -139,6 +118,28 @@ interface FieldInterface
     /**
      * @return string
      */
+    public function getName(): string;
+
+    /**
+     * @param string|null $value
+     * @return $this
+     */
+    public function setName(?string $value): FieldInterface;
+
+    /**
+     * @return bool
+     */
+    public function getIsPrimaryKey(): bool;
+
+    /**
+     * @param bool $value
+     * @return $this
+     */
+    public function setIsPrimaryKey(bool $value): FieldInterface;
+
+    /**
+     * @return string
+     */
     public function getType(): string;
 
     /**
@@ -146,6 +147,17 @@ interface FieldInterface
      * @return $this
      */
     public function setType(?string $value): FieldInterface;
+
+    /**
+     * @return string
+     */
+    public function getFieldType(): string;
+
+    /**
+     * @param string|null $value
+     * @return $this
+     */
+    public function setFieldType(?string $value): FieldInterface;
 
     /**
      * @return int
@@ -168,17 +180,6 @@ interface FieldInterface
      * @return $this
      */
     public function setFacetHandler(int $value): FieldInterface;
-
-    /**
-     * @return bool
-     */
-    public function getIsPrimaryKey(): bool;
-
-    /**
-     * @param bool $value
-     * @return $this
-     */
-    public function setIsPrimaryKey(bool $value): FieldInterface;
 
     /**
      * @return bool

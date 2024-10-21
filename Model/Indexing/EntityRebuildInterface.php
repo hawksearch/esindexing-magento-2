@@ -17,6 +17,10 @@ namespace HawkSearch\EsIndexing\Model\Indexing;
 
 use Magento\Framework\Api\SearchCriteriaInterface;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 interface EntityRebuildInterface
 {
     /**

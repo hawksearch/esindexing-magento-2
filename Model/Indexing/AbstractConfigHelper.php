@@ -16,6 +16,10 @@ namespace HawkSearch\EsIndexing\Model\Indexing;
 
 use HawkSearch\EsIndexing\Model\Config\Indexing as IndexingConfig;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 abstract class AbstractConfigHelper
 {
     /**
