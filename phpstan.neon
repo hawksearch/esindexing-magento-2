@@ -1,0 +1,23 @@
+parameters:
+    level: 7
+    reportUnmatchedIgnoredErrors: false
+    fileExtensions:
+        - php
+        - phtml
+    paths:
+        - Api
+        - Block
+        - Console
+        - Controller
+        - Gateway
+        - Helper
+        - Logger
+        - Model
+        - Observer
+        - Plugin
+        - Registry
+        - Service
+        - Setup
+        - Ui
+        - view/adminhtml/templates
+        - view/frontend/templates

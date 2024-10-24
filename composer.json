@@ -13,6 +13,11 @@
         "ext-mbstring": "*",
         "ext-dom": "*"
     },
+    "require-dev": {
+        "phpcompatibility/php-compatibility": "^9.3",
+        "bitexpert/phpstan-magento": "*",
+        "phpstan/extension-installer": "*"
+    },
     "conflict": {
         "hawksearch/datafeed": "*",
         "hawksearch/proxy": "*"
@@ -24,5 +29,10 @@
         "files": [
             "registration.php"
         ]
+    },
+    "config": {
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
     }
 }
