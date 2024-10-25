@@ -40,7 +40,7 @@ interface IndexManagementInterface
      * @param bool $useCurrent
      * @return string
      */
-    public function getIndexName($useCurrent = false) : ?string;
+    public function getIndexName(bool $useCurrent = false) : ?string;
 
     /**
      * Remove index
@@ -60,15 +60,15 @@ interface IndexManagementInterface
     public function switchIndices();
 
     /**
-     * @param array $items
+     * @param list<array<string, mixed>> $items
      * @param string $indexName
      * @return void
-     * @todo use \HawkSearch\EsIndexing\Api\Data\IndexItemsContextInterface as input array
+     * @todo use \HawkSearch\EsIndexing\Api\Data\IndexItemsContextInterface[] as input array
      */
     public function indexItems(array $items, string $indexName);
 
     /**
-     * @param array $ids
+     * @param string[] $ids
      * @param string $indexName
      * @return void
      */

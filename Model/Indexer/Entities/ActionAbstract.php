@@ -68,6 +68,7 @@ abstract class ActionAbstract
      *
      * @param array|int $ids
      * @return $this
+     * @noinspection PhpMissingParamTypeInspection
      */
     abstract public function execute($ids);
 

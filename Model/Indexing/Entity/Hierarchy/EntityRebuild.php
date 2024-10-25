@@ -46,7 +46,7 @@ class EntityRebuild extends AbstractEntityRebuild
      * @param CategoryInterface|Category|DataObject $entityItem
      * @inheritDoc
      */
-    protected function getEntityId($entityItem): ?int
+    protected function getEntityId(DataObject $entityItem): ?int
     {
         return (int)$entityItem->getId();
     }
@@ -54,7 +54,7 @@ class EntityRebuild extends AbstractEntityRebuild
     /**
      * @inheritdoc
      */
-    protected function castAttributeValue($value)
+    protected function castAttributeValue(mixed $value)
     {
         return $value === '' ? null : $value;
     }

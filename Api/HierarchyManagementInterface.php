@@ -24,9 +24,10 @@ interface HierarchyManagementInterface
 {
     /**
      * Upsert Hierarchy
-     * @param array $items
+     * @param list<array<string, mixed>> $items
      * @param string $indexName
      * @return void
+     * @todo use \HawkSearch\EsIndexing\Api\Data\HierarchyInterface[] as input array
      */
     public function upsertHierarchy(array $items, string $indexName);
 
@@ -39,7 +40,7 @@ interface HierarchyManagementInterface
 
     /**
      * Removes multiple documents from a specific hierarchy based on ids
-     * @param array $ids
+     * @param string[] $ids
      * @param string $indexName
      * @return void
      */

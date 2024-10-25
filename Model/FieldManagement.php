@@ -15,9 +15,11 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model;
 
-use HawkSearch\Connector\Gateway\Instruction\InstructionManagerPool;
+use HawkSearch\Connector\Gateway\Instruction\InstructionManagerInterface;
+use HawkSearch\Connector\Gateway\Instruction\InstructionManagerPoolInterface;
 use HawkSearch\EsIndexing\Api\Data\FieldInterface;
 use HawkSearch\EsIndexing\Api\FieldManagementInterface;
+use Magento\Framework\Api\AbstractSimpleObject;
 use Magento\Framework\Exception\CouldNotSaveException;
 
 /**
@@ -27,17 +29,17 @@ use Magento\Framework\Exception\CouldNotSaveException;
 class FieldManagement implements FieldManagementInterface
 {
     /**
-     * @var InstructionManagerPool
+     * @var InstructionManagerPoolInterface<string, InstructionManagerInterface>
      */
-    private InstructionManagerPool $instructionManagerPool;
+    private InstructionManagerPoolInterface $instructionManagerPool;
 
     /**
      * FieldsManagement constructor.
      *
-     * @param InstructionManagerPool $instructionManagerPool
+     * @param InstructionManagerPoolInterface<string, InstructionManagerInterface> $instructionManagerPool
      */
     public function __construct(
-        InstructionManagerPool $instructionManagerPool
+        InstructionManagerPoolInterface $instructionManagerPool
     ) {
         $this->instructionManagerPool = $instructionManagerPool;
     }
@@ -68,7 +70,7 @@ class FieldManagement implements FieldManagementInterface
     {
         /** @var FieldInterface $returnedField */
         $returnedField = $this->instructionManagerPool->get('hawksearch-esindexing')
-            ->executeByCode('addField', $field->__toArray())->get();
+            ->executeByCode('addField', $this->collectFieldData($field))->get();
 
         if (!$returnedField->getFieldId()) {
             throw new CouldNotSaveException(
@@ -86,7 +88,7 @@ class FieldManagement implements FieldManagementInterface
     {
         /** @var FieldInterface $returnedField */
         $returnedField = $this->instructionManagerPool->get('hawksearch-esindexing')
-            ->executeByCode('updateField', $field->__toArray())->get();
+            ->executeByCode('updateField', $this->collectFieldData($field))->get();
 
         if (!$returnedField->getFieldId()) {
             throw new CouldNotSaveException(
@@ -95,5 +97,22 @@ class FieldManagement implements FieldManagementInterface
         }
 
         return $returnedField;
+    }
+
+    private function collectFieldData(FieldInterface $field): array
+    {
+        if ($field instanceof AbstractSimpleObject) {
+            return $field->__toArray();
+        } else {
+            throw new \InvalidArgumentException(
+                __(
+                    'Argument %1 passed to %2 should be an instance of %3 but %4 is given',
+                    '$field',
+                    __METHOD__,
+                    AbstractSimpleObject::class,
+                    get_class($field)
+                )->render()
+            );
+        }
     }
 }

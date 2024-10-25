@@ -29,7 +29,7 @@ interface DataStorageInterface
      * @param bool $graceful
      * @throws RuntimeException
      */
-    public function set($value, $graceful = false);
+    public function set(mixed $value, bool $graceful = false);
 
     /**
      * Reset DataStorage value
@@ -42,5 +42,5 @@ interface DataStorageInterface
      * @param bool $reset reset value after retrieving
      * @return mixed
      */
-    public function get($reset = false);
+    public function get(bool $reset = false);
 }

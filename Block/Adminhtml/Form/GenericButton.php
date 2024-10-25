@@ -40,10 +40,10 @@ class GenericButton
      * Generate url by route and parameters
      *
      * @param   string $route
-     * @param   array $params
+     * @param   array<string, mixed> $params
      * @return  string
      */
-    public function getUrl($route = '', $params = [])
+    public function getUrl(string $route = '', array $params = [])
     {
         return $this->context->getUrlBuilder()->getUrl($route, $params);
     }

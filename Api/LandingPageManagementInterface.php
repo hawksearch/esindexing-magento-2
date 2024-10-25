@@ -45,7 +45,7 @@ interface LandingPageManagementInterface
     public function updateLandingPages(array $landingPages);
 
     /**
-     * @param array $landingPageIds
+     * @param string[] $landingPageIds
      * @param bool $safeDelete Checks if Landing pages exist before deletion
      * @return void
      */

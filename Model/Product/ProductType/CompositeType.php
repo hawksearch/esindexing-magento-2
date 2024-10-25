@@ -60,12 +60,13 @@ abstract class CompositeType extends DefaultType
 
     /**
      * @inheritdoc
+     * @return array<int, float|null>
      */
     protected function getCustomerGroupPrices(ProductInterface $product): array
     {
         $groupPrices = [];
         foreach ($this->getCustomerGroups() as $group) {
-            $groupId = (string)$group['value'];
+            $groupId = $group['value'];
             $groupPrices[$groupId] = [];
         }
 

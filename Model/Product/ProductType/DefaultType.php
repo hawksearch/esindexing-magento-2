@@ -159,8 +159,8 @@ abstract class DefaultType implements ProductTypeInterface
 
     /**
      * @param string $priceName
-     * @param array $prices
-     * @param array $priceData
+     * @param array<string|int, float|null> $prices
+     * @param array<string, float> $priceData
      */
     protected function addPricesFromArray(string $priceName, array $prices, array &$priceData)
     {
@@ -168,25 +168,25 @@ abstract class DefaultType implements ProductTypeInterface
             if (null === $price) {
                 continue;
             }
-            $this->addSuffixedValue($priceName, $key, $price, $priceData);
+            $this->addSuffixedValue($priceName, (string)$key, $price, $priceData);
         }
     }
 
     /**
      * @param ProductInterface|ProductModel $product
-     * @param $priceData
+     * @param array<string, float> $priceData
      */
-    protected function addPricesIncludingTax(ProductInterface $product, &$priceData)
+    protected function addPricesIncludingTax(ProductInterface $product, array &$priceData)
     {
         $priceDataCopy = $priceData;
         foreach ($priceDataCopy as $key => $price) {
-            $price = $this->handleTax($product, (float)$price, true);
+            $price = $this->handleTax($product, $price, true);
             $this->addSuffixedValue($key, 'include_tax', $price, $priceData);
         }
     }
 
     /**
-     * @param array $priceData
+     * @param array<string, float> $priceData
      * @todo Review if we need to push prices rounded to the index
      */
     protected function roundPrices(array &$priceData)
@@ -198,31 +198,58 @@ abstract class DefaultType implements ProductTypeInterface
 
     /**
      * @param ProductInterface|ProductModel $product
-     * @param array $priceData
+     * @param array<string, float> $priceData
      */
     protected function addFormattedPrices(ProductInterface $product, array &$priceData)
     {
-        $priceDataCopy = $priceData;
+        $priceData = array_merge($priceData, $this->getFormattedPrices($product, $priceData));
+    }
+
+    /**
+     * @param ProductInterface $product
+     * @param array<string, float> $prices
+     * @return array<string, string>
+     */
+    private function getFormattedPrices(ProductInterface $product, array $prices): array
+    {
         $store = $product->getStore();
-        foreach ($priceDataCopy as $key => $price) {
+        $resultPrices = [];
+        foreach ($prices as $key => $price) {
+            $this->addSuffixedValue($key, 'formatted', $price, $resultPrices);
+        }
+
+        foreach ($resultPrices as &$price) {
             $price = $this->priceCurrency->format(
                 $price,
                 false,
                 PriceCurrencyInterface::DEFAULT_PRECISION,
                 $store
             );
-            $this->addSuffixedValue($key, 'formatted', $price, $priceData);
         }
+
+        return $resultPrices;
     }
 
     /**
      * @param string $priceName
-     * @param string|int|float $suffix
-     * @param float|string|int $price
-     * @param array $priceData
+     * @param string $suffix
+     * @param float $price
+     * @param array<string, float> $priceData
      */
-    protected function addSuffixedValue (string $priceName, $suffix, $price, array &$priceData) {
-        $priceData[$priceName . '_' . $suffix] = $price;
+    protected function addSuffixedValue (string $priceName, string $suffix, float $price, array &$priceData)
+    {
+        $priceData = array_merge($priceData, $this->getSuffixedPrice($priceName, $suffix, $price));
+    }
+
+    /**
+     * @param string $priceName
+     * @param string $suffix
+     * @param float $price
+     * @return array<string, float>
+     */
+    private function getSuffixedPrice(string $priceName, string $suffix, float $price)
+    {
+        return [$priceName . '_' . $suffix => $price];
     }
 
     /**
@@ -237,7 +264,7 @@ abstract class DefaultType implements ProductTypeInterface
     }
 
     /**
-     * @return array
+     * @return array<int, array{"label":\Stringable, "value": numeric}>
      */
     protected function getCustomerGroups(): array
     {
@@ -263,7 +290,7 @@ abstract class DefaultType implements ProductTypeInterface
 
     /**
      * @param ProductInterface|ProductModel $product
-     * @return array
+     * @return array<int, float>
      */
     protected function getCustomerGroupPrices(ProductInterface $product): array
     {
@@ -271,7 +298,7 @@ abstract class DefaultType implements ProductTypeInterface
 
         $groupPrices = [];
         foreach ($this->getCustomerGroups() as $group) {
-            $groupId = (string)$group['value'];
+            $groupId = $group['value'];
 
             $productCopy->setData('customer_group_id', $groupId);
             $productCopy->setData('website_id', $productCopy->getStore()->getWebsiteId());
