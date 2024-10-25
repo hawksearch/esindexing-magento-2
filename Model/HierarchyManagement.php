@@ -14,7 +14,8 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model;
 
-use HawkSearch\Connector\Gateway\Instruction\InstructionManagerPool;
+use HawkSearch\Connector\Gateway\Instruction\InstructionManagerInterface;
+use HawkSearch\Connector\Gateway\Instruction\InstructionManagerPoolInterface;
 use HawkSearch\Connector\Gateway\InstructionException;
 use HawkSearch\EsIndexing\Api\HierarchyManagementInterface;
 use Magento\Framework\Exception\NotFoundException;
@@ -26,16 +27,16 @@ use Magento\Framework\Exception\NotFoundException;
 class HierarchyManagement implements HierarchyManagementInterface
 {
     /**
-     * @var InstructionManagerPool
+     * @var InstructionManagerPoolInterface<string, InstructionManagerInterface>
      */
     private $instructionManagerPool;
 
     /**
      * HierarchyManagement constructor.
-     * @param InstructionManagerPool $instructionManagerPool
+     * @param InstructionManagerPoolInterface<string, InstructionManagerInterface> $instructionManagerPool
      */
     public function __construct(
-        InstructionManagerPool $instructionManagerPool
+        InstructionManagerPoolInterface $instructionManagerPool
     ){
         $this->instructionManagerPool = $instructionManagerPool;
     }
@@ -47,15 +48,13 @@ class HierarchyManagement implements HierarchyManagementInterface
      */
     public function upsertHierarchy(array $items, string $indexName)
     {
-        $hierarchies = array_values($items);
-
-        if (!$hierarchies) {
+        if (!$items) {
             return;
         }
 
         $data = [
             'IndexName' => $indexName,
-            'Hierarchies' => $hierarchies
+            'Hierarchies' => $items
         ];
 
         $this->instructionManagerPool

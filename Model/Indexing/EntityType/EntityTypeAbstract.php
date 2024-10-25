@@ -90,7 +90,7 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
         FieldHandlerInterface $fieldHandler,
         ItemsIndexerInterface $itemsIndexer,
         AbstractConfigHelper $configHelper,
-        $typeName = null,
+        string $typeName = null,
         FieldNameProviderInterface $fieldNameProvider = null,
         /**
          * @deprecated 0.7.0 in favour of a new Field Handlers logic.

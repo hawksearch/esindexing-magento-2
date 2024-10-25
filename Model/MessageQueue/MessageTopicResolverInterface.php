@@ -29,5 +29,5 @@ interface MessageTopicResolverInterface
      * @return string
      * @throws  InputException
      */
-    public function resolve($object);
+    public function resolve(object $object);
 }

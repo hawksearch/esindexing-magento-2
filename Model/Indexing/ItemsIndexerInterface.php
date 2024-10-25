@@ -35,7 +35,7 @@ interface ItemsIndexerInterface
     public function update(array $items, string $indexName);
 
     /**
-     * @param array $items
+     * @param string[] $items
      * @param string $indexName
      * @return void
      */

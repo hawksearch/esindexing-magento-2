@@ -265,7 +265,7 @@ interface SearchRequestInterface
     public function getFacetSelections(): array;
 
     /**
-     * @param array|null $value
+     * @param array<string, list<array<string, mixed>>>|null $value
      * @return $this
      */
     public function setFacetSelections(?array $value): self;

@@ -53,7 +53,7 @@ class HierarchyItemsIndexer implements ItemsIndexerInterface
      */
     public function update(array $items, string $indexName)
     {
-        $this->hierarchyManagement->upsertHierarchy($items, $indexName);
+        $this->hierarchyManagement->upsertHierarchy(array_values($items), $indexName);
     }
 
     /**

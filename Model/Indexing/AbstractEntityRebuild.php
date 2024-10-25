@@ -173,7 +173,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
      * Rebuild one batch of Entity items
      *
      * @param SearchCriteriaInterface $searchCriteria
-     * @param array|null $entityIds
+     * @param array<int>|null $entityIds
      * @return void
      * @throws LocalizedException
      * @throws NotFoundException
@@ -259,7 +259,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     /**
      * @param DataObject[] $fullItemsList Full list of items to be indexed
      * @param array|null $entityIds List of entity IDs used for items selection
-     * @return array
+     * @return array<int, string>
      * @throws NotFoundException
      */
     protected function getItemsToRemove(array $fullItemsList, ?array $entityIds = null): array
@@ -267,7 +267,9 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
         $idsToRemove = is_array($entityIds)
             ? array_combine(
                 $entityIds,
-                array_map(function($id) { return $this->addTypePrefix((string)$id);}, $entityIds)
+                array_map(function ($id) {
+                    return $this->addTypePrefix((string)$id);
+                }, $entityIds)
             )
             : [];
         $itemsToRemove = [];
@@ -402,7 +404,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
      * @param mixed $value
      * @return mixed
      */
-    protected function castAttributeValue($value)
+    protected function castAttributeValue(mixed $value)
     {
         if ($value === '') {
             $value = null;
@@ -551,12 +553,14 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     }
 
     /**
-     * @param array $items
+     * @param DataObject[] $items Key of an array item is item ID
+     * @param array<
+     *      $items Key of an array item is item ID
      * @param string $indexName
      * @throws LocalizedException
      * @throws NotFoundException
      */
-    protected function addIndexItems($items, $indexName)
+    protected function addIndexItems(array $items, string $indexName)
     {
         if (!$items) {
             return;
@@ -571,13 +575,13 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     }
 
     /**
-     * @param $items
-     * @param $indexName
+     * @param DataObject[] $items Key of an array item is item ID
+     * @param string $indexName
      * @return void
      * @throws LocalizedException
      * @throws NotFoundException
      */
-    protected function updateIndexItems($items, $indexName)
+    protected function updateIndexItems(array $items, string $indexName)
     {
         if (!$items) {
             return;
@@ -592,11 +596,11 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     }
 
     /**
-     * @param array $ids
+     * @param string[] $ids
      * @param string $indexName
      * @throws NotFoundException
      */
-    protected function deleteIndexItems($ids, $indexName)
+    protected function deleteIndexItems(array $ids, string $indexName)
     {
         if (!$ids) {
             return;

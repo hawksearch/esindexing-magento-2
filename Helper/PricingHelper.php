@@ -61,6 +61,7 @@ class PricingHelper extends AbstractHelper
      * @param string|int|Store $store
      * @param bool $force
      * @return bool
+     * @noinspection PhpMissingParamTypeInspection
      */
     public function isIncludeTax($store, bool $force = false): bool
     {
@@ -73,7 +74,7 @@ class PricingHelper extends AbstractHelper
      * @param bool $forceIncludeTax
      * @return float
      */
-    public function handleTax($product, float $price, bool $forceIncludeTax = false): float
+    public function handleTax(ProductModel $product, float $price, bool $forceIncludeTax = false): float
     {
         $store = $product->getStore();
         $includingTax = $this->isIncludeTax($store, $forceIncludeTax);

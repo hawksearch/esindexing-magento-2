@@ -14,7 +14,8 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model;
 
-use HawkSearch\Connector\Gateway\Instruction\InstructionManagerPool;
+use HawkSearch\Connector\Gateway\Instruction\InstructionManagerInterface;
+use HawkSearch\Connector\Gateway\Instruction\InstructionManagerPoolInterface;
 use HawkSearch\EsIndexing\Api\LandingPageManagementInterface;
 
 /**
@@ -24,16 +25,16 @@ use HawkSearch\EsIndexing\Api\LandingPageManagementInterface;
 class LandingPageManagement implements LandingPageManagementInterface
 {
     /**
-     * @var InstructionManagerPool
+     * @var InstructionManagerPoolInterface<string, InstructionManagerInterface>
      */
     private $instructionManagerPool;
 
     /**
      * LandingPageManagement constructor.
-     * @param InstructionManagerPool $instructionManagerPool
+     * @param InstructionManagerPoolInterface<string, InstructionManagerInterface> $instructionManagerPool
      */
     public function __construct(
-        InstructionManagerPool $instructionManagerPool
+        InstructionManagerPoolInterface $instructionManagerPool
     ){
         $this->instructionManagerPool = $instructionManagerPool;
     }
@@ -70,7 +71,7 @@ class LandingPageManagement implements LandingPageManagementInterface
      */
     public function updateLandingPages(array $landingPages)
     {
-        return $this->instructionManagerPool->get('hawksearch-esindexing')
+        $this->instructionManagerPool->get('hawksearch-esindexing')
             ->executeByCode('updateLandingPagesBulk', $landingPages)->get();
     }
 

@@ -257,13 +257,13 @@ class EntityRebuild extends AbstractEntityRebuild
     }
 
     /**
-     * @param array $ids Landing page Custom field array
+     * @param string[] $ids Landing page Custom field array
      * @param string $indexName
      * @return void
      * @throws NoSuchEntityException
      * @throws NotFoundException
      */
-    protected function deleteIndexItems($ids, $indexName)
+    protected function deleteIndexItems(array $ids, string $indexName)
     {
         $pageIds = [];
         $customFieldMap = $this->getCustomFieldMap();
@@ -291,7 +291,7 @@ class EntityRebuild extends AbstractEntityRebuild
     /**
      * @inheritdoc
      */
-    protected function castAttributeValue($value)
+    protected function castAttributeValue(mixed $value)
     {
         return $value;
     }
@@ -316,7 +316,7 @@ class EntityRebuild extends AbstractEntityRebuild
     /**
      * @inheritDoc
      */
-    protected function addIndexItems($items, $indexName)
+    protected function addIndexItems(array $items, string $indexName)
     {
         if (!$items) {
             return;
@@ -328,7 +328,7 @@ class EntityRebuild extends AbstractEntityRebuild
     /**
      * @inheritDoc
      */
-    protected function updateIndexItems($items, $indexName)
+    protected function updateIndexItems(array $items, string $indexName)
     {
         if (!$items) {
             return;

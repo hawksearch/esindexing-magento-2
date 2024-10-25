@@ -66,7 +66,12 @@ class ObjectHelper
     }
 
     /**
-     * @param array $data
+     * @param array{
+     *     "SearchCriteria::FILTER_GROUPS":array<mixed>,
+     *     "SearchCriteria::SORT_ORDERS":array<mixed>,
+     *     "SearchCriteria::PAGE_SIZE":?int,
+     *     "SearchCriteria::CURRENT_PAGE":?int,
+     * } $data
      * @return SearchCriteria
      */
     public function convertArrayToSearchCriteriaObject(array $data)
@@ -92,10 +97,10 @@ class ObjectHelper
 
     /**
      * @param string $param
-     * @param $value
-     * @return array|mixed
+     * @param mixed $value
+     * @return mixed
      */
-    protected function buildSearchCriteriaValue(string $param, $value)
+    protected function buildSearchCriteriaValue(string $param, mixed $value)
     {
         switch ($param) {
             case 'filter_groups':
@@ -147,14 +152,16 @@ class ObjectHelper
 
     /**
      * Validate array values to be an instance of a class
+     * Used as array_walk callable
      *
      * @param object $item
      * @param int $key
      * @param string $className
      * @return void
      * @throws \InvalidArgumentException
+     * @todo remove $key argument, use a closure for array_walk explicitely and use this method implicitely in the closure
      */
-    public static function validateObjectValue($item, $key, string $className)
+    public static function validateObjectValue(object $item, int $key, string $className)
     {
         if (!$item instanceof $className) {
             throw new \InvalidArgumentException(

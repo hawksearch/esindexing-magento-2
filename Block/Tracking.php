@@ -50,7 +50,7 @@ class Tracking extends Template
      * @param OrderCollectionFactory $orderCollectionFactory
      * @param ProductEntityType $productEntityType
      * @param EventTrackingConfig $eventTrackingConfig
-     * @param array $data
+     * @param array<string,mixed> $data
      * @param SerializerInterface|null $serializer
      */
     public function __construct(
