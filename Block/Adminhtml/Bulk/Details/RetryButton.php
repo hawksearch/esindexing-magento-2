@@ -39,7 +39,6 @@ class RetryButton implements ButtonProviderInterface
      *
      * @param Details $details
      * @param RequestInterface $request
-     * @param string $targetName
      */
     public function __construct(
         Details $details,
