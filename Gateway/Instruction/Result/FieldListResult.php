@@ -21,10 +21,13 @@ use HawkSearch\EsIndexing\Api\Data\FieldInterfaceFactory;
 use HawkSearch\EsIndexing\Api\Data\FieldInterface;
 use Magento\Framework\Api\DataObjectHelper;
 
+/**
+ * @phpstan-import-type HttpResult from ResultInterface
+ */
 class FieldListResult implements ResultInterface
 {
     /**
-     * @var array
+     * @var HttpResult
      */
     private array $result;
 
@@ -53,7 +56,7 @@ class FieldListResult implements ResultInterface
      * @param DataObjectHelper $dataObjectHelper
      * @param HawkSearchDataObjectHelper $hawksearchDataObjectHelper
      * @param HttpResponseReader $httpResponseReader
-     * @param array $result
+     * @param HttpResult $result
      */
     public function __construct(
         FieldInterfaceFactory $fieldInterfaceFactory,

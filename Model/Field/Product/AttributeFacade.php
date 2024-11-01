@@ -43,7 +43,7 @@ class AttributeFacade
     /**
      * @return $this
      */
-    protected function processSearchable($field): AttributeFacade
+    protected function processSearchable(FieldInterface $field): AttributeFacade
     {
         $this->setFieldSearchable($field, $this->attribute->isSearchable());
         return $this;
@@ -52,7 +52,7 @@ class AttributeFacade
     /**
      * @return $this
      */
-    protected function processFilterable($field): AttributeFacade
+    protected function processFilterable(FieldInterface $field): AttributeFacade
     {
         $this->setFieldFilterable($field, $this->attribute->isFilterable());
         return $this;
@@ -61,7 +61,7 @@ class AttributeFacade
     /**
      * @return $this
      */
-    protected function processSortable($field): AttributeFacade
+    protected function processSortable(FieldInterface $field): AttributeFacade
     {
         $this->setFieldSortable($field, $this->attribute->isSortable());
         return $this;

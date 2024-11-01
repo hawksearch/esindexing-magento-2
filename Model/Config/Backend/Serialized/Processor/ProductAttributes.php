@@ -33,6 +33,11 @@ use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Serialize\SerializerInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @phpstan-type ValueItemRow array{'field': string, 'attribute': string, 'field_new'?: string}
+ * @phpstan-type ValueItems array<string, ValueItemRow>
+ * @implements ValueProcessorInterface<ValueItems, ValueItems>
+ */
 class ProductAttributes implements ValueProcessorInterface
 {
     /**
@@ -131,9 +136,6 @@ class ProductAttributes implements ValueProcessorInterface
         $this->serializer = $serializer ?? ObjectManager::getInstance()->get(SerializerInterface::class);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function process(array $value, ValueInterface $configValue): array
     {
         $value = $resultSave = $this->filterValue($value);
@@ -182,17 +184,16 @@ class ProductAttributes implements ValueProcessorInterface
     }
 
     /**
-     * @param array $value
-     * @return array
+     * @param ValueItems $value
+     * @return ValueItems
      */
     protected function filterValue(array $value): array
     {
         $usedFields = [];
-        $filterItem = function($v, $k) use (&$usedFields) {
+        $filterItem = function(array $v, string $k) use (&$usedFields) {
             //check item key
             $isEmptyKey = $k === '__empty';
 
-            $v = (array)$v;
             //check item value
             $isEmptyField = empty($v[self::COLUMN_FIELD]);
             $isEmptyNewField = (
@@ -213,17 +214,17 @@ class ProductAttributes implements ValueProcessorInterface
     }
 
     /**
-     * @param $rows
-     * @param array $oldConfigValue
-     * @return array
+     * @param ValueItems $rows
+     * @param ValueItems $oldConfigValue
+     * @return ValueItems
      */
-    protected function getRowsUpdated($rows, array $oldConfigValue): array
+    protected function getRowsUpdated(array $rows, array $oldConfigValue): array
     {
         $fields = array_column($oldConfigValue, self::COLUMN_FIELD);
         $attributes = array_column($oldConfigValue, self::COLUMN_ATTRIBUTE);
         $oldConfigCombined = array_combine($fields, $attributes);
 
-        $filterItem = function($v) use ($oldConfigCombined) {
+        $filterItem = function(array $v) use ($oldConfigCombined) {
             $isChangedField = !array_key_exists($v[self::COLUMN_FIELD], $oldConfigCombined)
                 && $v[self::COLUMN_FIELD] !== self::SELECT_OPTION_NEW_FILED_VALUE;
             $isChangedAttribute = isset($oldConfigCombined[$v[self::COLUMN_FIELD]])
@@ -236,12 +237,12 @@ class ProductAttributes implements ValueProcessorInterface
     }
 
     /**
-     * @param array $rows
-     * @return array
+     * @param ValueItems $rows
+     * @return ValueItems
      */
     protected function getRowsCreated(array $rows): array
     {
-        $filterItem = function ($v) {
+        $filterItem = function(array $v) {
             return $v[self::COLUMN_FIELD] === self::SELECT_OPTION_NEW_FILED_VALUE
                 && isset($v[self::COLUMN_FIELD_NEW]);
         };
@@ -250,7 +251,7 @@ class ProductAttributes implements ValueProcessorInterface
     }
 
     /**
-     * @param array $fieldData
+     * @param ValueItemRow $fieldData
      * @return FieldInterface
      * @throws CouldNotSaveException
      */
@@ -268,7 +269,7 @@ class ProductAttributes implements ValueProcessorInterface
     }
 
     /**
-     * @param array $fieldData
+     * @param ValueItemRow $fieldData
      * @return FieldInterface
      * @throws NotFoundException|CouldNotSaveException
      */

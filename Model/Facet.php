@@ -30,31 +30,31 @@ class Facet extends AbstractSimpleObject implements FacetInterface
 
     /**
      * @param FacetBoostBuryInterfaceFactory $facetBoostBuryFactory
-     * @param array $data
+     * @param array<self::*, mixed> $data
      */
     public function __construct(
         FacetBoostBuryInterfaceFactory $facetBoostBuryFactory,
         array $data = [
-            "Name" => "", // should be specified during facet creation
-            "Field" => "",  // should be specified during facet creation
-            "FacetType" => "checkbox",
-            "FieldType" => "string",
-            "MaxCount" => 0,
-            "MinHitCount" => 0,
-            "DisplayType" => "default",
-            "ScrollHeight" => 0,
-            "ScrollThreshold" => 0,
-            "TruncateThreshold" => 0,
-            "SearchThreshold" => 0,
-            "SortOrder" => 0,
-            "ExpandSelection" => false,
-            "IsCurrency" => false,
-            "IsNumeric" => false,
-            "IsSearch" => false,
-            "IsVisible" => false,
-            "IsCollapsible" => false,
-            "IsCollapsedDefault" => false,
-            "ShowSliderInputs" => false
+            self::NAME => "", // should be specified during facet creation
+            self::FIELD => "",  // should be specified during facet creation
+            self::FACET_TYPE => "checkbox",
+            self::FIELD_TYPE => "string",
+            self::MAX_COUNT => 0,
+            self::MIN_HIT_COUNT => 0,
+            self::DISPLAY_TYPE => "default",
+            self::SCROLL_HEIGHT => 0,
+            self::SCROLL_THRESHOLD => 0,
+            self::TRUNCATE_THRESHOLD => 0,
+            self::SEARCH_THRESHOLD => 0,
+            self::SORT_ORDER => 0,
+            self::EXPAND_SELECTION => false,
+            self::IS_CURRENCY => false,
+            self::IS_NUMERIC => false,
+            self::IS_SEARCH => false,
+            self::IS_VISIBLE => false,
+            self::IS_COLLAPSIBLE => false,
+            self::IS_COLLAPSED_DEFAULT => false,
+            self::SHOW_SLIDER_INPUTS => false
         ]
     ) {
         parent::__construct($data);

@@ -54,7 +54,7 @@ class CustomJoinProcessor implements CollectionProcessorInterface
             if (isset($this->appliedJoins[$joinName])) {
                 continue;
             }
-            $this->applyCustomJoin($joinName, $collection);
+            $this->applyCustomJoin((string)$joinName, $collection);
         }
     }
 
@@ -65,7 +65,7 @@ class CustomJoinProcessor implements CollectionProcessorInterface
      * @param AbstractDb $collection
      * @return void
      */
-    private function applyCustomJoin($joinName, AbstractDb $collection)
+    private function applyCustomJoin(string $joinName, AbstractDb $collection)
     {
         $customJoin = $this->getCustomJoin($joinName);
 
@@ -81,7 +81,7 @@ class CustomJoinProcessor implements CollectionProcessorInterface
      * @return CustomJoinInterface|null
      * @throws \InvalidArgumentException
      */
-    private function getCustomJoin($joinName)
+    private function getCustomJoin(string $joinName)
     {
         $joinType = null;
         if (isset($this->joins[$joinName])) {

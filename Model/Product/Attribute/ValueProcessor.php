@@ -34,7 +34,7 @@ class ValueProcessor implements ValueProcessorInterface
     /**
      * @inheritDoc
      */
-    public function process(Attribute $attribute, $value, $relatedValues = [])
+    public function process(Attribute $attribute, array $value, array $relatedValues = [])
     {
         if ($this->isRollUpAttributeStrategy($attribute)) {
             $value = array_merge($value, $relatedValues);

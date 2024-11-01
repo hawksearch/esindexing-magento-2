@@ -52,11 +52,10 @@ class OnCartRemoveTrackingEventPlugin
     /**
      * @param Quote $subject
      * @param int $itemId
-     * @param DataObject  $buyRequest
-     * @param null|array|DataObject $params
      * @return null
+     * @noinspection PhpMissingParamTypeInspection
      */
-    public function beforeUpdateItem(Quote $subject, $itemId, $buyRequest, $params = null)
+    public function beforeUpdateItem(Quote $subject, $itemId)
     {
         $item = $subject->getItemById($itemId);
         $this->qty = $item ? $item->getQty() : 0;
@@ -68,12 +67,11 @@ class OnCartRemoveTrackingEventPlugin
      * @param Quote $subject
      * @param QuoteItem $result
      * @param int $itemId
-     * @param DataObject $buyRequest
-     * @param null|array|DataObject $params
      * @return QuoteItem
      * @throws \Magento\Framework\Exception\RuntimeException
+     * @noinspection PhpMissingParamTypeInspection
      */
-    public function afterUpdateItem(Quote $subject, $result, $itemId, $buyRequest, $params = null)
+    public function afterUpdateItem(Quote $subject, QuoteItem $result, $itemId)
     {
         if ($this->qty > $result->getQty() && (int)$itemId === (int)$result->getItemId()) {
             $this->addItemToTriggerList($result, $this->qty - $result->getQty());
@@ -88,12 +86,13 @@ class OnCartRemoveTrackingEventPlugin
      * @param int $itemId
      * @return Quote
      * @throws \Magento\Framework\Exception\RuntimeException
+     * @noinspection PhpMissingParamTypeInspection
      */
-    public function afterRemoveItem(Quote $subject, $result, $itemId)
+    public function afterRemoveItem(Quote $subject, Quote $result, $itemId)
     {
         $item = $subject->getItemById($itemId);
-        if ($item) {
-            $this->addItemToTriggerList($item, $item->getQty());
+        if ($item instanceof QuoteItem) {
+            $this->addItemToTriggerList($item, $item->getQty() - 0);
         }
 
         return $result;
@@ -105,7 +104,7 @@ class OnCartRemoveTrackingEventPlugin
      * @return void
      * @throws \Magento\Framework\Exception\RuntimeException
      */
-    private function addItemToTriggerList($resultItem, $qty)
+    private function addItemToTriggerList(QuoteItem $resultItem, float $qty)
     {
         if ($this->eventTrackingConfig->isEnabled()) {
             $this->cartItemsToRemoveDataStorage->reset();

@@ -17,20 +17,19 @@ namespace HawkSearch\EsIndexing\Gateway\Request;
 use HawkSearch\Connector\Gateway\InstructionException;
 use HawkSearch\Connector\Gateway\Request\BuilderInterface;
 use HawkSearch\EsIndexing\Api\Data\LandingPageInterface;
+use HawkSearch\EsIndexing\Model\LandingPage;
 
 class LandingPageListBuilder implements BuilderInterface
 {
     /**
      * Build request with Landing Pages collection
      *
-     * @param array $buildSubject
-     * @return array
      * @throws InstructionException
      */
     public function build(array $buildSubject)
     {
         $data = [];
-        /** @var LandingPageInterface $landingPage */
+        /** @var LandingPage $landingPage */
         foreach ($buildSubject as $landingPage) {
             if (!$landingPage instanceof LandingPageInterface) {
                 throw new InstructionException(__('Invalid request. Class: %1', self::class));

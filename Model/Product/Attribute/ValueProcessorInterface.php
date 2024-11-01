@@ -27,5 +27,5 @@ interface ValueProcessorInterface
      * @param array $relatedValues
      * @return array
      */
-    public function process(Attribute $attribute, $value, $relatedValues = []);
+    public function process(Attribute $attribute, array $value, array $relatedValues = []);
 }

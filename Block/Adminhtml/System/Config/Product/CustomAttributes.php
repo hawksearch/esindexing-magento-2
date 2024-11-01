@@ -45,7 +45,7 @@ class CustomAttributes extends AbstractFieldArray
      * @param Template\Context $context
      * @param HawksearchFields $hawksearchFields
      * @param ProductAttributes $productAttributes
-     * @param array $data
+     * @param array<string, mixed> $data
      */
     public function __construct(
         Template\Context $context,
@@ -95,7 +95,7 @@ class CustomAttributes extends AbstractFieldArray
      * Add a column to array-grid
      *
      * @param string $name
-     * @param array $params
+     * @param array<string, mixed> $params
      * @return void
      */
     public function addColumn($name, $params)

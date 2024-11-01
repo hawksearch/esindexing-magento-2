@@ -21,30 +21,30 @@ class Field extends AbstractSimpleObject implements FieldInterface
 {
     /**
      * Field constructor.
-     * @param array $data
+     * @param array<self::*, mixed> $data
      */
     public function __construct(
         array $data = [
-            "Name" => '', // should be specified during field creation
-            "Label" => '', // should be specified during field creation
-            "FieldType" => "keyword",
-            "Type" => "String",
-            "Boost" => 1,
-            "FacetHandler" => 0,
-            "IsPrimaryKey" => false,
-            "IsOutput" => false,
-            "IsShingle" => false,
-            "IsBestFragment" => false,
-            "IsDictionary" => false,
-            "IsSort" => false,
-            "IsPrefix" => false,
-            "IsHidden" => false,
-            "IsCompare" => false,
-            "IsKeywordText" => true,
-            "IsQuery" => false,
-            "IsQueryText" => false,
-            "SkipCustom" => false,
-            "StripHtml" => false
+            self::NAME => '', // should be specified during field creation
+            self::LABEL => '', // should be specified during field creation
+            self::FIELD_TYPE => "keyword",
+            self::TYPE => "String",
+            self::BOOST => 1,
+            self::FACET_HANDLER => 0,
+            self::IS_PRIMARY_KEY => false,
+            self::IS_OUTPUT => false,
+            self::IS_SHINGLE => false,
+            self::IS_BEST_FRAGMENT => false,
+            self::IS_DICTIONARY => false,
+            self::IS_SORT => false,
+            self::IS_PREFIX => false,
+            self::IS_HIDDEN => false,
+            self::IS_COMPARE => false,
+            self::IS_KEYWORD_TEXT => true,
+            self::IS_QUERY => false,
+            self::IS_QUERY_TEXT => false,
+            self::SKIP_CUSTOM => false,
+            self::STRIP_HTML => false
         ]
     ) {
         parent::__construct($data);

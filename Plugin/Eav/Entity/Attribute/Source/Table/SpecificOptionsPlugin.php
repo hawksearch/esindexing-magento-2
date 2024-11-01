@@ -31,8 +31,9 @@ class SpecificOptionsPlugin
      * @param array|string $ids
      * @param bool $withEmpty
      * @return array
+     * @noinspection PhpMissingParamTypeInspection
      */
-    public function aroundGetSpecificOptions(Table $subject, callable $proceed, $ids, $withEmpty = true): array
+    public function aroundGetSpecificOptions(Table $subject, callable $proceed, $ids, bool $withEmpty = true): array
     {
         $allOptions = $subject->getAllOptions(true);
         $emptyOption = array_shift($allOptions);

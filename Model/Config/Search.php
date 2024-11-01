@@ -27,8 +27,10 @@ class Search extends ConfigProvider
 
     /**
      * Check if search is enabled for selected store
+     *
      * @param null|int|string $store
      * @return bool
+     * @noinspection PhpMissingParamTypeInspection
      */
     public function isSearchEnabled($store = null): bool
     {

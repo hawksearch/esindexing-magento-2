@@ -106,7 +106,7 @@ class CategoryPlugin
      * @param int $pageId
      * @return void
      */
-    protected function reindexCategoryRow($pageId)
+    protected function reindexCategoryRow(int $pageId)
     {
         if (!$this->categoryIndexer->isScheduled()) {
             $this->categoryIndexer->reindexRow($pageId);

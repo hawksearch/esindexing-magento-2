@@ -63,7 +63,7 @@ class ActionEntityDefault extends ActionAbstract
      * @inheritDoc
      * @throws LocalizedException
      */
-    public function execute($ids)
+    public function execute(array $ids)
     {
         if (!is_array($ids)) {
             $ids = [$ids];
