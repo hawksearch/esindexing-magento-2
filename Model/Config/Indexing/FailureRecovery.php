@@ -42,6 +42,7 @@ class FailureRecovery extends ConfigProvider
      *
      * @param null|int|string $store
      * @return bool
+     * @noinspection PhpMissingParamTypeInspection
      */
     public function isEnabled($store = null): bool
     {
@@ -53,6 +54,7 @@ class FailureRecovery extends ConfigProvider
      *
      * @param null|int|string $store
      * @return int
+     * @noinspection PhpMissingParamTypeInspection
      */
     public function getMaximumRetries($store = null): int
     {
@@ -64,6 +66,7 @@ class FailureRecovery extends ConfigProvider
      *
      * @param null|int|string $store
      * @return int
+     * @noinspection PhpMissingParamTypeInspection
      */
     public function getMaximumOpenDelay($store = null): int
     {

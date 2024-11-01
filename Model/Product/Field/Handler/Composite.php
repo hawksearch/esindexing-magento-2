@@ -87,7 +87,7 @@ class Composite extends \HawkSearch\EsIndexing\Model\Indexing\FieldHandler\Compo
      * @param mixed $value
      * @return array
      */
-    private function formatValue($value)
+    private function formatValue(mixed $value)
     {
         $result = [];
         if (is_array($value)) {

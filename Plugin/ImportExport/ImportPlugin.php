@@ -39,12 +39,12 @@ class ImportPlugin
      * After import handler
      *
      * @param Import $subject
-     * @param bool $import
+     * @param mixed $import
      *
      * @return bool
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterImportSource(Import $subject, $import)
+    public function afterImportSource(Import $subject, mixed $import)
     {
         if (!$this->productIndexer->isScheduled()) {
             $this->productIndexer->invalidate();

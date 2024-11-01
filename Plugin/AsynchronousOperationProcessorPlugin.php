@@ -163,10 +163,12 @@ class AsynchronousOperationProcessorPlugin
 
     /**
      * @param OperationProcessor $subject
-     * @param $result
+     * @param null $result
      * @param string $encodedMessage
      * @return void
      * @throws LocalizedException
+     * @noinspection PhpMissingParamTypeInspection
+     * @phpstan-ignore missingType.parameter
      */
     public function afterProcess(OperationProcessor $subject, $result, string $encodedMessage)
     {

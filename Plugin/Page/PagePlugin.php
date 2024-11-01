@@ -79,7 +79,7 @@ class PagePlugin
             $pageResource->beginTransaction();
             $result = $proceed($object);
             $pageResource->addCommitCallback(function () use ($object) {
-                $this->reindexRow($object->getId());
+                $this->reindexRow((int)$object->getId());
             });
             $pageResource->commit();
         } catch (\Exception $e) {
@@ -96,7 +96,7 @@ class PagePlugin
      * @param int $pageId
      * @return void
      */
-    protected function reindexRow($pageId)
+    private function reindexRow(int $pageId)
     {
         if (!$this->pageIndexer->isScheduled()) {
             $this->pageIndexer->reindexRow($pageId);

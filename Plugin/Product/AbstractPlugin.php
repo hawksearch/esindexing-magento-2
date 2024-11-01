@@ -40,7 +40,7 @@ abstract class AbstractPlugin
      * @param int $productId
      * @return void
      */
-    protected function reindexRow($productId)
+    protected function reindexRow(int $productId)
     {
         if (!$this->productIndexer->isScheduled()) {
             $this->productIndexer->reindexRow($productId);

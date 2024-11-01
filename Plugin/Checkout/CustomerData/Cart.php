@@ -45,7 +45,7 @@ class Cart
      * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterGetSectionData(CustomerDataCart $subject, $result)
+    public function afterGetSectionData(CustomerDataCart $subject, array $result)
     {
         $items = $this->getQuote()->getAllVisibleItems();
         if (is_array($result['items'])) {

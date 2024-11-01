@@ -62,12 +62,10 @@ class ActionFull extends ActionAbstract
     /**
      * Execute full reindex action
      *
-     * @param null|array $ids
-     * @return $this
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @throws LocalizedException
      */
-    public function execute($ids = null)
+    public function execute(?array $ids = null)
     {
         try {
             $currentStore = $this->storeManager->getStore();
