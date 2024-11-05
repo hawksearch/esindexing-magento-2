@@ -58,7 +58,7 @@ class VueAdditionalParametersProcessor implements LayoutConfigProcessorInterface
     /**
      * @inheritDoc
      */
-    public function process($jsConfig)
+    public function process(array $jsConfig)
     {
         $params = [];
         $queryParam = [];
@@ -73,7 +73,6 @@ class VueAdditionalParametersProcessor implements LayoutConfigProcessorInterface
             $params['Query'] = implode(' AND ', $queryParam);
         }
 
-        $jsConfig = $jsConfig ?? [];
         $jsConfig['additionalParameters'] = $params;
 
         return $jsConfig;

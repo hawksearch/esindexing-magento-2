@@ -63,9 +63,8 @@ class RequestConfigProcessor implements LayoutConfigProcessorInterface
     /**
      * @inheritDoc
      */
-    public function process($jsConfig)
+    public function process(array $jsConfig)
     {
-        $jsConfig = $jsConfig ?? [];
         $jsConfig['request'] = [
             'query' => $this->request->getParam($this->searchHelper->getQueryParamName()),
             'url' => $this->urlBuilder->getUrl('*/*/*', [

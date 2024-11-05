@@ -80,7 +80,7 @@ class CatalogConfigProcessor implements LayoutConfigProcessorInterface
      *
      * @inheritDoc
      */
-    public function process($jsConfig)
+    public function process(array $jsConfig)
     {
         $urlRewritesConfig = $this->getUrlRewritesConfig();
         $config = [
@@ -95,7 +95,7 @@ class CatalogConfigProcessor implements LayoutConfigProcessorInterface
             ]
         ];
 
-        return array_merge_recursive($jsConfig ?? [], $config);
+        return array_merge_recursive($jsConfig, $config);
     }
 
     /**

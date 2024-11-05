@@ -21,9 +21,8 @@ class VueResultItemConfigProcessor implements LayoutConfigProcessorInterface
     /**
      * @inheritDoc
      */
-    public function process($jsConfig)
+    public function process(array $jsConfig)
     {
-        $jsConfig = $jsConfig ?? [];
         $jsConfig['resultItem'] = [
             'linkField' => 'url'
         ];
