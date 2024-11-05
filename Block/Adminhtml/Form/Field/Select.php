@@ -24,7 +24,7 @@ class Select extends HtmlSelect
      * @param string $value
      * @return $this
      */
-    public function setInputName($value)
+    public function setInputName(string $value)
     {
         return $this->setName($value);
     }
@@ -32,10 +32,10 @@ class Select extends HtmlSelect
     /**
      * Set "id" for <select> element
      *
-     * @param $value
+     * @param string $value
      * @return $this
      */
-    public function setInputId($value)
+    public function setInputId(string $value)
     {
         return $this->setId($value);
     }

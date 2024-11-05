@@ -146,7 +146,7 @@ class CustomAttributes extends AbstractFieldArray
      * @throws LocalizedException
      * @throws \Exception
      */
-    protected function getColumnRenderer($columnName)
+    protected function getColumnRenderer(string $columnName)
     {
         if (empty($this->_columns[$columnName])) {
             throw new \Exception('Wrong column name specified.');
@@ -169,7 +169,7 @@ class CustomAttributes extends AbstractFieldArray
      * @return Select|null
      * @throws \Exception
      */
-    protected function resolveSelectFieldRenderer($columnName)
+    protected function resolveSelectFieldRenderer(string $columnName)
     {
         if (empty($this->_columns[$columnName])) {
             throw new \Exception('Wrong column name specified.');

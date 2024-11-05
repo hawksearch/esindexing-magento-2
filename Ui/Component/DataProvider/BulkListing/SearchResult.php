@@ -51,10 +51,12 @@ class SearchResult extends \Magento\AsynchronousOperations\Ui\Component\DataProv
      * @param StatusMapper $statusMapper
      * @param CalculatedStatusSql $calculatedStatusSql
      * @param OperationCollectionFactory $operationCollectionFactory
+     * @param Operation $operationResourceConfig
      * @param string $mainTable
      * @param null $resourceModel
      * @param string $identifierName
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @noinspection PhpMissingParamTypeInspection
      */
     public function __construct(
         EntityFactory $entityFactory,
