@@ -60,7 +60,7 @@ class ItemsDataProvider implements ItemsDataProviderInterface
      * @inheritDoc
      * @return CategoryInterface[]
      */
-    public function getItems($storeId, $entityIds = null, $currentPage = 1, $pageSize = 0)
+    public function getItems(int $storeId, ?array $entityIds = null, int $currentPage = 1, int $pageSize = 0)
     {
         return $this->getCategoryCollection($storeId, $entityIds, $currentPage, $pageSize);
     }
@@ -72,7 +72,7 @@ class ItemsDataProvider implements ItemsDataProviderInterface
      * @param int $pageSize
      * @return CategoryInterface[]
      */
-    protected function getCategoryCollection($storeId, $entityIds = null, $currentPage = 1, $pageSize = 0): array
+    protected function getCategoryCollection(int $storeId, ?array $entityIds = null, int $currentPage = 1, int $pageSize = 0): array
     {
         $storeParentCategoryId = $this->storeManager->getStore($storeId)->getRootCategoryId();
 

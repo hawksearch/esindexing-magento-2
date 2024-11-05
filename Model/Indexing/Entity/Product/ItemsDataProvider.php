@@ -99,7 +99,7 @@ class ItemsDataProvider implements ItemsDataProviderInterface
      * @return ProductInterface[]
      * @throws Exception
      */
-    public function getItems($storeId, $entityIds = null, $currentPage = 1, $pageSize = 0)
+    public function getItems(int $storeId, ?array $entityIds = null, int $currentPage = 1, int $pageSize = 0)
     {
         $items = $this->getProductCollection($storeId, $entityIds, $currentPage, $pageSize);
 
@@ -121,7 +121,7 @@ class ItemsDataProvider implements ItemsDataProviderInterface
      * @param int $pageSize
      * @return ProductInterface[]
      */
-    protected function getProductCollection($storeId, $productIds = null, $currentPage = 1, $pageSize = 0): array
+    protected function getProductCollection(int $storeId, ?array $productIds = null, int $currentPage = 1, int $pageSize = 0): array
     {
         $this->searchCriteriaBuilder->addFilter('store_id', $storeId);
 

@@ -50,7 +50,7 @@ class ItemsDataProvider implements ItemsDataProviderInterface
     /**
      * @inheritDoc
      */
-    public function getItems(int $storeId, $entityIds = null, $currentPage = 1, $pageSize = 0)
+    public function getItems(int $storeId, ?array $entityIds = null, int $currentPage = 1, int $pageSize = 0)
     {
         return $this->getPageCollection($storeId, $entityIds, $currentPage, $pageSize);
     }
@@ -63,7 +63,7 @@ class ItemsDataProvider implements ItemsDataProviderInterface
      * @return PageInterface[]
      * @throws LocalizedException
      */
-    protected function getPageCollection($storeId, $entityIds = null, $currentPage = 1, $pageSize = 0)
+    protected function getPageCollection(int $storeId, ?array $entityIds = null, int $currentPage = 1, int $pageSize = 0)
     {
         $this->searchCriteriaBuilder->addFilter(
             'store_id',

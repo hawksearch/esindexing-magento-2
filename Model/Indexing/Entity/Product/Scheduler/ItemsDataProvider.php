@@ -16,7 +16,7 @@ namespace HawkSearch\EsIndexing\Model\Indexing\Entity\Product\Scheduler;
 
 class ItemsDataProvider extends \HawkSearch\EsIndexing\Model\Indexing\Entity\Product\ItemsDataProvider
 {
-    public function getItems($storeId, $entityIds = null, $currentPage = 1, $pageSize = 0)
+    public function getItems(int $storeId, ?array $entityIds = null, int $currentPage = 1, int $pageSize = 0)
     {
         return $this->getProductCollection($storeId, $entityIds, $currentPage, $pageSize);
     }
