@@ -21,10 +21,10 @@ namespace HawkSearch\EsIndexing\Model\Layout;
 interface LayoutConfigProcessorInterface
 {
     /**
-     * Process js Config of a block
+     * Process JS Config of a block and return an updated JSConfig
      *
-     * @param array $jsConfig
-     * @return array
+     * @param array<string, mixed> $jsConfig
+     * @return array<string, mixed> updated $jsConfig
      */
-    public function process($jsConfig);
+    public function process(array $jsConfig);
 }

@@ -21,9 +21,8 @@ class VueSearchConfigProcessor implements LayoutConfigProcessorInterface
     /**
      * @inheritDoc
      */
-    public function process($jsConfig)
+    public function process(array $jsConfig)
     {
-        $jsConfig = $jsConfig ?? [];
         $jsConfig['searchConfig'] = [
             'initialSearch' => true,
             'scrollUpOnRefresh' => false,

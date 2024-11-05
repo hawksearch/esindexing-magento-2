@@ -19,7 +19,7 @@ class VueSuggestionItemConfigProcessor extends VueResultItemConfigProcessor
     /**
      * @inheritDoc
      */
-    public function process($jsConfig)
+    public function process(array $jsConfig)
     {
         $jsConfig = parent::process($jsConfig);
         $jsConfig['suggestionItem'] = $jsConfig['resultItem'];

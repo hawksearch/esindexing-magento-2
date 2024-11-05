@@ -21,9 +21,8 @@ class VueTabConfigProcessor implements LayoutConfigProcessorInterface
     /**
      * @inheritDoc
      */
-    public function process($jsConfig)
+    public function process(array $jsConfig)
     {
-        $jsConfig = $jsConfig ?? [];
         $jsConfig['tabConfig'] = [
             'alwaysOn' => false
         ];

@@ -21,12 +21,12 @@ class CommonConfigProcessor implements LayoutConfigProcessorInterface
     /**
      * @inheritDoc
      */
-    public function process($jsConfig)
+    public function process(array $jsConfig)
     {
         $config = [
             'vueComponent' => 'results'
         ];
 
-        return array_merge_recursive($jsConfig ?? [], $config);
+        return array_merge_recursive($jsConfig, $config);
     }
 }

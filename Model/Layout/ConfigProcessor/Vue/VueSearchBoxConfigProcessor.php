@@ -21,9 +21,8 @@ class VueSearchBoxConfigProcessor implements LayoutConfigProcessorInterface
     /**
      * @inheritDoc
      */
-    public function process($jsConfig)
+    public function process(array $jsConfig)
     {
-        $jsConfig = $jsConfig ?? [];
         $jsConfig['searchBoxConfig'] = [
             'redirectToCurrentPage' => true
         ];

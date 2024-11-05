@@ -38,7 +38,7 @@ class CompositeConfigProcessor implements LayoutConfigProcessorInterface
     /**
      * @inheritDoc
      */
-    public function process($jsConfig)
+    public function process(array $jsConfig)
     {
         foreach ($this->configProcessors as $configProcessor) {
             $jsConfig = $configProcessor->process($jsConfig);
