@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2024 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -17,9 +17,9 @@ namespace HawkSearch\EsIndexing\Gateway\Validator;
 
 use HawkSearch\Connector\Gateway\Validator\ResultInterface;
 
-class GetIndexListBadRequestValidator extends BadRequestValidator
+class GetCurentIndexBadRequestValidator extends BadRequestValidator
 {
-    private const NO_INDECES_MESSAGE = "There are no indices.";
+    private const NO_INDEX_MESSAGE = "Unable to retrieve the current index name.";
 
     /**
      * @inheritDoc
@@ -30,7 +30,7 @@ class GetIndexListBadRequestValidator extends BadRequestValidator
 
         if (!$result->isValid()) {
             $message = current($result->getFailsDescription());
-            if ($message == self::NO_INDECES_MESSAGE) {
+            if ($message == self::NO_INDEX_MESSAGE) {
                 $result = $this->createResult(true);
             }
         }
