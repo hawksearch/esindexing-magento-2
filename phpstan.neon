@@ -21,3 +21,9 @@ parameters:
         - Ui
         - view/adminhtml/templates
         - view/frontend/templates
+#    ignoreErrors:
+#        -
+#            identifier: missingType.parameter
+#            paths:
+#                - Plugin
+#                - Model
