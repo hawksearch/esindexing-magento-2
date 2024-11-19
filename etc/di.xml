@@ -210,7 +210,7 @@
         <arguments>
             <argument name="requestBuilder" xsi:type="object">HawkSearch\Connector\Gateway\Request\BuilderComposite</argument>
             <argument name="transferFactory" xsi:type="object">HawkSearchEsIndexingGetCurrentIndexTransferFactory</argument>
-            <argument name="validator" xsi:type="object">HawkSearchEsIndexingBadResponseValidator</argument>
+            <argument name="validator" xsi:type="object">HawkSearchEsIndexingGetCurrentIndexBadResponseValidator</argument>
             <argument name="resultFactory" xsi:type="object">HawkSearchEsIndexingGetCurrentIndexResultFactory</argument>
         </arguments>
     </virtualType>
@@ -225,6 +225,18 @@
                  type="HawkSearch\Connector\Gateway\Instruction\ResultInterfaceFactory">
         <arguments>
             <argument xsi:type="string" name="instanceName">HawkSearch\EsIndexing\Gateway\Instruction\Result\EsIndexResult</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearchEsIndexingGetCurrentIndexBadResponseValidator"
+                 type="HawkSearch\Connector\Gateway\Validator\ValidatorComposite">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="badRequestValidator" xsi:type="string">HawkSearch\EsIndexing\Gateway\Validator\GetCurentIndexBadRequestValidator</item>
+            </argument>
+            <argument name="chainBreakingValidators" xsi:type="array">
+                <item name="httpCodeValidator" xsi:type="string">httpCodeValidator</item>
+                <item name="badRequestValidator" xsi:type="string">badRequestValidator</item>
+            </argument>
         </arguments>
     </virtualType>
     <!-- END getCurrentIndex Instruction  -->

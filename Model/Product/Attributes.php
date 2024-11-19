@@ -108,8 +108,8 @@ class Attributes
     {
         return [
             'type_id' => 'type_id',
-            'thumbnail_url' => 'thumbnail_url',
-            'image_url' => 'image_url',
+            'thumbnail_url' => 'thumbnail',
+            'image_url' => 'image',
             'name' => 'name',
             'sku' => 'sku',
             'category' => '',

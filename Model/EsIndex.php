@@ -22,10 +22,11 @@ class EsIndex extends AbstractSimpleObject implements EsIndexInterface
 {
     /**
      * @inheritDoc
+     * @return string
      */
-    public function getIndexName(): ?string
+    public function getIndexName(): string
     {
-        return $this->_get(self::INDEX_NAME);
+        return (string)$this->_get(self::INDEX_NAME);
     }
 
     /**
