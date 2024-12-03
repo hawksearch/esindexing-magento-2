@@ -134,10 +134,7 @@ class View extends \Magento\Framework\App\Action\Action
             ->setIsFacetOverride(false)
             ->setPageType('ProductListing')
             ->setPageId(5978900);
-        $res = $this->landingPageManagement->updateLandingPages($landingPages);
-
-        var_dump($res);
-
+        $this->landingPageManagement->updateLandingPages($landingPages);
         return $page;
     }
 }
