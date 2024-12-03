@@ -15,17 +15,16 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Hierarchy\Field\Handler;
 
 use HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface;
-use Magento\Catalog\Api\Data\CategoryInterface;
+use Magento\Catalog\Model\Category;
 use Magento\Framework\DataObject;
 
+/**
+ * @implements FieldHandlerInterface<Category>
+ */
 class Name implements FieldHandlerInterface
 {
     public const PARENT_HIERARCHY_NAME = 'category';
 
-    /**
-     * @inheritDoc
-     * @param CategoryInterface $item
-     */
     public function handle(DataObject $item, string $fieldName)
     {
         if ($item->getLevel() == 1) {

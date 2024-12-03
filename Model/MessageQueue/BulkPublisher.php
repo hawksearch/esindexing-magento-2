@@ -26,6 +26,9 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Serialize\SerializerInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @todo deprecate extending AbstractSimpleObject
+ */
 class BulkPublisher extends AbstractSimpleObject implements BulkPublisherInterface
 {
     public const DEFAULT_BULK_DESCRIPTION = 'Hawksearch indexing bulk operation';
@@ -93,7 +96,7 @@ class BulkPublisher extends AbstractSimpleObject implements BulkPublisherInterfa
      * @param QueueOperationDataInterfaceFactory $queueOperationDataFactory
      * @param MessageManagerInterface $messageManager
      * @param string|null $bulkDescription
-     * @param array $data
+     * @param array<array-key, mixed> $data
      */
     public function __construct(
         SerializerInterface $serializer,
@@ -117,7 +120,7 @@ class BulkPublisher extends AbstractSimpleObject implements BulkPublisherInterfa
         $this->logger = $loggerFactory->create();
         $this->saveMultipleOperations = $saveMultipleOperations;
         $this->queueOperationDataFactory = $queueOperationDataFactory;
-        $this->bulkDescription = $bulkDescription;
+        $this->bulkDescription = $bulkDescription ?? static::DEFAULT_BULK_DESCRIPTION;
         $this->messageManager = $messageManager;
     }
 
@@ -129,7 +132,7 @@ class BulkPublisher extends AbstractSimpleObject implements BulkPublisherInterfa
     public function publish()
     {
         $bulkUuid = $this->identityService->generateId();
-        $bulkDescription = $this->bulkDescription ?? static::DEFAULT_BULK_DESCRIPTION;
+        $bulkDescription = $this->bulkDescription;
         $userId = $this->userContext->getUserId();
 
         /** create new bulk without operations */

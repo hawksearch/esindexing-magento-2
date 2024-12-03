@@ -31,21 +31,19 @@ use Magento\Framework\Serialize\Serializer\Json;
 class ArraySerialized extends ArraySerializedParent
 {
     /**
-     * @var ValueProcessorInterface
+     * @var ValueProcessorInterface<array<array<mixed>>, array<array<mixed>>>
      */
     private ValueProcessorInterface $processor;
 
     /**
-     * FieldsMapping constructor.
-     *
      * @param Context $context
      * @param Registry $registry
      * @param ScopeConfigInterface $config
      * @param TypeListInterface $cacheTypeList
-     * @param ValueProcessorInterface $processor
+     * @param ValueProcessorInterface<array<array<mixed>>, array<array<mixed>>> $processor
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
-     * @param array $data
+     * @param array<mixed> $data
      * @param Json|null $serializer
      */
     public function __construct(

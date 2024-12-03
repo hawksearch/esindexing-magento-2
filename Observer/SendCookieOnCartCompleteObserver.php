@@ -18,11 +18,15 @@ namespace HawkSearch\EsIndexing\Observer;
 use HawkSearch\EsIndexing\Model\Config\EventTracking as EventTrackingConfig;
 use HawkSearch\EsIndexing\Model\Indexing\EntityType\ProductEntityType;
 use HawkSearch\EsIndexing\Service\DataStorageInterface;
+use Magento\Framework\App\Request\Http as HttpRequest;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Exception\InputException;
 use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
+use Magento\Framework\Stdlib\Cookie\CookieSizeLimitReachedException;
+use Magento\Framework\Stdlib\Cookie\FailureToSendException;
 use Magento\Framework\Stdlib\Cookie\PublicCookieMetadata;
 use Magento\Framework\Stdlib\CookieManagerInterface;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
@@ -65,7 +69,7 @@ class SendCookieOnCartCompleteObserver implements ObserverInterface
     private $cookieManager;
 
     /**
-     * @var RequestInterface
+     * @var HttpRequest
      */
     private $httpRequest;
 
@@ -138,11 +142,11 @@ class SendCookieOnCartCompleteObserver implements ObserverInterface
 
     /**
      * @param string $cookieName
-     * @param array $cartItems
+     * @param QuoteItem[] $cartItems
      * @return void
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Stdlib\Cookie\CookieSizeLimitReachedException
-     * @throws \Magento\Framework\Stdlib\Cookie\FailureToSendException
+     * @throws InputException
+     * @throws CookieSizeLimitReachedException
+     * @throws FailureToSendException
      */
     protected function setCookieForCartItems(string $cookieName, array $cartItems)
     {

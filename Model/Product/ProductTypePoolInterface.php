@@ -15,12 +15,15 @@ namespace HawkSearch\EsIndexing\Model\Product;
 /**
  * @api
  * @since 0.8.0
+ *
+ * @template TKey of string
+ * @template TValue of ProductTypeInterface
  */
 interface ProductTypePoolInterface
 {
     /**
-     * @param string $typeCode
-     * @return ProductTypeInterface
+     * @param TKey $typeCode
+     * @return TValue
      */
     public function get(string $typeCode): ProductTypeInterface;
 }

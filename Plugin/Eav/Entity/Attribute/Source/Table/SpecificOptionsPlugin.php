@@ -28,7 +28,7 @@ class SpecificOptionsPlugin
     /**
      * @param Table $subject
      * @param callable $proceed
-     * @param array|string $ids
+     * @param list<int>|string $ids
      * @param bool $withEmpty
      * @return array
      * @noinspection PhpMissingParamTypeInspection
@@ -63,8 +63,8 @@ class SpecificOptionsPlugin
     }
 
     /**
-    * @param array $options
-    * @param $emptyOption
+    * @param list<array{label: string, value: string}> $options
+    * @param array{label: '', value: ''} $emptyOption
     * @return array
     */
     private function addEmptyOption(array $options, $emptyOption): array

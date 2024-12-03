@@ -14,20 +14,28 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Product\Field\Handler;
 
+use HawkSearch\EsIndexing\Model\Indexing\FieldHandler;
 use HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface;
 use HawkSearch\EsIndexing\Model\Product\Attribute\ValueProcessorInterface;
+use HawkSearch\EsIndexing\Model\Product\ProductTypeInterface;
 use HawkSearch\EsIndexing\Model\Product\ProductTypePoolInterface;
-use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Model\Product as ProductModel;
 use Magento\Catalog\Model\ResourceModel\Eav\Attribute as AttributeResource;
 use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
 use Magento\Framework\DataObject;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\ObjectManagerInterface;
 
-class Composite extends \HawkSearch\EsIndexing\Model\Indexing\FieldHandler\Composite
+/**
+ * @phpstan-type ItemType ProductModel
+ * @phpstan-import-type HandlerSignature from FieldHandler\Composite
+ * @template TItem of ProductModel
+ * @template T of FieldHandlerInterface
+ * @extends FieldHandler\Composite<T, TItem>
+ */
+class Composite extends FieldHandler\Composite
 {
     /**
-     * @var ProductTypePoolInterface
+     * @var ProductTypePoolInterface<string, ProductTypeInterface>
      */
     private ProductTypePoolInterface $productTypePool;
 
@@ -40,9 +48,9 @@ class Composite extends \HawkSearch\EsIndexing\Model\Indexing\FieldHandler\Compo
      * Composite constructor.
      *
      * @param ObjectManagerInterface $objectManager
-     * @param ProductTypePoolInterface $productTypePool
+     * @param ProductTypePoolInterface<string, ProductTypeInterface> $productTypePool
      * @param ValueProcessorInterface $valueProcessor
-     * @param FieldHandlerInterface[] $handlers
+     * @param array<array-key, HandlerSignature> $handlers
      */
     public function __construct(
         ObjectManagerInterface $objectManager,
@@ -55,11 +63,6 @@ class Composite extends \HawkSearch\EsIndexing\Model\Indexing\FieldHandler\Compo
         $this->valueProcessor = $valueProcessor;
     }
 
-    /**
-     * @inheritDoc
-     * @param ProductInterface $item
-     * @throws LocalizedException
-     */
     public function handle(DataObject $item, string $fieldName)
     {
         $value = $this->formatValue(parent::handle($item, $fieldName));
@@ -100,8 +103,8 @@ class Composite extends \HawkSearch\EsIndexing\Model\Indexing\FieldHandler\Compo
     }
 
     /**
-     * @param ProductInterface|DataObject $item
-     * @return ProductInterface[]
+     * @param TItem $item
+     * @return TItem[]
      */
     private function getChildren(DataObject $item): array
     {

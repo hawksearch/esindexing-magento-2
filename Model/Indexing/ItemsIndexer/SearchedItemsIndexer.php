@@ -14,7 +14,8 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexing\ItemsIndexer;
 
-use HawkSearch\Connector\Gateway\Instruction\InstructionManagerPool;
+use HawkSearch\Connector\Gateway\Instruction\InstructionManagerInterface;
+use HawkSearch\Connector\Gateway\Instruction\InstructionManagerPoolInterface;
 use HawkSearch\Connector\Gateway\InstructionException;
 use HawkSearch\EsIndexing\Model\Indexing\ItemsIndexerInterface;
 use Magento\Framework\Exception\NotFoundException;
@@ -25,21 +26,20 @@ use Magento\Framework\Exception\NotFoundException;
 class SearchedItemsIndexer implements ItemsIndexerInterface
 {
     /**
-     * @var InstructionManagerPool
+     * @var InstructionManagerPoolInterface<string, InstructionManagerInterface>
      */
     private $instructionManagerPool;
 
     /**
-     * @param InstructionManagerPool $instructionManagerPool
+     * @param InstructionManagerPoolInterface<string, InstructionManagerInterface> $instructionManagerPool
      */
     public function __construct(
-        InstructionManagerPool $instructionManagerPool
+        InstructionManagerPoolInterface $instructionManagerPool
     ) {
         $this->instructionManagerPool = $instructionManagerPool;
     }
 
     /**
-     * @inheritDoc
      * @throws InstructionException
      * @throws NotFoundException
      */
@@ -51,9 +51,6 @@ class SearchedItemsIndexer implements ItemsIndexerInterface
     /**
      * Uses api/v2/indexing/index-ixtems API call for items indexing
      *
-     * @param array $items
-     * @param string $indexName
-     * @return void
      * @throws InstructionException
      * @throws NotFoundException
      */
@@ -76,10 +73,6 @@ class SearchedItemsIndexer implements ItemsIndexerInterface
 
     /**
      * Uses api/v2/indexing/delete-items API call for removing items from the index
-     *
-     * @param array $items Array of Ids to remove
-     * @param string $indexName
-     * @return void
      * @throws InstructionException
      * @throws NotFoundException
      */

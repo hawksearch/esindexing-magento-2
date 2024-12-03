@@ -85,8 +85,6 @@ class ContentPage implements IndexerActionInterface, MviewActionInterface
     }
 
     /**
-     * @inheritdoc
-     * @param $ids
      * @throws NoSuchEntityException
      * @throws InputException
      */

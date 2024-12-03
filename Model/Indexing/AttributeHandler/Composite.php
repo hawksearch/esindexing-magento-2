@@ -26,6 +26,7 @@ PublicContractDeprecation::triggerClassDeprecationMessage(
 /**
  * @deprecated 0.7.0 In favour of a new Field Handlers logic
  * @see \HawkSearch\EsIndexing\Model\Indexing\FieldHandler\Composite
+ * @phpstan-ignore-next-line 
  */
 class Composite extends \HawkSearch\EsIndexing\Model\Indexing\FieldHandler\Composite
 {

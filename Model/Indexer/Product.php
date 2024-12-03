@@ -99,7 +99,6 @@ class Product implements IndexerActionInterface, MviewActionInterface
 
     /**
      * @inheritDoc
-     * @param $ids
      * @throws LocalizedException
      */
     public function execute($ids)

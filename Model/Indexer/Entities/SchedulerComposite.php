@@ -21,18 +21,22 @@ use Magento\Store\Api\Data\StoreInterface;
 /**
  * @api
  * @since 0.8.0
+ *
+ * @template TKey of array-key
+ * @template TValue of SchedulerInterface
  */
 class SchedulerComposite implements SchedulerInterface
 {
     /**
-     * @var SchedulerInterface[]  | TMap
+     * @var TMap<TKey, TValue>
      */
-    protected $schedulers = [];
+    protected $schedulers;
 
     /**
      * SchedulerComposite constructor.
      *
-     * @param SchedulerInterface[] $schedulers
+     * @param TMapFactory $tmapFactory
+     * @param array<TKey, class-string<TValue>> $schedulers
      */
     public function __construct(
         TMapFactory $tmapFactory,
@@ -46,9 +50,6 @@ class SchedulerComposite implements SchedulerInterface
         );
     }
 
-    /**
-     * @inheritDoc
-     */
     public function schedule(StoreInterface $store, ?array $ids = null)
     {
         foreach ($this->schedulers as $scheduler) {

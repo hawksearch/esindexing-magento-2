@@ -66,15 +66,14 @@ abstract class ActionAbstract
     /**
      * Execute action for given ids
      *
-     * @param array|int $ids
+     * @param list<int> $ids
      * @return $this
-     * @noinspection PhpMissingParamTypeInspection
      */
-    abstract public function execute($ids);
+    abstract public function execute(array $ids);
 
     /**
      * @param StoreInterface $store
-     * @param array|null $ids
+     * @param list<int>|null $ids
      * @return void
      */
     protected function reindex(StoreInterface $store, ?array $ids = null)

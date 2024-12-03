@@ -15,11 +15,14 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\ContentPage\Field\Handler;
 
 use HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface;
-use Magento\Cms\Api\Data\PageInterface;
+use Magento\Cms\Model\Page as PageModel;
 use Magento\Framework\DataObject;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\StoreManagerInterface;
 
+/**
+ * @implements FieldHandlerInterface<PageModel>
+ */
 class Url implements FieldHandlerInterface
 {
 
@@ -39,8 +42,6 @@ class Url implements FieldHandlerInterface
     }
 
     /**
-     * @inheritDoc
-     * @param PageInterface $item
      * @throws NoSuchEntityException
      */
     public function handle(DataObject $item, string $fieldName)

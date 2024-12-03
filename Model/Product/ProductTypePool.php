@@ -20,11 +20,15 @@ use Magento\Framework\ObjectManager\TMapFactory;
 /**
  * @api
  * @since 0.8.0
+ *
+ * @template TKey of string
+ * @template TValue of ProductTypeInterface
+ * @implements ProductTypePoolInterface<TKey, TValue>
  */
 class ProductTypePool implements ProductTypePoolInterface
 {
     /**
-     * @var ProductTypeInterface[] | TMap
+     * @var TMap<TKey, TValue>
      */
     private $types;
 
@@ -36,7 +40,7 @@ class ProductTypePool implements ProductTypePoolInterface
     /**
      * @param TMapFactory $tmapFactory
      * @param ProductTypeInterfaceFactory $productTypeFactory
-     * @param array $types
+     * @param array<TKey, class-string<TValue>> $types
      */
     public function __construct(
         TMapFactory $tmapFactory,
@@ -52,9 +56,6 @@ class ProductTypePool implements ProductTypePoolInterface
         );
     }
 
-    /**
-     * @inheritDoc
-     */
     public function get(string $typeCode): ProductTypeInterface
     {
         return isset($this->types[$typeCode]) ? $this->types[$typeCode] : $this->productTypeFactory->create();

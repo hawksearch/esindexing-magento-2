@@ -15,16 +15,18 @@ namespace HawkSearch\EsIndexing\Model\Indexing\Field;
 /**
  * @api
  * @since 0.8.0
+ *
+ * @phpstan-import-type FieldNameListGeneric from NameProviderInterface
  */
 class DefaultNameProvider implements NameProviderInterface
 {
     /**
-     * @var array
+     * @var FieldNameListGeneric
      */
     private array $names;
 
     /**
-     * @param array $names
+     * @param FieldNameListGeneric $names
      */
     public function __construct(array $names = [])
     {

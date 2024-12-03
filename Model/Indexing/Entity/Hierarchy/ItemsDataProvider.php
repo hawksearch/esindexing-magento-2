@@ -67,7 +67,7 @@ class ItemsDataProvider implements ItemsDataProviderInterface
 
     /**
      * @param int $storeId
-     * @param array|null $entityIds
+     * @param array<int>|null $entityIds
      * @param int $currentPage
      * @param int $pageSize
      * @return CategoryInterface[]
@@ -102,6 +102,7 @@ class ItemsDataProvider implements ItemsDataProviderInterface
         $categories->setCurPage($currentPage)
             ->setPageSize($pageSize);
 
+        /** @var CategoryInterface[] */
         return $categories->getItems();
     }
 }

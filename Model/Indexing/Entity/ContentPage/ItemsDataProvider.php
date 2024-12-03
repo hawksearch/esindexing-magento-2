@@ -57,7 +57,7 @@ class ItemsDataProvider implements ItemsDataProviderInterface
 
     /**
      * @param int $storeId
-     * @param array|null $entityIds
+     * @param array<int>|null $entityIds
      * @param int $currentPage
      * @param int $pageSize
      * @return PageInterface[]
