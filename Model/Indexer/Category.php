@@ -56,13 +56,12 @@ class Category implements IndexerActionInterface, MviewActionInterface
      */
     public function executeFull()
     {
-        $this->output->writeln(
-            sprintf(
-                '<comment>Indexer `%s` can\'t be run for full reindexing. Please run `%s` indexer instead.</comment>',
-                self::INDEXER_ID,
-                EntitiesIndexer::INDEXER_ID
-            )
+        $phrase = __(
+            "Indexer %1 can't be run for full reindexing. Please run %2 indexer instead.",
+            self::INDEXER_ID,
+            EntitiesIndexer::INDEXER_ID
         );
+        $this->output->writeln('<comment>' . $phrase . '</comment>');
     }
 
     /**

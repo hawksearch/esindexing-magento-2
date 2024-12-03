@@ -78,7 +78,7 @@ class Details extends Action implements HttpGetActionInterface
         $resultPage = $this->resultPageFactory->create();
         $resultPage->initLayout();
         $this->_setActiveMenu($this->menuId);
-        $resultPage->getConfig()->getTitle()->prepend(__('Bulk Details - #' . $bulkId));
+        $resultPage->getConfig()->getTitle()->prepend(__('Bulk Details - #%1', $bulkId)->render());
 
         return $resultPage;
     }

@@ -58,7 +58,7 @@ class Index extends Action implements HttpGetActionInterface
         $resultPage = $this->resultPageFactory->create();
         $resultPage->initLayout();
         $this->_setActiveMenu($this->menuId);
-        $resultPage->getConfig()->getTitle()->prepend(__('Indexing Bulks'));
+        $resultPage->getConfig()->getTitle()->prepend(__('Indexing Bulks')->render());
         return $resultPage;
     }
 }
