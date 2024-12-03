@@ -15,18 +15,20 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Indexing;
 
 use Magento\Framework\Exception\NotFoundException;
-use Magento\Framework\ObjectManager\TMap;
 
 /**
  * @internal
+ *
+ * @template TKey of string
+ * @template TValue of EntityTypeInterface
  */
 interface EntityTypePoolInterface
 {
     /**
      * Gets an entity type instance by its type name
      *
-     * @param string $entityTypeName
-     * @return EntityTypeInterface
+     * @param TKey $entityTypeName
+     * @return TValue
      * @throws NotFoundException
      */
     public function get(string $entityTypeName): EntityTypeInterface;
@@ -34,15 +36,15 @@ interface EntityTypePoolInterface
     /**
      * Get a list of entity types
      *
-     * @return EntityTypeInterface[]|TMap
+     * @return iterable<TValue>
      */
     public function getList();
 
     /**
      * Create not shared entity type instance by its type name
      *
-     * @param string $entityTypeName
-     * @return EntityTypeInterface
+     * @param TKey $entityTypeName
+     * @return TValue
      * @throws NotFoundException
      */
     public function create(string $entityTypeName): EntityTypeInterface;

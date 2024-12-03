@@ -19,10 +19,11 @@ use HawkSearch\Connector\Logger\LoggerFactoryInterface;
 use HawkSearch\EsIndexing\Helper\ObjectHelper;
 use HawkSearch\EsIndexing\Model\Indexing\AbstractEntityRebuild;
 use HawkSearch\EsIndexing\Model\Indexing\ContextInterface;
+use HawkSearch\EsIndexing\Model\Indexing\EntityTypeInterface;
 use HawkSearch\EsIndexing\Model\Indexing\EntityTypePoolInterface;
 use HawkSearch\EsIndexing\Model\Product;
 use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Catalog\Model\Product as CatalogProductModel;
+use Magento\Catalog\Model\Product as ProductModel;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Catalog\Model\Product\Visibility;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
@@ -31,6 +32,11 @@ use Magento\Framework\DataObject;
 use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
+
+/**
+ * @phpstan-type ItemType ProductModel
+ * @extends AbstractEntityRebuild<ItemType>
+ */
 class EntityRebuild extends AbstractEntityRebuild
 {
     /**
@@ -56,7 +62,7 @@ class EntityRebuild extends AbstractEntityRebuild
     /**
      * ProductEntity constructor.
      *
-     * @param EntityTypePoolInterface $entityTypePool
+     * @param EntityTypePoolInterface<string, EntityTypeInterface> $entityTypePool
      * @param EventManagerInterface $eventManager
      * @param LoggerFactoryInterface $loggerFactory
      * @param StoreManagerInterface $storeManager
@@ -96,7 +102,7 @@ class EntityRebuild extends AbstractEntityRebuild
     }
 
     /**
-     * @param ProductInterface $product
+     * @param ItemType $product
      * @return bool
      */
     private function isProductInStock(ProductInterface $product)
@@ -106,19 +112,11 @@ class EntityRebuild extends AbstractEntityRebuild
         return $stockItem->getIsInStock();
     }
 
-    /**
-     * @param ProductInterface|CatalogProductModel|DataObject $entityItem
-     * @inheritdoc
-     */
     protected function getEntityId(DataObject $entityItem): ?int
     {
         return (int)$entityItem->getId();
     }
 
-    /**
-     * @param ProductInterface|CatalogProductModel|DataObject $item
-     * @inheritdoc
-     */
     protected function isAllowedItem(DataObject $item): bool
     {
         if ($item->isDeleted()) {

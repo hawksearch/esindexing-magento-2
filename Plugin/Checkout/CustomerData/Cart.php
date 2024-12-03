@@ -39,8 +39,8 @@ class Cart
      * Add extra price data to result
      *
      * @param CustomerDataCart $subject
-     * @param array $result
-     * @return array
+     * @param array<string, mixed> $result
+     * @return array<string, mixed>
      * @throws LocalizedException
      * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -78,7 +78,7 @@ class Cart
      * Find item by id in items haystack
      *
      * @param int $id
-     * @param array $itemsHaystack
+     * @param QuoteItem[] $itemsHaystack
      * @return QuoteItem | bool
      */
     protected function findItemById(int $id, array $itemsHaystack)

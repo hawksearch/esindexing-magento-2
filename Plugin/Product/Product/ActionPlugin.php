@@ -46,7 +46,7 @@ class ActionPlugin extends AbstractPlugin
      *
      * @param ProductAction $subject
      * @param null $result
-     * @param array $productIds
+     * @param list<int> $productIds
      * @return void
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

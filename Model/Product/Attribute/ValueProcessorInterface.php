@@ -23,8 +23,8 @@ interface ValueProcessorInterface
 {
     /**
      * @param Attribute $attribute
-     * @param array $value
-     * @param array $relatedValues
+     * @param list<mixed> $value
+     * @param list<mixed> $relatedValues
      * @return array
      */
     public function process(Attribute $attribute, array $value, array $relatedValues = []);

@@ -21,11 +21,12 @@ use HawkSearch\EsIndexing\Api\LandingPageManagementInterface;
 use HawkSearch\EsIndexing\Helper\ObjectHelper;
 use HawkSearch\EsIndexing\Model\Indexing\AbstractEntityRebuild;
 use HawkSearch\EsIndexing\Model\Indexing\ContextInterface;
+use HawkSearch\EsIndexing\Model\Indexing\EntityTypeInterface;
 use HawkSearch\EsIndexing\Model\Indexing\EntityTypePoolInterface;
 use HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\Custom;
 use HawkSearch\EsIndexing\Model\LandingPage\Field\Handler\CustomUrl;
 use Magento\Catalog\Api\Data\CategoryInterface;
-use Magento\Catalog\Model\Category;
+use Magento\Catalog\Model\Category as CategoryModel;
 use Magento\Framework\App\CacheInterface as Cache;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
@@ -35,6 +36,10 @@ use Magento\Framework\Exception\NotFoundException;
 use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
+/**
+ * @phpstan-type ItemType CategoryModel
+ * @extends AbstractEntityRebuild<ItemType>
+ */
 class EntityRebuild extends AbstractEntityRebuild
 {
     private const CACHE_KEY = 'HAWKSEARCH_LP_INDEXING';
@@ -81,7 +86,7 @@ class EntityRebuild extends AbstractEntityRebuild
     private $customUrlHandler;
 
     /**
-     * @param EntityTypePoolInterface $entityTypePool
+     * @param EntityTypePoolInterface<string, EntityTypeInterface> $entityTypePool
      * @param EventManagerInterface $eventManager
      * @param LoggerFactoryInterface $loggerFactory
      * @param StoreManagerInterface $storeManager
@@ -121,10 +126,6 @@ class EntityRebuild extends AbstractEntityRebuild
         $this->customUrlHandler = $customUrlHandler;
     }
 
-    /**
-     * @param CategoryInterface|Category|DataObject $item
-     * @inheritDoc
-     */
     protected function isAllowedItem(DataObject $item): bool
     {
         //@todo check if requested category is selected to be as landing page
@@ -132,7 +133,7 @@ class EntityRebuild extends AbstractEntityRebuild
     }
 
     /**
-     * @param CategoryInterface $item
+     * @param ItemType $item
      * @return bool
      */
     protected function isCategoryAllowed(CategoryInterface $item)
@@ -153,7 +154,6 @@ class EntityRebuild extends AbstractEntityRebuild
     }
 
     /**
-     * @inheritDoc
      * @throws NotFoundException
      * @throws NoSuchEntityException
      */
@@ -165,10 +165,6 @@ class EntityRebuild extends AbstractEntityRebuild
             && !array_key_exists($customUrl, $this->getCustomUrlMap());
     }
 
-    /**
-     * @param CategoryInterface|Category|DataObject $entityItem
-     * @inheritDoc
-     */
     protected function getEntityId(DataObject $entityItem): ?int
     {
         return (int)$entityItem->getId();
@@ -203,7 +199,12 @@ class EntityRebuild extends AbstractEntityRebuild
         } else {
             $landingPages = $this->landingPageManagement->getLandingPages();
             $this->cache->save(
-                $this->serializer->serialize(array_map(function($page){return $page->__toArray();}, $landingPages)),
+                $this->serializer->serialize(array_map(
+                    function($page){
+                            return $page->__toArray();
+                        },
+                    $landingPages
+                )),
                 $cacheKey,
                 [],
                 self::CACHE_LIFETIME
@@ -257,9 +258,8 @@ class EntityRebuild extends AbstractEntityRebuild
     }
 
     /**
-     * @param string[] $ids Landing page Custom field array
-     * @param string $indexName
-     * @return void
+     * Delete Landing pages by Custom field ids
+     * 
      * @throws NoSuchEntityException
      * @throws NotFoundException
      */
@@ -273,31 +273,24 @@ class EntityRebuild extends AbstractEntityRebuild
                 continue;
             }
 
-            $pageIds[] = $customFieldMap[$id]->getPageId();
+            $pageIds[] = (string)$customFieldMap[$id]->getPageId();
         }
 
         parent::deleteIndexItems($pageIds, $indexName);
     }
 
-    /**
-     * @param string $value
-     * @return string
-     */
     protected function addTypePrefix(string $value)
     {
         return Custom::CUSTOM_FIELD_PREFIX . $value;
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function castAttributeValue(mixed $value)
     {
         return $value;
     }
 
     /**
-     * @param array $items
+     * @param ItemType[] $items
      * @return LandingPageInterface[]
      * @throws LocalizedException
      */
@@ -313,9 +306,6 @@ class EntityRebuild extends AbstractEntityRebuild
         return $itemsToIndex;
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function addIndexItems(array $items, string $indexName)
     {
         if (!$items) {
@@ -325,9 +315,6 @@ class EntityRebuild extends AbstractEntityRebuild
         $this->getEntityType()->getItemsIndexer()->add($this->convertItems($items), $indexName);
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function updateIndexItems(array $items, string $indexName)
     {
         if (!$items) {
@@ -353,14 +340,14 @@ class EntityRebuild extends AbstractEntityRebuild
 
             /** @var LandingPageInterface $current */
             $current = array_shift($existingPages);
-            if ($current){
+            if ($current !== null){
                 $convertedItem->setPageId($current->getPageId());
                 $resultItemsToUpdate[] = $convertedItem;
             }
 
             /** @var LandingPageInterface $last */
             $last = array_shift($existingPages);
-            if ($last) {
+            if ($last !== null) {
                 $last->setCustom(null);
                 $resultItemsToUpdate[] = $last;
             }

@@ -86,8 +86,6 @@ class Category implements IndexerActionInterface, MviewActionInterface
     }
 
     /**
-     * @inheritdoc
-     * @param $ids
      * @throws NoSuchEntityException
      * @throws InputException
      */

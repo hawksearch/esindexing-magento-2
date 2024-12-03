@@ -21,6 +21,19 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @phpstan-type MessageType array{
+ *      'class'?: class-string,
+ *      'method'?: callable-string,
+ *      'method_arguments'?: array<array-key, mixed>,
+ *      'full_reindex'?: bool,
+ *      'application_headers'?: array{
+ *          'store_id'?: int|string,
+ *          'index'?: string,
+ *          'full_reindex'?: bool,
+ *      }
+ *  }
+ */
 class MessageManager extends AbstractSimpleObject implements MessageManagerInterface
 {
     public const DATA_MESSAGES = 'messages';
@@ -44,7 +57,7 @@ class MessageManager extends AbstractSimpleObject implements MessageManagerInter
      * @param StoreManagerInterface $storeManager
      * @param LoggerFactoryInterface $loggerFactory
      * @param IndexManagementInterface $indexManagement
-     * @param array $data
+     * @param array<self::DATA_*, mixed> $data
      */
     public function __construct(
         StoreManagerInterface $storeManager,
@@ -58,9 +71,6 @@ class MessageManager extends AbstractSimpleObject implements MessageManagerInter
         parent::__construct($data);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function addMessage($topicName, $data)
     {
         $messages = $this->_get(self::DATA_MESSAGES);
@@ -69,20 +79,14 @@ class MessageManager extends AbstractSimpleObject implements MessageManagerInter
             'data' => $this->updateApplicationHeaders($data),
         ];
 
-        return $this->setData(self::DATA_MESSAGES, $messages);
+        return $this->setMessages($messages);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setMessages(array $messages)
     {
         return $this->setData(self::DATA_MESSAGES, $messages);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getMessages()
     {
         return array_values($this->_get(self::DATA_MESSAGES));
@@ -94,7 +98,7 @@ class MessageManager extends AbstractSimpleObject implements MessageManagerInter
      * Prevent publishing inconsistent messages because of store_id not defined or wrong.
      * Set other operation global data
      *
-     * @param array $data
+     * @param MessageType $data
      * @return array
      */
     private function updateApplicationHeaders(array $data)

@@ -15,16 +15,16 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\LandingPage\Field\Handler;
 
 use HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface;
-use Magento\Catalog\Api\Data\CategoryInterface;
 use Magento\Catalog\Model\Category;
 use Magento\Framework\DataObject;
 
+/**
+ * @implements FieldHandlerInterface<Category>
+ */
 class CustomUrl implements FieldHandlerInterface
 {
     /**
-     * @inheritDoc
      * @todo implement handler which can get other attribute values or has access to the final entity
-     * @param CategoryInterface $item
      */
     public function handle(DataObject $item, string $fieldName)
     {
@@ -32,7 +32,6 @@ class CustomUrl implements FieldHandlerInterface
     }
 
     /**
-     * @param Category|CategoryInterface $category
      * @return string|null
      */
     protected function getUrl(Category $category)

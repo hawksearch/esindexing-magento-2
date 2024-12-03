@@ -73,8 +73,9 @@ class RetryBulkManagement implements BulkManagementInterface
         return true;
     }
 
+
     /**
-     * @inheritDoc
+     * @throws \LogicException
      */
     public function deleteBulk($bulkId)
     {
@@ -84,7 +85,7 @@ class RetryBulkManagement implements BulkManagementInterface
     /**
      * Publish list of operations to the corresponding message queues.
      *
-     * @param array $operations
+     * @param OperationInterface[] $operations
      * @return void
      */
     private function publishOperations(array $operations)

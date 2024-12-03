@@ -16,15 +16,14 @@ namespace HawkSearch\EsIndexing\Model\Indexing\Entity\ContentPage;
 
 use HawkSearch\EsIndexing\Model\Indexing\AbstractEntityRebuild;
 use Magento\Cms\Api\Data\PageInterface;
-use Magento\Cms\Model\Page;
 use Magento\Framework\DataObject;
 
+/**
+ * @phpstan-type ItemType DataObject&PageInterface
+ * @extends AbstractEntityRebuild<ItemType>
+ */
 class EntityRebuild extends AbstractEntityRebuild
 {
-    /**
-     * @param PageInterface|Page|DataObject $item
-     * @inheritDoc
-     */
     protected function isAllowedItem(DataObject $item): bool
     {
         if (!$item->isActive()) {
@@ -33,11 +32,7 @@ class EntityRebuild extends AbstractEntityRebuild
 
         return true;
     }
-
-    /**
-     * @param PageInterface|Page|DataObject $entityItem
-     * @inheritDoc
-     */
+    
     protected function getEntityId(DataObject $entityItem): ?int
     {
         return (int)$entityItem->getId();

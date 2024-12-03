@@ -18,13 +18,14 @@ namespace HawkSearch\EsIndexing\Model\Indexing\EntityType;
 use HawkSearch\Connector\Compatibility\ParameterDeprecation;
 use HawkSearch\Connector\Compatibility\PublicMethodDeprecationTrait;
 use HawkSearch\EsIndexing\Model\Indexing\AbstractConfigHelper;
-use HawkSearch\EsIndexing\Model\Indexing\Field\NameProviderInterface as FieldNameProviderInterface;
-use HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface;
 use HawkSearch\EsIndexing\Model\Indexing\EntityRebuildInterface;
 use HawkSearch\EsIndexing\Model\Indexing\EntityTypeInterface;
+use HawkSearch\EsIndexing\Model\Indexing\Field\NameProviderInterface as FieldNameProviderInterface;
+use HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface;
 use HawkSearch\EsIndexing\Model\Indexing\ItemsDataProviderInterface;
 use HawkSearch\EsIndexing\Model\Indexing\ItemsIndexerInterface;
 use Magento\Framework\App\ObjectManager;
+use Magento\Framework\DataObject;
 
 abstract class EntityTypeAbstract implements EntityTypeInterface
 {
@@ -54,7 +55,7 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
     private $typeName;
 
     /**
-     * @var FieldHandlerInterface
+     * @var FieldHandlerInterface<DataObject>
      */
     private $fieldHandler;
 
@@ -69,7 +70,7 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
     private $configHelper;
 
     /**
-     * @var null
+     * @var FieldNameProviderInterface
      */
     private $fieldNameProvider;
 
@@ -78,11 +79,12 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
      *
      * @param EntityRebuildInterface $rebuilder
      * @param ItemsDataProviderInterface $itemsDataProvider
-     * @param FieldHandlerInterface $fieldHandler
+     * @param FieldHandlerInterface<DataObject> $fieldHandler
      * @param ItemsIndexerInterface $itemsIndexer
      * @param AbstractConfigHelper $configHelper
      * @param null $typeName
      * @param FieldNameProviderInterface|null $fieldNameProvider
+     * @phpstan-ignore-next-line for $attributeHandler argument
      */
     public function __construct(
         EntityRebuildInterface $rebuilder,
@@ -90,12 +92,14 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
         FieldHandlerInterface $fieldHandler,
         ItemsIndexerInterface $itemsIndexer,
         AbstractConfigHelper $configHelper,
+        //@todo deprecate $typeName default value
         string $typeName = null,
         FieldNameProviderInterface $fieldNameProvider = null,
         /**
          * @deprecated 0.7.0 in favour of a new Field Handlers logic.
          * @see $fieldHandler
          * Update dependencies in di.xml file.
+         * @phpstan-ignore-next-line
          */
         FieldHandlerInterface $attributeHandler = null
     ) {
@@ -115,7 +119,9 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
             } else {
                 throw new \InvalidArgumentException(
                     __(
-                        '$attributeHandler parameter expects instance of %1, %2 is passed',
+                        'Argument %1 passed to %2 should be an instance of %3 but %4 is given',
+                        '$attributeHandler',
+                        __METHOD__,
                         FieldHandlerInterface::class,
                         get_class($attributeHandler)
                     )->render()
@@ -139,7 +145,7 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
     /**
      * @inheritDoc
      */
-    public function setTypeName($type)
+    public function setTypeName(string $type)
     {
         $this->typeName = $type;
         return $this;
@@ -181,6 +187,7 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
      * @inheritDoc
      * @deprecated 0.7.0 In favour of a new Field Handlers logic
      * @see self::getFieldHandler()
+     * @phpstan-ignore-next-line
      */
     public function getAttributeHandler() : FieldHandlerInterface
     {
@@ -189,7 +196,7 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
     }
 
     /**
-     * @inheritDoc
+     * @return FieldHandlerInterface<DataObject>
      */
     public function getFieldHandler() : FieldHandlerInterface
     {

@@ -124,7 +124,7 @@ class Product
     }
 
     /**
-     * @param array $ids
+     * @param int[] $ids
      * @return array
      * @throws Exception
      */

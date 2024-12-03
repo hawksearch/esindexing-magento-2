@@ -21,6 +21,12 @@ use Magento\Framework\ObjectManagerInterface;
 /**
  * @api
  * @since 0.8.0
+ *
+ * @template T of FieldHandlerInterface
+ * @template TItem of DataObject
+ * @phpstan-type HandlersMap  array<string, class-string<T>>
+ * @phpstan-type HandlerSignature array{attribute?: key-of<HandlersMap>, class?: value-of<HandlersMap>}
+ * @implements T<TItem>
  */
 class Composite implements FieldHandlerInterface
 {
@@ -31,7 +37,7 @@ class Composite implements FieldHandlerInterface
     /**#@-*/
 
     /**
-     * @var string[]
+     * @var HandlersMap
      */
     protected $handlers = [
         self::HANDLER_DEFAULT_NAME => DataObjectHandler::class
@@ -45,7 +51,7 @@ class Composite implements FieldHandlerInterface
     /**
      * Composite constructor.
      *
-     * @param FieldHandlerInterface[] $handlers
+     * @param array<array-key, HandlerSignature> $handlers
      */
     public function __construct(
         ObjectManagerInterface $objectManager,
@@ -56,8 +62,8 @@ class Composite implements FieldHandlerInterface
     }
 
     /**
-     * @inheritDoc
-     * @param DataObject $item
+     * @param TItem $item
+     * @param key-of<HandlersMap> $fieldName
      */
     public function handle(DataObject $item, string $fieldName)
     {
@@ -69,7 +75,7 @@ class Composite implements FieldHandlerInterface
     /**
      * Add or override handlers
      *
-     * @param array $handlers
+     * @param array<array-key, HandlerSignature> $handlers
      * @return void
      */
     protected function mergeTypes(array $handlers)
@@ -82,8 +88,8 @@ class Composite implements FieldHandlerInterface
     }
 
     /**
-     * @param string $fieldName
-     * @return FieldHandlerInterface
+     * @param key-of<HandlersMap> $fieldName
+     * @return T
      */
     protected function getHandler(string $fieldName): FieldHandlerInterface
     {
@@ -91,8 +97,8 @@ class Composite implements FieldHandlerInterface
     }
 
     /**
-     * @param string $instanceName
-     * @return FieldHandlerInterface
+     * @param value-of<HandlersMap> $instanceName
+     * @return T
      * @throws \InvalidArgumentException
      */
     private function getObject(string $instanceName): FieldHandlerInterface

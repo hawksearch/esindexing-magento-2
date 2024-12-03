@@ -20,6 +20,8 @@ use Magento\Framework\DataObject;
 /**
  * @api
  * @since 0.8.0
+ *
+ * @implements FieldHandlerInterface<DataObject>
  */
 class DataObjectHandler implements FieldHandlerInterface
 {

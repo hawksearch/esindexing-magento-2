@@ -19,11 +19,15 @@ use HawkSearch\EsIndexing\Model\Config\Advanced as AdvancedConfig;
 use HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Helper\Image as ImageHelper;
-use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\Product as ProductModel;
 use Magento\Framework\DataObject;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\StoreManagerInterface;
 
+/**
+ * @phpstan-type ItemType ProductModel
+ * @implements FieldHandlerInterface<ItemType>
+ */
 class ImageUrl implements FieldHandlerInterface
 {
     protected const ATTRIBUTE_IMAGE_ID_MAP = [
@@ -71,8 +75,6 @@ class ImageUrl implements FieldHandlerInterface
     }
 
     /**
-     * @inheritDoc
-     * @param ProductInterface $item
      * @throws NoSuchEntityException
      */
     public function handle(DataObject $item, string $fieldName)
@@ -87,7 +89,7 @@ class ImageUrl implements FieldHandlerInterface
 
     /**
      * Get product image URL by image_id
-     * @param ProductInterface|Product $product
+     * @param ItemType $product
      * @param string $imageId
      * @return string
      * @throws NoSuchEntityException

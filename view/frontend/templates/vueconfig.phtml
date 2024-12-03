@@ -11,8 +11,8 @@
  * IN THE SOFTWARE.
  */
 
-/* @var $block \HawkSearch\EsIndexing\Block\Html\Head\JsConfig
- * @var $escaper \Magento\Framework\Escaper */
+/* @var \HawkSearch\EsIndexing\Block\Html\Head\JsConfig $block
+ * @var \Magento\Framework\Escaper $escaper */
 ?>
 <script id="<?= $escaper->escapeHtml($block->getNameInLayout())?>" type="application/json">
     <?= $block->getJsLayout(); ?>

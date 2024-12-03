@@ -18,12 +18,14 @@ use Magento\Catalog\Api\Data\ProductInterface;
 /**
  * @api
  * @since 0.8.0
+ *
+ * @phpstan-type PriceData array<string, float|string|null>
  */
 interface PriceManagementInterface
 {
     /**
      * @param ProductInterface $product
-     * @param array $itemData
+     * @param PriceData $itemData
      */
     public function collectPrices(ProductInterface $product, array &$itemData);
 }

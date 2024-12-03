@@ -15,17 +15,16 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\LandingPage\Field\Handler;
 
 use HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface;
-use Magento\Catalog\Api\Data\CategoryInterface;
+use Magento\Catalog\Model\Category;
 use Magento\Framework\DataObject;
 
+/**
+ * @implements FieldHandlerInterface<Category>
+ */
 class Custom implements FieldHandlerInterface
 {
     public const CUSTOM_FIELD_PREFIX = "__mage_catid__";
 
-    /**
-     * @inheritDoc
-     * @param CategoryInterface $item
-     */
     public function handle(DataObject $item, string $fieldName)
     {
         return self::CUSTOM_FIELD_PREFIX . $item->getId();

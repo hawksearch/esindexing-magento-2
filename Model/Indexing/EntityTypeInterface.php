@@ -16,12 +16,13 @@ namespace HawkSearch\EsIndexing\Model\Indexing;
 
 
 use HawkSearch\EsIndexing\Model\Indexing\Field\NameProviderInterface as FieldNameProviderInterface;
+use Magento\Framework\DataObject;
 
 /**
  * @api
  * @since 0.8.0
  *
- * @method FieldHandlerInterface getFieldHandler() Use this method in your class implementations for smooth transitions
+ * @method FieldHandlerInterface<DataObject> getFieldHandler() Use this method in your class implementations for smooth transitions
  *          since 0.10.0. Method will be added in 0.10.0
  * @method FieldNameProviderInterface getFieldNameProvider() Method will be added in 0.10.0
  */
@@ -63,11 +64,12 @@ interface EntityTypeInterface
      * @deprecated 0.7.0 in favour of a new Field Handlers logic
      * @see self::getFieldHandler()
      * @return AttributeHandlerInterface|FieldHandlerInterface
+     * @phpstan-ignore-next-line
      */
     public function getAttributeHandler() : FieldHandlerInterface;
 
     /**
-     * @return FieldHandlerInterface
+     * @return FieldHandlerInterface<DataObject>
      */
     /*public function getFieldHandler() : FieldHandlerInterface;*/
 

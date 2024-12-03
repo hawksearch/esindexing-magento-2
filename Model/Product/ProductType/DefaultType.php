@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Product\ProductType;
 
 use HawkSearch\EsIndexing\Helper\PricingHelper;
+use HawkSearch\EsIndexing\Model\Product\PriceManagementInterface;
 use HawkSearch\EsIndexing\Model\Product\ProductTypeInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product as ProductModel;
@@ -27,6 +28,8 @@ use Magento\Framework\Pricing\PriceCurrencyInterface;
 /**
  * @api
  * @since 0.8.0
+ *
+ * @phpstan-import-type PriceData from PriceManagementInterface
  */
 abstract class DefaultType implements ProductTypeInterface
 {
@@ -79,6 +82,7 @@ abstract class DefaultType implements ProductTypeInterface
     }
 
     /**
+     * @param ProductModel $product
      * @inheritDoc
      */
     public function getPriceData(ProductInterface $product): array
@@ -114,7 +118,7 @@ abstract class DefaultType implements ProductTypeInterface
     }
 
     /**
-     * @param ProductInterface|ProductModel $product
+     * @param ProductModel $product
      * @return float
      */
     protected function getPriceRegular(ProductInterface $product): float
@@ -123,7 +127,7 @@ abstract class DefaultType implements ProductTypeInterface
     }
 
     /**
-     * @param ProductInterface|ProductModel $product
+     * @param ProductModel $product
      * @return float
      */
     protected function getPriceFinal(ProductInterface $product): float
@@ -132,7 +136,7 @@ abstract class DefaultType implements ProductTypeInterface
     }
 
     /**
-     * @param ProductInterface|ProductModel $product
+     * @param ProductModel $product
      * @return float
      */
     protected function getPriceMin(ProductInterface $product): float
@@ -141,7 +145,7 @@ abstract class DefaultType implements ProductTypeInterface
     }
 
     /**
-     * @param ProductInterface|ProductModel $product
+     * @param ProductModel $product
      * @return float
      */
     protected function getPriceMax(ProductInterface $product): float
@@ -159,8 +163,8 @@ abstract class DefaultType implements ProductTypeInterface
 
     /**
      * @param string $priceName
-     * @param array<string|int, float|null> $prices
-     * @param array<string, float> $priceData
+     * @param array<array-key, float|null> $prices
+     * @param PriceData $priceData
      */
     protected function addPricesFromArray(string $priceName, array $prices, array &$priceData)
     {
@@ -173,8 +177,8 @@ abstract class DefaultType implements ProductTypeInterface
     }
 
     /**
-     * @param ProductInterface|ProductModel $product
-     * @param array<string, float> $priceData
+     * @param ProductModel $product
+     * @param PriceData $priceData
      */
     protected function addPricesIncludingTax(ProductInterface $product, array &$priceData)
     {
@@ -186,7 +190,7 @@ abstract class DefaultType implements ProductTypeInterface
     }
 
     /**
-     * @param array<string, float> $priceData
+     * @param PriceData $priceData
      * @todo Review if we need to push prices rounded to the index
      */
     protected function roundPrices(array &$priceData)
@@ -197,8 +201,8 @@ abstract class DefaultType implements ProductTypeInterface
     }
 
     /**
-     * @param ProductInterface|ProductModel $product
-     * @param array<string, float> $priceData
+     * @param ProductModel $product
+     * @param PriceData $priceData
      */
     protected function addFormattedPrices(ProductInterface $product, array &$priceData)
     {
@@ -206,7 +210,7 @@ abstract class DefaultType implements ProductTypeInterface
     }
 
     /**
-     * @param ProductInterface $product
+     * @param ProductModel $product
      * @param array<string, float> $prices
      * @return array<string, string>
      */
@@ -234,7 +238,7 @@ abstract class DefaultType implements ProductTypeInterface
      * @param string $priceName
      * @param string $suffix
      * @param float $price
-     * @param array<string, float> $priceData
+     * @param PriceData $priceData
      */
     protected function addSuffixedValue (string $priceName, string $suffix, float $price, array &$priceData)
     {
@@ -253,7 +257,7 @@ abstract class DefaultType implements ProductTypeInterface
     }
 
     /**
-     * @param ProductInterface|ProductModel $product
+     * @param ProductModel $product
      * @param float $price input product price
      * @param bool $forceIncludeTax
      * @return float
@@ -289,7 +293,7 @@ abstract class DefaultType implements ProductTypeInterface
     }
 
     /**
-     * @param ProductInterface|ProductModel $product
+     * @param ProductModel $product
      * @return array<int, float>
      */
     protected function getCustomerGroupPrices(ProductInterface $product): array
@@ -325,7 +329,7 @@ abstract class DefaultType implements ProductTypeInterface
     }
 
     /**
-     * @param ProductInterface|ProductModel $product
+     * @param ProductModel $product
      * @return array
      * @throws LocalizedException
      */

@@ -15,15 +15,14 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Product\Field\Handler;
 
 use HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface;
-use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Model\Product as ProductModel;
 use Magento\Framework\DataObject;
 
+/**
+ * @implements FieldHandlerInterface<ProductModel>
+ */
 class Category implements FieldHandlerInterface
 {
-    /**
-     * @inheritDoc
-     * @param ProductInterface $item
-     */
     public function handle(DataObject $item, string $fieldName)
     {
         return $item->getCategoryIds();

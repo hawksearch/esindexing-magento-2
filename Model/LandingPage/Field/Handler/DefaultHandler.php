@@ -29,10 +29,7 @@ class DefaultHandler extends DataObjectHandler
     {
         $this->dataObjectHelper = $dataObjectHelper;
     }
-
-    /**
-     * @inheritDoc
-     */
+    
     public function handle(DataObject $item, string $fieldName)
     {
         $fieldName = $this->dataObjectHelper->camelCaseToSnakeCase($fieldName);

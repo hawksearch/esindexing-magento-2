@@ -45,8 +45,6 @@ class Entities implements ActionInterface
 
     /**
      * This indexer is not designed to run partial index updates
-     *
-     * @inheritdoc
      */
     public function executeList(array $ids)
     {
@@ -54,8 +52,6 @@ class Entities implements ActionInterface
 
     /**
      * This indexer is not designed to run partial index updates
-     *
-     * @inheritdoc
      */
     public function executeRow($id)
     {

@@ -15,7 +15,6 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Plugin\Indexing\Entity\Product\ItemsDataProvider;
 
 use HawkSearch\EsIndexing\Model\Indexing\Entity\Product\ItemsDataProvider;
-use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product as CatalogProductModel;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
@@ -37,8 +36,8 @@ class IsReturnableAttributeModifierPlugin
 
     /**
      * @param ItemsDataProvider $subject
-     * @param ProductInterface|CatalogProductModel[] $result
-     * @return ProductInterface|CatalogProductModel[]
+     * @param CatalogProductModel[] $result
+     * @return CatalogProductModel[]
      */
     public function afterGetItems(ItemsDataProvider $subject, array $result): array
     {
