@@ -30,29 +30,30 @@ class ConsumerProcessorPlugin
     /**
      * @var SerializerInterface
      */
-    private $serializer;
+    private SerializerInterface $serializer;
 
     /**
      * @var StoreManagerInterface
      */
-    private $storeManager;
+    private StoreManagerInterface $storeManager;
 
     /**
      * @var ContextInterface
      */
-    private $indexingContext;
+    private ContextInterface $indexingContext;
 
     /**
      * @var Emulation
      */
-    private $emulation;
+    private Emulation $emulation;
 
     public function __construct(
         SerializerInterface $serializer,
         StoreManagerInterface $storeManager,
         ContextInterface $indexingContext,
         Emulation $emulation
-    ) {
+    )
+    {
         $this->serializer = $serializer;
         $this->storeManager = $storeManager;
         $this->indexingContext = $indexingContext;

@@ -29,7 +29,7 @@ class Url implements FieldHandlerInterface
     /**
      * @var StoreManagerInterface
      */
-    private $storeManager;
+    private StoreManagerInterface $storeManager;
 
     public function __construct(
         StoreManagerInterface $storeManager)

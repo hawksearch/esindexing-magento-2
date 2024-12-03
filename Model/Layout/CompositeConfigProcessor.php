@@ -23,7 +23,7 @@ class CompositeConfigProcessor implements LayoutConfigProcessorInterface
     /**
      * @var LayoutConfigProcessorInterface[]
      */
-    private $configProcessors;
+    private array $configProcessors;
 
     /**
      * @param LayoutConfigProcessorInterface[] $configProcessors
@@ -31,7 +31,8 @@ class CompositeConfigProcessor implements LayoutConfigProcessorInterface
      */
     public function __construct(
         array $configProcessors
-    ) {
+    )
+    {
         $this->configProcessors = $configProcessors;
     }
 

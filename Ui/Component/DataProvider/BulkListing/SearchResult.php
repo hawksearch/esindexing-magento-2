@@ -15,7 +15,7 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Ui\Component\DataProvider\BulkListing;
 
 use HawkSearch\EsIndexing\Model\BulkOperation\BulkOperationManagement;
-use HawkSearch\EsIndexing\Model\ResourceModel\AsynchronousOperations\Operation;
+use HawkSearch\EsIndexing\Model\ResourceModel\AsynchronousOperations\Operation as OperationResource;
 use Magento\AsynchronousOperations\Model\BulkStatus\CalculatedStatusSql;
 use Magento\AsynchronousOperations\Model\ResourceModel\Operation\CollectionFactory as OperationCollectionFactory;
 use Magento\AsynchronousOperations\Model\StatusMapper;
@@ -33,13 +33,13 @@ class SearchResult extends \Magento\AsynchronousOperations\Ui\Component\DataProv
     /**
      * @var OperationCollectionFactory
      */
-    private $operationCollectionFactory;
+    private OperationCollectionFactory $operationCollectionFactory;
 
     /**
-     * @var Operation
+     * @var OperationResource
      */
-    private $operationResourceConfig;
-    
+    private OperationResource $operationResource;
+
     /**
      * @param EntityFactory $entityFactory
      * @param Logger $logger
@@ -49,7 +49,7 @@ class SearchResult extends \Magento\AsynchronousOperations\Ui\Component\DataProv
      * @param StatusMapper $statusMapper
      * @param CalculatedStatusSql $calculatedStatusSql
      * @param OperationCollectionFactory $operationCollectionFactory
-     * @param Operation $operationResourceConfig
+     * @param OperationResource $operationResourceConfig
      * @param string $mainTable
      * @param string $resourceModel
      * @param string $identifierName
@@ -66,13 +66,14 @@ class SearchResult extends \Magento\AsynchronousOperations\Ui\Component\DataProv
         StatusMapper $statusMapper,
         CalculatedStatusSql $calculatedStatusSql,
         OperationCollectionFactory $operationCollectionFactory,
-        Operation $operationResourceConfig,
+        OperationResource $operationResourceConfig,
         $mainTable = 'magento_bulk',
         $resourceModel = null,
         $identifierName = 'uuid'
-    ) {
+    )
+    {
         $this->operationCollectionFactory = $operationCollectionFactory;
-        $this->operationResourceConfig = $operationResourceConfig;
+        $this->operationResource = $operationResourceConfig;
         parent::__construct(
             $entityFactory,
             $logger,
@@ -130,7 +131,7 @@ class SearchResult extends \Magento\AsynchronousOperations\Ui\Component\DataProv
             'status_complete' => new \Zend_Db_Expr(
                 'COUNT(
                             IF(
-                                status = '. OperationInterface::STATUS_TYPE_COMPLETE .',
+                                status = ' . OperationInterface::STATUS_TYPE_COMPLETE . ',
                                 1,
                                 NULL
                             )
@@ -139,13 +140,13 @@ class SearchResult extends \Magento\AsynchronousOperations\Ui\Component\DataProv
             'status_failed' => new \Zend_Db_Expr(
                 'COUNT(
                             IF(
-                                status IN ('.
+                                status IN (' .
                 implode(',', [
                     OperationInterface::STATUS_TYPE_RETRIABLY_FAILED,
                     OperationInterface::STATUS_TYPE_NOT_RETRIABLY_FAILED,
                     OperationInterface::STATUS_TYPE_REJECTED,
                 ])
-                .'),
+                . '),
                                 1,
                                 NULL
                             )
@@ -154,7 +155,7 @@ class SearchResult extends \Magento\AsynchronousOperations\Ui\Component\DataProv
             'status_open' => new \Zend_Db_Expr(
                 'COUNT(
                             IF(
-                                status = '. OperationInterface::STATUS_TYPE_OPEN .',
+                                status = ' . OperationInterface::STATUS_TYPE_OPEN . ',
                                 1,
                                 NULL
                             )
@@ -164,7 +165,7 @@ class SearchResult extends \Magento\AsynchronousOperations\Ui\Component\DataProv
             'allowed_topic_count' => new \Zend_Db_Expr(
                 'COUNT(
                             IF(
-                                topic_name LIKE "'. BulkOperationManagement::OPERATION_TOPIC_PREFIX .'%",
+                                topic_name LIKE "' . BulkOperationManagement::OPERATION_TOPIC_PREFIX . '%",
                                 1,
                                 NULL
                             )
@@ -172,7 +173,7 @@ class SearchResult extends \Magento\AsynchronousOperations\Ui\Component\DataProv
             ),
         ];
 
-        if ($this->operationResourceConfig->isStartedAtColumnExists()) {
+        if ($this->operationResource->isStartedAtColumnExists()) {
             $columns['last_time'] = new \Zend_Db_Expr('MAX(started_at)');
         }
 

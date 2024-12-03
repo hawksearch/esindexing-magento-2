@@ -23,13 +23,13 @@ class DefaultHandler extends DataObjectHandler
     /**
      * @var DataObjectHelper
      */
-    private $dataObjectHelper;
+    private DataObjectHelper $dataObjectHelper;
 
     public function __construct(DataObjectHelper $dataObjectHelper)
     {
         $this->dataObjectHelper = $dataObjectHelper;
     }
-    
+
     public function handle(DataObject $item, string $fieldName)
     {
         $fieldName = $this->dataObjectHelper->camelCaseToSnakeCase($fieldName);

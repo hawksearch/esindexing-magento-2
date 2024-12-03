@@ -15,28 +15,29 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Plugin\Product;
 
 use HawkSearch\EsIndexing\Model\Indexer\Category as CategoryIndexer;
+use HawkSearch\EsIndexing\Model\Product as ProductDataProvider;
 use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
 use Magento\Framework\Indexer\IndexerInterface;
 use Magento\Framework\Indexer\IndexerRegistry;
 use Magento\Framework\Model\AbstractModel;
-use HawkSearch\EsIndexing\Model\Product as ProductDataProvider;
 
 class ProductPlugin extends AbstractPlugin
 {
     /**
      * @var IndexerInterface
      */
-    private $categoryIndexer;
+    private IndexerInterface $categoryIndexer;
 
     /**
      * @var ProductDataProvider
      */
-    private $productDataProvider;
+    private ProductDataProvider $productDataProvider;
 
     public function __construct(
         IndexerRegistry $indexerRegistry,
         ProductDataProvider $productDataProvider
-    ) {
+    )
+    {
         parent::__construct($indexerRegistry);
         $this->categoryIndexer = $indexerRegistry->get(CategoryIndexer::INDEXER_ID);
         $this->productDataProvider = $productDataProvider;

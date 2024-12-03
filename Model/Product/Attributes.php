@@ -29,28 +29,29 @@ class Attributes
     /**
      * @var array
      */
-    private $attributes;
+    private array $attributes;
 
     /**
      * @var Config
      */
-    private $eavConfig;
+    private Config $eavConfig;
 
     /**
      * @var Json
      */
-    private $jsonSerializer;
+    private Json $jsonSerializer;
 
     /**
      * @var ProductsConfig
      */
-    private $attributesConfigProvider;
+    private ProductsConfig $attributesConfigProvider;
 
     public function __construct(
         Config $eavConfig,
         Json $jsonSerializer,
         ProductsConfig $attributesConfigProvider
-    ) {
+    )
+    {
         $this->eavConfig = $eavConfig;
         $this->jsonSerializer = $jsonSerializer;
         $this->attributesConfigProvider = $attributesConfigProvider;
@@ -121,6 +122,7 @@ class Attributes
 
     /**
      * Product data which is calculated
+     *
      * @return array
      */
     public function getExtraDataCodes()

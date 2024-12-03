@@ -25,17 +25,18 @@ class TrackSaleEventOnOrderSuccessObserver implements ObserverInterface
     /**
      * @var EventTracking
      */
-    private $eventTrackingConfig;
+    private EventTracking $eventTrackingConfig;
 
     /**
      * @var LayoutInterface
      */
-    private $layout;
+    private LayoutInterface $layout;
 
     public function __construct(
         EventTracking $eventTrackingConfig,
         LayoutInterface $layout
-    ) {
+    )
+    {
         $this->eventTrackingConfig = $eventTrackingConfig;
         $this->layout = $layout;
     }

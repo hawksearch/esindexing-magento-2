@@ -26,11 +26,12 @@ class InitializeFullReindexing implements ObserverInterface
     /**
      * @var IndexManagementInterface
      */
-    private  $indexManagement;
+    private IndexManagementInterface $indexManagement;
 
     public function __construct(
         IndexManagementInterface $indexManagement
-    ) {
+    )
+    {
         $this->indexManagement = $indexManagement;
     }
 

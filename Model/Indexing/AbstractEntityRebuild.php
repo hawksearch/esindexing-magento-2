@@ -35,6 +35,7 @@ use Psr\Log\LoggerInterface;
 abstract class AbstractEntityRebuild implements EntityRebuildInterface
 {
     use PublicMethodDeprecationTrait;
+
     private $deprecatedMethods = [
         'getAttributeValue' => [
             'since' => '0.7.0',
@@ -51,17 +52,17 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     /**
      * @var array
      */
-    private $itemsToRemoveCache = [];
+    private array $itemsToRemoveCache = [];
 
     /**
      * @var array
      */
-    private $itemsToIndexCache = [];
+    private array $itemsToIndexCache = [];
 
     /**
      * @var EntityTypeInterface
      */
-    private $entityType;
+    private EntityTypeInterface $entityType;
 
     /**
      * @var EntityTypePoolInterface<string, EntityTypeInterface>
@@ -91,7 +92,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     /**
      * @var ObjectHelper
      */
-    private $objectHelper;
+    private ObjectHelper $objectHelper;
 
     /**
      * AbstractEntityRebuild constructor.
@@ -381,6 +382,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
 
     /**
      * Temporary method to overcome deprecation of getIndexedAttributes() method
+     *
      * @param TItem $item
      * @return array
      * @throws NotFoundException
@@ -417,20 +419,21 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
         }
 
         if (is_array($value)) {
-            $value = array_filter($value, function ($item){
+            $value = array_filter($value, function ($item) {
                 return $item !== '' && $item !== null;
             });
             $value = array_values($value);
         }
 
-        return $value !== null && !is_array($value) ? array($value) : $value;
+        return $value !== null && !is_array($value) ? [$value] : $value;
     }
 
     /**
      * @param TItem|null $item
      * @return array
      * @deprecated 0.7.0 method will be removed.
-     *      Using of 'code' and 'value' options is deprecated. Use @see FieldHandlerInterface to migrate fields with values.
+     *      Using of 'code' and 'value' options is deprecated. Use @see FieldHandlerInterface to migrate fields with
+     *     values.
      * @see FieldNameProviderInterface
      */
     protected function getIndexedAttributes(DataObject $item = null): array
@@ -495,7 +498,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
      */
     protected function getEntityType(): EntityTypeInterface
     {
-        if ($this->entityType === null) {
+        if (!isset($this->entityType)) {
             foreach ($this->entityTypePool->getList() as $entityType) {
                 $rebuilder = $entityType->getRebuilder();
                 if ($this instanceof $rebuilder) {
@@ -512,7 +515,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
                 }
             }
 
-            if (empty($entityType)){
+            if (empty($entityType)) {
                 throw new NotFoundException(__('Unregistered Entity Indexer "%1"', get_class($this)));
             }
 

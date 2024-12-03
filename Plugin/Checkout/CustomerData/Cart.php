@@ -24,9 +24,9 @@ use Magento\Quote\Model\Quote\Item as QuoteItem;
 class Cart
 {
     /**
-     * @var Quote|null
+     * @var Quote
      */
-    protected $quote = null;
+    private Quote $quote;
 
     private CheckoutSession $checkoutSession;
 
@@ -62,13 +62,15 @@ class Cart
     /**
      * Get active quote
      *
-     * @return Quote
+     * @return ?Quote
      * @throws LocalizedException
      * @throws NoSuchEntityException
+     * @todo change return type: ?Quote -> Quote
+     * @todo make private
      */
     protected function getQuote(): ?Quote
     {
-        if (null === $this->quote) {
+        if (!isset($this->quote)) {
             $this->quote = $this->checkoutSession->getQuote();
         }
         return $this->quote;
@@ -80,6 +82,7 @@ class Cart
      * @param int $id
      * @param QuoteItem[] $itemsHaystack
      * @return QuoteItem | bool
+     * @todo make private
      */
     protected function findItemById(int $id, array $itemsHaystack)
     {

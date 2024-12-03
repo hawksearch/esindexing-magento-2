@@ -27,29 +27,29 @@ use Magento\Framework\Api\DataObjectHelper;
 class EsIndexResult implements ResultInterface
 {
     /**
-     * @var HttpResult
-     */
-    private $result;
-
-    /**
      * @var EsIndexInterfaceFactory
      */
-    private $esIndexFactory;
+    private EsIndexInterfaceFactory $esIndexFactory;
 
     /**
      * @var DataObjectHelper
      */
-    private $dataObjectHelper;
+    private DataObjectHelper $dataObjectHelper;
 
     /**
      * @var HawkSearchDataObjectHelper
      */
-    private $hawksearchDataObjectHelper;
+    private HawkSearchDataObjectHelper $hawksearchDataObjectHelper;
 
     /**
      * @var HttpResponseReader
      */
-    private $httpResponseReader;
+    private HttpResponseReader $httpResponseReader;
+
+    /**
+     * @var HttpResult
+     */
+    private array $result;
 
     /**
      * @param EsIndexInterfaceFactory $esIndexFactory
@@ -66,11 +66,11 @@ class EsIndexResult implements ResultInterface
         array $result = []
     )
     {
-        $this->result = $result;
         $this->esIndexFactory = $esIndexFactory;
         $this->dataObjectHelper = $dataObjectHelper;
         $this->hawksearchDataObjectHelper = $hawksearchDataObjectHelper;
         $this->httpResponseReader = $httpResponseReader;
+        $this->result = $result;
     }
 
     /**

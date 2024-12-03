@@ -14,10 +14,12 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Plugin\Product\Product;
 
+use HawkSearch\EsIndexing\Model\Indexer\Product as ProductIndexer;
 use HawkSearch\EsIndexing\Model\Product\Attributes;
 use HawkSearch\EsIndexing\Plugin\Product\AbstractPlugin;
 use Magento\Catalog\Model\ResourceModel\Attribute as AttributeResourceModel;
 use Magento\Eav\Model\Entity\Attribute;
+use Magento\Framework\Indexer\IndexerInterface;
 use Magento\Framework\Indexer\IndexerRegistry;
 use Magento\Framework\Model\AbstractModel;
 
@@ -26,18 +28,22 @@ class AttributePlugin extends AbstractPlugin
     /**
      * @var bool
      */
-    private $isInvalidationNeeded = false;
+    private bool $isInvalidationNeeded = false;
+
+    private IndexerInterface $productIndexer;
 
     /**
      * @var Attributes
      */
-    private $productAttributes;
+    private Attributes $productAttributes;
 
     public function __construct(
         IndexerRegistry $indexerRegistry,
         Attributes $productAttributes
-    ) {
+    )
+    {
         parent::__construct($indexerRegistry);
+        $this->productIndexer = $indexerRegistry->get(ProductIndexer::INDEXER_ID);
         $this->productAttributes = $productAttributes;
     }
 
@@ -52,7 +58,8 @@ class AttributePlugin extends AbstractPlugin
     public function beforeDelete(
         AttributeResourceModel $subject,
         AbstractModel $attribute
-    ) {
+    )
+    {
         $this->isInvalidationNeeded = $this->isIndexInvalidationNeeded($attribute);
     }
 
@@ -65,7 +72,8 @@ class AttributePlugin extends AbstractPlugin
     public function afterDelete(
         AttributeResourceModel $subject,
         AttributeResourceModel $result
-    ) {
+    )
+    {
         if ($this->isInvalidationNeeded) {
             $this->productIndexer->invalidate();
         }

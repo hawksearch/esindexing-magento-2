@@ -25,7 +25,7 @@ class GenericButton
     /**
      * @var Context
      */
-    private $context;
+    private Context $context;
 
     public function __construct(
         Context $context

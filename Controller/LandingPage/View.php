@@ -10,6 +10,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+
 namespace HawkSearch\EsIndexing\Controller\LandingPage;
 
 use HawkSearch\EsIndexing\Api\Data\LandingPageInterface;
@@ -30,33 +31,33 @@ class View extends \Magento\Framework\App\Action\Action
     /**
      * @var PageFactory
      */
-    protected $resultPageFactory;
+    private PageFactory $resultPageFactory;
 
     /**
      * @var Session
      */
-    private $session;
+    private Session $session;
 
     /**
      * @var Registry
      */
-    private $coreRegistry;
+    private Registry $coreRegistry;
 
     /**
      * @var CategoryFactory
      */
-    private $categoryFactory;
+    private CategoryFactory $categoryFactory;
 
     /**
      * @var LandingPageManagementInterface
      */
-    private $landingPageManagement;
+    private LandingPageManagementInterface $landingPageManagement;
 
     /**
      * @var LandingPageInterfaceFactory
      */
-    private $landingPageInterfaceFactory;
-    
+    private LandingPageInterfaceFactory $landingPageInterfaceFactory;
+
     public function __construct(
         Context $context,
         Session $session,
@@ -65,7 +66,8 @@ class View extends \Magento\Framework\App\Action\Action
         PageFactory $resultPageFactory,
         LandingPageManagementInterface $landingPageManagement,
         LandingPageInterfaceFactory $landingPageInterfaceFactory
-    ) {
+    )
+    {
         parent::__construct($context);
         $this->resultPageFactory = $resultPageFactory;
         $this->session = $session;
@@ -88,7 +90,7 @@ class View extends \Magento\Framework\App\Action\Action
 
         //@TODO I am not sure if this is needed
         $category->setData('hawksearch_breadcrumb_path',
-            [ 0 => [
+            [0 => [
                 'label' => $category->getName(),
                 'link' => ''
             ]]

@@ -26,7 +26,7 @@ class RequestConfigProcessor implements LayoutConfigProcessorInterface
     /**
      * @var SearchHelper
      */
-    private $searchHelper;
+    private SearchHelper $searchHelper;
 
     /**
      * @var RequestInterface

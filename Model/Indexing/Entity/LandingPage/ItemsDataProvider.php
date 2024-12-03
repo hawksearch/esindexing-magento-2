@@ -28,23 +28,24 @@ class ItemsDataProvider implements ItemsDataProviderInterface
     /**
      * @var CategoryResource
      */
-    private $categoryResource;
+    private CategoryResource $categoryResource;
 
     /**
      * @var StoreManagerInterface
      */
-    private $storeManager;
+    private StoreManagerInterface $storeManager;
 
     /**
      * @var CategoryFactory
      */
-    private $categoryFactory;
+    private CategoryFactory $categoryFactory;
 
     public function __construct(
         CategoryResource $categoryResource,
         StoreManagerInterface $storeManager,
         CategoryFactory $categoryFactory
-    ) {
+    )
+    {
         $this->categoryResource = $categoryResource;
         $this->storeManager = $storeManager;
         $this->categoryFactory = $categoryFactory;

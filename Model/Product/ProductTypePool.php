@@ -28,14 +28,14 @@ use Magento\Framework\ObjectManager\TMapFactory;
 class ProductTypePool implements ProductTypePoolInterface
 {
     /**
-     * @var TMap<TKey, TValue>
-     */
-    private $types;
-
-    /**
      * @var ProductTypeInterfaceFactory
      */
-    private $productTypeFactory;
+    private ProductTypeInterfaceFactory $productTypeFactory;
+
+    /**
+     * @var TMap<TKey, TValue>
+     */
+    private TMap $types;
 
     /**
      * @param TMapFactory $tmapFactory
@@ -46,7 +46,8 @@ class ProductTypePool implements ProductTypePoolInterface
         TMapFactory $tmapFactory,
         ProductTypeInterfaceFactory $productTypeFactory,
         array $types = []
-    ) {
+    )
+    {
         $this->productTypeFactory = $productTypeFactory;
         $this->types = $tmapFactory->create(
             [

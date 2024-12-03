@@ -22,14 +22,15 @@ class EntityRebuildPlugin
     /**
      * @var StockRegistryStorage
      */
-    private $stockRegistryStorage;
+    private StockRegistryStorage $stockRegistryStorage;
 
     /**
      * @param StockRegistryStorage|null $stockRegistryStorage
      */
     public function __construct(
         StockRegistryStorage $stockRegistryStorage = null
-    ) {
+    )
+    {
         $this->stockRegistryStorage = $stockRegistryStorage ?: ObjectManager::getInstance()
             ->get(StockRegistryStorage::class);
     }

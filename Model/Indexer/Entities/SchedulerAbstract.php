@@ -31,27 +31,27 @@ class SchedulerAbstract implements SchedulerInterface
     /**
      * @var EventManagerInterface
      */
-    private $eventManager;
+    private EventManagerInterface $eventManager;
 
     /**
      * @var SearchCriteriaBuilder
      */
-    private $searchCriteriaBuilder;
+    private SearchCriteriaBuilder $searchCriteriaBuilder;
 
     /**
      * @var EntityTypeInterface
      */
-    private $entityType;
+    private EntityTypeInterface $entityType;
 
     /**
      * @var MessageManagerInterface
      */
-    private $messageManager;
+    private MessageManagerInterface $messageManager;
 
     /**
      * @var MessageTopicResolverInterface
      */
-    private $messageTopicResolver;
+    private MessageTopicResolverInterface $messageTopicResolver;
 
     public function __construct(
         EventManagerInterface $eventManager,

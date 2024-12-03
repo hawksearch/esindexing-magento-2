@@ -36,47 +36,47 @@ class SendCookieOnCartCompleteObserver implements ObserverInterface
     /**
      * @var PublicCookieMetadata
      */
-    private $cookieMetadata;
+    private PublicCookieMetadata $cookieMetadata;
 
     /**
      * @var DataStorageInterface
      */
-    private $cartItemsToAddDataStorage;
+    private DataStorageInterface $cartItemsToAddDataStorage;
 
     /**
      * @var DataStorageInterface
      */
-    private $cartItemsToRemoveDataStorage;
+    private DataStorageInterface $cartItemsToRemoveDataStorage;
 
     /**
      * @var EventTrackingConfig
      */
-    private $eventTrackingConfig;
+    private EventTrackingConfig $eventTrackingConfig;
 
     /**
      * @var ProductEntityType
      */
-    private $productEntityType;
+    private ProductEntityType $productEntityType;
 
     /**
      * @var CookieMetadataFactory
      */
-    private $cookieMetadataFactory;
+    private CookieMetadataFactory $cookieMetadataFactory;
 
     /**
      * @var CookieManagerInterface
      */
-    private $cookieManager;
+    private CookieManagerInterface $cookieManager;
 
     /**
      * @var HttpRequest
      */
-    private $httpRequest;
+    private RequestInterface $httpRequest;
 
     /**
      * @var SerializerInterface
      */
-    private $jsonSerializer;
+    private SerializerInterface $jsonSerializer;
 
     public function __construct(
         DataStorageInterface $cartItemsToAddDataStorage,
@@ -87,7 +87,8 @@ class SendCookieOnCartCompleteObserver implements ObserverInterface
         CookieManagerInterface $cookieManager,
         RequestInterface $httpRequest,
         SerializerInterface $jsonSerializer
-    ) {
+    )
+    {
         $this->cartItemsToAddDataStorage = $cartItemsToAddDataStorage;
         $this->cartItemsToRemoveDataStorage = $cartItemsToRemoveDataStorage;
         $this->eventTrackingConfig = $eventTrackingConfig;

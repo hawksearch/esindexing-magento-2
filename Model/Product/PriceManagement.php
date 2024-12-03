@@ -26,15 +26,17 @@ class PriceManagement implements PriceManagementInterface
     /**
      * @var ProductTypePoolInterface<string, ProductTypeInterface>
      */
-    private $productTypePool;
+    private ProductTypePoolInterface $productTypePool;
 
     /**
      * PriceManagement constructor.
+     *
      * @param ProductTypePoolInterface<string, ProductTypeInterface> $productTypePool
      */
     public function __construct(
         ProductTypePoolInterface $productTypePool
-    ) {
+    )
+    {
         $this->productTypePool = $productTypePool;
     }
 

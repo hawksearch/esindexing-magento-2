@@ -21,10 +21,11 @@ class MessageTopicResolverComposite implements MessageTopicResolverInterface
     /**
      * @var MessageTopicResolverInterface[]
      */
-    private $resolvers;
+    private array $resolvers;
 
     /**
      * MessageTopicResolverComposite constructor.
+     *
      * @param MessageTopicResolverInterface[] $resolvers
      */
     public function __construct(array $resolvers = [])

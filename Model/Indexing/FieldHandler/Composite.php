@@ -37,16 +37,16 @@ class Composite implements FieldHandlerInterface
     /**#@-*/
 
     /**
+     * @var ObjectManagerInterface
+     */
+    private ObjectManagerInterface $objectManager;
+
+    /**
      * @var HandlersMap
      */
     protected $handlers = [
         self::HANDLER_DEFAULT_NAME => DataObjectHandler::class
     ];
-
-    /**
-     * @var ObjectManagerInterface
-     */
-    private $objectManager;
 
     /**
      * Composite constructor.
@@ -56,7 +56,8 @@ class Composite implements FieldHandlerInterface
     public function __construct(
         ObjectManagerInterface $objectManager,
         array $handlers = []
-    ) {
+    )
+    {
         $this->objectManager = $objectManager;
         $this->mergeTypes($handlers);
     }
@@ -93,7 +94,7 @@ class Composite implements FieldHandlerInterface
      */
     protected function getHandler(string $fieldName): FieldHandlerInterface
     {
-        return $this->getObject( $this->handlers[$fieldName] ?? $this->handlers[self::HANDLER_DEFAULT_NAME]);
+        return $this->getObject($this->handlers[$fieldName] ?? $this->handlers[self::HANDLER_DEFAULT_NAME]);
     }
 
     /**

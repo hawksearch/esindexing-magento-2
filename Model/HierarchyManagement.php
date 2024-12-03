@@ -29,15 +29,15 @@ class HierarchyManagement implements HierarchyManagementInterface
     /**
      * @var InstructionManagerPoolInterface<string, InstructionManagerInterface>
      */
-    private $instructionManagerPool;
+    private InstructionManagerPoolInterface $instructionManagerPool;
 
     /**
-     * HierarchyManagement constructor.
      * @param InstructionManagerPoolInterface<string, InstructionManagerInterface> $instructionManagerPool
      */
     public function __construct(
         InstructionManagerPoolInterface $instructionManagerPool
-    ){
+    )
+    {
         $this->instructionManagerPool = $instructionManagerPool;
     }
 

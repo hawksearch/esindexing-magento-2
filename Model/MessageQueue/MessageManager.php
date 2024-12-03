@@ -41,17 +41,17 @@ class MessageManager extends AbstractSimpleObject implements MessageManagerInter
     /**
      * @var StoreManagerInterface
      */
-    private $storeManager;
+    private StoreManagerInterface $storeManager;
 
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
 
     /**
      * @var IndexManagementInterface
      */
-    private $indexManagement;
+    private IndexManagementInterface $indexManagement;
 
     /**
      * @param StoreManagerInterface $storeManager
@@ -64,7 +64,8 @@ class MessageManager extends AbstractSimpleObject implements MessageManagerInter
         LoggerFactoryInterface $loggerFactory,
         IndexManagementInterface $indexManagement,
         array $data = []
-    ) {
+    )
+    {
         $this->storeManager = $storeManager;
         $this->logger = $loggerFactory->create();
         $this->indexManagement = $indexManagement;

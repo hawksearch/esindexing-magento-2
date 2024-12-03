@@ -36,22 +36,22 @@ class BulkOperationManagement
     /**
      * @var SearchCriteriaBuilderFactory
      */
-    private $searchCriteriaBuilderFactory;
+    private SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory;
 
     /**
      * @var OperationRepositoryInterface
      */
-    private $operationRepository;
+    private OperationRepositoryInterface $operationRepository;
 
     /**
      * @var OperationCollectionFactory
      */
-    private $operationCollectionFactory;
+    private OperationCollectionFactory $operationCollectionFactory;
 
     /**
      * @var BulkCollectionFactory
      */
-    private $bulkCollectionFactory;
+    private BulkCollectionFactory $bulkCollectionFactory;
 
     public function __construct(
         SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,

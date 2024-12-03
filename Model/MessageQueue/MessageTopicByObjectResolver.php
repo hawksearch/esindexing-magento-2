@@ -23,17 +23,18 @@ class MessageTopicByObjectResolver implements MessageTopicResolverInterface
     /**
      * @var string
      */
-    private $topic;
+    private string $topic;
 
     /**
      * @var string
      */
-    private $resolverClass;
+    private string $resolverClass;
 
     public function __construct(
         string $topic,
         string $resolverClass
-    ) {
+    )
+    {
         $this->topic = $topic;
         $this->resolverClass = $resolverClass;
     }

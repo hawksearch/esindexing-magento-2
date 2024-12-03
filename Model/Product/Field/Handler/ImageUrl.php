@@ -38,29 +38,30 @@ class ImageUrl implements FieldHandlerInterface
     /**
      * @var ImageHelper
      */
-    private $imageHelper;
+    private ImageHelper $imageHelper;
 
     /**
      * @var UrlHelper
      */
-    private $urlHelper;
+    private UrlHelper $urlHelper;
 
     /**
      * @var AdvancedConfig
      */
-    private $advancedConfig;
+    private AdvancedConfig $advancedConfig;
 
     /**
      * @var StoreManagerInterface
      */
-    private $storeManager;
+    private StoreManagerInterface $storeManager;
 
     public function __construct(
         ImageHelper $imageHelper,
         UrlHelper $urlHelper,
         AdvancedConfig $advancedConfig,
         StoreManagerInterface $storeManager
-    ) {
+    )
+    {
         $this->imageHelper = $imageHelper;
         $this->urlHelper = $urlHelper;
         $this->advancedConfig = $advancedConfig;

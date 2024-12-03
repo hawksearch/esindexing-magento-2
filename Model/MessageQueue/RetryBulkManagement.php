@@ -24,12 +24,12 @@ class RetryBulkManagement implements BulkManagementInterface
     /**
      * @var OperationManagementInterface
      */
-    private $operationManagement;
+    private OperationManagementInterface $operationManagement;
 
     /**
      * @var BulkPublisherInterface
      */
-    private $publisher;
+    private BulkPublisherInterface $publisher;
 
     public function __construct(
         OperationManagementInterface $operationManagement,

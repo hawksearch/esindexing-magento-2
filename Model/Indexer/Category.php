@@ -31,21 +31,21 @@ class Category implements IndexerActionInterface, MviewActionInterface
     const INDEXER_ID = 'hawksearch_categories';
 
     /**
-     * @var ConsoleOutput
-     */
-    private $output;
-
-    /**
      * @var Action
      */
-    private $action;
+    private Action $action;
+
+    /**
+     * @var ConsoleOutput
+     */
+    private ConsoleOutput $output;
 
     public function __construct(
         Action $action,
         ConsoleOutput $output
     ) {
-        $this->output = $output;
         $this->action = $action;
+        $this->output = $output;
     }
 
     /**

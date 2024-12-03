@@ -23,14 +23,14 @@ use Magento\Framework\Exception\RuntimeException;
 class DataStorage implements DataStorageInterface
 {
     /**
-     * @var string|null
+     * @var string
      */
-    private ?string $name;
+    private string $name;
 
     /**
      * @var mixed
      */
-    private $value;
+    private mixed $value;
 
     /**
      * @param string|null $name
@@ -73,8 +73,8 @@ class DataStorage implements DataStorageInterface
     {
         if (isset($this->value)) {
             if (is_object($this->value)
-            && method_exists($this->value, '__destruct')
-            && is_callable([$this->value, '__destruct'])) {
+                && method_exists($this->value, '__destruct')
+                && is_callable([$this->value, '__destruct'])) {
                 $this->value->__destruct();
             }
             unset($this->value);

@@ -25,16 +25,18 @@ class EntityPriceObserver implements ObserverInterface
     /**
      * @var PriceManagementInterface
      */
-    private $priceManagement;
+    private PriceManagementInterface $priceManagement;
 
     public function __construct(
         PriceManagementInterface $priceManagement
-    ) {
+    )
+    {
         $this->priceManagement = $priceManagement;
     }
 
     /**
      * Add product entity pricing data to the index data
+     *
      * @inheritDoc
      */
     public function execute(Observer $observer)

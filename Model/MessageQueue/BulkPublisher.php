@@ -36,52 +36,52 @@ class BulkPublisher extends AbstractSimpleObject implements BulkPublisherInterfa
     /**
      * @var SerializerInterface
      */
-    private $serializer;
+    private SerializerInterface $serializer;
 
     /**
      * @var OperationRepositoryInterface
      */
-    private $operationRepository;
+    private OperationRepositoryInterface $operationRepository;
 
     /**
      * @var IdentityGeneratorInterface
      */
-    private $identityService;
+    private IdentityGeneratorInterface $identityService;
 
     /**
      * @var BulkManagementInterface
      */
-    private $bulkManagement;
+    private BulkManagementInterface $bulkManagement;
 
     /**
      * @var UserContextInterface
      */
-    private $userContext;
+    private UserContextInterface $userContext;
 
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
 
     /**
      * @var SaveMultipleOperationsInterface
      */
-    private $saveMultipleOperations;
+    private SaveMultipleOperationsInterface $saveMultipleOperations;
 
     /**
      * @var QueueOperationDataInterfaceFactory
      */
-    private $queueOperationDataFactory;
-
-    /**
-     * @var string
-     */
-    private $bulkDescription;
+    private QueueOperationDataInterfaceFactory $queueOperationDataFactory;
 
     /**
      * @var MessageManagerInterface
      */
-    private $messageManager;
+    private MessageManagerInterface $messageManager;
+
+    /**
+     * @var string
+     */
+    private string $bulkDescription;
 
     /**
      * @param SerializerInterface $serializer
@@ -108,7 +108,8 @@ class BulkPublisher extends AbstractSimpleObject implements BulkPublisherInterfa
         MessageManagerInterface $messageManager,
         string $bulkDescription = null,
         array $data = []
-    ) {
+    )
+    {
         parent::__construct($data);
         $this->serializer = $serializer;
         $this->operationRepository = $operationRepository;
@@ -118,8 +119,8 @@ class BulkPublisher extends AbstractSimpleObject implements BulkPublisherInterfa
         $this->logger = $loggerFactory->create();
         $this->saveMultipleOperations = $saveMultipleOperations;
         $this->queueOperationDataFactory = $queueOperationDataFactory;
-        $this->bulkDescription = $bulkDescription ?? static::DEFAULT_BULK_DESCRIPTION;
         $this->messageManager = $messageManager;
+        $this->bulkDescription = $bulkDescription ?? static::DEFAULT_BULK_DESCRIPTION;
     }
 
     /**

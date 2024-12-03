@@ -23,12 +23,12 @@ class JsConfig extends Template
     /**
      * @var SerializerInterface
      */
-    private $serializer;
+    private SerializerInterface $serializer;
 
     /**
      * @var LayoutConfigProcessorInterface
      */
-    private $configProcessor;
+    private LayoutConfigProcessorInterface $configProcessor;
 
     /**
      * Config constructor.

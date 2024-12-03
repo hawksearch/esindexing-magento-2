@@ -27,17 +27,17 @@ class ItemsDataProvider implements ItemsDataProviderInterface
     /**
      * @var CategoryResource
      */
-    private $categoryResource;
+    private CategoryResource $categoryResource;
 
     /**
      * @var StoreManagerInterface
      */
-    private $storeManager;
+    private StoreManagerInterface $storeManager;
 
     /**
      * @var CategoryFactory
      */
-    private $categoryFactory;
+    private CategoryFactory $categoryFactory;
 
     public function __construct(
         CategoryResource $categoryResource,

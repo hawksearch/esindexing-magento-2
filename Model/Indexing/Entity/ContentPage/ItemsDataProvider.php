@@ -26,12 +26,12 @@ class ItemsDataProvider implements ItemsDataProviderInterface
     /**
      * @var PageRepositoryInterface
      */
-    private $pageRepository;
+    private PageRepositoryInterface $pageRepository;
 
     /**
      * @var SearchCriteriaBuilder
      */
-    private $searchCriteriaBuilder;
+    private SearchCriteriaBuilder $searchCriteriaBuilder;
 
     public function __construct(
         PageRepositoryInterface $pageRepository,

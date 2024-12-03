@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Ui\Component\Listing\Column;
 
-use HawkSearch\EsIndexing\Model\ResourceModel\AsynchronousOperations\Operation;
+use HawkSearch\EsIndexing\Model\ResourceModel\AsynchronousOperations\Operation as OperationResource;
 use Magento\Framework\Locale\Bundle\DataBundle;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\Stdlib\BooleanUtils;
@@ -27,16 +27,16 @@ use Magento\Ui\Component\Listing\Columns\Date;
 class StartTime extends Date
 {
     /**
-     * @var Operation
+     * @var OperationResource
      */
-    private $operation;
+    private OperationResource $operationResource;
 
     /**
      * @param ContextInterface $context
      * @param UiComponentFactory $uiComponentFactory
      * @param TimezoneInterface $timezone
      * @param BooleanUtils $booleanUtils
-     * @param Operation $operation
+     * @param OperationResource $operation
      * @param array<string, UiComponentInterface> $components
      * @param array<mixed> $data
      * @param ResolverInterface|null $localeResolver
@@ -47,13 +47,14 @@ class StartTime extends Date
         UiComponentFactory $uiComponentFactory,
         TimezoneInterface $timezone,
         BooleanUtils $booleanUtils,
-        Operation $operation,
+        OperationResource $operation,
         array $components = [],
         array $data = [],
         ResolverInterface $localeResolver = null,
         DataBundle $dataBundle = null
-    ) {
-        $this->operation = $operation;
+    )
+    {
+        $this->operationResource = $operation;
         parent::__construct(
             $context,
             $uiComponentFactory,
@@ -74,7 +75,7 @@ class StartTime extends Date
         parent::prepare();
 
         $config = (array)$this->getData('config');
-        if (!$this->operation->isStartedAtColumnExists()) {
+        if (!$this->operationResource->isStartedAtColumnExists()) {
             $config['componentDisabled'] = true;
         }
         $this->setData('config', $config);

@@ -30,23 +30,24 @@ class Consumer
     /**
      * @var SerializerInterface
      */
-    private $serializer;
+    private SerializerInterface $serializer;
 
     /**
      * @var ObjectFactory
      */
-    private $objectFactory;
+    private ObjectFactory $objectFactory;
 
     /**
      * @var ObjectHelper
      */
-    private $objectHelper;
+    private ObjectHelper $objectHelper;
 
     public function __construct(
         SerializerInterface $serializer,
         ObjectFactory $objectFactory,
         ObjectHelper $objectHelper
-    ) {
+    )
+    {
         $this->serializer = $serializer;
         $this->objectFactory = $objectFactory;
         $this->objectHelper = $objectHelper;

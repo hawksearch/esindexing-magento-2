@@ -26,17 +26,18 @@ class FieldMappingConfigPatch implements DataPatchInterface
     /**
      * @var ModuleDataSetupInterface
      */
-    private $moduleDataSetup;
+    private ModuleDataSetupInterface $moduleDataSetup;
 
     /**
      * @var Json
      */
-    private $json;
+    private Json $json;
 
     public function __construct(
         ModuleDataSetupInterface $moduleDataSetup,
         Json $json
-    ) {
+    )
+    {
         $this->moduleDataSetup = $moduleDataSetup;
         $this->json = $json;
     }

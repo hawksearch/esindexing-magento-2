@@ -53,38 +53,38 @@ class Retry extends Action implements HttpPostActionInterface
     /**
      * @var BulkManagementInterface
      */
-    private $bulkManagement;
+    private BulkManagementInterface $bulkManagement;
 
     /**
      * @var BulkNotificationManagement
      */
-    private $notificationManagement;
+    private BulkNotificationManagement $notificationManagement;
 
     /**
      * @var BulkAccessValidator
      */
-    private $bulkAccessValidator;
+    private BulkAccessValidator $bulkAccessValidator;
 
     /**
      * @var BulkSummaryInterfaceFactory
      */
-    private $bulkSummaryFactory;
+    private BulkSummaryInterfaceFactory $bulkSummaryFactory;
 
     /**
      * @var EntityManager
      */
-    private $entityManager;
+    private EntityManager $entityManager;
 
     /**
      * @var BulkStatusInterface
      */
-    private $bulkStatus;
+    private BulkStatusInterface $bulkStatus;
 
     /**
      * @var DataObjectFactory
      */
-    private $dataObjectFactory;
-    
+    private DataObjectFactory $dataObjectFactory;
+
     public function __construct(
         Context $context,
         BulkManagementInterface $bulkManagement,

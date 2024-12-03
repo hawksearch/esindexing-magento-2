@@ -29,7 +29,7 @@ class SearchResult extends SearchResultParent
     /**
      * @var IdentifierResolver
      */
-    private $identifierResolver;
+    private IdentifierResolver $identifierResolver;
 
     /**
      * @param EntityFactory $entityFactory
@@ -53,7 +53,8 @@ class SearchResult extends SearchResultParent
         $mainTable = 'magento_operation',
         $resourceModel = null,
         $identifierName = 'id'
-    ) {
+    )
+    {
         $this->identifierResolver = $identifierResolver;
         parent::__construct(
             $entityFactory,

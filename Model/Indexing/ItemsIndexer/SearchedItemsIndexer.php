@@ -28,14 +28,15 @@ class SearchedItemsIndexer implements ItemsIndexerInterface
     /**
      * @var InstructionManagerPoolInterface<string, InstructionManagerInterface>
      */
-    private $instructionManagerPool;
+    private InstructionManagerPoolInterface $instructionManagerPool;
 
     /**
      * @param InstructionManagerPoolInterface<string, InstructionManagerInterface> $instructionManagerPool
      */
     public function __construct(
         InstructionManagerPoolInterface $instructionManagerPool
-    ) {
+    )
+    {
         $this->instructionManagerPool = $instructionManagerPool;
     }
 
@@ -73,6 +74,7 @@ class SearchedItemsIndexer implements ItemsIndexerInterface
 
     /**
      * Uses api/v2/indexing/delete-items API call for removing items from the index
+     *
      * @throws InstructionException
      * @throws NotFoundException
      */
