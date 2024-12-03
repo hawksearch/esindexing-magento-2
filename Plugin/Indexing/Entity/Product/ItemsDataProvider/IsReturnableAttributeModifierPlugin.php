@@ -55,7 +55,7 @@ class IsReturnableAttributeModifierPlugin
                 : (string) (int) $this->scopeConfig->isSetFlag(
                 \Magento\Rma\Model\Product\Source::XML_PATH_PRODUCTS_ALLOWED,
                 ScopeInterface::SCOPE_STORE,
-                $item->getStore()
+                $item->getStore()->getId()
             );
 
             $item->setIsReturnable(

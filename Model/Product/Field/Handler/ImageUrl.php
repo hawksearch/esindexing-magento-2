@@ -92,7 +92,7 @@ class ImageUrl implements FieldHandlerInterface
         $uri = $this->urlHelper->getUriInstance($imageUrl);
 
         $store = $this->storeManager->getStore($product->getStoreId());
-        if ($this->advancedConfig->isRemovePubFromAssetsUrl($store)) {
+        if ($this->advancedConfig->isRemovePubFromAssetsUrl($store->getId())) {
             /** @link  https://github.com/magento/magento2/issues/9111 */
             $uri = $this->urlHelper->removeFromUriPath($uri, ['pub']);
         }

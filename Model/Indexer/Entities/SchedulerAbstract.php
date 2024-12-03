@@ -85,7 +85,7 @@ class SchedulerAbstract implements SchedulerInterface
             ]
         );
 
-        $batchSize = $this->entityType->getConfigHelper()->getBatchSize($store);
+        $batchSize = $this->entityType->getConfigHelper()->getBatchSize($store->getId());
         if ($isFullReindex) {
             $items = $this->entityType->getItemsDataProvider()->getItems((int)$store->getId());
             $batches = ceil(count($items) / $batchSize);

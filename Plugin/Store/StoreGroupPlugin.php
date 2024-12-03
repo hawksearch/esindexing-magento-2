@@ -19,6 +19,7 @@ use HawkSearch\EsIndexing\Model\Indexer\Product as ProductIndexer;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Store\Model\Group as StoreGroupModel;
 use Magento\Store\Model\ResourceModel\Group as StoreGroupResourceModel;
+use Magento\Store\Model\Store;
 
 class StoreGroupPlugin extends AbstractPlugin
 {
@@ -27,7 +28,7 @@ class StoreGroupPlugin extends AbstractPlugin
      *
      * @param StoreGroupResourceModel $subject
      * @param StoreGroupResourceModel $result
-     * @param AbstractModel $group
+     * @param StoreGroupModel $group
      * @return StoreGroupResourceModel
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -45,15 +46,15 @@ class StoreGroupPlugin extends AbstractPlugin
     /**
      * Validate changes for invalidating indexer
      *
-     * @param AbstractModel $model
+     * @param StoreGroupModel $model
      * @return bool
      */
     protected function validate(AbstractModel $model)
     {
         $isIndexingEnabled = false;
-        /** @var StoreGroupModel $model */
+        /** @var Store $store */
         foreach ($model->getStores() as $store) {
-            $isIndexingEnabled = $isIndexingEnabled || $this->indexingConfig->isIndexingEnabled($store);
+            $isIndexingEnabled = $isIndexingEnabled || $this->indexingConfig->isIndexingEnabled($store->getId());
         }
 
         return ($model->dataHasChangedFor('website_id') || $model->dataHasChangedFor('root_category_id'))
