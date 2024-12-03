@@ -31,7 +31,7 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
 {
     use PublicMethodDeprecationTrait;
 
-    private $deprecatedMethods = [
+    private array $deprecatedMethods = [
         'getAttributeHandler' => [
             'since' => '0.7.0',
             'replacement' => __CLASS__ . '::getFieldHandler()',
