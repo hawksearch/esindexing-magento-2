@@ -118,7 +118,7 @@ class RetryBulk extends Command
                         $output->writeln(__(
                             'Status "%1" is skipped. Operations with such status can\'t be retried.',
                             $status
-                        ));
+                        )->render());
                         continue;
                     }
                     $operations = array_merge(
@@ -144,12 +144,16 @@ class RetryBulk extends Command
                 $bulkSummary->getDescription(),
                 $bulkSummary->getUserId()
             )) {
-                $output->writeln(__('%1 item(s) have been scheduled for update"', count($operations)));
+                $output->writeln(__('%1 item(s) have been scheduled for update"', count($operations))->render());
             } else {
-                $output->writeln(__('No operations found to retry'));
+                $output->writeln(__('No operations found to retry')->render());
             }
         } catch (\Exception $exception) {
-            $output->writeln(__('<error>An error occurred: %1</error>', $exception->getMessage()));
+            $phrase = __(
+                "An error occurred: %1",
+                $exception->getMessage()
+            );
+            $output->writeln('<error>' . $phrase . '</error>');
             return 1;
         }
         return 0;
