@@ -643,7 +643,7 @@ class Facet extends AbstractSimpleObject implements FacetInterface
      */
     public function getFacetRanges(): array
     {
-        $value = $this->_get(self::FACET_RANGES) ?? [];
+        $value = (array)($this->_get(self::FACET_RANGES) ?? []);
         array_walk(
             $value,
             [ObjectHelper::class, 'validateObjectValue'],

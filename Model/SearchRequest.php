@@ -114,7 +114,7 @@ class SearchRequest extends AbstractSimpleObject implements SearchRequestInterfa
      */
     public function getBoostQueries(): array
     {
-        $value = $this->_get(self::FIELD_BOOST_QUERIES) ?? [];
+        $value = (array)($this->_get(self::FIELD_BOOST_QUERIES) ?? []);
         array_walk(
             $value,
             [ObjectHelper::class, 'validateObjectValue'],
@@ -361,7 +361,7 @@ class SearchRequest extends AbstractSimpleObject implements SearchRequestInterfa
      */
     public function getFacetSelections(): array
     {
-        return $this->_get(self::FIELD_FACET_SELECTIONS) ?? [];
+        return (array)($this->_get(self::FIELD_FACET_SELECTIONS) ?? []);
     }
 
     /**
@@ -441,7 +441,7 @@ class SearchRequest extends AbstractSimpleObject implements SearchRequestInterfa
      */
     public function getFacetOverride(): array
     {
-        return $this->_get(self::FIELD_FACET_OVERRIDE) ?? [];
+        return (array)($this->_get(self::FIELD_FACET_OVERRIDE) ?? []);
     }
 
     /**
@@ -457,7 +457,7 @@ class SearchRequest extends AbstractSimpleObject implements SearchRequestInterfa
      */
     public function getFieldOverride(): array
     {
-        return $this->_get(self::FIELD_FIELD_OVERRIDE) ?? [];
+        return (array)($this->_get(self::FIELD_FIELD_OVERRIDE) ?? []);
     }
 
     /**
