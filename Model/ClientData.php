@@ -75,7 +75,7 @@ class ClientData extends AbstractSimpleObject implements ClientDataInterface
      */
     public function getCustom(): array
     {
-        return $this->_get(self::FIELD_CUSTOM) ?? [];
+        return (array)($this->_get(self::FIELD_CUSTOM) ?? []);
     }
 
     /**
@@ -91,7 +91,7 @@ class ClientData extends AbstractSimpleObject implements ClientDataInterface
      */
     public function getExtendedCustom(): array
     {
-        return $this->_get(self::FIELD_EXTENDED_CUSTOM) ?? [];
+        return (array)($this->_get(self::FIELD_EXTENDED_CUSTOM) ?? []);
     }
 
     /**
@@ -107,7 +107,7 @@ class ClientData extends AbstractSimpleObject implements ClientDataInterface
      */
     public function getPreviewBuckets(): array
     {
-        return $this->_get(self::FIELD_PREVIEW_BUCKETS) ?? [];
+        return (array)($this->_get(self::FIELD_PREVIEW_BUCKETS) ?? []);
     }
 
     /**

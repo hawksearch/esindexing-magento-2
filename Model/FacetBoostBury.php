@@ -28,7 +28,7 @@ class FacetBoostBury extends AbstractSimpleObject implements FacetBoostBuryInter
      */
     public function getBoostValues(): array
     {
-        $value = $this->_get(self::BOOST_VALUES) ?? [];
+        $value = (array)($this->_get(self::BOOST_VALUES) ?? []);
         array_walk(
             $value,
             [ObjectHelper::class, 'validateObjectValue'],
@@ -52,7 +52,7 @@ class FacetBoostBury extends AbstractSimpleObject implements FacetBoostBuryInter
      */
     public function getBuryValues(): array
     {
-        $value = $this->_get(self::BURY_VALUES) ?? [];
+        $value = (array)($this->_get(self::BURY_VALUES) ?? []);
         array_walk(
             $value,
             [ObjectHelper::class, 'validateObjectValue'],
