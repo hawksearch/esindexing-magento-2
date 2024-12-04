@@ -35,6 +35,7 @@ class DataStorage implements DataStorageInterface
     /**
      * @param string|null $name
      * @throws RuntimeException
+     * @todo $name: remove default value 'null'
      */
     public function __construct(string $name = null)
     {

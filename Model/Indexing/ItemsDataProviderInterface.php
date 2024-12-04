@@ -27,6 +27,8 @@ interface ItemsDataProviderInterface
      * @param int $currentPage
      * @param int $pageSize
      * @return array
+     * @todo $entityIds: default value null -> []
+     * @todo $entityIds: change type ?array -> array
      */
     public function getItems(int $storeId, ?array $entityIds = null, int $currentPage = 1, int $pageSize = 0);
 }
