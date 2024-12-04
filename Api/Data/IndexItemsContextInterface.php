@@ -31,15 +31,15 @@ interface IndexItemsContextInterface
     /**#@-*/
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getIndexName(): ?string;
+    public function getIndexName(): string;
 
     /**
-     * @param string $value
+     * @param string|null $value
      * @return $this
      */
-    public function setIndexName(string $value);
+    public function setIndexName(?string $value);
 
     /**
      * @return IndexItemInterface[]
@@ -47,8 +47,8 @@ interface IndexItemsContextInterface
     public function getItems(): array;
 
     /**
-     * @param IndexItemInterface[] $value
+     * @param IndexItemInterface[]|null $value
      * @return $this
      */
-    public function setItems(array $value);
+    public function setItems(?array $value);
 }
