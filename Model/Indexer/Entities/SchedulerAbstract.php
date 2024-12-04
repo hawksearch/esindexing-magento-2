@@ -75,7 +75,6 @@ class SchedulerAbstract implements SchedulerInterface
     }
 
     /**
-     * @inheritDoc
      * @throws InputException
      */
     public function schedule(StoreInterface $store, ?array $ids = null)

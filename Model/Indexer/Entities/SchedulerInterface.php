@@ -26,7 +26,7 @@ interface SchedulerInterface
      * Schedule entity ids for reindexing
      *
      * @param StoreInterface $store
-     * @param list<int>|null $ids
+     * @param list<int>|null $ids Schedule full reindexing if null
      * @return void
      */
     public function schedule(StoreInterface $store, ?array $ids = null);

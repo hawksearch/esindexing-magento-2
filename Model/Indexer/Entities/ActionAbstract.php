@@ -73,7 +73,7 @@ abstract class ActionAbstract
 
     /**
      * @param StoreInterface $store
-     * @param list<int>|null $ids
+     * @param list<int>|null $ids Schedule full reindexing if null
      * @return void
      */
     protected function reindex(StoreInterface $store, ?array $ids = null)

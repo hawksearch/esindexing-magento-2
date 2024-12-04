@@ -175,10 +175,12 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
      * Rebuild one batch of Entity items
      *
      * @param SearchCriteriaInterface $searchCriteria
-     * @param array<int>|null $entityIds
+     * @param array<int>|null $entityIds Entity ids for partial rebuild or null to rebuild all entities
      * @return void
      * @throws LocalizedException
      * @throws NotFoundException
+     * @todo $entityIds: default value null -> []
+     * @todo $entityIds: change type ?array -> array
      */
     protected function rebuildBatch(SearchCriteriaInterface $searchCriteria, ?array $entityIds = null)
     {
@@ -263,6 +265,8 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
      * @param array<int>|null $entityIds List of entity IDs used for items selection
      * @return array<int, string>
      * @throws NotFoundException
+     * @todo $entityIds: default value null -> []
+     * @todo $entityIds: change type ?array -> array
      */
     protected function getItemsToRemove(array $fullItemsList, ?array $entityIds = null): array
     {
@@ -303,6 +307,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
      * @param array<int>|null $entityIds List of entity IDs used for items selection
      * @return array
      * @throws LocalizedException
+     * @todo $entityIds: remove unused argument
      */
     protected function getItemsToIndex(array $fullItemsList, ?array $entityIds = null): array
     {
