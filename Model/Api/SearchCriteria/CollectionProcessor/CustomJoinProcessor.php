@@ -65,6 +65,7 @@ class CustomJoinProcessor implements CollectionProcessorInterface
 
         if ($customJoin) {
             $customJoin->apply($collection);
+            $this->appliedJoins[$joinName] = true;
         }
     }
 
