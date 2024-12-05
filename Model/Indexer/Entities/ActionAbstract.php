@@ -45,12 +45,6 @@ abstract class ActionAbstract
      */
     protected $entityScheduler;
 
-    /**
-     * @param ManagerInterface $eventManager
-     * @param MessageManagerInterface $messageManager
-     * @param BulkPublisherInterface $publisher
-     * @param SchedulerInterface $entityScheduler
-     */
     public function __construct(
         ManagerInterface $eventManager,
         MessageManagerInterface $messageManager,

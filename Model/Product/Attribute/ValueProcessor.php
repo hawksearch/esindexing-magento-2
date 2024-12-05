@@ -48,7 +48,6 @@ class ValueProcessor implements ValueProcessorInterface
     }
 
     /**
-     * @param Attribute $attribute
      * @return bool
      */
     protected function isRollUpAttributeStrategy(Attribute $attribute)
@@ -59,7 +58,6 @@ class ValueProcessor implements ValueProcessorInterface
     }
 
     /**
-     * @param Attribute $attribute
      * @return bool
      */
     protected function isUniqueValueStrategy(Attribute $attribute)

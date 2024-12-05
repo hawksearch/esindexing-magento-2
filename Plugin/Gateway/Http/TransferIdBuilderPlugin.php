@@ -19,8 +19,6 @@ use HawkSearch\Connector\Gateway\Http\TransferInterface;
 class TransferIdBuilderPlugin
 {
     /**
-     * @param TransferInterface $subject
-     * @param string $result
      * @return string
      */
     public function afterGetUri(TransferInterface $subject, string $result): string

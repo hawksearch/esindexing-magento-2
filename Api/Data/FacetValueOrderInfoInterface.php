@@ -51,7 +51,6 @@ interface FacetValueOrderInfoInterface
     public function getSortOrder() : int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setSortOrder(int $value): FacetValueOrderInfoInterface;

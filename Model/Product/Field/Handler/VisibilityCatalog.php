@@ -29,9 +29,6 @@ class VisibilityCatalog implements FieldHandlerInterface
      */
     private Visibility $visibility;
 
-    /**
-     * @param Visibility $visibility
-     */
     public function __construct(
         Visibility $visibility
     )

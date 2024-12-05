@@ -33,14 +33,6 @@ class ActionFull extends ActionAbstract
      */
     private $indexingConfig;
 
-    /**
-     * @param ManagerInterface $eventManager
-     * @param MessageManagerInterface $messageManager
-     * @param BulkPublisherInterface $publisher
-     * @param SchedulerInterface $entityScheduler
-     * @param StoreManagerInterface $storeManager
-     * @param IndexingConfig $indexingConfig
-     */
     public function __construct(
         ManagerInterface $eventManager,
         MessageManagerInterface $messageManager,

@@ -35,7 +35,6 @@ interface VariantOptionsInterface
     public function getCountFacetHitOnChild(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setCountFacetHitOnChild(bool $value): self;
@@ -46,7 +45,6 @@ interface VariantOptionsInterface
     public function getPageNo(): int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setPageNo(int $value): self;
@@ -57,7 +55,6 @@ interface VariantOptionsInterface
     public function getMaxPerPage(): int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setMaxPerPage(int $value): self;

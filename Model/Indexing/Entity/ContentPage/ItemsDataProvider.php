@@ -33,11 +33,6 @@ class ItemsDataProvider implements ItemsDataProviderInterface
      */
     private $searchCriteriaBuilder;
 
-    /**
-     * ContentPageItems constructor.
-     * @param PageRepositoryInterface $pageRepository
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
-     */
     public function __construct(
         PageRepositoryInterface $pageRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder

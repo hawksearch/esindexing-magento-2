@@ -43,7 +43,6 @@ interface BoostQueryInterface
     public function getBoost(): float;
 
     /**
-     * @param float $value
      * @return $this
      */
     public function setBoost(float $value): self;

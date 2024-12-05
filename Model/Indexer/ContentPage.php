@@ -39,10 +39,6 @@ class ContentPage implements IndexerActionInterface, MviewActionInterface
      */
     private $action;
 
-    /**
-     * @param Action $action
-     * @param ConsoleOutput $output
-     */
     public function __construct(
         Action $action,
         ConsoleOutput $output

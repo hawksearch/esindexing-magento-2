@@ -30,10 +30,6 @@ abstract class AbstractPlugin
      */
     protected $indexingConfig;
 
-    /**
-     * @param IndexerRegistry $indexerRegistry
-     * @param IndexingConfig $indexingConfig
-     */
     public function __construct(
         IndexerRegistry $indexerRegistry,
         IndexingConfig $indexingConfig
@@ -45,7 +41,6 @@ abstract class AbstractPlugin
     /**
      * Validate changes for invalidating indexer
      *
-     * @param AbstractModel $model
      * @return bool
      */
     abstract protected function validate(AbstractModel $model);

@@ -26,9 +26,6 @@ class ImportPlugin
      */
     private $productIndexer;
 
-    /**
-     * @param IndexerRegistry $indexerRegistry
-     */
     public function __construct(
         IndexerRegistry $indexerRegistry
     ) {
@@ -36,10 +33,7 @@ class ImportPlugin
     }
 
     /**
-     * After import handler
-     *
-     * @param Import $subject
-     * @param mixed $import
+     * Invalidate index after import
      *
      * @return bool
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

@@ -18,7 +18,6 @@ use HawkSearch\EsIndexing\Api\HierarchyManagementInterface;
 use HawkSearch\EsIndexing\Api\IndexManagementInterface;
 use HawkSearch\EsIndexing\Model\BulkOperation\BulkOperationManagement;
 use HawkSearch\EsIndexing\Model\Indexing;
-use HawkSearch\EsIndexing\Model\Indexing\Context;
 use HawkSearch\EsIndexing\Model\MessageQueue\Exception\InvalidBulkOperationException;
 use HawkSearch\EsIndexing\Model\MessageQueue\Validator\OperationValidatorInterface;
 use Magento\AsynchronousOperations\Api\Data\OperationInterface;
@@ -92,22 +91,6 @@ class AsynchronousOperationProcessorPlugin
      */
     private BulkOperationManagement $bulkOperationManagement;
 
-    /**
-     * AsynchronousOperationProcessorPlugin constructor.
-     *
-     * @param MessageEncoder $messageEncoder
-     * @param OperationManagementInterface $operationManagement
-     * @param OperationValidatorInterface $bulkAllOperationCompleteValidator
-     * @param OperationValidatorInterface $operationTopicValidator
-     * @param OperationValidatorInterface $operationOpenStatusValidator
-     * @param HierarchyManagementInterface $hierarchyManagement
-     * @param IndexManagementInterface $indexManagement
-     * @param MessageValidator $messageValidator
-     * @param StoreManagerInterface $storeManager
-     * @param Context $indexingContext
-     * @param Emulation $emulation
-     * @param BulkOperationManagement $bulkOperationManagement
-     */
     public function __construct(
         MessageEncoder $messageEncoder,
         OperationManagementInterface $operationManagement,
@@ -138,8 +121,6 @@ class AsynchronousOperationProcessorPlugin
     }
 
     /**
-     * @param OperationProcessor $subject
-     * @param string $encodedMessage
      * @return array
      * @throws LocalizedException
      */
@@ -193,7 +174,6 @@ class AsynchronousOperationProcessorPlugin
     /**
      * Finalize full reindexing process: rebuild hierarchy, set current index
      *
-     * @param OperationInterface $operation
      * @return void
      * @throws NoSuchEntityException|InvalidBulkOperationException
      */
@@ -234,7 +214,6 @@ class AsynchronousOperationProcessorPlugin
     }
 
     /**
-     * @param OperationInterface $operation
      * @return bool
      */
     private function isAllowed(OperationInterface $operation): bool
@@ -252,7 +231,6 @@ class AsynchronousOperationProcessorPlugin
     /**
      * Update operation status from magento_operation table
      *
-     * @param OperationInterface $operation
      * @return void
      */
     private function updateOperationStatus(OperationInterface $operation)

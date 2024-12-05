@@ -69,8 +69,6 @@ class ItemsDataProvider implements ItemsDataProviderInterface
     private ProductDataProvider $productDataProvider;
 
     /**
-     * ProductItems constructor.
-     *
      * @param ProductRepositoryInterface $productRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param Visibility $visibility
@@ -150,7 +148,6 @@ class ItemsDataProvider implements ItemsDataProviderInterface
     }
 
     /**
-     * @param SearchCriteria $searchCriteria
      * @return ItemType[]
      */
     private function getProductItems(SearchCriteria $searchCriteria): array
@@ -160,7 +157,6 @@ class ItemsDataProvider implements ItemsDataProviderInterface
     }
 
     /**
-     * Adds all parent categories to products
      * @param ItemType[] $products
      * @return void
      */

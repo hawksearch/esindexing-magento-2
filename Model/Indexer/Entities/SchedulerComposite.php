@@ -33,8 +33,6 @@ class SchedulerComposite implements SchedulerInterface
     protected $schedulers;
 
     /**
-     * SchedulerComposite constructor.
-     *
      * @param TMapFactory $tmapFactory
      * @param array<TKey, class-string<TValue>> $schedulers
      */

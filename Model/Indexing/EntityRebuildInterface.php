@@ -26,7 +26,6 @@ interface EntityRebuildInterface
     /**
      * Rebuild Entity items
      *
-     * @param SearchCriteriaInterface $searchCriteria
      * @return void
      */
     public function rebuild(SearchCriteriaInterface $searchCriteria);

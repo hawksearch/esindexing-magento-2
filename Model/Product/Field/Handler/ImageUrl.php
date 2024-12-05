@@ -55,13 +55,6 @@ class ImageUrl implements FieldHandlerInterface
      */
     private $storeManager;
 
-    /**
-     * ImageUrl constructor.
-     * @param ImageHelper $imageHelper
-     * @param UrlHelper $urlHelper
-     * @param AdvancedConfig $advancedConfig
-     * @param StoreManagerInterface $storeManager
-     */
     public function __construct(
         ImageHelper $imageHelper,
         UrlHelper $urlHelper,
@@ -88,7 +81,6 @@ class ImageUrl implements FieldHandlerInterface
     }
 
     /**
-     * Get product image URL by image_id
      * @param ItemType $product
      * @param string $imageId
      * @return string

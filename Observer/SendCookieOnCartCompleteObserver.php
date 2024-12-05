@@ -78,16 +78,6 @@ class SendCookieOnCartCompleteObserver implements ObserverInterface
      */
     private $jsonSerializer;
 
-    /**
-     * @param DataStorageInterface $cartItemsToAddDataStorage
-     * @param DataStorageInterface $cartItemsToRemoveDataStorage
-     * @param EventTrackingConfig $eventTrackingConfig
-     * @param ProductEntityType $productEntityType
-     * @param CookieMetadataFactory $cookieMetadataFactory
-     * @param CookieManagerInterface $cookieManager
-     * @param RequestInterface $httpRequest
-     * @param SerializerInterface $jsonSerializer
-     */
     public function __construct(
         DataStorageInterface $cartItemsToAddDataStorage,
         DataStorageInterface $cartItemsToRemoveDataStorage,
@@ -128,7 +118,6 @@ class SendCookieOnCartCompleteObserver implements ObserverInterface
     }
 
     /**
-     * @param QuoteItem $item
      * @return array
      */
     protected function formatCartItem(QuoteItem $item)

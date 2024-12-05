@@ -118,7 +118,6 @@ interface LandingPageInterface
     public function getIsFacetOverride(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsFacetOverride(bool $value);
@@ -129,7 +128,6 @@ interface LandingPageInterface
     public function getIsIncludeProducts(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsIncludeProducts(bool $value);
@@ -184,7 +182,6 @@ interface LandingPageInterface
     public function getEnableFacetAutoOrdering(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setEnableFacetAutoOrdering(bool $value);
@@ -327,7 +324,6 @@ interface LandingPageInterface
     public function getIsNoIndex(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsNoIndex(bool $value);
@@ -338,7 +334,6 @@ interface LandingPageInterface
     public function getIsNoFollow(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsNoFollow(bool $value);

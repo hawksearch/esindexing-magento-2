@@ -214,8 +214,6 @@ class EntityRebuild extends AbstractEntityRebuild
     }
 
     /**
-     * Retreive mapping by Custom field
-     *
      * @return LandingPageInterface[]
      * @throws NoSuchEntityException
      */
@@ -236,8 +234,6 @@ class EntityRebuild extends AbstractEntityRebuild
     }
 
     /**
-     * Retreive mapping by CustomUrl field
-     *
      * @return LandingPageInterface[]
      * @throws NoSuchEntityException
      */
@@ -259,7 +255,7 @@ class EntityRebuild extends AbstractEntityRebuild
 
     /**
      * Delete Landing pages by Custom field ids
-     * 
+     *
      * @throws NoSuchEntityException
      * @throws NotFoundException
      */

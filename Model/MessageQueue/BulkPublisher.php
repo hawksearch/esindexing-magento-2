@@ -84,8 +84,6 @@ class BulkPublisher extends AbstractSimpleObject implements BulkPublisherInterfa
     private $messageManager;
 
     /**
-     * Publisher constructor.
-     *
      * @param SerializerInterface $serializer
      * @param OperationRepositoryInterface $operationRepository
      * @param IdentityGeneratorInterface $identityService

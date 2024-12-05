@@ -43,10 +43,6 @@ class RequestConfigProcessor implements LayoutConfigProcessorInterface
      */
     private FormKey $formKey;
 
-    /**
-     * VueParamsMappingProcessor constructor.
-     * @param SearchHelper $searchHelper
-     */
     public function __construct(
         SearchHelper $searchHelper,
         RequestInterface $request,

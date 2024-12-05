@@ -31,10 +31,6 @@ class Url implements FieldHandlerInterface
      */
     private $storeManager;
 
-    /**
-     * Url constructor.
-     * @param StoreManagerInterface $storeManager
-     */
     public function __construct(
         StoreManagerInterface $storeManager)
     {

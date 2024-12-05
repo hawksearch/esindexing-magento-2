@@ -27,9 +27,6 @@ abstract class AbstractConfigHelper
      */
     private $indexingConfig;
 
-    /**
-     * @param IndexingConfig $indexingConfig
-     */
     public function __construct(
         IndexingConfig $indexingConfig
     ) {

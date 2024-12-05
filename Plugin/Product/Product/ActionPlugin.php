@@ -26,7 +26,6 @@ class ActionPlugin extends AbstractPlugin
      * @param ProductAction $action
      * @param array<int> $productIds
      * @return ProductAction
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @noinspection PhpUnusedParameterInspection
      */
@@ -48,7 +47,6 @@ class ActionPlugin extends AbstractPlugin
      * @param null $result
      * @param list<int> $productIds
      * @return void
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterUpdateWebsites(ProductAction $subject, $result, array $productIds)

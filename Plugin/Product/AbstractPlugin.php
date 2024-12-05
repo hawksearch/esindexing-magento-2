@@ -25,9 +25,6 @@ abstract class AbstractPlugin
      */
     protected $productIndexer;
 
-    /**
-     * @param IndexerRegistry $indexerRegistry
-     */
     public function __construct(
         IndexerRegistry $indexerRegistry
     ) {
@@ -37,7 +34,6 @@ abstract class AbstractPlugin
     /**
      * Reindex product if indexer is not scheduled
      *
-     * @param int $productId
      * @return void
      */
     protected function reindexRow(int $productId)

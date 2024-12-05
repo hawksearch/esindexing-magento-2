@@ -30,12 +30,6 @@ class MessageTopicByObjectResolver implements MessageTopicResolverInterface
      */
     private $resolverClass;
 
-    /**
-     * TopicResolver constructor.
-     *
-     * @param string $topic
-     * @param string $resolverClass
-     */
     public function __construct(
         string $topic,
         string $resolverClass

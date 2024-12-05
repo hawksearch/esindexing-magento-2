@@ -117,7 +117,6 @@ class CustomAttributes extends AbstractFieldArray
     /**
      * Prepare existing row data object
      *
-     * @param DataObject $row
      * @throws LocalizedException
      */
     protected function _prepareArrayRow(DataObject $row): void
@@ -141,7 +140,6 @@ class CustomAttributes extends AbstractFieldArray
     }
 
     /**
-     * @param string $columnName
      * @return void
      * @throws LocalizedException
      * @throws \Exception
@@ -165,7 +163,6 @@ class CustomAttributes extends AbstractFieldArray
     }
 
     /**
-     * @param string $columnName
      * @return Select|null
      * @throws \Exception
      */

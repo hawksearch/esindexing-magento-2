@@ -53,13 +53,6 @@ class SchedulerAbstract implements SchedulerInterface
      */
     private $messageTopicResolver;
 
-    /**
-     * @param EventManagerInterface $eventManager
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
-     * @param EntityTypeInterface $entityType
-     * @param MessageManagerInterface $messageManager
-     * @param MessageTopicResolverInterface $messageTopicResolver
-     */
     public function __construct(
         EventManagerInterface $eventManager,
         SearchCriteriaBuilder $searchCriteriaBuilder,

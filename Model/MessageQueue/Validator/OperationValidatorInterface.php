@@ -24,7 +24,6 @@ use Magento\Framework\Bulk\OperationInterface;
 interface OperationValidatorInterface
 {
     /**
-     * @param OperationInterface $operation
      * @return bool
      * @throws InvalidBulkOperationException
      */

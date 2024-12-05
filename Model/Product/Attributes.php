@@ -46,10 +46,6 @@ class Attributes
      */
     private $attributesConfigProvider;
 
-    /**
-     * Attributes constructor.
-     * @param Config $eavConfig
-     */
     public function __construct(
         Config $eavConfig,
         Json $jsonSerializer,

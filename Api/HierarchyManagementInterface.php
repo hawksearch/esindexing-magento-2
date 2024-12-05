@@ -23,25 +23,19 @@ namespace HawkSearch\EsIndexing\Api;
 interface HierarchyManagementInterface
 {
     /**
-     * Upsert Hierarchy
      * @param list<array<string, mixed>> $items
-     * @param string $indexName
      * @return void
      * @todo use \HawkSearch\EsIndexing\Api\Data\HierarchyInterface[] as input array
      */
     public function upsertHierarchy(array $items, string $indexName);
 
     /**
-     * Rebuild index hierarchy
-     * @param string $indexName
      * @return void
      */
     public function rebuildHierarchy(string $indexName);
 
     /**
-     * Removes multiple documents from a specific hierarchy based on ids
      * @param string[] $ids
-     * @param string $indexName
      * @return void
      */
     public function deleteHierarchyItems(array $ids, string $indexName);

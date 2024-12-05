@@ -44,15 +44,7 @@ class Details extends Action implements HttpGetActionInterface
      * @var BulkAccessValidator
      */
     private BulkAccessValidator $bulkAccessValidator;
-
-    /**
-     * Index constructor.
-     *
-     * @param Context $context
-     * @param PageFactory $resultPageFactory
-     * @param BulkAccessValidator $bulkAccessValidator
-     * @param string $menuId
-     */
+    
     public function __construct(
         Context $context,
         PageFactory $resultPageFactory,

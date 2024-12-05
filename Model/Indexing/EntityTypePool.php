@@ -38,7 +38,6 @@ class EntityTypePool implements EntityTypePoolInterface
     private TMapFactory $tmapFactory;
 
     /**
-     * EntityTypePool constructor.
      * @param TMapFactory $tmapFactory
      * @param array<TKey, class-string<TValue>> $types
      */

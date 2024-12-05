@@ -37,14 +37,7 @@ class Index extends Action implements HttpGetActionInterface
      * @var string
      */
     private $menuId;
-
-    /**
-     * Index constructor.
-     *
-     * @param Context $context
-     * @param PageFactory $resultPageFactory
-     * @param string $menuId
-     */
+    
     public function __construct(
         Context $context,
         PageFactory $resultPageFactory,

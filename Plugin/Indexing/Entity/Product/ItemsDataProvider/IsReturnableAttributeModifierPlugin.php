@@ -26,9 +26,6 @@ class IsReturnableAttributeModifierPlugin
      */
     private ScopeConfigInterface $scopeConfig;
 
-    /**
-     * @param ScopeConfigInterface $scopeConfig
-     */
     public function __construct(ScopeConfigInterface $scopeConfig)
     {
         $this->scopeConfig = $scopeConfig;

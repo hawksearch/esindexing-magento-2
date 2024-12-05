@@ -53,12 +53,6 @@ class CatalogConfigProcessor implements LayoutConfigProcessorInterface
      */
     private AdvancedCategoryConfig $advancedCategoryConfig;
 
-    /**
-     * @param CurrentCategory $currentCategory
-     * @param CategoryUrlPathGenerator $categoryUrlPathGenerator
-     * @param ScopeConfigInterface $scopeConfig
-     * @param DbStorage $urlFinder
-     */
     public function __construct(
         CurrentCategory $currentCategory,
         CategoryUrlPathGenerator $categoryUrlPathGenerator,

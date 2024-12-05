@@ -31,12 +31,6 @@ class BulkAccessValidator
      */
     private BulkOperationsStatus $bulkOperationsStatus;
 
-    /**
-     * BulkAccessValidator Constructor
-     *
-     * @param OperationValidatorInterface $operationTopicValidator
-     * @param BulkOperationsStatus $bulkOperationsStatus
-     */
     public function __construct(
         OperationValidatorInterface $operationTopicValidator,
         BulkOperationsStatus $bulkOperationsStatus
@@ -48,7 +42,6 @@ class BulkAccessValidator
     /**
      * Check if content is allowed
      *
-     * @param string $bulkUuid
      * @return bool
      */
     public function isAllowed(string $bulkUuid): bool
@@ -67,7 +60,6 @@ class BulkAccessValidator
     }
 
     /**
-     * @param OperationInterface $operation
      * @return bool
      */
     private function isTopicAllowed(OperationInterface $operation): bool

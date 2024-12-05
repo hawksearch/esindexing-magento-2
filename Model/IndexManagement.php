@@ -16,13 +16,12 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model;
 
 use HawkSearch\Connector\Gateway\Instruction\InstructionManagerInterface;
-use HawkSearch\Connector\Gateway\Instruction\InstructionManagerPool;
 use HawkSearch\Connector\Gateway\Instruction\InstructionManagerPoolInterface;
 use HawkSearch\Connector\Gateway\InstructionException;
+use HawkSearch\Connector\Logger\LoggerFactoryInterface;
 use HawkSearch\EsIndexing\Api\Data\EsIndexInterface;
 use HawkSearch\EsIndexing\Api\Data\IndexListInterface;
 use HawkSearch\EsIndexing\Api\IndexManagementInterface;
-use HawkSearch\Connector\Logger\LoggerFactoryInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\NotFoundException;
 use Magento\Store\Model\StoreManagerInterface;
@@ -61,7 +60,6 @@ class IndexManagement implements IndexManagementInterface
     private $storeManager;
 
     /**
-     * IndexManagement constructor.
      * @param InstructionManagerPoolInterface<string, InstructionManagerInterface> $instructionManagerPool
      * @param LoggerFactoryInterface $loggerFactory
      * @param StoreManagerInterface $storeManager
@@ -123,7 +121,6 @@ class IndexManagement implements IndexManagementInterface
 
     /**
      * @inheritDoc
-     * @param string $indexName
      * @throws InstructionException
      * @throws NoSuchEntityException
      * @throws NotFoundException
@@ -263,7 +260,6 @@ class IndexManagement implements IndexManagementInterface
     }
 
     /**
-     * @param string $indexName
      * @throws InstructionException
      * @throws NoSuchEntityException
      * @throws NotFoundException
@@ -292,8 +288,6 @@ class IndexManagement implements IndexManagementInterface
     }
 
     /**
-     * @param string $index
-     * @param bool $isCurrent
      * @throws NoSuchEntityException
      * @TODO Replace with \Psr\Cache\CacheItemPoolInterface implementation
      */
@@ -310,7 +304,6 @@ class IndexManagement implements IndexManagementInterface
     }
 
     /**
-     * @param string $index
      * @throws NoSuchEntityException
      * @TODO Replace with \Psr\Cache\CacheItemPoolInterface implementation
      */
@@ -325,7 +318,6 @@ class IndexManagement implements IndexManagementInterface
     }
 
     /**
-     * @param bool $isCurrent
      * @return array|string|null
      * @throws NoSuchEntityException
      * @TODO Replace with \Psr\Cache\CacheItemPoolInterface implementation

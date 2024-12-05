@@ -16,7 +16,6 @@ namespace HawkSearch\EsIndexing\Plugin\Quote;
 
 use HawkSearch\EsIndexing\Model\Config\EventTracking as EventTrackingConfig;
 use HawkSearch\EsIndexing\Service\DataStorageInterface;
-use Magento\Framework\DataObject;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
 
@@ -37,10 +36,6 @@ class OnCartRemoveTrackingEventPlugin
      */
     private $eventTrackingConfig;
 
-    /**
-     * @param DataStorageInterface $cartItemsToRemoveDataStorage
-     * @param EventTrackingConfig $eventTrackingConfig
-     */
     public function __construct(
         DataStorageInterface $cartItemsToRemoveDataStorage,
         EventTrackingConfig $eventTrackingConfig
@@ -99,8 +94,6 @@ class OnCartRemoveTrackingEventPlugin
     }
 
     /**
-     * @param QuoteItem $resultItem
-     * @param float $qty
      * @return void
      * @throws \Magento\Framework\Exception\RuntimeException
      */
