@@ -69,9 +69,6 @@ class PricingHelper extends AbstractHelper
     }
 
     /**
-     * @param ProductModel $product
-     * @param float $price inputted product price
-     * @param bool $forceIncludeTax
      * @return float
      */
     public function handleTax(ProductModel $product, float $price, bool $forceIncludeTax = false): float

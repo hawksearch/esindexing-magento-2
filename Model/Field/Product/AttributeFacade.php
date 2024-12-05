@@ -27,8 +27,6 @@ class AttributeFacade
     private AttributeAdapter $attribute;
 
     /**
-     * @param FieldInterface $field
-     * @param AttributeAdapter $attribute
      * @return void
      */
     public function execute(FieldInterface $field, AttributeAdapter $attribute)
@@ -68,7 +66,6 @@ class AttributeFacade
     }
 
     /**
-     * @param FieldInterface $field
      * @return bool
      */
     protected function isFieldSearchable(FieldInterface $field): bool
@@ -78,8 +75,6 @@ class AttributeFacade
     }
 
     /**
-     * @param FieldInterface $field
-     * @param bool $value
      * @return void
      */
     protected function setFieldSearchable(FieldInterface $field, bool $value)
@@ -99,7 +94,6 @@ class AttributeFacade
     }
 
     /**
-     * @param FieldInterface $field
      * @return bool
      */
     protected function isFieldFilterable(FieldInterface $field): bool
@@ -108,8 +102,6 @@ class AttributeFacade
     }
 
     /**
-     * @param FieldInterface $field
-     * @param bool $value
      * @return void
      */
     protected function setFieldFilterable(FieldInterface $field, bool $value)
@@ -126,7 +118,6 @@ class AttributeFacade
     }
 
     /**
-     * @param FieldInterface $field
      * @return bool
      */
     protected function isFieldSortable(FieldInterface $field): bool
@@ -135,8 +126,6 @@ class AttributeFacade
     }
 
     /**
-     * @param FieldInterface $field
-     * @param bool $value
      * @return void
      */
     protected function setFieldSortable(FieldInterface $field, bool $value)

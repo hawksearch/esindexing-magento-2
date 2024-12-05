@@ -60,8 +60,6 @@ class EntityRebuild extends AbstractEntityRebuild
     private $productDataProvider;
 
     /**
-     * ProductEntity constructor.
-     *
      * @param EntityTypePoolInterface<string, EntityTypeInterface> $entityTypePool
      * @param EventManagerInterface $eventManager
      * @param LoggerFactoryInterface $loggerFactory

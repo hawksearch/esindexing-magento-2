@@ -38,11 +38,6 @@ class ResultIndexPlugin
      */
     private SearchConfig $searchConfig;
 
-    /**
-     * @param QueryFactory $queryFactory
-     * @param ViewInterface $view
-     * @param SearchConfig $searchConfig
-     */
     public function __construct(
         QueryFactory $queryFactory,
         ViewInterface $view,

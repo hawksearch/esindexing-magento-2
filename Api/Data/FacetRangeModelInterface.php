@@ -45,7 +45,6 @@ interface FacetRangeModelInterface
     public function getRangeId() : int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setRangeId(int $value): FacetRangeModelInterface;
@@ -89,7 +88,6 @@ interface FacetRangeModelInterface
     public function getSortOrder() : int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setSortOrder(int $value): FacetRangeModelInterface;

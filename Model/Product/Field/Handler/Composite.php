@@ -45,8 +45,6 @@ class Composite extends FieldHandler\Composite
     private ValueProcessorInterface $valueProcessor;
 
     /**
-     * Composite constructor.
-     *
      * @param ObjectManagerInterface $objectManager
      * @param ProductTypePoolInterface<string, ProductTypeInterface> $productTypePool
      * @param ValueProcessorInterface $valueProcessor
@@ -87,7 +85,6 @@ class Composite extends FieldHandler\Composite
     /**
      * Safely apply values of array type.
      *
-     * @param mixed $value
      * @return array
      */
     private function formatValue(mixed $value)

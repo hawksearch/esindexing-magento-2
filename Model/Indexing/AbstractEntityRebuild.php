@@ -408,7 +408,6 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     }
 
     /**
-     * @param mixed $value
      * @return mixed
      */
     protected function castAttributeValue(mixed $value)
@@ -550,7 +549,6 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     }
 
     /**
-     * @param string $value
      * @return string
      * @throws NotFoundException
      */

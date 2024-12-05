@@ -53,14 +53,6 @@ class BulkOperationManagement
      */
     private $bulkCollectionFactory;
 
-    /**
-     * BulkOperationManagement constructor.
-     *
-     * @param SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory
-     * @param OperationRepositoryInterface $operationRepository
-     * @param OperationCollectionFactory $operationCollectionFactory
-     * @param BulkCollectionFactory $bulkCollectionFactory
-     */
     public function __construct(
         SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
         OperationRepositoryInterface $operationRepository,
@@ -74,10 +66,6 @@ class BulkOperationManagement
     }
 
     /**
-     * Get operation by bulk_uuid and numeric key
-     *
-     * @param string $bulkUuid
-     * @param int $operationKey
      * @return OperationInterface
      * @throws NoSuchEntityException
      */
@@ -114,10 +102,6 @@ class BulkOperationManagement
     }
 
     /**
-     * Get operation by bulk_uuid and status
-     *
-     * @param string $bulkUuid
-     * @param int $status
      * @return OperationSearchResultsInterface
      */
     public function getOperationsByBulkUuidAndStatus(string $bulkUuid, int $status)
@@ -137,9 +121,6 @@ class BulkOperationManagement
     }
 
     /**
-     * Get operation by bulk_uuid
-     *
-     * @param string $bulkUuid
      * @return OperationSearchResultsInterface
      */
     public function getOperationsByBulkUuid(string $bulkUuid)

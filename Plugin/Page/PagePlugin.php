@@ -27,9 +27,6 @@ class PagePlugin
      */
     private $pageIndexer;
 
-    /**
-     * @param IndexerRegistry $indexerRegistry
-     */
     public function __construct(
         IndexerRegistry $indexerRegistry
     ) {
@@ -39,9 +36,6 @@ class PagePlugin
     /**
      * Reindex on page save.
      *
-     * @param PageResource $pageResource
-     * @param \Closure $proceed
-     * @param AbstractModel $object
      * @return PageResource
      * @throws \Exception
      */
@@ -53,9 +47,6 @@ class PagePlugin
     /**
      * Reindex on product delete
      *
-     * @param PageResource $pageResource
-     * @param \Closure $proceed
-     * @param AbstractModel $object
      * @return PageResource
      * @throws \Exception
      */
@@ -67,9 +58,6 @@ class PagePlugin
     /**
      * Reindex catalog search.
      *
-     * @param PageResource $pageResource
-     * @param \Closure $proceed
-     * @param AbstractModel $object
      * @return PageResource
      * @throws \Exception
      */
@@ -93,7 +81,6 @@ class PagePlugin
     /**
      * Reindex page if indexer is not scheduled
      *
-     * @param int $pageId
      * @return void
      */
     private function reindexRow(int $pageId)

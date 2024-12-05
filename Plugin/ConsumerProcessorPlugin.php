@@ -46,13 +46,6 @@ class ConsumerProcessorPlugin
      */
     private $emulation;
 
-    /**
-     * ConsumerProcessorPlugin constructor.
-     * @param SerializerInterface $serializer
-     * @param StoreManagerInterface $storeManager
-     * @param ContextInterface $indexingContext
-     * @param Emulation $emulation
-     */
     public function __construct(
         SerializerInterface $serializer,
         StoreManagerInterface $storeManager,
@@ -66,8 +59,6 @@ class ConsumerProcessorPlugin
     }
 
     /**
-     * @param Consumer $subject
-     * @param QueueOperationDataInterface $operation
      * @return null
      * @throws LocalizedException
      * @throws NoSuchEntityException

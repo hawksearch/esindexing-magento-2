@@ -88,7 +88,6 @@ interface FieldInterface
     public function getFieldId(): int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setFieldId(int $value): FieldInterface;
@@ -132,7 +131,6 @@ interface FieldInterface
     public function getIsPrimaryKey(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsPrimaryKey(bool $value): FieldInterface;
@@ -165,7 +163,6 @@ interface FieldInterface
     public function getBoost(): int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setBoost(int $value): FieldInterface;
@@ -176,7 +173,6 @@ interface FieldInterface
     public function getFacetHandler(): int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setFacetHandler(int $value): FieldInterface;
@@ -187,7 +183,6 @@ interface FieldInterface
     public function getIsOutput(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsOutput(bool $value): FieldInterface;
@@ -198,7 +193,6 @@ interface FieldInterface
     public function getIsShingle(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsShingle(bool $value): FieldInterface;
@@ -209,7 +203,6 @@ interface FieldInterface
     public function getIsBestFragment(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsBestFragment(bool $value): FieldInterface;
@@ -220,7 +213,6 @@ interface FieldInterface
     public function getIsDictionary(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsDictionary(bool $value): FieldInterface;
@@ -231,7 +223,6 @@ interface FieldInterface
     public function getIsSort(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsSort(bool $value): FieldInterface;
@@ -242,7 +233,6 @@ interface FieldInterface
     public function getIsPrefix(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsPrefix(bool $value): FieldInterface;
@@ -253,7 +243,6 @@ interface FieldInterface
     public function getIsHidden(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsHidden(bool $value): FieldInterface;
@@ -264,7 +253,6 @@ interface FieldInterface
     public function getIsCompare(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsCompare(bool $value): FieldInterface;
@@ -275,7 +263,6 @@ interface FieldInterface
     public function getSortOrder(): int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setSortOrder(int $value): FieldInterface;
@@ -297,7 +284,6 @@ interface FieldInterface
     public function getIsKeywordText(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsKeywordText(bool $value): FieldInterface;
@@ -308,7 +294,6 @@ interface FieldInterface
     public function getIsQuery(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsQuery(bool $value): FieldInterface;
@@ -319,7 +304,6 @@ interface FieldInterface
     public function getIsQueryText(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsQueryText(bool $value): FieldInterface;
@@ -330,7 +314,6 @@ interface FieldInterface
     public function getSkipCustom(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setSkipCustom(bool $value): FieldInterface;
@@ -341,7 +324,6 @@ interface FieldInterface
     public function getStripHtml(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setStripHtml(bool $value): FieldInterface;
@@ -352,7 +334,6 @@ interface FieldInterface
     public function getMinNGramAnalyzer(): int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setMinNGramAnalyzer(int $value): FieldInterface;
@@ -363,7 +344,6 @@ interface FieldInterface
     public function getMaxNGramAnalyzer(): int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setMaxNGramAnalyzer(int $value): FieldInterface;
@@ -374,7 +354,6 @@ interface FieldInterface
     public function getCoordinateType(): int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setCoordinateType(int $value): FieldInterface;
@@ -385,7 +364,6 @@ interface FieldInterface
     public function getOmitNorms(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setOmitNorms(bool $value): FieldInterface;
@@ -418,7 +396,6 @@ interface FieldInterface
     public function getUseForPrediction(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setUseForPrediction(bool $value): FieldInterface;
@@ -451,7 +428,6 @@ interface FieldInterface
     public function getDoNotStore(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setDoNotStore(bool $value): FieldInterface;
@@ -506,7 +482,6 @@ interface FieldInterface
     public function getOmitTfAndPos(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setOmitTfAndPos(bool $value): FieldInterface;
@@ -539,7 +514,6 @@ interface FieldInterface
     public function getIsChild(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsChild(bool $value): FieldInterface;
@@ -550,7 +524,6 @@ interface FieldInterface
     public function getIsHierarchical(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsHierarchical(bool $value): FieldInterface;

@@ -39,13 +39,6 @@ class ItemsDataProvider implements ItemsDataProviderInterface
      */
     private $categoryFactory;
 
-
-    /**
-     * HierarchyItems constructor.
-     * @param CategoryResource $categoryResource
-     * @param StoreManagerInterface $storeManager
-     * @param CategoryFactory $categoryFactory
-     */
     public function __construct(
         CategoryResource $categoryResource,
         StoreManagerInterface $storeManager,

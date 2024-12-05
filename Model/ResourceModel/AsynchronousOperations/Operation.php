@@ -20,9 +20,6 @@ class Operation
 {
     private OperationResource $operationResource;
 
-    /**
-     * @param OperationResource $operationResource
-     */
     public function __construct(OperationResource $operationResource)
     {
         $this->operationResource = $operationResource;

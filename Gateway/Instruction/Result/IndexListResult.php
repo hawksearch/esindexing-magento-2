@@ -54,6 +54,7 @@ class IndexListResult implements ResultInterface
     /**
      * @param IndexListInterfaceFactory $indexListFactory
      * @param DataObjectHelper $dataObjectHelper
+     * @param HawkSearchDataObjectHelper $hawksearchDataObjectHelper
      * @param HttpResponseReader $httpResponseReader
      * @param HttpResult $result
      */

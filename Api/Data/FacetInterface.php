@@ -93,7 +93,6 @@ interface FacetInterface
     public function getFacetId() : int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setFacetId(int $value): FacetInterface;
@@ -137,7 +136,6 @@ interface FacetInterface
     public function getMaxCount() : int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setMaxCount(int $value): FacetInterface;
@@ -148,7 +146,6 @@ interface FacetInterface
     public function getMinHitCount() : int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setMinHitCount(int $value): FacetInterface;
@@ -192,7 +189,6 @@ interface FacetInterface
     public function getScrollHeight() : int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setScrollHeight(int $value): FacetInterface;
@@ -203,7 +199,6 @@ interface FacetInterface
     public function getScrollThreshold() : int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setScrollThreshold(int $value): FacetInterface;
@@ -214,7 +209,6 @@ interface FacetInterface
     public function getTruncateThreshold() : int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setTruncateThreshold(int $value): FacetInterface;
@@ -225,7 +219,6 @@ interface FacetInterface
     public function getSearchThreshold() : int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setSearchThreshold(int $value): FacetInterface;
@@ -236,7 +229,6 @@ interface FacetInterface
     public function getSortOrder() : int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setSortOrder(int $value): FacetInterface;
@@ -247,7 +239,6 @@ interface FacetInterface
     public function getExpandSelection() : bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setExpandSelection(bool $value): FacetInterface;
@@ -258,7 +249,6 @@ interface FacetInterface
     public function getIsCurrency() : bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsCurrency(bool $value): FacetInterface;
@@ -269,7 +259,6 @@ interface FacetInterface
     public function getIsNumeric() : bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsNumeric(bool $value): FacetInterface;
@@ -280,7 +269,6 @@ interface FacetInterface
     public function getIsSearch() : bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsSearch(bool $value): FacetInterface;
@@ -291,7 +279,6 @@ interface FacetInterface
     public function getIsVisible() : bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsVisible(bool $value): FacetInterface;
@@ -335,7 +322,6 @@ interface FacetInterface
     public function getNofVisible() : int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setNofVisible(int $value): FacetInterface;
@@ -346,7 +332,6 @@ interface FacetInterface
     public function getHeight() : int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setHeight(int $value): FacetInterface;
@@ -379,7 +364,6 @@ interface FacetInterface
     public function getParentId() : int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setParentId(int $value): FacetInterface;
@@ -390,7 +374,6 @@ interface FacetInterface
     public function getIsCollapsible() : bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsCollapsible(bool $value): FacetInterface;
@@ -401,7 +384,6 @@ interface FacetInterface
     public function getIsCollapsedDefault() : bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsCollapsedDefault(bool $value): FacetInterface;
@@ -423,7 +405,6 @@ interface FacetInterface
     public function getFacetRangeDisplayType() : int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setFacetRangeDisplayType(int $value): FacetInterface;
@@ -434,7 +415,6 @@ interface FacetInterface
     public function getPreloadChildren() : bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setPreloadChildren(bool $value): FacetInterface;
@@ -456,7 +436,6 @@ interface FacetInterface
     public function getShowSliderInputs() : bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setShowSliderInputs(bool $value): FacetInterface;
@@ -467,7 +446,6 @@ interface FacetInterface
     public function getShowFacetImageCount() : bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setShowFacetImageCount(bool $value): FacetInterface;
@@ -544,7 +522,6 @@ interface FacetInterface
     public function getNumericPrecision() : int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setNumericPrecision(int $value): FacetInterface;

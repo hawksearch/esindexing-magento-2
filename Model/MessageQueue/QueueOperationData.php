@@ -23,10 +23,6 @@ class QueueOperationData implements QueueOperationDataInterface
      */
     private string $data;
 
-    /**
-     * QueueOperationData constructor.
-     * @param string $data
-     */
     public function __construct(string $data)
     {
         $this->data = $data;

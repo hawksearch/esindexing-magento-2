@@ -56,17 +56,7 @@ class View extends \Magento\Framework\App\Action\Action
      * @var LandingPageInterfaceFactory
      */
     private $landingPageInterfaceFactory;
-
-    /**
-     * View constructor.
-     *
-     * @param Context $context
-     * @param Session $session
-     * @param Registry $coreRegistry
-     * @param CategoryFactory $categoryFactory
-     * @param PageFactory $resultPageFactory
-     * @param LandingPageManagementInterface $landingPageManagement
-     */
+    
     public function __construct(
         Context $context,
         Session $session,

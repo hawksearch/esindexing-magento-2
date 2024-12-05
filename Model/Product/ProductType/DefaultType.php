@@ -58,15 +58,6 @@ abstract class DefaultType implements ProductTypeInterface
      */
     private PricingHelper $pricingHelper;
 
-    /**
-     * NonComplexProductType constructor.
-     *
-     * @param PriceCurrencyInterface $priceCurrency
-     * @param GroupSourceInterface $customerGroupSource
-     * @param GroupManagementInterface $groupManagement
-     * @param ModuleManager $moduleManager
-     * @param PricingHelper $pricingHelper
-     */
     public function __construct(
         PriceCurrencyInterface $priceCurrency,
         GroupSourceInterface $customerGroupSource,
@@ -246,9 +237,6 @@ abstract class DefaultType implements ProductTypeInterface
     }
 
     /**
-     * @param string $priceName
-     * @param string $suffix
-     * @param float $price
      * @return array<string, float>
      */
     private function getSuffixedPrice(string $priceName, string $suffix, float $price)
@@ -258,7 +246,7 @@ abstract class DefaultType implements ProductTypeInterface
 
     /**
      * @param ProductModel $product
-     * @param float $price input product price
+     * @param float $price
      * @param bool $forceIncludeTax
      * @return float
      */

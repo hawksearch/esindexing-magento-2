@@ -111,7 +111,6 @@ interface SearchRequestInterface
     public function getDistanceUnitType(): int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setDistanceUnitType(int $value): self;
@@ -122,7 +121,6 @@ interface SearchRequestInterface
     public function getRequestType(): int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setRequestType(int $value): self;
@@ -155,7 +153,6 @@ interface SearchRequestInterface
     public function getKValue(): int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setKValue(int $value): self;
@@ -188,7 +185,6 @@ interface SearchRequestInterface
     public function getPageId(): int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setPageId(int $value): self;
@@ -199,7 +195,6 @@ interface SearchRequestInterface
     public function getPageNo(): int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setPageNo(int $value): self;
@@ -210,7 +205,6 @@ interface SearchRequestInterface
     public function getMaxPerPage(): int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setMaxPerPage(int $value): self;
@@ -287,7 +281,6 @@ interface SearchRequestInterface
     public function getIsInPreview(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsInPreview(bool $value): self;
@@ -298,7 +291,6 @@ interface SearchRequestInterface
     public function getIs100CoverageTurnedOn(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIs100CoverageTurnedOn(bool $value): self;
@@ -375,7 +367,6 @@ interface SearchRequestInterface
     public function getIgnoreSpellcheck(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIgnoreSpellcheck(bool $value): self;

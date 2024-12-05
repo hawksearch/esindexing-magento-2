@@ -29,6 +29,7 @@ interface IndexManagementInterface
      * Start process of full reindexing
      * We consider that number of indices per engine is equal to 2
      * Non-current index is the only index which can be processed during full reindexing
+     *
      * @return void
      */
     public function initializeFullReindex();
@@ -37,14 +38,12 @@ interface IndexManagementInterface
      * Get active index for indexing
      * Use current index for partial delta index updates
      * Current index is used for searching
-     * @param bool $useCurrent
+     *
      * @return string
      */
     public function getIndexName(bool $useCurrent = false) : ?string;
 
     /**
-     * Remove index
-     * @param string $indexName
      * @return void
      */
     public function removeIndex(string $indexName);

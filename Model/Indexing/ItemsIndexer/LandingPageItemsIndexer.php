@@ -28,9 +28,6 @@ class LandingPageItemsIndexer implements ItemsIndexerInterface
      */
     private $landingPageManagement;
 
-    /**
-     * @param LandingPageManagementInterface $landingPageManagement
-     */
     public function __construct(
         LandingPageManagementInterface $landingPageManagement
     ) {

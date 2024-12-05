@@ -39,12 +39,6 @@ class LandingPageRepository implements \HawkSearch\EsIndexing\Api\LandingPageRep
      */
     private $serializer;
 
-    /**
-     * LandingPageRepository constructor.
-     * @param StoreManagerInterface $storeManager
-     * @param Cache $cache
-     * @param SerializerInterface $serializer
-     */
     public function __construct(
         StoreManagerInterface $storeManager,
         Cache $cache,

@@ -35,9 +35,6 @@ class CurrentCategory
      */
     private CategoryInterfaceFactory $categoryFactory;
 
-    /**
-     * @param CategoryInterfaceFactory $categoryFactory
-     */
     public function __construct(CategoryInterfaceFactory $categoryFactory)
     {
         $this->categoryFactory = $categoryFactory;
@@ -51,9 +48,6 @@ class CurrentCategory
         return $this->category ?? $this->categoryFactory->create();
     }
 
-    /**
-     * @param CategoryInterface $category
-     */
     public function set(CategoryInterface $category)
     {
         $this->category = $category;

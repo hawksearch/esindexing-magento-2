@@ -100,18 +100,6 @@ class ProductAttributes implements ValueProcessorInterface
      */
     private ?SerializerInterface $serializer;
 
-    /**
-     * @param AttributeProvider $attributeProvider
-     * @param AttributeFacade $attributeFacade
-     * @param ManagerInterface $message
-     * @param LoggerFactoryInterface $loggerFactory
-     * @param FieldInterfaceFactory $fieldFactory
-     * @param FacetInterfaceFactory $facetFactory
-     * @param FieldManagementInterface $fieldManagement
-     * @param FacetManagementInterface $facetManagement
-     * @param FieldExtendedInterfaceFactory $fieldExtendedFactory
-     * @param SerializerInterface|null $serializer
-     */
     public function __construct(
         AttributeProvider $attributeProvider,
         AttributeFacade $attributeFacade,
@@ -299,7 +287,6 @@ class ProductAttributes implements ValueProcessorInterface
     }
 
     /**
-     * @param string $name
      * @return FieldInterface
      */
     protected function getFieldByName(string $name): FieldInterface
@@ -326,7 +313,6 @@ class ProductAttributes implements ValueProcessorInterface
     }
 
     /**
-     * @param FieldExtendedInterface $field
      * @return FacetInterface
      */
     protected function getFacetByField(FieldExtendedInterface $field): FacetInterface
@@ -352,7 +338,6 @@ class ProductAttributes implements ValueProcessorInterface
     }
 
     /**
-     * @param FieldExtendedInterface $field
      * @return FacetInterface
      * @throws CouldNotSaveException
      */

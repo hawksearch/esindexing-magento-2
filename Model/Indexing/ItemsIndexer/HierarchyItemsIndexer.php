@@ -27,9 +27,6 @@ class HierarchyItemsIndexer implements ItemsIndexerInterface
      */
     private $hierarchyManagement;
 
-    /**
-     * @param HierarchyManagementInterface $hierarchyManagement
-     */
     public function __construct(
         HierarchyManagementInterface $hierarchyManagement
     ) {

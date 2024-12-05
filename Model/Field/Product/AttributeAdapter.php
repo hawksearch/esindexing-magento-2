@@ -32,10 +32,6 @@ class AttributeAdapter
      */
     private string $attributeCode;
 
-    /**
-     * @param ProductAttributeInterface $attribute
-     * @param string $attributeCode
-     */
     public function __construct(
         ProductAttributeInterface $attribute,
         string $attributeCode

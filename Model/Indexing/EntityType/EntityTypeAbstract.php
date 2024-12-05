@@ -75,8 +75,6 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
     private $fieldNameProvider;
 
     /**
-     * EntityTypeAbstract constructor.
-     *
      * @param EntityRebuildInterface $rebuilder
      * @param ItemsDataProviderInterface $itemsDataProvider
      * @param FieldHandlerInterface<DataObject> $fieldHandler

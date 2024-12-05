@@ -31,12 +31,6 @@ class LayoutUpdateHandler implements ObserverInterface
      */
     private CatalogHelper $catalogHelper;
 
-    /**
-     * LayoutUpdateHandler constructor.
-     *
-     * @param SearchConfig $searchConfig
-     * @param CatalogHelper $catalogHelper
-     */
     public function __construct(
         SearchConfig $searchConfig,
         CatalogHelper $catalogHelper
@@ -65,7 +59,6 @@ class LayoutUpdateHandler implements ObserverInterface
     }
 
     /**
-     * @param string $action
      * @return array
      */
     private function getResultsHandles(string $action): array

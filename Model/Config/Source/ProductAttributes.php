@@ -24,10 +24,6 @@ class ProductAttributes implements OptionSourceInterface
      */
     private $attributes;
 
-    /**
-     * ProductAttributes constructor.
-     * @param Attributes $attributes
-     */
     public function __construct(
         Attributes $attributes
     ) {

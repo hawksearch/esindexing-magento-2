@@ -24,12 +24,7 @@ class BulkAllOperationCompleteValidator implements OperationValidatorInterface
      * @var BulkOperationManagement
      */
     private BulkOperationManagement $bulkOperationManagement;
-
-    /**
-     * IndexingOperationValidator constructor.
-     *
-     * @param BulkOperationManagement $bulkOperationManagement
-     */
+    
     public function __construct(
         BulkOperationManagement $bulkOperationManagement
     ) {
@@ -37,7 +32,6 @@ class BulkAllOperationCompleteValidator implements OperationValidatorInterface
     }
 
     /**
-     * @param OperationInterface $operation
      * @return bool
      */
     public function validate(OperationInterface $operation): bool

@@ -106,21 +106,6 @@ class RetryFailedOperations
      */
     private int $errorCode;
 
-    /**
-     * @param MessageEncoder $messageEncoder
-     * @param MessageValidator $messageValidator
-     * @param BulkOperationManagement $bulkOperationManagement
-     * @param OperationManagementInterface $operationManagement
-     * @param LoggerInterface $logger
-     * @param SerializerInterface $serializer
-     * @param QueueOperationDataInterfaceFactory $operationDataFactory
-     * @param BulkManagementInterface $bulkRetryManagement
-     * @param DateTime $dateTime
-     * @param Operation $operationResource
-     * @param OperationCollectionFactory $operationCollectionFactory
-     * @param FailureRecoveryConfig $failureRecoveryConfig
-     * @param int $errorCode
-     */
     public function __construct(
         MessageEncoder $messageEncoder,
         MessageValidator $messageValidator,
@@ -277,9 +262,6 @@ class RetryFailedOperations
     }
 
     /**
-     * Make operation retrial
-     *
-     * @param OperationInterface $operation
      * @return bool
      * @throws LocalizedException
      */
@@ -313,7 +295,6 @@ class RetryFailedOperations
     /**
      * Get number of retry attempts for operation
      *
-     * @param QueueOperationDataInterface $operation
      * @return int
      */
     protected function getOperationTrials(QueueOperationDataInterface $operation): int
@@ -326,7 +307,6 @@ class RetryFailedOperations
     /**
      * Increase number of retry attempts for operation
      *
-     * @param QueueOperationDataInterface $operationData
      * @return QueueOperationDataInterface
      */
     protected function increaseOperationTrials(QueueOperationDataInterface $operationData): QueueOperationDataInterface

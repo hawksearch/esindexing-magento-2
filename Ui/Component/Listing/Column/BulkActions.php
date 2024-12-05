@@ -21,10 +21,8 @@ use Magento\Ui\Component\Listing\Columns\Column;
 class BulkActions extends Column
 {
     /**
-     * Prepare Data Source
-     *
-     * @param array $dataSource
-     * @return array
+     * @param array<string, mixed> $dataSource
+     * @return array<string, mixed>
      */
     public function prepareDataSource(array $dataSource)
     {

@@ -23,11 +23,7 @@ class VueParamsMappingProcessor implements LayoutConfigProcessorInterface
      * @var SearchHelper
      */
     private $searchHelper;
-
-    /**
-     * VueParamsMappingProcessor constructor.
-     * @param SearchHelper $searchHelper
-     */
+    
     public function __construct(
         SearchHelper $searchHelper
     )

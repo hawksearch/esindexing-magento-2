@@ -54,6 +54,7 @@ class EsIndexResult implements ResultInterface
     /**
      * @param EsIndexInterfaceFactory $esIndexFactory
      * @param DataObjectHelper $dataObjectHelper
+     * @param HawkSearchDataObjectHelper $hawksearchDataObjectHelper
      * @param HttpResponseReader $httpResponseReader
      * @param HttpResult $result
      */
@@ -63,7 +64,8 @@ class EsIndexResult implements ResultInterface
         HawkSearchDataObjectHelper $hawksearchDataObjectHelper,
         HttpResponseReader $httpResponseReader,
         array $result = []
-    ) {
+    )
+    {
         $this->result = $result;
         $this->esIndexFactory = $esIndexFactory;
         $this->dataObjectHelper = $dataObjectHelper;

@@ -34,13 +34,11 @@ interface EntityTypeInterface
     public function getTypeName() : string;
 
     /**
-     * @param string $type
      * @return $this
      */
     public function setTypeName(string $type);
 
     /**
-     * @param string $itemId
      * @return string
      */
     public function getUniqueId(string $itemId);

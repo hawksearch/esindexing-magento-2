@@ -50,11 +50,6 @@ class OnCartAddTrackingEventPlugin
      */
     private $dataObjectFactory;
 
-    /**
-     * @param DataStorageInterface $cartItemsToAddDataStorage
-     * @param EventTrackingConfig $eventTrackingConfig
-     * @param DataObjectFactory $dataObjectFactory
-     */
     public function __construct(
         DataStorageInterface $cartItemsToAddDataStorage,
         EventTrackingConfig $eventTrackingConfig,
@@ -83,11 +78,8 @@ class OnCartAddTrackingEventPlugin
     }
 
     /**
-     * @param Quote $subject
-     * @param QuoteItem $result
      * @return QuoteItem
      * @throws RuntimeException
-     * @noinspection PhpMissingParamTypeInspection
      */
     public function afterUpdateItem(Quote $subject, QuoteItem $result)
     {
@@ -171,7 +163,6 @@ class OnCartAddTrackingEventPlugin
     }
 
     /**
-     * @param QuoteItem $item
      * @return void
      * @throws RuntimeException
      */

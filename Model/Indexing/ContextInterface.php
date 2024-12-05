@@ -21,8 +21,6 @@ namespace HawkSearch\EsIndexing\Model\Indexing;
 interface ContextInterface
 {
     /**
-     * @param int $storeId
-     * @param string $indexName
      * @return void
      */
     public function setIndexName(int $storeId, string $indexName);
@@ -33,7 +31,6 @@ interface ContextInterface
     public function getIndexName(int $storeId);
 
     /**
-     * @param bool $isFull
      * @return void
      */
     public function setIsFullReindex(bool $isFull);

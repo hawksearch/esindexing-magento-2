@@ -32,8 +32,6 @@ class SearchResult extends SearchResultParent
     private $identifierResolver;
 
     /**
-     * SearchResult constructor.
-     *
      * @param EntityFactory $entityFactory
      * @param Logger $logger
      * @param FetchStrategy $fetchStrategy
@@ -41,7 +39,7 @@ class SearchResult extends SearchResultParent
      * @param IdentifierResolver $identifierResolver
      * @param JsonHelper $serializerHelper
      * @param string $mainTable
-     * @param null $resourceModel
+     * @param class-string $resourceModel
      * @param string $identifierName
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */

@@ -64,7 +64,6 @@ class DefaultHandler implements FieldHandlerInterface
     }
 
     /**
-     * @param string $fieldName
      * @return string
      */
     private function getAttributeCodeByFieldName(string $fieldName): string

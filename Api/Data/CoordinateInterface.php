@@ -37,7 +37,6 @@ interface CoordinateInterface
     public function getLatitude(): float;
 
     /**
-     * @param float $value
      * @return $this
      */
     public function setLatitude(float $value): self;
@@ -48,7 +47,6 @@ interface CoordinateInterface
     public function getLongitude(): float;
 
     /**
-     * @param float $value
      * @return $this
      */
     public function setLongitude(float $value): self;

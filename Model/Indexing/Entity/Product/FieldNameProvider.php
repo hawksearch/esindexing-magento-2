@@ -24,9 +24,6 @@ class FieldNameProvider implements NameProviderInterface
      */
     private ProductAttributesProvider $productAttributes;
 
-    /**
-     * @param ProductAttributesProvider $productAttributes
-     */
     public function __construct(ProductAttributesProvider $productAttributes)
     {
         $this->productAttributes = $productAttributes;

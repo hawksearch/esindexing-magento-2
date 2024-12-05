@@ -43,12 +43,7 @@ class AttributeProvider
      * @var string
      */
     private string $instanceName;
-
-    /**
-     * @param ProductAttributeRepositoryInterface $productAttributeRepository
-     * @param ProductAttributeInterfaceFactory $productAttributeFactory
-     * @param string $instanceName
-     */
+    
     public function __construct(
         ProductAttributeRepositoryInterface $productAttributeRepository,
         ProductAttributeInterfaceFactory $productAttributeFactory,
@@ -61,7 +56,6 @@ class AttributeProvider
     }
 
     /**
-     * @param string $attributeCode
      * @return AttributeAdapter
      */
     public function getByCode(string $attributeCode): AttributeAdapter
