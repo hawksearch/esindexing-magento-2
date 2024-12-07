@@ -16,6 +16,10 @@ namespace HawkSearch\EsIndexing\Model\Indexer\Entities;
 
 use Magento\Store\Api\Data\StoreInterface;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 interface SchedulerInterface
 {
     /**

@@ -17,6 +17,10 @@ namespace HawkSearch\EsIndexing\Model\Product;
 use Magento\Framework\ObjectManager\TMap;
 use Magento\Framework\ObjectManager\TMapFactory;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 class ProductTypePool implements ProductTypePoolInterface
 {
     /**

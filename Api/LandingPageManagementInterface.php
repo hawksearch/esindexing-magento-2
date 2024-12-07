@@ -14,6 +14,12 @@ namespace HawkSearch\EsIndexing\Api;
 
 use HawkSearch\EsIndexing\Api\Data\LandingPageInterface;
 
+/**
+ * Interface for managing Landing Pages in HawkSearch
+ *
+ * @api
+ * @since 0.8.0
+ */
 interface LandingPageManagementInterface
 {
     /**

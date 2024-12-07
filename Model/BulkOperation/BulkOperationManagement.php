@@ -25,6 +25,10 @@ use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\Bulk\OperationInterface as BulkOperationInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 class BulkOperationManagement
 {
     public const OPERATION_TOPIC_PREFIX = 'hawksearch.indexing.';

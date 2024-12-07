@@ -17,6 +17,10 @@ namespace HawkSearch\EsIndexing\Model\MessageQueue\Validator;
 use HawkSearch\EsIndexing\Model\MessageQueue\Exception\InvalidBulkOperationException;
 use Magento\Framework\Bulk\OperationInterface;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 interface OperationValidatorInterface
 {
     /**

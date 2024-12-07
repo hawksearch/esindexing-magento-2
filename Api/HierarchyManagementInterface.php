@@ -14,10 +14,16 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Api;
 
+/**
+ * Interface for managing Hierarchy in HawkSearch
+ *
+ * @api
+ * @since 0.8.0
+ */
 interface HierarchyManagementInterface
 {
     /**
-     * Upseart Hierarchy
+     * Upsert Hierarchy
      * @param array $items
      * @param string $indexName
      * @return void

@@ -17,6 +17,10 @@ namespace HawkSearch\EsIndexing\Model;
 use HawkSearch\Connector\Gateway\Instruction\InstructionManagerPool;
 use HawkSearch\EsIndexing\Api\LandingPageManagementInterface;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 class LandingPageManagement implements LandingPageManagementInterface
 {
     /**

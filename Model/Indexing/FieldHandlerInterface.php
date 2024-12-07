@@ -16,6 +16,12 @@ namespace HawkSearch\EsIndexing\Model\Indexing;
 
 use Magento\Framework\DataObject;
 
+/**
+ * Handle value for HawkSearch field
+ *
+ * @api
+ * @since 0.8.0
+ */
 interface FieldHandlerInterface
 {
     /**

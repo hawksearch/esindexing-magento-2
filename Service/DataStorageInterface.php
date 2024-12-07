@@ -16,6 +16,10 @@ namespace HawkSearch\EsIndexing\Service;
 
 use Magento\Framework\Exception\RuntimeException;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 interface DataStorageInterface
 {
     /**

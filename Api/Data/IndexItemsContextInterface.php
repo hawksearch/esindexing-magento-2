@@ -15,6 +15,12 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Api\Data;
 
+/**
+ * IndexItemsContext interface is used in index-items method of Indexing API
+ * @internal interface is not used yet
+ * @see https://developerdocs.hawksearch.com/reference/indexv2_index-1
+ * @see https://indexing-dev.hawksearch.net/swagger/ui/index#!/IndexV2/IndexV2_Index
+ */
 interface IndexItemsContextInterface
 {
     /**#@+

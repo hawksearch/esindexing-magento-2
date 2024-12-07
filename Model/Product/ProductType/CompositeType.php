@@ -17,6 +17,10 @@ namespace HawkSearch\EsIndexing\Model\Product\ProductType;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 abstract class CompositeType extends DefaultType
 {
     /**

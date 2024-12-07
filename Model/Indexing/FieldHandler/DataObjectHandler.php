@@ -17,6 +17,10 @@ namespace HawkSearch\EsIndexing\Model\Indexing\FieldHandler;
 use HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface;
 use Magento\Framework\DataObject;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 class DataObjectHandler implements FieldHandlerInterface
 {
     /**

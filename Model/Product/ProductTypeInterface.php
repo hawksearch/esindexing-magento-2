@@ -16,8 +16,8 @@ use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product;
 
 /**
- * Interface ProductTypeInterface
- * @package HawkSearch\EsIndexing\Model\Product\Price
+ * @api
+ * @since 0.8.0
  */
 interface ProductTypeInterface
 {

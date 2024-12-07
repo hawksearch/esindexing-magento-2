@@ -19,6 +19,10 @@ use HawkSearch\EsIndexing\Model\MessageQueue\MessageManagerInterface;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Store\Api\Data\StoreInterface;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 abstract class ActionAbstract
 {
     /**

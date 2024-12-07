@@ -17,12 +17,18 @@ namespace HawkSearch\EsIndexing\Api;
 
 use HawkSearch\EsIndexing\Api\Data\EsIndexInterface;
 
+/**
+ * Interface for managing Indexes and items in HawkSearch indices.
+ *
+ * @api
+ * @since 0.8.0
+ */
 interface IndexManagementInterface
 {
     /**
      * Start process of full reindexing
      * We consider that number of indices per engine is equal to 2
-     * Non current index is the only index which can be processed during full reindexing
+     * Non-current index is the only index which can be processed during full reindexing
      * @return void
      */
     public function initializeFullReindex();
@@ -57,6 +63,7 @@ interface IndexManagementInterface
      * @param array $items
      * @param string $indexName
      * @return void
+     * @todo use \HawkSearch\EsIndexing\Api\Data\IndexItemsContextInterface as input array
      */
     public function indexItems(array $items, string $indexName);
 

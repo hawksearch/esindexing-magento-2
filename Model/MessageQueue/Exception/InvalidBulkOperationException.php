@@ -16,6 +16,10 @@ namespace HawkSearch\EsIndexing\Model\MessageQueue\Exception;
 
 use Magento\Framework\Exception\LocalizedException;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 class InvalidBulkOperationException extends LocalizedException
 {
 

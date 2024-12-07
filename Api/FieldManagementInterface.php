@@ -17,6 +17,12 @@ namespace HawkSearch\EsIndexing\Api;
 use HawkSearch\EsIndexing\Api\Data\FieldInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
 
+/**
+ * Interface for managing Fields in HawkSearch
+ *
+ * @api
+ * @since 0.8.0
+ */
 interface FieldManagementInterface
 {
     /**

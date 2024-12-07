@@ -22,6 +22,10 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SimpleDataObjectConverter;
 use Magento\Framework\Api\SortOrderFactory;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 class ObjectHelper
 {
     /**

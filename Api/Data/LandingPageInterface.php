@@ -12,6 +12,14 @@
  */
 namespace HawkSearch\EsIndexing\Api\Data;
 
+/**
+ * LandingPage Interface used in HawkSearch API
+ *
+ * @api v11
+ * @since 0.8.0
+ * @link https://developerdocs.hawksearch.com/reference/landingpage_postvalue_value
+ * @link https://dev.hawksearch.net/swagger/ui/index#!/LandingPage/LandingPage_PostValue_value
+ */
 interface LandingPageInterface
 {
     /**#@+
