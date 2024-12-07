@@ -64,22 +64,6 @@ class Facet extends AbstractSimpleObject implements FacetInterface
     /**
      * @inheritDoc
      */
-    public function getFacetId(): int
-    {
-        return (int)$this->_get(self::FACET_ID);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setFacetId(int $value): FacetInterface
-    {
-        return $this->setData(self::FACET_ID, $value);
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function getSyncGuid(): string
     {
         return (string)$this->_get(self::SYNC_GUID);
@@ -91,6 +75,22 @@ class Facet extends AbstractSimpleObject implements FacetInterface
     public function setSyncGuid(?string $value): FacetInterface
     {
         return $this->setData(self::SYNC_GUID, $value);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getFacetId(): int
+    {
+        return (int)$this->_get(self::FACET_ID);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setFacetId(int $value): FacetInterface
+    {
+        return $this->setData(self::FACET_ID, $value);
     }
 
     /**

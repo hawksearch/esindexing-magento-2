@@ -24,6 +24,10 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Module\Manager as ModuleManager;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 abstract class DefaultType implements ProductTypeInterface
 {
     /**

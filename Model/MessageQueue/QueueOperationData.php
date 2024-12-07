@@ -21,7 +21,7 @@ class QueueOperationData implements QueueOperationDataInterface
     /**
      * @var string
      */
-    private $data;
+    private string $data;
 
     /**
      * QueueOperationData constructor.
@@ -35,7 +35,7 @@ class QueueOperationData implements QueueOperationDataInterface
     /**
      * @inheritDoc
      */
-    public function getData()
+    public function getData(): string
     {
         return $this->data;
     }

@@ -14,6 +14,12 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Api\Data;
 
+/**
+ * Interface for operations used in message topics processed by `hawksearch.indexing` consumer
+ *
+ * @api
+ * @since 0.8.0
+ */
 interface QueueOperationDataInterface
 {
     /**

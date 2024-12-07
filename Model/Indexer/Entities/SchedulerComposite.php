@@ -18,6 +18,10 @@ use Magento\Framework\ObjectManager\TMap;
 use Magento\Framework\ObjectManager\TMapFactory;
 use Magento\Store\Api\Data\StoreInterface;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 class SchedulerComposite implements SchedulerInterface
 {
     /**

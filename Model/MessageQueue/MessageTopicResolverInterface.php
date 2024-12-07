@@ -16,6 +16,10 @@ namespace HawkSearch\EsIndexing\Model\MessageQueue;
 
 use Magento\Framework\Exception\InputException;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 interface MessageTopicResolverInterface
 {
     /**

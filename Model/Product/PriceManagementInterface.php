@@ -16,8 +16,8 @@ namespace HawkSearch\EsIndexing\Model\Product;
 use Magento\Catalog\Api\Data\ProductInterface;
 
 /**
- * Interface PriceManagementInterface
- * @package HawkSearch\EsIndexing\Model\Product
+ * @api
+ * @since 0.8.0
  */
 interface PriceManagementInterface
 {

@@ -24,22 +24,26 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Item;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 class Tracking extends Template
 {
     /**
      * @var OrderCollectionFactory
      */
-    private $orderCollectionFactory;
+    private OrderCollectionFactory $orderCollectionFactory;
 
     /**
      * @var ProductEntityType
      */
-    private $productEntityType;
+    private ProductEntityType $productEntityType;
 
     /**
      * @var EventTrackingConfig
      */
-    private $eventTrackingConfig;
+    private EventTrackingConfig $eventTrackingConfig;
 
     /**
      * @param Template\Context $context

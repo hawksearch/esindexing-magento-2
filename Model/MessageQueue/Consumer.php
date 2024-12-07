@@ -21,6 +21,10 @@ use Magento\Framework\Data\ObjectFactory;
 use Magento\Framework\DataObject;
 use Magento\Framework\Serialize\SerializerInterface;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 class Consumer
 {
     /**

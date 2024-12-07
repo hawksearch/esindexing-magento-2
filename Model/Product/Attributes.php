@@ -20,6 +20,10 @@ use Magento\Catalog\Model\Product;
 use Magento\Eav\Model\Config;
 use Magento\Framework\Serialize\Serializer\Json;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 class Attributes
 {
     /**

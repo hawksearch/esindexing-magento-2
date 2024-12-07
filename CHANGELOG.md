@@ -7,6 +7,94 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 See tasks currently in development on [Unreleased] changes page.
 
+## [Unreleased]
+
+### API CHANGES
+#### Interfaces
+The following interfaces in `\HawkSearch\EsIndexing` namespace are defined as `@api`:
+- Api\Data\BoostQueryInterface
+- Api\Data\ClientDataInterface
+- Api\Data\CoordinateInterface
+- Api\Data\EsIndexInterface
+- Api\Data\FacetBoostBuryInterface
+- Api\Data\FacetInterface
+- Api\Data\FacetRangeModelInterface
+- Api\Data\FacetValueOrderInfoInterface
+- Api\Data\FieldInterface
+- Api\Data\HierarchyInterface
+- Api\Data\IndexListInterface
+- Api\Data\LandingPageInterface
+- Api\Data\QueueOperationDataInterface
+- Api\Data\SearchRequestInterface
+- Api\Data\SmartBarInterface
+- Api\Data\VariantOptionsInterface
+- Api\FacetManagementInterface
+- Api\FieldManagementInterface
+- Api\HierarchyManagementInterface
+- Api\IndexManagementInterface
+- Api\LandingPageManagementInterface
+- Model\Indexer\Entities\SchedulerInterface
+- Model\Indexing\ContextInterface
+- Model\Indexing\FieldHandlerInterface
+- Model\Indexing\EntityRebuildInterface
+- Model\Indexing\EntityTypeInterface
+- Model\Indexing\Field\NameProviderInterface
+- Model\Indexing\ItemsDataProviderInterface
+- Model\Indexing\ItemsIndexerInterface
+- Model\Layout\LayoutConfigProcessorInterface
+- Model\MessageQueue\Validator\OperationValidatorInterface
+- Model\MessageQueue\BulkPublisherInterface
+- Model\MessageQueue\MessageManagerInterface
+- Model\MessageQueue\MessageTopicResolverInterface
+- Model\Product\Attribute\ExcludeNotVisibleProductsFlagInterface
+- Model\Product\PriceManagementInterface
+- Model\Product\ProductTypeInterface
+- Model\Product\ProductTypePoolInterface
+- Service\DataStorageInterface
+- 
+
+The following interfaces in `\HawkSearch\EsIndexing` namespace are defined as `@internal` (including experimental features):
+- Api\Data\IndexItemInterface
+- Api\Data\IndexItemsContextInterface
+- Model\Config\Backend\Serialized\Processor\ValueProcessorInterface
+- Model\Field\FieldExtendedInterface
+
+#### Classes
+The following classes in `\HawkSearch\EsIndexing` namespace are defined as `@api`:
+- Block\Adminhtml\Bulk\Details\BackButton
+- Block\Adminhtml\Bulk\Details\RetryButton
+- Block\Adminhtml\Form\GenericButton
+- Block\Tracking
+- Registry\CurrentCategory
+- Service\DataStorage
+- Model\BulkOperation\BulkOperationManagement
+- Model\Indexer\Entities\ActionAbstract
+- Model\Indexer\Entities\SchedulerAbstract
+- Model\Indexer\Entities\SchedulerComposite
+- Model\Indexing\AbstractConfigHelper
+- Model\Indexing\AbstractEntityRebuild
+- Model\Indexing\Field\DefaultNameProvider
+- Model\Indexing\FieldHandler\Composite
+- Model\Indexing\FieldHandler\DataObjectHandler
+- Model\Layout\CompositeConfigProcessor
+- Model\MessageQueue\Consumer
+- Model\MessageQueue\Exception\InvalidBulkOperationException
+- Model\MessageQueue\MessageTopicByObjectResolver
+- Model\MessageQueue\QueueOperationData
+- Model\FacetManagement
+- Model\FieldManagement
+- Model\HierarchyManagement
+- Model\IndexManagement
+- Model\LandingPageManagement
+- Model\Product
+- Model\Product\Attributes
+- Model\Product\PriceManagement
+- Model\Product\ProductType\CompositeType
+- Model\Product\ProductType\DefaultType
+- Model\Product\ProductTypePool
+
+
+
 ## [0.7.4] - 2024-11-19
 ### FIXES
 * **fix: image and thumbnail attributes not indexing** ([#81](https://github.com/hawksearch/esindexing-magento-2/pull/81))

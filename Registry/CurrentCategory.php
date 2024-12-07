@@ -17,6 +17,12 @@ namespace HawkSearch\EsIndexing\Registry;
 use Magento\Catalog\Api\Data\CategoryInterface;
 use Magento\Catalog\Api\Data\CategoryInterfaceFactory;
 
+/**
+ * Registry to access current active category on the page
+ *
+ * @api
+ * @since 0.8.0
+ */
 class CurrentCategory
 {
     /**

@@ -15,6 +15,12 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Api\Data;
 
+/**
+ * EsIndex Interface for Indexing API
+ *
+ * @api v2
+ * @since 0.8.0
+ */
 interface EsIndexInterface
 {
     /**#@+
