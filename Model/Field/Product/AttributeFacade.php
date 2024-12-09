@@ -27,8 +27,6 @@ class AttributeFacade
     private AttributeAdapter $attribute;
 
     /**
-     * @param FieldInterface $field
-     * @param AttributeAdapter $attribute
      * @return void
      */
     public function execute(FieldInterface $field, AttributeAdapter $attribute)
@@ -43,7 +41,7 @@ class AttributeFacade
     /**
      * @return $this
      */
-    protected function processSearchable($field): AttributeFacade
+    protected function processSearchable(FieldInterface $field): AttributeFacade
     {
         $this->setFieldSearchable($field, $this->attribute->isSearchable());
         return $this;
@@ -52,7 +50,7 @@ class AttributeFacade
     /**
      * @return $this
      */
-    protected function processFilterable($field): AttributeFacade
+    protected function processFilterable(FieldInterface $field): AttributeFacade
     {
         $this->setFieldFilterable($field, $this->attribute->isFilterable());
         return $this;
@@ -61,14 +59,13 @@ class AttributeFacade
     /**
      * @return $this
      */
-    protected function processSortable($field): AttributeFacade
+    protected function processSortable(FieldInterface $field): AttributeFacade
     {
         $this->setFieldSortable($field, $this->attribute->isSortable());
         return $this;
     }
 
     /**
-     * @param FieldInterface $field
      * @return bool
      */
     protected function isFieldSearchable(FieldInterface $field): bool
@@ -78,8 +75,6 @@ class AttributeFacade
     }
 
     /**
-     * @param FieldInterface $field
-     * @param bool $value
      * @return void
      */
     protected function setFieldSearchable(FieldInterface $field, bool $value)
@@ -99,7 +94,6 @@ class AttributeFacade
     }
 
     /**
-     * @param FieldInterface $field
      * @return bool
      */
     protected function isFieldFilterable(FieldInterface $field): bool
@@ -108,8 +102,6 @@ class AttributeFacade
     }
 
     /**
-     * @param FieldInterface $field
-     * @param bool $value
      * @return void
      */
     protected function setFieldFilterable(FieldInterface $field, bool $value)
@@ -126,7 +118,6 @@ class AttributeFacade
     }
 
     /**
-     * @param FieldInterface $field
      * @return bool
      */
     protected function isFieldSortable(FieldInterface $field): bool
@@ -135,8 +126,6 @@ class AttributeFacade
     }
 
     /**
-     * @param FieldInterface $field
-     * @param bool $value
      * @return void
      */
     protected function setFieldSortable(FieldInterface $field, bool $value)

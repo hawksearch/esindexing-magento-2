@@ -21,10 +21,13 @@ use HawkSearch\EsIndexing\Api\Data\FacetInterfaceFactory;
 use HawkSearch\EsIndexing\Api\Data\FacetInterface;
 use Magento\Framework\Api\DataObjectHelper;
 
+/**
+ * @phpstan-import-type HttpResult from ResultInterface
+ */
 class FacetResult implements ResultInterface
 {
     /**
-     * @var array
+     * @var HttpResult
      */
     private array $result;
 
@@ -53,7 +56,7 @@ class FacetResult implements ResultInterface
      * @param DataObjectHelper $dataObjectHelper
      * @param HawkSearchDataObjectHelper $hawksearchDataObjectHelper
      * @param HttpResponseReader $httpResponseReader
-     * @param array $result
+     * @param HttpResult $result
      */
     public function __construct(
         FacetInterfaceFactory $facetFactory,

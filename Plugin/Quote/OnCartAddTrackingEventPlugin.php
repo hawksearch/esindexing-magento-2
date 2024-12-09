@@ -17,7 +17,6 @@ namespace HawkSearch\EsIndexing\Plugin\Quote;
 use HawkSearch\EsIndexing\Model\Config\EventTracking as EventTrackingConfig;
 use HawkSearch\EsIndexing\Service\DataStorageInterface;
 use Magento\Catalog\Model\Product;
-use Magento\Catalog\Model\Product\Type\AbstractType;
 use Magento\Framework\DataObject;
 use Magento\Framework\DataObject\Factory as DataObjectFactory;
 use Magento\Framework\Exception\RuntimeException;
@@ -51,11 +50,6 @@ class OnCartAddTrackingEventPlugin
      */
     private $dataObjectFactory;
 
-    /**
-     * @param DataStorageInterface $cartItemsToAddDataStorage
-     * @param EventTrackingConfig $eventTrackingConfig
-     * @param DataObjectFactory $dataObjectFactory
-     */
     public function __construct(
         DataStorageInterface $cartItemsToAddDataStorage,
         EventTrackingConfig $eventTrackingConfig,
@@ -71,11 +65,10 @@ class OnCartAddTrackingEventPlugin
      *
      * @param Quote $subject
      * @param int $itemId
-     * @param DataObject  $buyRequest
-     * @param null|array|DataObject $params
      * @return null
+     * @noinspection PhpMissingParamTypeInspection
      */
-    public function beforeUpdateItem(Quote $subject, $itemId, $buyRequest, $params = null)
+    public function beforeUpdateItem(Quote $subject, $itemId)
     {
         $item = $subject->getItemById($itemId);
         $this->qty = $item ? $item->getQty() : 0;
@@ -85,15 +78,10 @@ class OnCartAddTrackingEventPlugin
     }
 
     /**
-     * @param Quote $subject
-     * @param QuoteItem $result
-     * @param int $itemId
-     * @param DataObject $buyRequest
-     * @param null|array|DataObject $params
      * @return QuoteItem
      * @throws RuntimeException
      */
-    public function afterUpdateItem(Quote $subject, $result, $itemId, $buyRequest, $params = null)
+    public function afterUpdateItem(Quote $subject, QuoteItem $result)
     {
         $this->isSkipAddNewItem = false;
         if ($this->qty > $result->getQty()) {
@@ -111,14 +99,13 @@ class OnCartAddTrackingEventPlugin
      * @param Quote $subject
      * @param Product $product
      * @param float|DataObject|null $request
-     * @param string|null $processMode
      * @return null
+     * @noinspection PhpMissingParamTypeInspection
      */
     public function beforeAddProduct(
         Quote $subject,
         Product $product,
-        $request = null,
-        $processMode = AbstractType::PROCESS_MODE_FULL
+        $request = null
     ) {
         if ($this->isSkipAddNewItem) {
             return null;
@@ -142,18 +129,13 @@ class OnCartAddTrackingEventPlugin
     /**
      * @param Quote $subject
      * @param QuoteItem|string $result
-     * @param Product|mixed $product
-     * @param float|\Magento\Framework\DataObject|null $request
-     * @param string|null $processMode
      * @return QuoteItem|string
      * @throws RuntimeException
+     * @noinspection PhpMissingParamTypeInspection
      */
     public function afterAddProduct(
         Quote $subject,
-        $result,
-        Product $product,
-        $request = null,
-        $processMode = AbstractType::PROCESS_MODE_FULL
+        $result
     ) {
         if ($this->isSkipAddNewItem) {
             return $result;
@@ -173,17 +155,18 @@ class OnCartAddTrackingEventPlugin
             $this->qty = 0;
         }
 
-        $this->addItemToTriggerList($result);
+        if ($result instanceof QuoteItem) {
+            $this->addItemToTriggerList($result);
+        }
 
         return $result;
     }
 
     /**
-     * @param QuoteItem $item
      * @return void
      * @throws RuntimeException
      */
-    private function addItemToTriggerList($item)
+    private function addItemToTriggerList(QuoteItem $item)
     {
         if ($this->eventTrackingConfig->isEnabled()) {
             $this->cartItemsToAddDataStorage->reset();

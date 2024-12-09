@@ -17,13 +17,17 @@ namespace HawkSearch\EsIndexing\Model\Product\Field\Handler;
 use HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface;
 use HawkSearch\EsIndexing\Model\Product\Attributes as ProductAttributesProvider;
 use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\Product as ProductModel;
 use Magento\Catalog\Model\ResourceModel\Eav\Attribute as AttributeResource;
 use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
 
+/**
+ * @phpstan-type ItemType ProductModel
+ * @implements FieldHandlerInterface<ItemType>
+ */
 class DefaultHandler implements FieldHandlerInterface
 {
     /**
@@ -38,8 +42,6 @@ class DefaultHandler implements FieldHandlerInterface
     }
 
     /**
-     * @inheritDoc
-     * @param ProductInterface $item
      * @throws LocalizedException
      */
     public function handle(DataObject $item, string $fieldName)
@@ -51,6 +53,7 @@ class DefaultHandler implements FieldHandlerInterface
 
         /** @var AttributeResource $attributeResource */
         $attributeResource = $productResource->getAttribute($attributeCode);
+        // @phpstan-ignore-next-line
         if ($attributeResource) {
             $value = $this->getProductAttributeText($item, $attributeResource);
         } else {
@@ -61,7 +64,6 @@ class DefaultHandler implements FieldHandlerInterface
     }
 
     /**
-     * @param string $fieldName
      * @return string
      */
     private function getAttributeCodeByFieldName(string $fieldName): string
@@ -70,7 +72,7 @@ class DefaultHandler implements FieldHandlerInterface
     }
 
     /**
-     * @param ProductInterface|Product $product
+     * @param ItemType $product
      * @param AttributeResource $attribute
      * @return mixed
      */

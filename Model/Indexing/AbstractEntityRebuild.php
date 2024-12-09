@@ -17,6 +17,7 @@ namespace HawkSearch\EsIndexing\Model\Indexing;
 use HawkSearch\Connector\Compatibility\PublicMethodDeprecationTrait;
 use HawkSearch\Connector\Logger\LoggerFactoryInterface;
 use HawkSearch\EsIndexing\Helper\ObjectHelper;
+use HawkSearch\EsIndexing\Model\Indexing\Field\NameProviderInterface as FieldNameProviderInterface;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
@@ -24,11 +25,12 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NotFoundException;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
-use HawkSearch\EsIndexing\Model\Indexing\Field\NameProviderInterface as FieldNameProviderInterface;
 
 /**
  * @api
  * @since 0.8.0
+ *
+ * @template TItem of DataObject
  */
 abstract class AbstractEntityRebuild implements EntityRebuildInterface
 {
@@ -62,7 +64,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     private $entityType;
 
     /**
-     * @var EntityTypePoolInterface
+     * @var EntityTypePoolInterface<string, EntityTypeInterface>
      */
     protected $entityTypePool;
 
@@ -94,7 +96,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     /**
      * AbstractEntityRebuild constructor.
      *
-     * @param EntityTypePoolInterface $entityTypePool
+     * @param EntityTypePoolInterface<string, EntityTypeInterface> $entityTypePool
      * @param EventManagerInterface $eventManager
      * @param LoggerFactoryInterface $loggerFactory
      * @param StoreManagerInterface $storeManager
@@ -121,7 +123,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     /**
      * Check whether item is allowed to be indexed. Otherwise it should be removed.
      *
-     * @param DataObject $item
+     * @param TItem $item
      * @return bool
      */
     abstract protected function isAllowedItem(DataObject $item): bool;
@@ -130,7 +132,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
      * Check if item is new or existing one.
      * By default, it is considered that new and existing items are updated through the same indexing endpoint.
      *
-     * @param DataObject $item
+     * @param TItem $item
      * @return bool
      */
     protected function isItemNew(DataObject $item): bool
@@ -139,7 +141,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     }
 
     /**
-     * @param DataObject $entityItem
+     * @param TItem $entityItem
      * @return int
      */
     abstract protected function getEntityId(DataObject $entityItem): ?int;
@@ -173,10 +175,12 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
      * Rebuild one batch of Entity items
      *
      * @param SearchCriteriaInterface $searchCriteria
-     * @param array|null $entityIds
+     * @param array<int>|null $entityIds Entity ids for partial rebuild or null to rebuild all entities
      * @return void
      * @throws LocalizedException
      * @throws NotFoundException
+     * @todo $entityIds: default value null -> []
+     * @todo $entityIds: change type ?array -> array
      */
     protected function rebuildBatch(SearchCriteriaInterface $searchCriteria, ?array $entityIds = null)
     {
@@ -257,17 +261,21 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     }
 
     /**
-     * @param DataObject[] $fullItemsList Full list of items to be indexed
-     * @param array|null $entityIds List of entity IDs used for items selection
-     * @return array
+     * @param TItem[] $fullItemsList Full list of items to be indexed
+     * @param array<int>|null $entityIds List of entity IDs used for items selection
+     * @return array<int, string>
      * @throws NotFoundException
+     * @todo $entityIds: default value null -> []
+     * @todo $entityIds: change type ?array -> array
      */
     protected function getItemsToRemove(array $fullItemsList, ?array $entityIds = null): array
     {
         $idsToRemove = is_array($entityIds)
             ? array_combine(
                 $entityIds,
-                array_map(function($id) { return $this->addTypePrefix((string)$id);}, $entityIds)
+                array_map(function ($id) {
+                    return $this->addTypePrefix((string)$id);
+                }, $entityIds)
             )
             : [];
         $itemsToRemove = [];
@@ -295,10 +303,11 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     }
 
     /**
-     * @param array $fullItemsList Full list of items to be indexed
-     * @param array|null $entityIds List of entity IDs used for items selection
+     * @param TItem[] $fullItemsList Full list of items to be indexed
+     * @param array<int>|null $entityIds List of entity IDs used for items selection
      * @return array
      * @throws LocalizedException
+     * @todo $entityIds: remove unused argument
      */
     protected function getItemsToIndex(array $fullItemsList, ?array $entityIds = null): array
     {
@@ -322,7 +331,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     }
 
     /**
-     * @param DataObject $item
+     * @param TItem $item
      * @return array
      * @throws LocalizedException
      */
@@ -353,7 +362,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     }
 
     /**
-     * @param DataObject $item
+     * @param TItem $item
      * @return array
      * @throws NotFoundException
      */
@@ -372,7 +381,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
 
     /**
      * Temporary method to overcome deprecation of getIndexedAttributes() method
-     * @param DataObject $item
+     * @param TItem $item
      * @return array
      * @throws NotFoundException
      */
@@ -399,10 +408,9 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     }
 
     /**
-     * @param mixed $value
      * @return mixed
      */
-    protected function castAttributeValue($value)
+    protected function castAttributeValue(mixed $value)
     {
         if ($value === '') {
             $value = null;
@@ -419,7 +427,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     }
 
     /**
-     * @param DataObject|null $item
+     * @param TItem|null $item
      * @return array
      * @deprecated 0.7.0 method will be removed.
      *      Using of 'code' and 'value' options is deprecated. Use @see FieldHandlerInterface to migrate fields with values.
@@ -431,7 +439,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     }
 
     /**
-     * @param DataObject $item
+     * @param TItem $item
      * @param string $fieldName
      * @return mixed
      * @throws NotFoundException
@@ -449,7 +457,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     /**
      * Temporary function to call deprecated getAttributeValue()
      *
-     * @param DataObject $item
+     * @param TItem $item
      * @param string $attribute
      * @return mixed
      * @throws NotFoundException
@@ -467,7 +475,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     }
 
     /**
-     * @param DataObject $item
+     * @param TItem $item
      * @param string $attribute
      * @return mixed
      * @throws NotFoundException
@@ -531,7 +539,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     }
 
     /**
-     * @param DataObject $entityItem
+     * @param TItem $entityItem
      * @return string
      * @throws NotFoundException
      */
@@ -541,7 +549,6 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     }
 
     /**
-     * @param string $value
      * @return string
      * @throws NotFoundException
      */
@@ -551,12 +558,12 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     }
 
     /**
-     * @param array $items
+     * @param TItem[] $items Key of an array item is item ID
      * @param string $indexName
      * @throws LocalizedException
      * @throws NotFoundException
      */
-    protected function addIndexItems($items, $indexName)
+    protected function addIndexItems(array $items, string $indexName)
     {
         if (!$items) {
             return;
@@ -571,13 +578,13 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     }
 
     /**
-     * @param $items
-     * @param $indexName
+     * @param TItem[] $items Key of an array item is item ID
+     * @param string $indexName
      * @return void
      * @throws LocalizedException
      * @throws NotFoundException
      */
-    protected function updateIndexItems($items, $indexName)
+    protected function updateIndexItems(array $items, string $indexName)
     {
         if (!$items) {
             return;
@@ -592,11 +599,11 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     }
 
     /**
-     * @param array $ids
+     * @param string[] $ids
      * @param string $indexName
      * @throws NotFoundException
      */
-    protected function deleteIndexItems($ids, $indexName)
+    protected function deleteIndexItems(array $ids, string $indexName)
     {
         if (!$ids) {
             return;

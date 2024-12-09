@@ -14,9 +14,11 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model;
 
-use HawkSearch\Connector\Gateway\Instruction\InstructionManagerPool;
+use HawkSearch\Connector\Gateway\Instruction\InstructionManagerInterface;
+use HawkSearch\Connector\Gateway\Instruction\InstructionManagerPoolInterface;
 use HawkSearch\EsIndexing\Api\Data\FacetInterface;
 use HawkSearch\EsIndexing\Api\FacetManagementInterface;
+use Magento\Framework\Api\AbstractSimpleObject;
 use Magento\Framework\Exception\CouldNotSaveException;
 
 /**
@@ -26,16 +28,16 @@ use Magento\Framework\Exception\CouldNotSaveException;
 class FacetManagement implements FacetManagementInterface
 {
     /**
-     * @var InstructionManagerPool
+     * @var InstructionManagerPoolInterface<string, InstructionManagerInterface>
      */
-    private InstructionManagerPool $instructionManagerPool;
+    private InstructionManagerPoolInterface $instructionManagerPool;
 
     /**
      * FacetManagement constructor.
-     * @param InstructionManagerPool $instructionManagerPool
+     * @param InstructionManagerPoolInterface<string, InstructionManagerInterface> $instructionManagerPool
      */
     public function __construct(
-        InstructionManagerPool $instructionManagerPool
+        InstructionManagerPoolInterface $instructionManagerPool
     ){
         $this->instructionManagerPool = $instructionManagerPool;
     }
@@ -56,7 +58,7 @@ class FacetManagement implements FacetManagementInterface
     {
         /** @var FacetInterface $returnedFacet */
         $returnedFacet = $this->instructionManagerPool->get('hawksearch-esindexing')
-            ->executeByCode('addFacet', $facet->__toArray())->get();
+            ->executeByCode('addFacet', $this->collectFacetData($facet))->get();
 
         if (!$returnedFacet->getFacetId()) {
             throw new CouldNotSaveException(
@@ -74,7 +76,7 @@ class FacetManagement implements FacetManagementInterface
     {
         /** @var FacetInterface $returnedFacet */
         $returnedFacet = $this->instructionManagerPool->get('hawksearch-esindexing')
-            ->executeByCode('updateFacet', $facet->__toArray())->get();
+            ->executeByCode('updateFacet', $this->collectFacetData($facet))->get();
 
         if (!$returnedFacet->getFacetId()) {
             throw new CouldNotSaveException(
@@ -83,5 +85,22 @@ class FacetManagement implements FacetManagementInterface
         }
 
         return $returnedFacet;
+    }
+
+    private function collectFacetData(FacetInterface $facet): array
+    {
+        if ($facet instanceof AbstractSimpleObject) {
+            return $facet->__toArray();
+        } else {
+            throw new \InvalidArgumentException(
+                __(
+                    'Argument %1 passed to %2 should be an instance of %3 but %4 is given',
+                    '$facet',
+                    __METHOD__,
+                    AbstractSimpleObject::class,
+                    get_class($facet)
+                )->render()
+            );
+        }
     }
 }

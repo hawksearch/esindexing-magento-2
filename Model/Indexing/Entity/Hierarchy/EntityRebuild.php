@@ -16,15 +16,14 @@ namespace HawkSearch\EsIndexing\Model\Indexing\Entity\Hierarchy;
 
 use HawkSearch\EsIndexing\Model\Indexing\AbstractEntityRebuild;
 use Magento\Catalog\Api\Data\CategoryInterface;
-use Magento\Catalog\Model\Category;
 use Magento\Framework\DataObject;
 
+/**
+ * @phpstan-type ItemType DataObject&CategoryInterface
+ * @extends AbstractEntityRebuild<ItemType>
+ */
 class EntityRebuild extends AbstractEntityRebuild
 {
-    /**
-     * @param CategoryInterface|Category|DataObject $item
-     * @inheritDoc
-     */
     protected function isAllowedItem(DataObject $item): bool
     {
         $category = $item;
@@ -42,19 +41,12 @@ class EntityRebuild extends AbstractEntityRebuild
         return false;
     }
 
-    /**
-     * @param CategoryInterface|Category|DataObject $entityItem
-     * @inheritDoc
-     */
-    protected function getEntityId($entityItem): ?int
+    protected function getEntityId(DataObject $entityItem): ?int
     {
         return (int)$entityItem->getId();
     }
-
-    /**
-     * @inheritdoc
-     */
-    protected function castAttributeValue($value)
+    
+    protected function castAttributeValue(mixed $value)
     {
         return $value === '' ? null : $value;
     }

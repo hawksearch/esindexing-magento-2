@@ -21,10 +21,13 @@ use HawkSearch\EsIndexing\Api\Data\EsIndexInterface;
 use HawkSearch\EsIndexing\Api\Data\EsIndexInterfaceFactory;
 use Magento\Framework\Api\DataObjectHelper;
 
+/**
+ * @phpstan-import-type HttpResult from ResultInterface
+ */
 class EsIndexResult implements ResultInterface
 {
     /**
-     * @var array
+     * @var HttpResult
      */
     private $result;
 
@@ -51,8 +54,9 @@ class EsIndexResult implements ResultInterface
     /**
      * @param EsIndexInterfaceFactory $esIndexFactory
      * @param DataObjectHelper $dataObjectHelper
+     * @param HawkSearchDataObjectHelper $hawksearchDataObjectHelper
      * @param HttpResponseReader $httpResponseReader
-     * @param array $result
+     * @param HttpResult $result
      */
     public function __construct(
         EsIndexInterfaceFactory $esIndexFactory,
@@ -60,7 +64,8 @@ class EsIndexResult implements ResultInterface
         HawkSearchDataObjectHelper $hawksearchDataObjectHelper,
         HttpResponseReader $httpResponseReader,
         array $result = []
-    ) {
+    )
+    {
         $this->result = $result;
         $this->esIndexFactory = $esIndexFactory;
         $this->dataObjectHelper = $dataObjectHelper;

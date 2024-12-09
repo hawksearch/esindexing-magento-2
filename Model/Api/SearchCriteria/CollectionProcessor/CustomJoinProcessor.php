@@ -44,8 +44,6 @@ class CustomJoinProcessor implements CollectionProcessorInterface
     /**
      * Apply Search Criteria Filters to collection only if we need this
      *
-     * @param SearchCriteriaInterface $searchCriteria
-     * @param AbstractDb $collection
      * @return void
      */
     public function process(SearchCriteriaInterface $searchCriteria, AbstractDb $collection)
@@ -54,18 +52,14 @@ class CustomJoinProcessor implements CollectionProcessorInterface
             if (isset($this->appliedJoins[$joinName])) {
                 continue;
             }
-            $this->applyCustomJoin($joinName, $collection);
+            $this->applyCustomJoin((string)$joinName, $collection);
         }
     }
 
     /**
-     * Apply join to collection
-     *
-     * @param string $joinName
-     * @param AbstractDb $collection
      * @return void
      */
-    private function applyCustomJoin($joinName, AbstractDb $collection)
+    private function applyCustomJoin(string $joinName, AbstractDb $collection)
     {
         $customJoin = $this->getCustomJoin($joinName);
 
@@ -75,13 +69,10 @@ class CustomJoinProcessor implements CollectionProcessorInterface
     }
 
     /**
-     * Return custom filters for field if exists
-     *
-     * @param string $joinName
      * @return CustomJoinInterface|null
      * @throws \InvalidArgumentException
      */
-    private function getCustomJoin($joinName)
+    private function getCustomJoin(string $joinName)
     {
         $joinType = null;
         if (isset($this->joins[$joinName])) {

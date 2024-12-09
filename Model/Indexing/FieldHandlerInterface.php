@@ -21,11 +21,13 @@ use Magento\Framework\DataObject;
  *
  * @api
  * @since 0.8.0
+ *
+ * @template TItem of DataObject
  */
 interface FieldHandlerInterface
 {
     /**
-     * @param DataObject $item
+     * @param TItem $item
      * @param string $fieldName
      * @return mixed
      */

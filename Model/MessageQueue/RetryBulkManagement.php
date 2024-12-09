@@ -31,12 +31,6 @@ class RetryBulkManagement implements BulkManagementInterface
      */
     private $publisher;
 
-    /**
-     * RetryBulkManagement constructor.
-     *
-     * @param OperationManagementInterface $operationManagement
-     * @param BulkPublisherInterface $publisher
-     */
     public function __construct(
         OperationManagementInterface $operationManagement,
         BulkPublisherInterface $publisher
@@ -73,8 +67,9 @@ class RetryBulkManagement implements BulkManagementInterface
         return true;
     }
 
+
     /**
-     * @inheritDoc
+     * @throws \LogicException
      */
     public function deleteBulk($bulkId)
     {
@@ -84,7 +79,7 @@ class RetryBulkManagement implements BulkManagementInterface
     /**
      * Publish list of operations to the corresponding message queues.
      *
-     * @param array $operations
+     * @param OperationInterface[] $operations
      * @return void
      */
     private function publishOperations(array $operations)

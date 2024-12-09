@@ -21,10 +21,13 @@ use HawkSearch\EsIndexing\Api\Data\LandingPageInterface;
 use HawkSearch\EsIndexing\Api\Data\LandingPageInterfaceFactory;
 use Magento\Framework\Api\DataObjectHelper;
 
+/**
+ * @phpstan-import-type HttpResult from ResultInterface
+ */
 class LandingPageResult implements ResultInterface
 {
     /**
-     * @var array
+     * @var HttpResult
      */
     private $result;
 
@@ -53,7 +56,7 @@ class LandingPageResult implements ResultInterface
      * @param DataObjectHelper $dataObjectHelper
      * @param HawkSearchDataObjectHelper $hawksearchDataObjectHelper
      * @param HttpResponseReader $httpResponseReader
-     * @param array $result
+     * @param HttpResult $result
      */
     public function __construct(
         LandingPageInterfaceFactory $landingPageFactory,

@@ -31,14 +31,12 @@ interface FacetManagementInterface
     public function getFacets(): array;
 
     /**
-     * @param FacetInterface $facet
      * @return FacetInterface
      * @throws CouldNotSaveException
      */
     public function addFacet(FacetInterface $facet): FacetInterface;
 
     /**
-     * @param FacetInterface $facet
      * @return FacetInterface
      * @throws CouldNotSaveException
      */

@@ -35,9 +35,6 @@ class StagingSubscriptionPlugin
      */
     private $triggerFactory;
 
-    /**
-     * @param TriggerFactory $triggerFactory
-     */
     public function __construct(
         TriggerFactory $triggerFactory
     ) {
@@ -45,8 +42,6 @@ class StagingSubscriptionPlugin
     }
 
     /**
-     * @param Subscription $subject
-     * @param Trigger $trigger
      * @return array|null
      * @throws \Zend_Db_Exception
      */

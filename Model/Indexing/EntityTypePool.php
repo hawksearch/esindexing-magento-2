@@ -20,11 +20,15 @@ use Magento\Framework\ObjectManager\TMapFactory;
 
 /**
  * @internal
+ *
+ * @template TKey of string
+ * @template TValue of EntityTypeInterface
+ * @implements EntityTypePoolInterface<TKey, TValue>
  */
 class EntityTypePool implements EntityTypePoolInterface
 {
     /**
-     * @var EntityTypeInterface[] | TMap
+     * @var TMap<TKey, TValue>
      */
     private $types;
 
@@ -34,9 +38,8 @@ class EntityTypePool implements EntityTypePoolInterface
     private TMapFactory $tmapFactory;
 
     /**
-     * EntityTypePool constructor.
      * @param TMapFactory $tmapFactory
-     * @param array $types
+     * @param array<TKey, class-string<TValue>> $types
      */
     public function __construct(
         TMapFactory $tmapFactory,

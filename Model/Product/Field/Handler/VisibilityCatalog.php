@@ -15,10 +15,13 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Product\Field\Handler;
 
 use HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface;
-use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Model\Product as ProductModel;
 use Magento\Catalog\Model\Product\Visibility;
 use Magento\Framework\DataObject;
 
+/**
+ * @implements FieldHandlerInterface<ProductModel>
+ */
 class VisibilityCatalog implements FieldHandlerInterface
 {
     /**
@@ -26,9 +29,6 @@ class VisibilityCatalog implements FieldHandlerInterface
      */
     private Visibility $visibility;
 
-    /**
-     * @param Visibility $visibility
-     */
     public function __construct(
         Visibility $visibility
     )
@@ -36,10 +36,6 @@ class VisibilityCatalog implements FieldHandlerInterface
         $this->visibility = $visibility;
     }
 
-    /**
-     * @inheritDoc
-     * @param ProductInterface $item
-     */
     public function handle(DataObject $item, string $fieldName)
     {
         return in_array($item->getVisibility(), $this->visibility->getVisibleInCatalogIds());

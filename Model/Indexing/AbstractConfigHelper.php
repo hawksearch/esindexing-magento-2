@@ -27,9 +27,6 @@ abstract class AbstractConfigHelper
      */
     private $indexingConfig;
 
-    /**
-     * @param IndexingConfig $indexingConfig
-     */
     public function __construct(
         IndexingConfig $indexingConfig
     ) {
@@ -39,6 +36,7 @@ abstract class AbstractConfigHelper
     /**
      * @param null|int|string $store
      * @return bool
+     * @noinspection PhpMissingParamTypeInspection
      */
     public function isEnabled($store = null)
     {
@@ -48,6 +46,7 @@ abstract class AbstractConfigHelper
     /**
      * @param null|int|string $store
      * @return int
+     * @noinspection PhpMissingParamTypeInspection
      */
     public function getBatchSize($store = null)
     {

@@ -25,9 +25,8 @@ interface MessageTopicResolverInterface
     /**
      * Determine queue message topic based off the given object data.
      *
-     * @param object $object
      * @return string
      * @throws  InputException
      */
-    public function resolve($object);
+    public function resolve(object $object);
 }

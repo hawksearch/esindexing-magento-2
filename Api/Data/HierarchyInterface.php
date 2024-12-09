@@ -43,7 +43,6 @@ interface HierarchyInterface
     public function getHierarchyId(): string;
 
     /**
-     * @param string $value
      * @return $this
      */
     public function setHierarchyId(string $value);
@@ -54,7 +53,6 @@ interface HierarchyInterface
     public function getName(): string;
 
     /**
-     * @param string $value
      * @return $this
      */
     public function setName(string $value);
@@ -65,7 +63,6 @@ interface HierarchyInterface
     public function getParentHierarchyId(): string;
 
     /**
-     * @param string $value
      * @return $this
      */
     public function setParentHierarchyId(string $value);
@@ -76,7 +73,6 @@ interface HierarchyInterface
     public function getIsActive(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsActive(bool $value);
@@ -87,7 +83,6 @@ interface HierarchyInterface
     public function getSortOrder(): int;
 
     /**
-     * @param int $value
      * @return $this
      */
     public function setSortOrder(int $value);
@@ -98,7 +93,6 @@ interface HierarchyInterface
     public function getCustom(): string;
 
     /**
-     * @param string $value
      * @return $this
      */
     public function setCustom(string $value);

@@ -39,12 +39,6 @@ class VueAdditionalParametersProcessor implements LayoutConfigProcessorInterface
      */
     private $urlFinder;
 
-    /**
-     * VueAdditionalParametersProcessor constructor.
-     * @param Registry $registry
-     * @param RequestInterface $request
-     * @param UrlFinderInterface $urlFinder
-     */
     public function __construct(
         Registry $registry,
         RequestInterface $request,
@@ -58,7 +52,7 @@ class VueAdditionalParametersProcessor implements LayoutConfigProcessorInterface
     /**
      * @inheritDoc
      */
-    public function process($jsConfig)
+    public function process(array $jsConfig)
     {
         $params = [];
         $queryParam = [];
@@ -73,14 +67,12 @@ class VueAdditionalParametersProcessor implements LayoutConfigProcessorInterface
             $params['Query'] = implode(' AND ', $queryParam);
         }
 
-        $jsConfig = $jsConfig ?? [];
         $jsConfig['additionalParameters'] = $params;
 
         return $jsConfig;
     }
 
     /**
-     * @param Category $category
      * @return string|null
      */
     protected function getCategoryPath(Category $category)
@@ -110,7 +102,7 @@ class VueAdditionalParametersProcessor implements LayoutConfigProcessorInterface
     }
 
     /**
-     * Check if current page is category page
+     * Check if current page is a category page an return category
      * @return Category|null
      */
     protected function getCategoryPage()

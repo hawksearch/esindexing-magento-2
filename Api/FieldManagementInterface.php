@@ -38,14 +38,12 @@ interface FieldManagementInterface
     public function getFields(): array;
 
     /**
-     * @param FieldInterface $field
      * @return FieldInterface
      * @throws CouldNotSaveException
      */
     public function addField(FieldInterface $field): FieldInterface;
 
     /**
-     * @param FieldInterface $field
      * @return FieldInterface
      * @throws CouldNotSaveException
      */

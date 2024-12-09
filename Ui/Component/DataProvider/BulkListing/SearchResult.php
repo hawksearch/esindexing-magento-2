@@ -39,10 +39,8 @@ class SearchResult extends \Magento\AsynchronousOperations\Ui\Component\DataProv
      * @var Operation
      */
     private $operationResourceConfig;
-
+    
     /**
-     * SearchResult constructor.
-     *
      * @param EntityFactory $entityFactory
      * @param Logger $logger
      * @param FetchStrategy $fetchStrategy
@@ -51,10 +49,13 @@ class SearchResult extends \Magento\AsynchronousOperations\Ui\Component\DataProv
      * @param StatusMapper $statusMapper
      * @param CalculatedStatusSql $calculatedStatusSql
      * @param OperationCollectionFactory $operationCollectionFactory
+     * @param Operation $operationResourceConfig
      * @param string $mainTable
-     * @param null $resourceModel
+     * @param string $resourceModel
      * @param string $identifierName
+     *
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @noinspection PhpMissingParamTypeInspection
      */
     public function __construct(
         EntityFactory $entityFactory,

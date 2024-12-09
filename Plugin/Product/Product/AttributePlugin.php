@@ -33,10 +33,6 @@ class AttributePlugin extends AbstractPlugin
      */
     private $productAttributes;
 
-    /**
-     * @param IndexerRegistry $indexerRegistry
-     * @param Attributes $productAttributes
-     */
     public function __construct(
         IndexerRegistry $indexerRegistry,
         Attributes $productAttributes
@@ -50,7 +46,6 @@ class AttributePlugin extends AbstractPlugin
      *
      * @param AttributeResourceModel $subject
      * @param Attribute $attribute
-     *
      * @return void
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -63,9 +58,6 @@ class AttributePlugin extends AbstractPlugin
 
     /**
      * Invalidate product indexer on attribute delete
-     *
-     * @param AttributeResourceModel $subject
-     * @param AttributeResourceModel $result
      *
      * @return AttributeResourceModel
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

@@ -27,8 +27,10 @@ class Advanced extends ConfigProvider
 
     /**
      * Check if setting is enabled
+     *
      * @param null|int|string $store
      * @return bool
+     * @noinspection PhpMissingParamTypeInspection
      */
     public function isRemovePubFromAssetsUrl($store = null): bool
     {

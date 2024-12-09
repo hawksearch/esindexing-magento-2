@@ -17,6 +17,8 @@ namespace HawkSearch\EsIndexing\Model\Indexing\Field;
 /**
  * @api
  * @since 0.8.0
+ *
+ * @phpstan-type FieldNameListGeneric array<string, array<mixed>>
  */
 interface NameProviderInterface
 {
@@ -31,7 +33,7 @@ interface NameProviderInterface
      *      ...
      * ]
      *
-     * @return array
+     * @return FieldNameListGeneric
      */
     public function getList(): array;
 }

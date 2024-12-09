@@ -35,6 +35,7 @@ class DataStorage implements DataStorageInterface
     /**
      * @param string|null $name
      * @throws RuntimeException
+     * @todo $name: remove default value 'null'
      */
     public function __construct(string $name = null)
     {
@@ -53,7 +54,7 @@ class DataStorage implements DataStorageInterface
      * @inheritDoc
      * @throws RuntimeException
      */
-    public function set($value, $graceful = false)
+    public function set(mixed $value, bool $graceful = false)
     {
         if (isset($this->value)) {
             if ($graceful) {
@@ -83,7 +84,7 @@ class DataStorage implements DataStorageInterface
     /**
      * @inheritDoc
      */
-    public function get($reset = false)
+    public function get(bool $reset = false)
     {
         $value = null;
         if (isset($this->value)) {

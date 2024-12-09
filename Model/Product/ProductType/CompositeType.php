@@ -15,7 +15,7 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Product\ProductType;
 
 use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\Product as ProductModel;
 
 /**
  * @api
@@ -24,16 +24,18 @@ use Magento\Catalog\Model\Product;
 abstract class CompositeType extends DefaultType
 {
     /**
-     * @inheritDoc
+     * @param ProductModel $product
      */
     public function getChildProducts(ProductInterface $product): array
     {
         return $product->hasData('child_products') ? $product->getData('child_products') : [];
     }
+
     /**
      * Get minimal and maximal prices for composite products
-     * @param Product|ProductInterface $product
-     * @return float[]|array [min, max]
+     *
+     * @param ProductModel $product
+     * @return non-empty-list{0: float, 1: float} 0-key min value, 1-key max value
      */
     protected function getMinMaxPrice(ProductInterface $product): array
     {
@@ -60,12 +62,13 @@ abstract class CompositeType extends DefaultType
 
     /**
      * @inheritdoc
+     * @return array<int, float|null>
      */
     protected function getCustomerGroupPrices(ProductInterface $product): array
     {
         $groupPrices = [];
         foreach ($this->getCustomerGroups() as $group) {
-            $groupId = (string)$group['value'];
+            $groupId = $group['value'];
             $groupPrices[$groupId] = [];
         }
 

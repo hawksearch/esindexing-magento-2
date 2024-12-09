@@ -17,24 +17,25 @@ namespace HawkSearch\EsIndexing\Model\MessageQueue;
 /**
  * @api
  * @since 0.8.0
+ * @phpstan-type MessageType array<string, mixed>
  */
 interface MessageManagerInterface
 {
     /**
      * @param string $topicName
-     * @param array $data
+     * @param MessageType $data
      * @return $this
      */
     public function addMessage(string $topicName, array $data);
 
     /**
-     * @param array $messages
+     * @param list<MessageType> $messages
      * @return $this
      */
     public function setMessages(array $messages);
 
     /**
-     * @return array
+     * @return list<MessageType>
      */
     public function getMessages();
 }

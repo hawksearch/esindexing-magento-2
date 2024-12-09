@@ -33,11 +33,6 @@ class ItemsDataProvider implements ItemsDataProviderInterface
      */
     private $searchCriteriaBuilder;
 
-    /**
-     * ContentPageItems constructor.
-     * @param PageRepositoryInterface $pageRepository
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
-     */
     public function __construct(
         PageRepositoryInterface $pageRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder
@@ -50,20 +45,20 @@ class ItemsDataProvider implements ItemsDataProviderInterface
     /**
      * @inheritDoc
      */
-    public function getItems(int $storeId, $entityIds = null, $currentPage = 1, $pageSize = 0)
+    public function getItems(int $storeId, ?array $entityIds = null, int $currentPage = 1, int $pageSize = 0)
     {
         return $this->getPageCollection($storeId, $entityIds, $currentPage, $pageSize);
     }
 
     /**
      * @param int $storeId
-     * @param array|null $entityIds
+     * @param array<int>|null $entityIds
      * @param int $currentPage
      * @param int $pageSize
      * @return PageInterface[]
      * @throws LocalizedException
      */
-    protected function getPageCollection($storeId, $entityIds = null, $currentPage = 1, $pageSize = 0)
+    protected function getPageCollection(int $storeId, ?array $entityIds = null, int $currentPage = 1, int $pageSize = 0)
     {
         $this->searchCriteriaBuilder->addFilter(
             'store_id',

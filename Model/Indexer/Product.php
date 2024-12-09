@@ -45,13 +45,6 @@ class Product implements IndexerActionInterface, MviewActionInterface
      */
     private $output;
 
-    /**
-     * Product constructor.
-     *
-     * @param ProductDataProvider $productDataProvider
-     * @param Action $action
-     * @param ConsoleOutput $output
-     */
     public function __construct(
         ProductDataProvider $productDataProvider,
         Action $action,
@@ -99,7 +92,6 @@ class Product implements IndexerActionInterface, MviewActionInterface
 
     /**
      * @inheritDoc
-     * @param $ids
      * @throws LocalizedException
      */
     public function execute($ids)

@@ -21,6 +21,7 @@ use Magento\Framework\Stdlib\BooleanUtils;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
+use Magento\Framework\View\Element\UiComponentInterface;
 use Magento\Ui\Component\Listing\Columns\Date;
 
 class StartTime extends Date
@@ -36,8 +37,8 @@ class StartTime extends Date
      * @param TimezoneInterface $timezone
      * @param BooleanUtils $booleanUtils
      * @param Operation $operation
-     * @param array $components
-     * @param array $data
+     * @param array<string, UiComponentInterface> $components
+     * @param array<mixed> $data
      * @param ResolverInterface|null $localeResolver
      * @param DataBundle|null $dataBundle
      */

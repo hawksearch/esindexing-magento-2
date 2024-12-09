@@ -35,7 +35,7 @@ class JsConfig extends Template
      * @param Template\Context $context
      * @param SerializerInterface $serializer
      * @param LayoutConfigProcessorInterface $configProcessor
-     * @param array $data
+     * @param array<string, mixed> $data
      */
     public function __construct(
         Template\Context $context,
@@ -54,6 +54,6 @@ class JsConfig extends Template
      */
     public function getJsLayout()
     {
-        return $this->serializer->serialize($this->configProcessor->process($this->jsLayout));
+        return $this->serializer->serialize($this->configProcessor->process($this->jsLayout ?? []));
     }
 }

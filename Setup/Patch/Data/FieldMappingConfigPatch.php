@@ -33,10 +33,6 @@ class FieldMappingConfigPatch implements DataPatchInterface
      */
     private $json;
 
-    /**
-     * @param ModuleDataSetupInterface $moduleDataSetup
-     * @param Json $json
-     */
     public function __construct(
         ModuleDataSetupInterface $moduleDataSetup,
         Json $json

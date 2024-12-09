@@ -26,6 +26,7 @@ PublicContractDeprecation::triggerInterfaceDeprecationMessage(
 /**
  * @deprecated 0.7.0 In favour of a new Field Handlers logic
  * @see FieldHandlerInterface
+ * @phpstan-ignore-next-line
  */
 interface AttributeHandlerInterface extends FieldHandlerInterface
 {

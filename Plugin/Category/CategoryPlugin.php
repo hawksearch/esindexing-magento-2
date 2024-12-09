@@ -33,9 +33,6 @@ class CategoryPlugin
      */
     private $productIndexer;
 
-    /**
-     * @param IndexerRegistry $indexerRegistry
-     */
     public function __construct(
         IndexerRegistry $indexerRegistry
     ) {
@@ -46,9 +43,6 @@ class CategoryPlugin
     /**
      * Reindex on page save.
      *
-     * @param CategoryResource $categoryResource
-     * @param \Closure $proceed
-     * @param CategoryModel $object
      * @return CategoryResource
      * @throws \Exception
      */
@@ -58,9 +52,6 @@ class CategoryPlugin
     }
 
     /**
-     * @param CategoryResource $categoryResource
-     * @param \Closure $proceed
-     * @param CategoryModel $object
      * @return CategoryResource
      * @throws \Exception
      */
@@ -73,9 +64,6 @@ class CategoryPlugin
     /**
      * Reindex catalog search.
      *
-     * @param CategoryResource $categoryResource
-     * @param \Closure $proceed
-     * @param CategoryModel $category
      * @return CategoryResource
      * @throws \Exception
      */
@@ -103,10 +91,9 @@ class CategoryPlugin
     /**
      * Reindex category if indexer is not scheduled
      *
-     * @param int $pageId
      * @return void
      */
-    protected function reindexCategoryRow($pageId)
+    protected function reindexCategoryRow(int $pageId)
     {
         if (!$this->categoryIndexer->isScheduled()) {
             $this->categoryIndexer->reindexRow($pageId);

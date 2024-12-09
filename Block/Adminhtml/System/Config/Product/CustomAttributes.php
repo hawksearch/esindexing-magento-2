@@ -45,7 +45,7 @@ class CustomAttributes extends AbstractFieldArray
      * @param Template\Context $context
      * @param HawksearchFields $hawksearchFields
      * @param ProductAttributes $productAttributes
-     * @param array $data
+     * @param array<string, mixed> $data
      */
     public function __construct(
         Template\Context $context,
@@ -95,7 +95,7 @@ class CustomAttributes extends AbstractFieldArray
      * Add a column to array-grid
      *
      * @param string $name
-     * @param array $params
+     * @param array<string, mixed> $params
      * @return void
      */
     public function addColumn($name, $params)
@@ -117,7 +117,6 @@ class CustomAttributes extends AbstractFieldArray
     /**
      * Prepare existing row data object
      *
-     * @param DataObject $row
      * @throws LocalizedException
      */
     protected function _prepareArrayRow(DataObject $row): void
@@ -141,12 +140,11 @@ class CustomAttributes extends AbstractFieldArray
     }
 
     /**
-     * @param string $columnName
      * @return void
      * @throws LocalizedException
      * @throws \Exception
      */
-    protected function getColumnRenderer($columnName)
+    protected function getColumnRenderer(string $columnName)
     {
         if (empty($this->_columns[$columnName])) {
             throw new \Exception('Wrong column name specified.');
@@ -165,11 +163,10 @@ class CustomAttributes extends AbstractFieldArray
     }
 
     /**
-     * @param string $columnName
      * @return Select|null
      * @throws \Exception
      */
-    protected function resolveSelectFieldRenderer($columnName)
+    protected function resolveSelectFieldRenderer(string $columnName)
     {
         if (empty($this->_columns[$columnName])) {
             throw new \Exception('Wrong column name specified.');

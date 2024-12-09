@@ -17,8 +17,8 @@ namespace HawkSearch\EsIndexing\Helper;
 use Magento\Framework\Api\FilterFactory;
 use Magento\Framework\Api\Search\FilterGroupBuilder;
 use Magento\Framework\Api\SearchCriteria;
-use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Api\SimpleDataObjectConverter;
 use Magento\Framework\Api\SortOrderFactory;
 
@@ -48,11 +48,6 @@ class ObjectHelper
      */
     private $filterGroupBuilder;
 
-    /**
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
-     * @param FilterFactory $filterFactory
-     * @param FilterGroupBuilder $filterGroupBuilder
-     */
     public function __construct(
         SearchCriteriaBuilder $searchCriteriaBuilder,
         FilterFactory $filterFactory,
@@ -66,7 +61,12 @@ class ObjectHelper
     }
 
     /**
-     * @param array $data
+     * @param array{
+     *     "SearchCriteria::FILTER_GROUPS":array<mixed>,
+     *     "SearchCriteria::SORT_ORDERS":array<mixed>,
+     *     "SearchCriteria::PAGE_SIZE":?int,
+     *     "SearchCriteria::CURRENT_PAGE":?int,
+     * } $data
      * @return SearchCriteria
      */
     public function convertArrayToSearchCriteriaObject(array $data)
@@ -91,11 +91,9 @@ class ObjectHelper
     }
 
     /**
-     * @param string $param
-     * @param $value
-     * @return array|mixed
+     * @return mixed
      */
-    protected function buildSearchCriteriaValue(string $param, $value)
+    protected function buildSearchCriteriaValue(string $param, mixed $value)
     {
         switch ($param) {
             case 'filter_groups':
@@ -127,8 +125,6 @@ class ObjectHelper
     }
 
     /**
-     * @param SearchCriteriaInterface $searchCriteria
-     * @param string $filterField
      * @return mixed
      */
     public function getSearchCriteriaFilterValue(SearchCriteriaInterface $searchCriteria, string $filterField)
@@ -147,14 +143,13 @@ class ObjectHelper
 
     /**
      * Validate array values to be an instance of a class
+     * Used as array_walk callable
      *
-     * @param object $item
-     * @param int $key
-     * @param string $className
      * @return void
      * @throws \InvalidArgumentException
+     * @todo remove $key argument, use a closure for array_walk explicitely and use this method implicitely in the closure
      */
-    public static function validateObjectValue($item, $key, string $className)
+    public static function validateObjectValue(object $item, int $key, string $className)
     {
         if (!$item instanceof $className) {
             throw new \InvalidArgumentException(

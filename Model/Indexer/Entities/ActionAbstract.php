@@ -45,12 +45,6 @@ abstract class ActionAbstract
      */
     protected $entityScheduler;
 
-    /**
-     * @param ManagerInterface $eventManager
-     * @param MessageManagerInterface $messageManager
-     * @param BulkPublisherInterface $publisher
-     * @param SchedulerInterface $entityScheduler
-     */
     public function __construct(
         ManagerInterface $eventManager,
         MessageManagerInterface $messageManager,
@@ -66,14 +60,14 @@ abstract class ActionAbstract
     /**
      * Execute action for given ids
      *
-     * @param array|int $ids
+     * @param list<int> $ids
      * @return $this
      */
-    abstract public function execute($ids);
+    abstract public function execute(array $ids);
 
     /**
      * @param StoreInterface $store
-     * @param array|null $ids
+     * @param list<int>|null $ids Schedule full reindexing if null
      * @return void
      */
     protected function reindex(StoreInterface $store, ?array $ids = null)

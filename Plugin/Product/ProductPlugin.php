@@ -33,10 +33,6 @@ class ProductPlugin extends AbstractPlugin
      */
     private $productDataProvider;
 
-    /**
-     * @param IndexerRegistry $indexerRegistry
-     * @param ProductDataProvider $productDataProvider
-     */
     public function __construct(
         IndexerRegistry $indexerRegistry,
         ProductDataProvider $productDataProvider
@@ -49,9 +45,6 @@ class ProductPlugin extends AbstractPlugin
     /**
      * Reindex on product save.
      *
-     * @param ProductResource $productResource
-     * @param \Closure $proceed
-     * @param AbstractModel $object
      * @return ProductResource
      * @throws \Exception
      */
@@ -63,9 +56,6 @@ class ProductPlugin extends AbstractPlugin
     /**
      * Reindex on product delete
      *
-     * @param ProductResource $productResource
-     * @param \Closure $proceed
-     * @param AbstractModel $object
      * @return ProductResource
      * @throws \Exception
      */
@@ -79,9 +69,6 @@ class ProductPlugin extends AbstractPlugin
     /**
      * Reindex catalog search.
      *
-     * @param ProductResource $productResource
-     * @param \Closure $proceed
-     * @param AbstractModel $object
      * @return ProductResource
      * @throws \Exception
      */

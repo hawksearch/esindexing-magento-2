@@ -53,12 +53,6 @@ class CatalogConfigProcessor implements LayoutConfigProcessorInterface
      */
     private AdvancedCategoryConfig $advancedCategoryConfig;
 
-    /**
-     * @param CurrentCategory $currentCategory
-     * @param CategoryUrlPathGenerator $categoryUrlPathGenerator
-     * @param ScopeConfigInterface $scopeConfig
-     * @param DbStorage $urlFinder
-     */
     public function __construct(
         CurrentCategory $currentCategory,
         CategoryUrlPathGenerator $categoryUrlPathGenerator,
@@ -80,7 +74,7 @@ class CatalogConfigProcessor implements LayoutConfigProcessorInterface
      *
      * @inheritDoc
      */
-    public function process($jsConfig)
+    public function process(array $jsConfig)
     {
         $urlRewritesConfig = $this->getUrlRewritesConfig();
         $config = [
@@ -95,7 +89,7 @@ class CatalogConfigProcessor implements LayoutConfigProcessorInterface
             ]
         ];
 
-        return array_merge_recursive($jsConfig ?? [], $config);
+        return array_merge_recursive($jsConfig, $config);
     }
 
     /**

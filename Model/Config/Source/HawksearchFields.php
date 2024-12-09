@@ -30,9 +30,6 @@ class HawksearchFields implements OptionSourceInterface
      */
     private FieldManagementInterface $fieldManagement;
 
-    /**
-     * @param FieldManagementInterface $fieldManagement
-     */
     public function __construct(
         FieldManagementInterface $fieldManagement
 

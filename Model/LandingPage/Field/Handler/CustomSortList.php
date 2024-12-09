@@ -14,13 +14,15 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\LandingPage\Field\Handler;
 
-use HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface;
 use HawkSearch\EsIndexing\Model\Indexing\EntityType\ProductEntityType;
 use HawkSearch\EsIndexing\Model\Indexing\EntityType\ProductEntityTypeFactory;
-use Magento\Catalog\Api\Data\CategoryInterface;
+use HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface;
 use Magento\Catalog\Model\Category;
 use Magento\Framework\DataObject;
 
+/**
+ * @implements FieldHandlerInterface<Category>
+ */
 class CustomSortList implements FieldHandlerInterface
 {
     /**
@@ -36,10 +38,6 @@ class CustomSortList implements FieldHandlerInterface
         $this->productEntityTypeFactory = $productEntityTypeFactory;
     }
 
-    /**
-     * @inheritDoc
-     * @param CategoryInterface|Category $item
-     */
     public function handle(DataObject $item, string $fieldName)
     {
         $positionsHash = $item->getProductsPosition();

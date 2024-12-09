@@ -26,9 +26,6 @@ class ImportPlugin
      */
     private $productIndexer;
 
-    /**
-     * @param IndexerRegistry $indexerRegistry
-     */
     public function __construct(
         IndexerRegistry $indexerRegistry
     ) {
@@ -36,15 +33,12 @@ class ImportPlugin
     }
 
     /**
-     * After import handler
-     *
-     * @param Import $subject
-     * @param bool $import
+     * Invalidate index after import
      *
      * @return bool
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterImportSource(Import $subject, $import)
+    public function afterImportSource(Import $subject, mixed $import)
     {
         if (!$this->productIndexer->isScheduled()) {
             $this->productIndexer->invalidate();

@@ -33,14 +33,6 @@ class ActionEntityDefault extends ActionAbstract
      */
     private $indexingConfig;
 
-    /**
-     * @param ManagerInterface $eventManager
-     * @param MessageManagerInterface $messageManager
-     * @param BulkPublisherInterface $publisher
-     * @param SchedulerInterface $entityScheduler
-     * @param StoreManagerInterface $storeManager
-     * @param IndexingConfig $indexingConfig
-     */
     public function __construct(
         ManagerInterface $eventManager,
         MessageManagerInterface $messageManager,
@@ -63,7 +55,7 @@ class ActionEntityDefault extends ActionAbstract
      * @inheritDoc
      * @throws LocalizedException
      */
-    public function execute($ids)
+    public function execute(array $ids)
     {
         if (!is_array($ids)) {
             $ids = [$ids];

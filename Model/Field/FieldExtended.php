@@ -24,9 +24,6 @@ class FieldExtended implements FieldExtendedInterface
      */
     private FieldInterface $field;
 
-    /**
-     * @param FieldInterface $field
-     */
     public function __construct(FieldInterface $field)
     {
         $this->field = $field;

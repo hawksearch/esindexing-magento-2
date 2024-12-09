@@ -21,3 +21,31 @@ parameters:
         - Ui
         - view/adminhtml/templates
         - view/frontend/templates
+    excludePaths:
+        # ####################################
+        # Exclude until features are anounced
+        #
+        - Model/Api/SearchCriteria/JoinProcessor/ReviewRatingSummary.php
+        - Api/LandingPageRepositoryInterface.php
+        - Model/LandingPageRepository.php
+        - Controller/LandingPage
+        #
+        # ###################################
+    ignoreErrors:
+        -
+            # Private property defined in class and used in trait \HawkSearch\Connector\Compatibility\PublicMethodDeprecationTrait
+            message: '#Property [a-zA-Z0-9\\_]+::\$deprecatedMethods is never read, only written.#'
+        -
+            message: '#Variable \$block might not be defined.#'
+            path: *.phtml
+        -
+            message: '#Variable \$this might not be defined.#'
+            path: *.phtml
+        -
+            message: '#Variable \$escaper might not be defined.#'
+            path: *.phtml
+#        -
+#            identifier: missingType.parameter
+#            paths:
+#                - Plugin
+#                - Model

@@ -66,7 +66,7 @@ interface ClientDataInterface
     public function getCustom(): array;
 
     /**
-     * @param array|null $value
+     * @param array<string, string>|null $value
      * @return $this
      */
     public function setCustom(?array $value): self;
@@ -77,7 +77,7 @@ interface ClientDataInterface
     public function getExtendedCustom(): array;
 
     /**
-     * @param array|null $value
+     * @param array<string, list<string>>|null $value
      * @return $this
      */
     public function setExtendedCustom(?array $value): self;
@@ -88,7 +88,7 @@ interface ClientDataInterface
     public function getPreviewBuckets(): array;
 
     /**
-     * @param array|null $value
+     * @param list<int>|null $value
      * @return $this
      */
     public function setPreviewBuckets(?array $value): self;

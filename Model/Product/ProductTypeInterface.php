@@ -18,17 +18,17 @@ use Magento\Catalog\Model\Product;
 /**
  * @api
  * @since 0.8.0
+ *
+ * @phpstan-import-type PriceData from PriceManagementInterface
  */
 interface ProductTypeInterface
 {
     /**
-     * @param Product|ProductInterface $product
-     * @return array
+     * @return PriceData
      */
     public function getPriceData(ProductInterface $product): array;
 
     /**
-     * @param Product|ProductInterface $product
      * @return Product[]
      */
     public function getChildProducts(ProductInterface $product): array;

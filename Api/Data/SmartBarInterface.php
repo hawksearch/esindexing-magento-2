@@ -40,7 +40,6 @@ interface SmartBarInterface
     public function getBoostAndBury(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setBoostAndBury(bool $value): self;
@@ -51,7 +50,6 @@ interface SmartBarInterface
     public function getVisibilityRules(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setVisibilityRules(bool $value): self;
@@ -62,7 +60,6 @@ interface SmartBarInterface
     public function getPersonalizedBoost(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setPersonalizedBoost(bool $value): self;
@@ -73,7 +70,6 @@ interface SmartBarInterface
     public function getPopularityBoost(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setPopularityBoost(bool $value): self;
@@ -84,7 +80,6 @@ interface SmartBarInterface
     public function getItemPin(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setItemPin(bool $value): self;
@@ -95,7 +90,6 @@ interface SmartBarInterface
     public function getPopularitySalesBoost(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setPopularitySalesBoost(bool $value): self;
@@ -106,7 +100,6 @@ interface SmartBarInterface
     public function getPopularityAdd2CartBoost(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setPopularityAdd2CartBoost(bool $value): self;
@@ -117,7 +110,6 @@ interface SmartBarInterface
     public function getPopularityLandingPageBoost(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setPopularityLandingPageBoost(bool $value): self;
@@ -128,7 +120,6 @@ interface SmartBarInterface
     public function getKeywordReplacement(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setKeywordReplacement(bool $value): self;

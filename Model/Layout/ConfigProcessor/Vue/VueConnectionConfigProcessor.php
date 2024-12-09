@@ -24,10 +24,6 @@ class VueConnectionConfigProcessor implements LayoutConfigProcessorInterface
      */
     private $apiSettings;
 
-    /**
-     * ConnectionConfigProcessor constructor.
-     * @param ApiSettings $apiSettings
-     */
     public function __construct(
         ApiSettings $apiSettings
     ) {
@@ -37,7 +33,7 @@ class VueConnectionConfigProcessor implements LayoutConfigProcessorInterface
     /**
      * @inheritDoc
      */
-    public function process($jsConfig)
+    public function process(array $jsConfig)
     {
         $connectionConfig = [
             'apiUrl' => $this->apiSettings->getSearchApiUrl(),
@@ -45,6 +41,6 @@ class VueConnectionConfigProcessor implements LayoutConfigProcessorInterface
             'clientGuid' => $this->apiSettings->getClientGuid(),
             'trackEventUrl' => $this->apiSettings->getTrackingUrl() . 'api/trackevent/',
         ];
-        return array_merge_recursive($jsConfig ?? [], $connectionConfig);
+        return array_merge_recursive($jsConfig, $connectionConfig);
     }
 }

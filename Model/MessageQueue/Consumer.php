@@ -42,13 +42,6 @@ class Consumer
      */
     private $objectHelper;
 
-    /**
-     * InitFullReindex constructor.
-     *
-     * @param SerializerInterface $serializer
-     * @param ObjectFactory $objectFactory
-     * @param ObjectHelper $objectHelper
-     */
     public function __construct(
         SerializerInterface $serializer,
         ObjectFactory $objectFactory,
@@ -60,8 +53,6 @@ class Consumer
     }
 
     /**
-     * Process
-     * @param QueueOperationDataInterface $operation
      * @return string
      */
     public function process(QueueOperationDataInterface $operation)
@@ -86,7 +77,6 @@ class Consumer
     }
 
     /**
-     * @param DataObject $data
      * @return array
      */
     private function buildArguments(DataObject $data)

@@ -47,7 +47,7 @@ class SearchRequest extends AbstractSimpleObject implements SearchRequestInterfa
      * @param ClientDataInterfaceFactory $clientDataFactory
      * @param VariantOptionsInterfaceFactory $variantOptionsFactory
      * @param SmartBarInterfaceFactory $smartBarFactory
-     * @param array $data
+     * @param array<self::FIELD_*, mixed> $data
      */
     public function __construct(
         ClientDataInterfaceFactory $clientDataFactory,

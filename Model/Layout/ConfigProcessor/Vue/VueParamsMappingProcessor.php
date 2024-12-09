@@ -23,11 +23,7 @@ class VueParamsMappingProcessor implements LayoutConfigProcessorInterface
      * @var SearchHelper
      */
     private $searchHelper;
-
-    /**
-     * VueParamsMappingProcessor constructor.
-     * @param SearchHelper $searchHelper
-     */
+    
     public function __construct(
         SearchHelper $searchHelper
     )
@@ -38,9 +34,8 @@ class VueParamsMappingProcessor implements LayoutConfigProcessorInterface
     /**
      * @inheritDoc
      */
-    public function process($jsConfig)
+    public function process(array $jsConfig)
     {
-        $jsConfig = $jsConfig ?? [];
         $jsConfig['paramsMapping'] = [
             'keyword' => $this->searchHelper->getQueryParamName()
         ];

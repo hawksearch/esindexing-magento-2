@@ -19,6 +19,9 @@ namespace HawkSearch\EsIndexing\Api\Data;
  * @since 0.8.0
  * @link https://developerdocs.hawksearch.com/reference/landingpage_postvalue_value
  * @link https://dev.hawksearch.net/swagger/ui/index#!/LandingPage/LandingPage_PostValue_value
+ * @todo remove nullable in return for all getters
+ * @todo add nullable to array type in all setters param
+ * @todo remove nullable from int type in all setters param
  */
 interface LandingPageInterface
 {
@@ -115,7 +118,6 @@ interface LandingPageInterface
     public function getIsFacetOverride(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsFacetOverride(bool $value);
@@ -126,7 +128,6 @@ interface LandingPageInterface
     public function getIsIncludeProducts(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsIncludeProducts(bool $value);
@@ -181,7 +182,6 @@ interface LandingPageInterface
     public function getEnableFacetAutoOrdering(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setEnableFacetAutoOrdering(bool $value);
@@ -324,7 +324,6 @@ interface LandingPageInterface
     public function getIsNoIndex(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsNoIndex(bool $value);
@@ -335,7 +334,6 @@ interface LandingPageInterface
     public function getIsNoFollow(): bool;
 
     /**
-     * @param bool $value
      * @return $this
      */
     public function setIsNoFollow(bool $value);

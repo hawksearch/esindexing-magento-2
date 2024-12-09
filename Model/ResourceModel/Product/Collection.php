@@ -22,8 +22,10 @@ namespace HawkSearch\EsIndexing\Model\ResourceModel\Product;
  */
 class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
 {
-    /*
+    /**
      * We don't need total collection size
+     *
+     * @return int
      */
     public function getSize()
     {

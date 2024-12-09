@@ -24,20 +24,17 @@ class ActionPlugin extends AbstractPlugin
      *
      * @param ProductAction $subject
      * @param ProductAction $action
-     * @param array $productIds
-     * @param array $attrData
-     * @param int $storeId
+     * @param array<int> $productIds
      * @return ProductAction
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @noinspection PhpUnusedParameterInspection
      */
     public function afterUpdateAttributes(
         ProductAction $subject,
         ProductAction $action,
-        $productIds,
-        $attrData,
-        $storeId
-    ) {
+        array $productIds
+    )
+    {
         $this->reindexList(array_unique($productIds));
 
         return $action;
@@ -48,14 +45,11 @@ class ActionPlugin extends AbstractPlugin
      *
      * @param ProductAction $subject
      * @param null $result
-     * @param array $productIds
-     * @param array $websiteIds
-     * @param string $type
+     * @param list<int> $productIds
      * @return void
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterUpdateWebsites(ProductAction $subject, $result, $productIds, $websiteIds, $type)
+    public function afterUpdateWebsites(ProductAction $subject, $result, array $productIds)
     {
         $this->reindexList(array_unique($productIds));
     }

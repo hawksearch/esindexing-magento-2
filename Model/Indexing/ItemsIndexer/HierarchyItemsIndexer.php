@@ -27,9 +27,6 @@ class HierarchyItemsIndexer implements ItemsIndexerInterface
      */
     private $hierarchyManagement;
 
-    /**
-     * @param HierarchyManagementInterface $hierarchyManagement
-     */
     public function __construct(
         HierarchyManagementInterface $hierarchyManagement
     ) {
@@ -46,22 +43,14 @@ class HierarchyItemsIndexer implements ItemsIndexerInterface
 
     /**
      * Uses hierarchy API to upsert hierarchy items
-     *
-     * @param array $items
-     * @param string $indexName
-     * @return void
      */
     public function update(array $items, string $indexName)
     {
-        $this->hierarchyManagement->upsertHierarchy($items, $indexName);
+        $this->hierarchyManagement->upsertHierarchy(array_values($items), $indexName);
     }
 
     /**
      * Uses hierarchy API to remove hierarchy items
-     *
-     * @param array $items Array of Ids to remove
-     * @param string $indexName
-     * @return void
      */
     public function delete(array $items, string $indexName)
     {

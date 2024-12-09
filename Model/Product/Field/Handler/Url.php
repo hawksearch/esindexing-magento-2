@@ -15,12 +15,13 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Product\Field\Handler;
 
 use HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface;
-use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\Product as ProductModel;
 use Magento\Framework\DataObject;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\StoreManagerInterface;
 
+/**
+ * @implements FieldHandlerInterface<ProductModel>
+ */
 class Url implements FieldHandlerInterface
 {
     /**
@@ -28,22 +29,12 @@ class Url implements FieldHandlerInterface
      */
     private $storeManager;
 
-    /**
-     * Url constructor.
-     * @param StoreManagerInterface $storeManager
-     */
     public function __construct(
         StoreManagerInterface $storeManager)
     {
         $this->storeManager = $storeManager;
     }
 
-    /**
-     * @inheritDoc
-     * @param ProductInterface|Product $item
-     * @param string $fieldName
-     * @return string
-     */
     public function handle(DataObject $item, string $fieldName)
     {
         /**

@@ -31,10 +31,13 @@ class ClientData extends AbstractSimpleObject implements ClientDataInterface
 
     /**
      * @param CoordinateInterfaceFactory $coordinate
+     * @param array<self::*, mixed> $data
      */
     public function __construct(
-        CoordinateInterfaceFactory $coordinate
+        CoordinateInterfaceFactory $coordinate,
+        array $data = []
     ) {
+        parent::__construct($data);
         $this->coordinateFactory = $coordinate;
     }
 

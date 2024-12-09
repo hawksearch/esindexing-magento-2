@@ -43,10 +43,6 @@ class RequestConfigProcessor implements LayoutConfigProcessorInterface
      */
     private FormKey $formKey;
 
-    /**
-     * VueParamsMappingProcessor constructor.
-     * @param SearchHelper $searchHelper
-     */
     public function __construct(
         SearchHelper $searchHelper,
         RequestInterface $request,
@@ -63,9 +59,8 @@ class RequestConfigProcessor implements LayoutConfigProcessorInterface
     /**
      * @inheritDoc
      */
-    public function process($jsConfig)
+    public function process(array $jsConfig)
     {
-        $jsConfig = $jsConfig ?? [];
         $jsConfig['request'] = [
             'query' => $this->request->getParam($this->searchHelper->getQueryParamName()),
             'url' => $this->urlBuilder->getUrl('*/*/*', [

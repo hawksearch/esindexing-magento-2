@@ -26,9 +26,6 @@ class StoreViewPlugin extends AbstractPlugin
     /**
      * Invalidate indexer on store view save
      *
-     * @param StoreResourceModel $subject
-     * @param StoreResourceModel $result
-     * @param AbstractModel $store
      * @return StoreResourceModel
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

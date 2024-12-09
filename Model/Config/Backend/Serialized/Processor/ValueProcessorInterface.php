@@ -18,6 +18,8 @@ use Magento\Framework\App\Config\ValueInterface;
 
 /**
  * @internal
+ * @template TInputValue of array<array<mixed>>
+ * @template TComputedValue of array<array<mixed>>
  */
 interface ValueProcessorInterface
 {
@@ -33,9 +35,9 @@ interface ValueProcessorInterface
     /**
      * Process config value before serialization
      *
-     * @param array $value
+     * @param TInputValue $value
      * @param ValueInterface $configValue
-     * @return array
+     * @return TComputedValue
      */
     public function process(array $value, ValueInterface $configValue): array;
 }

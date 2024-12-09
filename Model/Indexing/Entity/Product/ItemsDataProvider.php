@@ -20,14 +20,17 @@ use HawkSearch\EsIndexing\Model\Config\Indexing;
 use HawkSearch\EsIndexing\Model\Indexing\ItemsDataProviderInterface;
 use HawkSearch\EsIndexing\Model\Product as ProductDataProvider;
 use HawkSearch\EsIndexing\Model\Product\Attribute\ExcludeNotVisibleProductsFlagInterface;
-use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Catalog\Model\Product as ProductModel;
 use Magento\Catalog\Model\Product\Visibility;
 use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCollectionFactory;
 use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\ObjectManager;
 
+/**
+ * @phpstan-type ItemType ProductModel
+ */
 class ItemsDataProvider implements ItemsDataProviderInterface
 {
     /**
@@ -66,8 +69,6 @@ class ItemsDataProvider implements ItemsDataProviderInterface
     private ProductDataProvider $productDataProvider;
 
     /**
-     * ProductItems constructor.
-     *
      * @param ProductRepositoryInterface $productRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param Visibility $visibility
@@ -96,10 +97,10 @@ class ItemsDataProvider implements ItemsDataProviderInterface
 
     /**
      * @inheritDoc
-     * @return ProductInterface[]
+     * @return ItemType[]
      * @throws Exception
      */
-    public function getItems($storeId, $entityIds = null, $currentPage = 1, $pageSize = 0)
+    public function getItems(int $storeId, ?array $entityIds = null, int $currentPage = 1, int $pageSize = 0)
     {
         $items = $this->getProductCollection($storeId, $entityIds, $currentPage, $pageSize);
 
@@ -116,12 +117,12 @@ class ItemsDataProvider implements ItemsDataProviderInterface
 
     /**
      * @param int $storeId
-     * @param array|null $productIds
+     * @param array<int>|null $productIds
      * @param int $currentPage
      * @param int $pageSize
-     * @return ProductInterface[]
+     * @return ItemType[]
      */
-    protected function getProductCollection($storeId, $productIds = null, $currentPage = 1, $pageSize = 0): array
+    protected function getProductCollection(int $storeId, ?array $productIds = null, int $currentPage = 1, int $pageSize = 0): array
     {
         $this->searchCriteriaBuilder->addFilter('store_id', $storeId);
 
@@ -147,24 +148,22 @@ class ItemsDataProvider implements ItemsDataProviderInterface
     }
 
     /**
-     * @param SearchCriteria $searchCriteria
-     * @return ProductInterface[]
+     * @return ItemType[]
      */
     private function getProductItems(SearchCriteria $searchCriteria): array
     {
+        // @phpstan-ignore-next-line
         return $this->productRepository->getList($searchCriteria)->getItems();
     }
 
     /**
-     * Adds all parent categories to products
-     * @param array $products
+     * @param ItemType[] $products
      * @return void
      */
     private function addParentCategoriesToProducts(array $products): void
     {
         // Get list of all distinct categories among all products
         $categoryIds = [];
-        /** @var ProductInterface $product */
         foreach ($products as $product) {
             foreach ($product->getCategoryIds() as $categoryId) {
                 $categoryIds[(int)$categoryId] = true;
@@ -182,7 +181,6 @@ class ItemsDataProvider implements ItemsDataProviderInterface
         $categories = $collection->getItems();
 
         // Add parent categories to products
-        /** @var ProductInterface $product */
         foreach ($products as $product) {
             $newCategoryIds = $product->getCategoryIds();
             foreach ($product->getCategoryIds() as $categoryId) {
@@ -202,14 +200,13 @@ class ItemsDataProvider implements ItemsDataProviderInterface
     /**
      * Add parent ids data to loaded items
      *
-     * @param array $products
+     * @param ItemType[] $products
      * @return void
      * @throws Exception
      */
     private function addParentIds(array $products)
     {
         $parentsMap = $this->productDataProvider->getParentsByChildMap(array_keys($products));
-        /** @var ProductInterface $item */
         foreach ($products as $item) {
             if (isset($parentsMap[$item->getId()])) {
                 $item->setData('parent_ids', $parentsMap[$item->getId()]);
@@ -220,7 +217,7 @@ class ItemsDataProvider implements ItemsDataProviderInterface
     /**
      * Load child products collection and add its data to loaded product items
      *
-     * @param ProductInterface[] $products
+     * @param ItemType[] $products
      * @return void
      * @throws Exception
      */

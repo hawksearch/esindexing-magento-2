@@ -39,11 +39,6 @@ class StoreViewDisableIndexingPlugin
      */
     private $reinitableConfig;
 
-    /**
-     * @param IndexingConfig $indexingConfig
-     * @param WriterInterface $configWriter
-     * @param ReinitableConfigInterface $reinitableConfig
-     */
     public function __construct(
         IndexingConfig $indexingConfig,
         WriterInterface $configWriter,

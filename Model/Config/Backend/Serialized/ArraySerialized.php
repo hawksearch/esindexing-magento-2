@@ -17,30 +17,33 @@ use HawkSearch\EsIndexing\Model\Config\Backend\Serialized\Processor\ValueProcess
 use Magento\Config\Model\Config\Backend\Serialized\ArraySerialized as ArraySerializedParent;
 use Magento\Framework\App\Cache\TypeListInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\Config\ValueInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
 use Magento\Framework\Serialize\Serializer\Json;
 
+/**
+ * @method array getValue()
+ * @method ValueInterface setValue(array $value)
+ */
 class ArraySerialized extends ArraySerializedParent
 {
     /**
-     * @var ValueProcessorInterface
+     * @var ValueProcessorInterface<array<array<mixed>>, array<array<mixed>>>
      */
     private ValueProcessorInterface $processor;
 
     /**
-     * FieldsMapping constructor.
-     *
      * @param Context $context
      * @param Registry $registry
      * @param ScopeConfigInterface $config
      * @param TypeListInterface $cacheTypeList
-     * @param ValueProcessorInterface $processor
+     * @param ValueProcessorInterface<array<array<mixed>>, array<array<mixed>>> $processor
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
-     * @param array $data
+     * @param array<mixed> $data
      * @param Json|null $serializer
      */
     public function __construct(
@@ -69,14 +72,13 @@ class ArraySerialized extends ArraySerializedParent
 
     /**
      * @return $this
-     * @noinspection PhpMissingReturnTypeInspection
      */
     public function beforeSave()
     {
-        $submitValue = $this->getValue() ?: [];
+        $submitValue = (array)$this->getValue() ?: [];
+        unset($submitValue['__empty']);
 
-        /** @noinspection PhpParamsInspection */
-        $this->setValue($this->processor->process((array)$submitValue, $this));
+        $this->setValue($this->processor->process($submitValue, $this));
 
         return parent::beforeSave();
     }
