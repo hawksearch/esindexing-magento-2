@@ -14,6 +14,10 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Layout;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 class CompositeConfigProcessor implements LayoutConfigProcessorInterface
 {
     /**

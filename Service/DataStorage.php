@@ -16,12 +16,16 @@ namespace HawkSearch\EsIndexing\Service;
 
 use Magento\Framework\Exception\RuntimeException;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 class DataStorage implements DataStorageInterface
 {
     /**
      * @var string|null
      */
-    private $name;
+    private ?string $name;
 
     /**
      * @var mixed
@@ -94,7 +98,7 @@ class DataStorage implements DataStorageInterface
     }
 
     /**
-     * Destruct DataStorage value
+     * Reset DataStorage value
      */
     public function __destruct()
     {

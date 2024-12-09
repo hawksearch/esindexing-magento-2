@@ -15,8 +15,12 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Api\Data;
 
 /**
+ * FacetValueOrderInfo Interface used in Facet
+ *
  * @api v11
- * @see https://developerdocs.hawksearch.com/docs/facet-object#facet-value-order-info
+ * @since 0.8.0
+ * @see https://developerdocs.hawksearch.com/reference/facet_post_value
+ * @see https://dev.hawksearch.net/swagger/ui/index#!/Facet/Facet_Post_value
  *
  * Since properties in HawkSearch API can be nullable the following argument types in setters
  * should be nullable as well: strings, arrays and objects

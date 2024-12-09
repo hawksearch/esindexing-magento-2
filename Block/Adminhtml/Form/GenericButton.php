@@ -16,6 +16,10 @@ namespace HawkSearch\EsIndexing\Block\Adminhtml\Form;
 
 use Magento\Backend\Block\Widget\Context;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 class GenericButton
 {
     /**

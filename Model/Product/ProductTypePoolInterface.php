@@ -12,6 +12,10 @@
  */
 namespace HawkSearch\EsIndexing\Model\Product;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 interface ProductTypePoolInterface
 {
     /**

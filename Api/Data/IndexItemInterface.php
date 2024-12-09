@@ -15,6 +15,10 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Api\Data;
 
+/**
+ * @internal interface is not used yet
+ * @todo define interface methods
+ */
 interface IndexItemInterface
 {
 

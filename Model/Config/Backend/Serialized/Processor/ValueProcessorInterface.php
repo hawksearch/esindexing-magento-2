@@ -16,6 +16,9 @@ namespace HawkSearch\EsIndexing\Model\Config\Backend\Serialized\Processor;
 
 use Magento\Framework\App\Config\ValueInterface;
 
+/**
+ * @internal
+ */
 interface ValueProcessorInterface
 {
     /**#@+

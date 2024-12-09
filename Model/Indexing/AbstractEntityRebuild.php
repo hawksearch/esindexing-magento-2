@@ -26,6 +26,10 @@ use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 use HawkSearch\EsIndexing\Model\Indexing\Field\NameProviderInterface as FieldNameProviderInterface;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 abstract class AbstractEntityRebuild implements EntityRebuildInterface
 {
     use PublicMethodDeprecationTrait;

@@ -22,6 +22,10 @@ use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
 use Magento\Framework\Exception\InputException;
 use Magento\Store\Api\Data\StoreInterface;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 class SchedulerAbstract implements SchedulerInterface
 {
     /**

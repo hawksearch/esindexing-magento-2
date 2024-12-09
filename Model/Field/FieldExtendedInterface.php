@@ -16,6 +16,10 @@ namespace HawkSearch\EsIndexing\Model\Field;
 
 use HawkSearch\EsIndexing\Api\Data\FieldInterface;
 
+
+/**
+ * @internal experimental feature
+ */
 interface FieldExtendedInterface
 {
     /**

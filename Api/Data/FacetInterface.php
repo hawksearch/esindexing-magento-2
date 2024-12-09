@@ -15,9 +15,11 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Api\Data;
 
 /**
+ * Facet Interface used in HawkSearch API
+ *
  * @api v11
- * @see https://developerdocs.hawksearch.com/reference/facet_get
- * @see https://developerdocs.hawksearch.com/docs/facet-object
+ * @see https://developerdocs.hawksearch.com/reference/facet_post_value
+ * @see https://dev.hawksearch.net/swagger/ui/index#!/Facet/Facet_Post_value
  *
  * Since properties in HawkSearch API can be nullable the following argument types in setters
  * should be nullable as well: strings, arrays and objects
@@ -27,8 +29,8 @@ interface FacetInterface
     /**#@+
      * Constants for keys of data array
      */
-    const FACET_ID = 'FacetId';
     const SYNC_GUID = 'SyncGuid';
+    const FACET_ID = 'FacetId';
     const NAME = 'Name';
     const FACET_TYPE = 'FacetType';
     const FIELD_TYPE = 'FieldType';
@@ -75,17 +77,6 @@ interface FacetInterface
     /**#@-*/
 
     /**
-     * @return int
-     */
-    public function getFacetId() : int;
-
-    /**
-     * @param int $value
-     * @return $this
-     */
-    public function setFacetId(int $value): FacetInterface;
-
-    /**
      * @return string
      */
     public function getSyncGuid() : string;
@@ -95,6 +86,17 @@ interface FacetInterface
      * @return $this
      */
     public function setSyncGuid(?string $value): FacetInterface;
+
+    /**
+     * @return int
+     */
+    public function getFacetId() : int;
+
+    /**
+     * @param int $value
+     * @return $this
+     */
+    public function setFacetId(int $value): FacetInterface;
 
     /**
      * @return string

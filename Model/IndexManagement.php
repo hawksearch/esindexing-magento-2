@@ -26,6 +26,10 @@ use Magento\Framework\Exception\NotFoundException;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 class IndexManagement implements IndexManagementInterface
 {
     /**

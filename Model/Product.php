@@ -26,6 +26,10 @@ use Magento\Framework\App\ObjectManager;
 use Magento\Framework\EntityManager\EntityMetadataInterface;
 use Magento\Framework\EntityManager\MetadataPool;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 class Product
 {
     /**

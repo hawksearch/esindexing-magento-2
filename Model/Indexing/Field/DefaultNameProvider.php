@@ -12,6 +12,10 @@
  */
 namespace HawkSearch\EsIndexing\Model\Indexing\Field;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 class DefaultNameProvider implements NameProviderInterface
 {
     /**

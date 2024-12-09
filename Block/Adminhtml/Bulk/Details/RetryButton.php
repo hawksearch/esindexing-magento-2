@@ -18,10 +18,20 @@ use Magento\AsynchronousOperations\Model\Operation\Details;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 
+/**
+ * @api
+ * @since 0.8.0
+ */
 class RetryButton implements ButtonProviderInterface
 {
+    /**
+     * @var RequestInterface
+     */
     private RequestInterface $request;
 
+    /**
+     * @var Details
+     */
     private Details $details;
 
     /**

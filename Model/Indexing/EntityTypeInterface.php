@@ -18,9 +18,12 @@ namespace HawkSearch\EsIndexing\Model\Indexing;
 use HawkSearch\EsIndexing\Model\Indexing\Field\NameProviderInterface as FieldNameProviderInterface;
 
 /**
+ * @api
+ * @since 0.8.0
+ *
  * @method FieldHandlerInterface getFieldHandler() Use this method in your class implementations for smooth transitions
- *          since 0.9.0. Method will be added in 0.9.0
- * @method FieldNameProviderInterface getFieldNameProvider() Method will be added in 0.9.0
+ *          since 0.10.0. Method will be added in 0.10.0
+ * @method FieldNameProviderInterface getFieldNameProvider() Method will be added in 0.10.0
  */
 interface EntityTypeInterface
 {
