@@ -15,7 +15,9 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model;
 
+use HawkSearch\EsIndexing\Api\Data\IndexItemInterface;
 use HawkSearch\EsIndexing\Api\Data\IndexItemsContextInterface;
+use HawkSearch\EsIndexing\Helper\ObjectHelper;
 use Magento\Framework\Api\AbstractSimpleObject;
 
 class IndexItemsContext extends AbstractSimpleObject implements IndexItemsContextInterface
@@ -23,15 +25,15 @@ class IndexItemsContext extends AbstractSimpleObject implements IndexItemsContex
     /**
      * @inheritDoc
      */
-    public function getIndexName(): ?string
+    public function getIndexName(): string
     {
-        return $this->_get(self::FIELD_INDEX_NAME);
+        return (string)$this->_get(self::FIELD_INDEX_NAME);
     }
 
     /**
      * @inheritDoc
      */
-    public function setIndexName(string $value)
+    public function setIndexName(?string $value)
     {
         return $this->setData(self::FIELD_INDEX_NAME, $value);
     }
@@ -41,13 +43,20 @@ class IndexItemsContext extends AbstractSimpleObject implements IndexItemsContex
      */
     public function getItems(): array
     {
-        return (array)$this->_get(self::FIELD_ITEMS);
+        $value = (array)($this->_get(self::FIELD_ITEMS) ?? []);
+        array_walk(
+            $value,
+            [ObjectHelper::class, 'validateObjectValue'],
+            IndexItemInterface::class
+        );
+
+        return $value;
     }
 
     /**
      * @inheritDoc
      */
-    public function setItems(array $value)
+    public function setItems(?array $value)
     {
         return $this->setData(self::FIELD_ITEMS, $value);
     }
