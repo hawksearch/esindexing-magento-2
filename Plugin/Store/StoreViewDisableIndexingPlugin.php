@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) 2023 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *

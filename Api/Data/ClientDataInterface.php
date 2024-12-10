@@ -20,8 +20,8 @@ namespace HawkSearch\EsIndexing\Api\Data;
  *
  * @api v2
  * @since 0.8.0
- * @see https://developerdocs.hawksearch.com/reference/searchv2_search-1
- * @see https://searchapi-dev.hawksearch.net/swagger/ui/index#!/SearchV2/SearchV2_Search
+ * @link https://developerdocs.hawksearch.com/reference/searchv2_search-1
+ * @link https://searchapi-dev.hawksearch.net/swagger/ui/index#!/SearchV2/SearchV2_Search
  */
 interface ClientDataInterface
 {

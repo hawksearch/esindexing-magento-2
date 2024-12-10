@@ -87,7 +87,7 @@ class Cart
     protected function findItemById(int $id, array $itemsHaystack)
     {
         foreach ($itemsHaystack as $item) {
-            /** @var $item QuoteItem */
+            /** @var QuoteItem $item */
             if ((int)$item->getItemId() === $id) {
                 return $item;
             }

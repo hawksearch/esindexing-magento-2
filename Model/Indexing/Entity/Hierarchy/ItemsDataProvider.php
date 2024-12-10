@@ -72,7 +72,7 @@ class ItemsDataProvider implements ItemsDataProviderInterface
         /**
          * Check if parent node of the store still exists
          */
-        /* @var $category CategoryModel */
+        /* @var CategoryModel $category */
         $category = $this->categoryFactory->create();
         $this->categoryResource->load($category, $storeParentCategoryId);
 

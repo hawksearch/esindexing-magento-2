@@ -17,8 +17,8 @@ namespace HawkSearch\EsIndexing\Api\Data;
 /**
  * @api
  * @since 0.8.0
- * @see https://developerdocs.hawksearch.com/reference/hierarchy_upsert-1
- * @see https://indexing-dev.hawksearch.net/swagger/ui/index#!/Hierarchy/Hierarchy_Upsert
+ * @link https://developerdocs.hawksearch.com/reference/hierarchy_upsert-1
+ * @link https://indexing-dev.hawksearch.net/swagger/ui/index#!/Hierarchy/Hierarchy_Upsert
  * @todo interface is not used yet. Use it in Indexing API requests/responses
  *
  * Since properties in HawkSearch API can be nullable the following argument types in setters

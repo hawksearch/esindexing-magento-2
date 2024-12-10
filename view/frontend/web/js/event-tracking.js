@@ -97,7 +97,7 @@ define([
      *
      * @param {Object} trackingEvent
      * @param {Array} orderData Multiple orders array
-     * @see https://developerdocs.hawksearch.com/docs/event-tracking-api#sale-event
+     * @link https://developerdocs.hawksearch.com/docs/event-tracking-api#sale-event
      */
     function sendOrderData(trackingEvent, orderData)
     {
