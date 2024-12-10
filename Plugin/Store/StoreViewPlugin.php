@@ -48,6 +48,6 @@ class StoreViewPlugin extends AbstractPlugin
         /** @var StoreModel $model */
         return !$model->isObjectNew()
             && $model->dataHasChangedFor('group_id')
-            && $this->indexingConfig->isIndexingEnabled($model);
+            && $this->indexingConfig->isIndexingEnabled($model->getId());
     }
 }

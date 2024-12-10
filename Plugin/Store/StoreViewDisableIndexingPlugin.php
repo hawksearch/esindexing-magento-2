@@ -21,6 +21,7 @@ use Magento\Framework\App\Config\Storage\WriterInterface;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Store\Model\ResourceModel\Store as StoreResourceModel;
 use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\Store;
 
 class StoreViewDisableIndexingPlugin
 {
@@ -54,17 +55,17 @@ class StoreViewDisableIndexingPlugin
      *
      * @param StoreResourceModel $subject
      * @param StoreResourceModel $result
-     * @param AbstractModel $store
+     * @param Store $store
      * @return StoreResourceModel
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterSave(StoreResourceModel $subject, StoreResourceModel $result, AbstractModel $store)
     {
-        if ($store->isObjectNew() && $this->indexingConfig->isIndexingEnabled($store)) {
+        if ($store->isObjectNew() && $this->indexingConfig->isIndexingEnabled($store->getId())) {
             $this->configWriter->save(
                 $this->indexingConfig->getPath(IndexingConfig::CONFIG_ENABLE_INDEXING),
-                IndexingConfig::ENABLE_INDEXING_DEFAULT,
+                (string)IndexingConfig::ENABLE_INDEXING_DEFAULT,
                 ScopeInterface::SCOPE_STORES,
                 $store->getId()
             );
