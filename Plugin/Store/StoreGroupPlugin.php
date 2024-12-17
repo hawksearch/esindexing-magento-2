@@ -14,8 +14,11 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Plugin\Store;
 
+use HawkSearch\EsIndexing\Model\Config\Indexing as IndexingConfig;
 use HawkSearch\EsIndexing\Model\Indexer\Category as CategoryIndexer;
 use HawkSearch\EsIndexing\Model\Indexer\Product as ProductIndexer;
+use Magento\Framework\Indexer\IndexerInterface;
+use Magento\Framework\Indexer\IndexerRegistry;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Store\Model\Group as StoreGroupModel;
 use Magento\Store\Model\ResourceModel\Group as StoreGroupResourceModel;
@@ -23,6 +26,31 @@ use Magento\Store\Model\Store;
 
 class StoreGroupPlugin extends AbstractPlugin
 {
+    /**
+     * @var IndexerInterface
+     */
+    private IndexerInterface $productIndexer;
+
+    /**
+     * @var IndexerInterface
+     */
+    private IndexerInterface $categoryIndexer;
+
+    /**
+     * @var IndexingConfig
+     */
+    private IndexingConfig $indexingConfig;
+
+    public function __construct(
+        IndexerRegistry $indexerRegistry,
+        IndexingConfig $indexingConfig
+    )
+    {
+        $this->productIndexer = $indexerRegistry->get(ProductIndexer::INDEXER_ID);
+        $this->categoryIndexer = $indexerRegistry->get(CategoryIndexer::INDEXER_ID);
+        $this->indexingConfig = $indexingConfig;
+    }
+
     /**
      * Invalidate indexer on store group save
      *
@@ -36,8 +64,8 @@ class StoreGroupPlugin extends AbstractPlugin
     public function afterSave(StoreGroupResourceModel $subject, StoreGroupResourceModel $result, AbstractModel $group)
     {
         if ($this->validate($group)) {
-            $this->indexerRegistry->get(CategoryIndexer::INDEXER_ID)->invalidate();
-            $this->indexerRegistry->get(ProductIndexer::INDEXER_ID)->invalidate();
+            $this->categoryIndexer->invalidate();
+            $this->productIndexer->invalidate();
         }
 
         return $result;
