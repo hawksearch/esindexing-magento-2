@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexer\Entities;
 
+use HawkSearch\Connector\Compatibility\PublicPropertyDeprecationTrait;
 use HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisherInterface;
 use HawkSearch\EsIndexing\Model\MessageQueue\MessageManagerInterface;
 use Magento\Framework\Event\ManagerInterface;
@@ -25,32 +26,58 @@ use Magento\Store\Api\Data\StoreInterface;
  */
 abstract class ActionAbstract
 {
+    use PublicPropertyDeprecationTrait;
+
+    private array $deprecatedPublicProperties = [
+        'eventManager' => [
+            'since' => '0.8.0',
+            'description' => 'Visibility changed to private. Set via constructor injection.'
+        ],
+        'messageManager' => [
+            'since' => '0.8.0',
+            'description' => 'Visibility changed to private. Set via constructor injection.'
+        ],
+        'publisher' => [
+            'since' => '0.8.0',
+            'description' => 'Visibility changed to private. Set via constructor injection.'
+        ],
+        'entityScheduler' => [
+            'since' => '0.8.0',
+            'description' => 'Visibility changed to private. Set via constructor injection.'
+        ],
+    ];
+
     /**
      * @var ManagerInterface
+     * @private 0.8.0 Visibility changed to private. Set via constructor injection.
      */
-    protected $eventManager;
+    private ManagerInterface $eventManager;
 
     /**
      * @var MessageManagerInterface
+     * @private 0.8.0 Visibility changed to private. Set via constructor injection.
      */
-    protected $messageManager;
+    private MessageManagerInterface $messageManager;
 
     /**
      * @var BulkPublisherInterface
+     * @private 0.8.0 Visibility changed to private. Set via constructor injection.
      */
-    protected $publisher;
+    private BulkPublisherInterface $publisher;
 
     /**
      * @var SchedulerInterface
+     * @private 0.8.0 Visibility changed to private. Set via constructor injection.
      */
-    protected $entityScheduler;
+    private SchedulerInterface $entityScheduler;
 
     public function __construct(
         ManagerInterface $eventManager,
         MessageManagerInterface $messageManager,
         BulkPublisherInterface $publisher,
         SchedulerInterface $entityScheduler
-    ) {
+    )
+    {
         $this->eventManager = $eventManager;
         $this->messageManager = $messageManager;
         $this->publisher = $publisher;

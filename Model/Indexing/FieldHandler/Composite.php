@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexing\FieldHandler;
 
+use HawkSearch\Connector\Compatibility\PublicPropertyDeprecationTrait;
 use HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface;
 use Magento\Framework\DataObject;
 use Magento\Framework\ObjectManagerInterface;
@@ -30,6 +31,15 @@ use Magento\Framework\ObjectManagerInterface;
  */
 class Composite implements FieldHandlerInterface
 {
+    use PublicPropertyDeprecationTrait;
+
+    private array $deprecatedPublicProperties = [
+        'handlers' => [
+            'since' => '0.8.0',
+            'description' => 'Visibility changed to private. Set via constructor injection.'
+        ],
+    ];
+
     /**#@+
      * Constants
      */
@@ -43,8 +53,9 @@ class Composite implements FieldHandlerInterface
 
     /**
      * @var HandlersMap
+     * @private 0.8.0 Visibility changed to private. Set via constructor injection.
      */
-    protected $handlers = [
+    private array $handlers = [
         self::HANDLER_DEFAULT_NAME => DataObjectHandler::class
     ];
 
