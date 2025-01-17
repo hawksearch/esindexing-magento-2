@@ -19,11 +19,7 @@ use HawkSearch\Connector\Model\ConfigProvider;
 
 class AdvancedCategory extends ConfigProvider
 {
-    /**#@+
-     * Configuration paths
-     */
     public const CONFIG_PRODUCT_URL_REWRITE_EXCEPTIONS_THRESHOLD = 'product_url_rewrite_exceptions_threshold';
-    /**#@-*/
 
     /**
      * Returns a threshold for the amount of excepted Product URL rewrites

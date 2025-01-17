@@ -23,16 +23,12 @@ namespace HawkSearch\EsIndexing\Api\Data;
  */
 interface EsIndexInterface
 {
-    /**#@+
-     * Constants for keys of data array
-     */
     public const INDEX_NAME = 'IndexName';
-    /**#@-*/
 
     /**
      * @return string|null
      */
-    public function getIndexName() : ?string;
+    public function getIndexName(): ?string;
 
     /**
      * @return $this

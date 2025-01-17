@@ -19,11 +19,7 @@ use HawkSearch\Connector\Model\ConfigProvider;
 
 class EventTracking extends ConfigProvider
 {
-    /**#@+
-     * Configuration paths
-     */
     public const CONFIG_ENABLE = 'enable';
-    /**#@-*/
 
     public const COOKIE_ADD_TO_CART_NAME = 'hawksearch_event_tracking_add_to_cart';
     public const COOKIE_REMOVE_FROM_CART_NAME = 'hawksearch_event_tracking_remove_from_cart';

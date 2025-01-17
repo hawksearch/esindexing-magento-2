@@ -25,9 +25,6 @@ namespace HawkSearch\EsIndexing\Api\Data;
  */
 interface ClientDataInterface
 {
-    /**#@+
-     * Constants for keys of data array
-     */
     const FIELD_VISITOR_ID = 'VisitorId';
     const FIELD_VISIT_ID = 'VisitId';
     const FIELD_CUSTOM = 'Custom';
@@ -36,7 +33,6 @@ interface ClientDataInterface
     const FIELD_SOURCE = 'Source';
     const FIELD_ORIGIN = 'Origin';
     const FIELD_ZIP_CODE = 'ZipCode';
-    /**#@-*/
 
     /**
      * @return string

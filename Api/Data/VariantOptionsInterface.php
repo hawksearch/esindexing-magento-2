@@ -19,15 +19,11 @@ namespace HawkSearch\EsIndexing\Api\Data;
  */
 interface VariantOptionsInterface
 {
-    /**#@+
-     * Constants for keys of data array
-     */
     public const FIELD_COUNT_FACET_HIT_ON_CHILD = 'CountFacetHitOnChild';
     public const FIELD_PAGE_NO = 'PageNo';
     public const FIELD_MAX_PER_PAGE = 'MaxPerPage';
     public const FIELD_SORT_CODE = 'SortCode';
     public const FIELD_SORT_BY = 'SortBy';
-    /**#@-*/
 
     /**
      * @return bool

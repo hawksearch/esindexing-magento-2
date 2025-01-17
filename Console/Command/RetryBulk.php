@@ -28,12 +28,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class RetryBulk extends Command
 {
-    /**#@+
-     * Constants for keys of data array
-     */
     private const INPUT_BULK_UUID = 'bulk-uuid';
     private const INPUT_STATUSES = 'statuses';
-    /**#@-*/
 
     private const FORBIDDEN_STATUSES = [
         OperationInterface::STATUS_TYPE_COMPLETE

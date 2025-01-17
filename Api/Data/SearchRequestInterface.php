@@ -25,9 +25,6 @@ namespace HawkSearch\EsIndexing\Api\Data;
  */
 interface SearchRequestInterface
 {
-    /**#@+
-     * Constants for keys of data array
-     */
     public const FIELD_INDEX_NAME = 'IndexName';
     public const FIELD_QUERY = 'Query';
     public const FIELD_VARIANT = 'Variant';
@@ -57,7 +54,6 @@ interface SearchRequestInterface
     public const FIELD_CLIENT_DATA = 'ClientData';
     public const FIELD_SEARCH_TYPE = 'SearchType';
     public const FIELD_IGNORE_SPELLCHECK = 'IgnoreSpellcheck';
-    /**#@-*/
 
     /**
      * @return string

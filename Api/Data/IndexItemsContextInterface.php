@@ -17,18 +17,15 @@ namespace HawkSearch\EsIndexing\Api\Data;
 
 /**
  * IndexItemsContext interface is used in index-items method of Indexing API
+ *
  * @internal interface is not used yet
  * @link https://developerdocs.hawksearch.com/reference/indexv2_index-1
  * @link https://indexing-dev.hawksearch.net/swagger/ui/index#!/IndexV2/IndexV2_Index
  */
 interface IndexItemsContextInterface
 {
-    /**#@+
-     * Constants for keys of data array
-     */
     public const FIELD_INDEX_NAME = 'IndexName';
     public const FIELD_ITEMS = 'Items';
-    /**#@-*/
 
     /**
      * @return string
