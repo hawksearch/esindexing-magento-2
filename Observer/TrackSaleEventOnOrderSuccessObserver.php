@@ -34,9 +34,6 @@ class TrackSaleEventOnOrderSuccessObserver implements ObserverInterface
         $this->layout = $layout;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function execute(Observer $observer)
     {
         if (!$this->eventTrackingConfig->isEnabled()) {

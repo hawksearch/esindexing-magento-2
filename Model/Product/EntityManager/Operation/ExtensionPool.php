@@ -21,9 +21,6 @@ use Magento\Catalog\Api\Data\ProductInterface;
  */
 class ExtensionPool extends \Magento\Framework\EntityManager\Operation\ExtensionPool
 {
-    /**
-     * @inheritDoc
-     */
     public function getActions($entityType, $actionName)
     {
         if ($entityType === ProductInterface::class && $actionName === 'read') {

@@ -36,9 +36,6 @@ class RetryButton implements ButtonProviderInterface
         $this->request = $request;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getButtonData()
     {
         $uuid = $this->request->getParam('uuid');

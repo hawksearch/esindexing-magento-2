@@ -21,9 +21,6 @@ use HawkSearch\EsIndexing\Model\Product\Attribute\ExcludeNotVisibleProductsFlagI
  */
 class IncludeProvider implements ExcludeNotVisibleProductsFlagInterface
 {
-    /**
-     * @inheritDoc
-     */
     public function execute(): bool
     {
         return false;

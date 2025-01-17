@@ -31,9 +31,6 @@ class HierarchyItemsIndexer implements ItemsIndexerInterface
         $this->hierarchyManagement = $hierarchyManagement;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function add(array $items, string $indexName)
     {
         $this->update($items, $indexName);

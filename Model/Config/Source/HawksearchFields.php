@@ -32,7 +32,6 @@ class HawksearchFields implements OptionSourceInterface
     }
 
     /**
-     * @inheritdoc
      * @noinspection PhpMissingReturnTypeInspection
      */
     public function toOptionArray()

@@ -197,9 +197,6 @@ class CustomAttributes extends AbstractFieldArray
         return $renderer;
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function _getElementHtml(AbstractElement $element)
     {
         $html = parent::_getElementHtml($element);

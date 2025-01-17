@@ -25,7 +25,6 @@ use Magento\Framework\Data\Collection\AbstractDb;
 class CleanAttributes implements CustomJoinInterface
 {
     /**
-     * @inheritDoc
      * @param AbstractCollection $collection
      */
     public function apply(AbstractDb $collection)

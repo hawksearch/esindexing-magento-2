@@ -79,17 +79,11 @@ class Retry extends Action implements HttpPostActionInterface
         $this->dataObjectFactory = $dataObjectFactory;
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function _isAllowed()
     {
         return parent::_isAllowed() && $this->bulkAccessValidator->isAllowed($this->getRequest()->getParam('uuid'));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function execute()
     {
         $bulkUuid = $this->getRequest()->getParam('uuid');

@@ -20,7 +20,7 @@ use Magento\Search\Helper\Data as SearchHelper;
 class VueParamsMappingProcessor implements LayoutConfigProcessorInterface
 {
     private SearchHelper $searchHelper;
-    
+
     public function __construct(
         SearchHelper $searchHelper
     )
@@ -28,9 +28,6 @@ class VueParamsMappingProcessor implements LayoutConfigProcessorInterface
         $this->searchHelper = $searchHelper;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function process(array $jsConfig)
     {
         $jsConfig['paramsMapping'] = [

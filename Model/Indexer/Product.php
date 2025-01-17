@@ -49,7 +49,6 @@ class Product implements IndexerActionInterface, MviewActionInterface
      * This indexer is not designed to run full reindex
      *
      * @see Entities
-     * @inheritDoc
      */
     public function executeFull()
     {
@@ -62,7 +61,6 @@ class Product implements IndexerActionInterface, MviewActionInterface
     }
 
     /**
-     * @inheritDoc
      * @throws LocalizedException
      */
     public function executeList(array $ids)
@@ -71,7 +69,6 @@ class Product implements IndexerActionInterface, MviewActionInterface
     }
 
     /**
-     * @inheritDoc
      * @throws LocalizedException
      */
     public function executeRow($id)
@@ -80,7 +77,6 @@ class Product implements IndexerActionInterface, MviewActionInterface
     }
 
     /**
-     * @inheritDoc
      * @throws LocalizedException
      */
     public function execute($ids)

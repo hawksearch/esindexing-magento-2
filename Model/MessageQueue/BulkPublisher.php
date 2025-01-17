@@ -85,7 +85,6 @@ class BulkPublisher extends AbstractSimpleObject implements BulkPublisherInterfa
     }
 
     /**
-     * @inheritDoc
      * @throws LocalizedException
      * @throws \Exception
      */

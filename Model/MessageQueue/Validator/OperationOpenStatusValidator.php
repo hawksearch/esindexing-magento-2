@@ -20,8 +20,8 @@ use Magento\Framework\Bulk\OperationInterface;
 class OperationOpenStatusValidator implements OperationValidatorInterface
 {
     const ERROR_CODE = 10101;
+
     /**
-     * @inheritDoc
      * @throws InvalidBulkOperationException
      */
     public function validate(OperationInterface $operation): bool

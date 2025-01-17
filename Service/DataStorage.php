@@ -44,7 +44,6 @@ class DataStorage implements DataStorageInterface
     }
 
     /**
-     * @inheritDoc
      * @throws RuntimeException
      */
     public function set(mixed $value, bool $graceful = false)
@@ -59,9 +58,6 @@ class DataStorage implements DataStorageInterface
         $this->value = $value;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function reset()
     {
         if (isset($this->value)) {
@@ -74,9 +70,6 @@ class DataStorage implements DataStorageInterface
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     public function get(bool $reset = false)
     {
         $value = null;

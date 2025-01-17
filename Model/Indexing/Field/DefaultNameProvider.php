@@ -10,6 +10,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+
 namespace HawkSearch\EsIndexing\Model\Indexing\Field;
 
 /**
@@ -33,9 +34,6 @@ class DefaultNameProvider implements NameProviderInterface
         $this->names = $names;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getList(): array
     {
         return $this->names;

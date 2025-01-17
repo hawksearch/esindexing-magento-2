@@ -157,9 +157,6 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
      */
     abstract protected function getEntityId(DataObject $entityItem): ?int;
 
-    /**
-     * @inheritDoc
-     */
     public function rebuild(SearchCriteriaInterface $searchCriteria)
     {
         if (!$this->getEntityType()->getConfigHelper()->isEnabled()) {

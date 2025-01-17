@@ -35,7 +35,7 @@ class IndexManagement implements IndexManagementInterface
 {
     private array $indicesListCache = [];
     private array $currentIndexCache = [];
-    
+
     /**
      * @var InstructionManagerPoolInterface<string, InstructionManagerInterface>
      */
@@ -59,9 +59,6 @@ class IndexManagement implements IndexManagementInterface
         $this->storeManager = $storeManager;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function initializeFullReindex()
     {
         $this->hawkLogger->info("--- initializeFullReindex STARTED ---");
@@ -80,9 +77,6 @@ class IndexManagement implements IndexManagementInterface
         $this->hawkLogger->info("--- initializeFullReindex FINISHED ---");
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getIndexName($useCurrent = false): ?string
     {
         $indices = $this->getIndices();
@@ -105,7 +99,6 @@ class IndexManagement implements IndexManagementInterface
     }
 
     /**
-     * @inheritDoc
      * @throws InstructionException
      * @throws NoSuchEntityException
      * @throws NotFoundException
@@ -122,7 +115,6 @@ class IndexManagement implements IndexManagementInterface
     }
 
     /**
-     * @inheritDoc
      * @return EsIndexInterface
      * @throws InstructionException
      * @throws NoSuchEntityException
@@ -140,7 +132,6 @@ class IndexManagement implements IndexManagementInterface
     }
 
     /**
-     * @inheritDoc
      * @throws InstructionException
      * @throws NoSuchEntityException
      * @throws NotFoundException
@@ -162,7 +153,6 @@ class IndexManagement implements IndexManagementInterface
     }
 
     /**
-     * @inheritdoc
      * @throws NotFoundException
      * @throws InstructionException
      */
@@ -184,7 +174,6 @@ class IndexManagement implements IndexManagementInterface
     }
 
     /**
-     * @inheritdoc
      * @throws NotFoundException
      * @throws InstructionException
      */

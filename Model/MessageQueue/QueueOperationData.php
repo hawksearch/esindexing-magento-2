@@ -19,15 +19,12 @@ use HawkSearch\EsIndexing\Api\Data\QueueOperationDataInterface;
 class QueueOperationData implements QueueOperationDataInterface
 {
     private string $data;
-    
+
     public function __construct(string $data)
     {
         $this->data = $data;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getData(): string
     {
         return $this->data;

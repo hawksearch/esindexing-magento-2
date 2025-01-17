@@ -32,9 +32,6 @@ class MessageTopicByObjectResolver implements MessageTopicResolverInterface
         $this->resolverClass = $resolverClass;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function resolve(object $object)
     {
         return $object instanceof $this->resolverClass ? $this->topic : '';

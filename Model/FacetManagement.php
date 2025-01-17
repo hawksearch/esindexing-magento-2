@@ -34,26 +34,22 @@ class FacetManagement implements FacetManagementInterface
 
     /**
      * FacetManagement constructor.
+     *
      * @param InstructionManagerPoolInterface<string, InstructionManagerInterface> $instructionManagerPool
      */
     public function __construct(
         InstructionManagerPoolInterface $instructionManagerPool
-    ){
+    )
+    {
         $this->instructionManagerPool = $instructionManagerPool;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getFacets(): array
     {
         return $this->instructionManagerPool->get('hawksearch-esindexing')
             ->executeByCode('getFacets')->get();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function addFacet(FacetInterface $facet): FacetInterface
     {
         /** @var FacetInterface $returnedFacet */
@@ -69,9 +65,6 @@ class FacetManagement implements FacetManagementInterface
         return $returnedFacet;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function updateFacet(FacetInterface $facet): FacetInterface
     {
         /** @var FacetInterface $returnedFacet */

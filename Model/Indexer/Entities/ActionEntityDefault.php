@@ -46,7 +46,6 @@ class ActionEntityDefault extends ActionAbstract
     }
 
     /**
-     * @inheritDoc
      * @throws LocalizedException
      */
     public function execute(array $ids)

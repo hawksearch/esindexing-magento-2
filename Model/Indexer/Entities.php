@@ -33,9 +33,6 @@ class Entities implements ActionInterface
         $this->action = $action;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function executeFull()
     {
         $this->action->execute();

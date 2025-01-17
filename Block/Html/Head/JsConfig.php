@@ -44,9 +44,6 @@ class JsConfig extends Template
         parent::__construct($context, $data);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getJsLayout()
     {
         return $this->serializer->serialize($this->configProcessor->process($this->jsLayout ?? []));

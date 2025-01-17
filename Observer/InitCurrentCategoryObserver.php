@@ -27,9 +27,6 @@ class InitCurrentCategoryObserver implements ObserverInterface
         $this->currentCategory = $currentCategory;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function execute(Observer $observer)
     {
         /** @var CategoryInterface $category */

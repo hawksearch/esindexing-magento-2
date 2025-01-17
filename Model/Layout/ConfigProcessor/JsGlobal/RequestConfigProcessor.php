@@ -41,9 +41,6 @@ class RequestConfigProcessor implements LayoutConfigProcessorInterface
         $this->formKey = $formKey;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function process(array $jsConfig)
     {
         $jsConfig['request'] = [

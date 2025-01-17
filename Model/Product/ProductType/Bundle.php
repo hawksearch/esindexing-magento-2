@@ -34,9 +34,6 @@ class Bundle extends CompositeType
      */
     private string $keySelectionsCollection = '_cache_instance_selections_collection_hawksearch';
 
-    /**
-     * @inheritDoc
-     */
     protected function getMinMaxPrice(ProductInterface $product): array
     {
         /** @var Price $priceModel */

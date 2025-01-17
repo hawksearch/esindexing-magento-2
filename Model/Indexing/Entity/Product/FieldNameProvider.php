@@ -26,9 +26,6 @@ class FieldNameProvider implements NameProviderInterface
         $this->productAttributes = $productAttributes;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getList(): array
     {
         return array_fill_keys(array_keys($this->productAttributes->getFieldToAttributeMap()), []);

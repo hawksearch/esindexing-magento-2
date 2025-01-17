@@ -39,9 +39,6 @@ class VueAdditionalParametersProcessor implements LayoutConfigProcessorInterface
         $this->urlFinder = $urlFinder;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function process(array $jsConfig)
     {
         $params = [];

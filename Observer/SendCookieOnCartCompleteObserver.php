@@ -68,9 +68,6 @@ class SendCookieOnCartCompleteObserver implements ObserverInterface
         $this->jsonSerializer = $jsonSerializer;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function execute(Observer $observer)
     {
         if (!$this->eventTrackingConfig->isEnabled() || $this->httpRequest->isXmlHttpRequest()) {

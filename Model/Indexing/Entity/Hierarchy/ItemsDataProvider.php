@@ -40,7 +40,6 @@ class ItemsDataProvider implements ItemsDataProviderInterface
     }
 
     /**
-     * @inheritDoc
      * @return CategoryInterface[]
      */
     public function getItems(int $storeId, ?array $entityIds = null, int $currentPage = 1, int $pageSize = 0)

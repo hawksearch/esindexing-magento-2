@@ -31,18 +31,12 @@ class ConfigHelper extends AbstractConfigHelper
         $this->batchSize = $batchSize;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function isEnabled($store = null)
     {
         //@todo check if indexing of landing page entity is allowed
         return parent::isEnabled($store);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getBatchSize($store = null)
     {
         return $this->batchSize ?? parent::getBatchSize($store);

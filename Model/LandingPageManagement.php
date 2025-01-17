@@ -41,45 +41,30 @@ class LandingPageManagement implements LandingPageManagementInterface
         $this->instructionManagerPool = $instructionManagerPool;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getLandingPages()
     {
         return $this->instructionManagerPool->get('hawksearch-esindexing')
             ->executeByCode('getLandingPages')->get();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getLandingPageUrls()
     {
         return $this->instructionManagerPool->get('hawksearch-esindexing')
             ->executeByCode('getLandingPageUrls')->get();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function addLandingPages(array $landingPages)
     {
         $this->instructionManagerPool->get('hawksearch-esindexing')
             ->executeByCode('addLandingPagesBulk', $landingPages)->get();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function updateLandingPages(array $landingPages)
     {
         $this->instructionManagerPool->get('hawksearch-esindexing')
             ->executeByCode('updateLandingPagesBulk', $landingPages)->get();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function deleteLandingPages(array $landingPageIds, bool $safeDelete = false)
     {
         if (!$landingPageIds) {

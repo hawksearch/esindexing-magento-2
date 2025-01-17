@@ -70,7 +70,6 @@ class ItemsDataProvider implements ItemsDataProviderInterface
     }
 
     /**
-     * @inheritDoc
      * @return ItemType[]
      * @throws Exception
      */

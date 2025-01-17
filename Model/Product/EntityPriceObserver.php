@@ -33,8 +33,6 @@ class EntityPriceObserver implements ObserverInterface
 
     /**
      * Add product entity pricing data to the index data
-     *
-     * @inheritDoc
      */
     public function execute(Observer $observer)
     {

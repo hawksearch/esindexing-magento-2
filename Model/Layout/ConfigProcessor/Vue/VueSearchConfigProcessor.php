@@ -18,9 +18,6 @@ use HawkSearch\EsIndexing\Model\Layout\LayoutConfigProcessorInterface;
 
 class VueSearchConfigProcessor implements LayoutConfigProcessorInterface
 {
-    /**
-     * @inheritDoc
-     */
     public function process(array $jsConfig)
     {
         $jsConfig['searchConfig'] = [

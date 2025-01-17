@@ -33,9 +33,6 @@ class MessageTopicResolverComposite implements MessageTopicResolverInterface
         $this->resolvers = $resolvers;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function resolve(object $object)
     {
         foreach ($this->resolvers as $resolver) {

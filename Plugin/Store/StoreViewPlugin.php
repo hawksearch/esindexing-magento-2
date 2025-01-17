@@ -56,9 +56,6 @@ class StoreViewPlugin extends AbstractPlugin
         return $result;
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function validate(AbstractModel $model)
     {
         /** @var StoreModel $model */

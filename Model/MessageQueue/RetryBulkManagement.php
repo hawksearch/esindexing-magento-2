@@ -35,8 +35,6 @@ class RetryBulkManagement implements BulkManagementInterface
 
     /**
      * It is used to reschedule bulk operations
-     *
-     * @inheritDoc
      */
     public function scheduleBulk($bulkUuid, array $operations, $description, $userId = null)
     {

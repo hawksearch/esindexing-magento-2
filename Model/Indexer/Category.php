@@ -46,7 +46,6 @@ class Category implements IndexerActionInterface, MviewActionInterface
      * This indexer is not designed to run full reindex
      *
      * @see Entities
-     * @inheritDoc
      */
     public function executeFull()
     {
@@ -58,17 +57,11 @@ class Category implements IndexerActionInterface, MviewActionInterface
         $this->output->writeln('<comment>' . $phrase . '</comment>');
     }
 
-    /**
-     * @inheritdoc
-     */
     public function executeList(array $ids)
     {
         $this->execute($ids);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function executeRow($id)
     {
         $this->execute([$id]);

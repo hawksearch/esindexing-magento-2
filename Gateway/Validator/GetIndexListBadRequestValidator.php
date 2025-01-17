@@ -21,9 +21,6 @@ class GetIndexListBadRequestValidator extends BadRequestValidator
 {
     private const NO_INDECES_MESSAGE = "There are no indices.";
 
-    /**
-     * @inheritDoc
-     */
     public function validate(array $validationSubject): ResultInterface
     {
         $result = parent::validate($validationSubject);

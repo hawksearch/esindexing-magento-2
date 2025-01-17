@@ -68,9 +68,6 @@ class Tracking extends Template
         return $this->eventTrackingConfig->isEnabled();
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function _toHtml()
     {
         if (!$this->isAvailable()) {

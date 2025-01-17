@@ -31,9 +31,6 @@ class ValueProcessor implements ValueProcessorInterface
         'status'
     ];
 
-    /**
-     * @inheritDoc
-     */
     public function process(Attribute $attribute, array $value, array $relatedValues = [])
     {
         if ($this->isRollUpAttributeStrategy($attribute)) {

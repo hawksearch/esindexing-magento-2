@@ -64,9 +64,6 @@ class StartTime extends Date
         );
     }
 
-    /**
-     * @inheritDoc
-     */
     public function prepare()
     {
         parent::prepare();

@@ -66,9 +66,6 @@ class SearchResult extends SearchResultParent
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function _initSelect()
     {
         $bulkUuid = $this->identifierResolver->execute();
@@ -80,9 +77,6 @@ class SearchResult extends SearchResultParent
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function _afterLoad()
     {
         parent::_afterLoad();

@@ -42,25 +42,16 @@ class FieldExtended implements FieldExtendedInterface
             );
     }
 
-    /**
-     * @inheritDoc
-     */
     public function isFilterable(): bool
     {
         return $this->field->getFieldType() === FieldInterface::FIELD_TYPE_FACET;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function isSortable(): bool
     {
         return $this->field->getIsSort();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getField(): FieldInterface
     {
         return $this->field;

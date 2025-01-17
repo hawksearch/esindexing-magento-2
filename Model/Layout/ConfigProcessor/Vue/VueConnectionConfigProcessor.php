@@ -20,7 +20,7 @@ use HawkSearch\EsIndexing\Model\Layout\LayoutConfigProcessorInterface;
 class VueConnectionConfigProcessor implements LayoutConfigProcessorInterface
 {
     private ApiSettings $apiSettings;
-    
+
     public function __construct(
         ApiSettings $apiSettings
     )
@@ -28,9 +28,6 @@ class VueConnectionConfigProcessor implements LayoutConfigProcessorInterface
         $this->apiSettings = $apiSettings;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function process(array $jsConfig)
     {
         $connectionConfig = [

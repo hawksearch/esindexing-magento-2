@@ -67,9 +67,6 @@ class RetryBulk extends Command
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function configure(): void
     {
         $this->setName('hawksearch:retry-bulk')
@@ -86,9 +83,6 @@ class RetryBulk extends Command
         parent::configure();
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $bulkUuid = $input->getArgument(self::INPUT_BULK_UUID);

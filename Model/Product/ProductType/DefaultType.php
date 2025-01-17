@@ -56,7 +56,6 @@ abstract class DefaultType implements ProductTypeInterface
 
     /**
      * @param ProductModel $product
-     * @inheritDoc
      */
     public function getPriceData(ProductInterface $product): array
     {
@@ -126,9 +125,6 @@ abstract class DefaultType implements ProductTypeInterface
         return max((float)$product->getMaxPrice(), $this->getPriceMin($product));
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getChildProducts(ProductInterface $product): array
     {
         return [];

@@ -20,33 +20,21 @@ use Magento\Framework\Api\AbstractSimpleObject;
 class FacetValueOrderInfo extends AbstractSimpleObject implements FacetValueOrderInfoInterface
 {
 
-    /**
-     * @inheritDoc
-     */
     public function getValue(): string
     {
         return (string)$this->_get(self::VALUE);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setValue(?string $value): FacetValueOrderInfoInterface
     {
         return $this->setData(self::VALUE, $value);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getSortOrder(): int
     {
         return (int)$this->_get(self::SORT_ORDER);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setSortOrder(int $value): FacetValueOrderInfoInterface
     {
         return $this->setData(self::SORT_ORDER, $value);

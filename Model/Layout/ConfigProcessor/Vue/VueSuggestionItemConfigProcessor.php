@@ -16,9 +16,6 @@ namespace HawkSearch\EsIndexing\Model\Layout\ConfigProcessor\Vue;
 
 class VueSuggestionItemConfigProcessor extends VueResultItemConfigProcessor
 {
-    /**
-     * @inheritDoc
-     */
     public function process(array $jsConfig)
     {
         $jsConfig = parent::process($jsConfig);

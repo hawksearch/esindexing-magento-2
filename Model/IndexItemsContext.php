@@ -22,25 +22,16 @@ use Magento\Framework\Api\AbstractSimpleObject;
 
 class IndexItemsContext extends AbstractSimpleObject implements IndexItemsContextInterface
 {
-    /**
-     * @inheritDoc
-     */
     public function getIndexName(): string
     {
         return (string)$this->_get(self::FIELD_INDEX_NAME);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setIndexName(?string $value)
     {
         return $this->setData(self::FIELD_INDEX_NAME, $value);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getItems(): array
     {
         $value = (array)($this->_get(self::FIELD_ITEMS) ?? []);
@@ -53,9 +44,6 @@ class IndexItemsContext extends AbstractSimpleObject implements IndexItemsContex
         return $value;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setItems(?array $value)
     {
         return $this->setData(self::FIELD_ITEMS, $value);

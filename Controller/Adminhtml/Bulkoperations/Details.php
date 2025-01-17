@@ -48,7 +48,6 @@ class Details extends Action implements HttpGetActionInterface
     }
 
     /**
-     * @inheritDoc
      * @noinspection PhpMissingReturnTypeInspection
      */
     protected function _isAllowed()

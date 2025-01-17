@@ -20,33 +20,21 @@ use Magento\Framework\Api\AbstractSimpleObject;
 class BoostQuery extends AbstractSimpleObject implements BoostQueryInterface
 {
 
-    /**
-     * @inheritDoc
-     */
     public function getQuery(): string
     {
         return (string)$this->_get(self::FIELD_QUERY);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setQuery(?string $value): BoostQueryInterface
     {
         return $this->setData(self::FIELD_QUERY, $value);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getBoost(): float
     {
         return (float)$this->_get(self::FIELD_BOOST);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setBoost(float $value): BoostQueryInterface
     {
         return $this->setData(self::FIELD_BOOST, $value);

@@ -82,7 +82,6 @@ class SearchResult extends \Magento\AsynchronousOperations\Ui\Component\DataProv
     }
 
     /**
-     * @inheritDoc
      * @return $this
      */
     protected function _initSelect()

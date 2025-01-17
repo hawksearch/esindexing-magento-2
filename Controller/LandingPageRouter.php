@@ -30,7 +30,6 @@ class LandingPageRouter implements RouterInterface
     }
 
     /**
-     * @inheritDoc
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function match(RequestInterface $request)

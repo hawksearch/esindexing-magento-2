@@ -10,6 +10,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+
 namespace HawkSearch\EsIndexing\Model\BulkOperation;
 
 use Magento\Framework\Bulk\OperationInterface;
@@ -20,15 +21,12 @@ use Magento\Framework\Data\OptionSourceInterface;
  */
 class Options implements OptionSourceInterface
 {
-    /**
-     * @inheritDoc
-     */
     public function toOptionArray()
     {
         return [
             [
                 'value' => OperationInterface::STATUS_TYPE_COMPLETE,
-                'label' =>  __('Complete')
+                'label' => __('Complete')
             ],
             [
                 'value' => OperationInterface::STATUS_TYPE_RETRIABLY_FAILED,

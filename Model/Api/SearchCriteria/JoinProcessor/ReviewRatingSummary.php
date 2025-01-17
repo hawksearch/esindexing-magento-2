@@ -41,7 +41,6 @@ class ReviewRatingSummary implements CustomJoinInterface
     }
 
     /**
-     * @inheritDoc
      * @param ProductCollection $collection
      * @throws LocalizedException
      */

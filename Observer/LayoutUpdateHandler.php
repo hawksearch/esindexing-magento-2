@@ -34,9 +34,6 @@ class LayoutUpdateHandler implements ObserverInterface
         $this->catalogHelper = $catalogHelper;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function execute(Observer $observer)
     {
         /** @var Layout $layout */

@@ -40,24 +40,17 @@ class LandingPageRepository implements LandingPageRepositoryInterface
         $this->serializer = $serializer;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getByUrl(string $url)
     {
         // TODO: Implement getByUrl() method.
     }
 
-    /**
-     * @inheritDoc
-     */
     public function get(int $id)
     {
         // TODO: Implement get() method.
     }
 
     /**
-     * @inheritDoc
      * @TODO move pages storage resource to MySQL
      * @TODO do not call Hawk API in repository
      */
