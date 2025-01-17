@@ -24,26 +24,11 @@ use Magento\Framework\Exception\NoSuchEntityException;
  */
 class AttributeProvider
 {
-    /**
-     * @var array
-     */
     private array $cachedAttributes = [];
-
-    /**
-     * @var ProductAttributeRepositoryInterface
-     */
     private ProductAttributeRepositoryInterface $productAttributeRepository;
-
-    /**
-     * @var ProductAttributeInterfaceFactory
-     */
     private ProductAttributeInterfaceFactory $productAttributeFactory;
-
-    /**
-     * @var string
-     */
     private string $instanceName;
-    
+
     public function __construct(
         ProductAttributeRepositoryInterface $productAttributeRepository,
         ProductAttributeInterfaceFactory $productAttributeFactory,

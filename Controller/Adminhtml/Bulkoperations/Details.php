@@ -30,27 +30,17 @@ class Details extends Action implements HttpGetActionInterface
      */
     const ADMIN_RESOURCE = 'HawkSearch_EsIndexing::bulk_operations';
 
-    /**
-     * @var PageFactory
-     */
     private PageFactory $resultPageFactory;
-
-    /**
-     * @var string
-     */
     private string $menuId;
-
-    /**
-     * @var BulkAccessValidator
-     */
     private BulkAccessValidator $bulkAccessValidator;
-    
+
     public function __construct(
         Context $context,
         PageFactory $resultPageFactory,
         BulkAccessValidator $bulkAccessValidator,
         string $menuId = 'HawkSearch_EsIndexing::bulk_operations'
-    ) {
+    )
+    {
         $this->resultPageFactory = $resultPageFactory;
         $this->bulkAccessValidator = $bulkAccessValidator;
         $this->menuId = $menuId;

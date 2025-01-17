@@ -33,29 +33,14 @@ use Psr\Log\LoggerInterface;
  */
 class IndexManagement implements IndexManagementInterface
 {
-    /**
-     * @var array
-     */
     private array $indicesListCache = [];
-
-    /**
-     * @var array
-     */
     private array $currentIndexCache = [];
-
+    
     /**
      * @var InstructionManagerPoolInterface<string, InstructionManagerInterface>
      */
     private InstructionManagerPoolInterface $instructionManagerPool;
-
-    /**
-     * @var LoggerInterface
-     */
     private LoggerInterface $hawkLogger;
-
-    /**
-     * @var StoreManagerInterface
-     */
     private StoreManagerInterface $storeManager;
 
     /**

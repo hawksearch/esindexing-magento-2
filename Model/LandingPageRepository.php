@@ -25,19 +25,8 @@ class LandingPageRepository implements LandingPageRepositoryInterface
 {
     private const CACHE_KEY = 'hawksearch_landing_pages';
 
-    /**
-     * @var StoreManagerInterface
-     */
     private StoreManagerInterface $storeManager;
-
-    /**
-     * @var Cache
-     */
     private Cache $cache;
-
-    /**
-     * @var SerializerInterface
-     */
     private SerializerInterface $serializer;
 
     public function __construct(

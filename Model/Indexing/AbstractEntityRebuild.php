@@ -73,55 +73,35 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
             'description' => 'Visibility changed to private. Set via constructor injection.'
         ],
     ];
-
-    /**
-     * @var array
-     */
     private array $itemsToRemoveCache = [];
-
-    /**
-     * @var array
-     */
     private array $itemsToIndexCache = [];
-
-    /**
-     * @var EntityTypeInterface
-     */
     private EntityTypeInterface $entityType;
 
     /**
      * @var EntityTypePoolInterface<string, EntityTypeInterface>
-     * @deprecated 0.8.0 Visibility changed to private. Set via constructor injection.
+     * @private 0.8.0 Visibility changed to private. Set via constructor injection.
      */
     private EntityTypePoolInterface $entityTypePool;
 
     /**
-     * @var EventManagerInterface
-     * @deprecated 0.8.0 Visibility changed to private. Set via constructor injection.
+     * @private 0.8.0 Visibility changed to private. Set via constructor injection.
      */
     private EventManagerInterface $eventManager;
 
     /**
-     * @var LoggerInterface
-     * @deprecated 0.8.0 Visibility changed to private. Set via constructor injection.
+     * @private 0.8.0 Visibility changed to private. Set via constructor injection.
      */
     private LoggerInterface $hawkLogger;
 
     /**
-     * @var StoreManagerInterface
-     * @deprecated 0.8.0 Visibility changed to private. Set via constructor injection.
+     * @private 0.8.0 Visibility changed to private. Set via constructor injection.
      */
     private StoreManagerInterface $storeManager;
 
     /**
-     * @var ContextInterface
-     * @deprecated 0.8.0 Visibility changed to private. Set via constructor injection.
+     * @private 0.8.0 Visibility changed to private. Set via constructor injection.
      */
     private ContextInterface $indexingContext;
-
-    /**
-     * @var ObjectHelper
-     */
     private ObjectHelper $objectHelper;
 
     /**

@@ -24,20 +24,14 @@ use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
  */
 class RetryButton implements ButtonProviderInterface
 {
-    /**
-     * @var RequestInterface
-     */
     private RequestInterface $request;
-
-    /**
-     * @var Details
-     */
     private Details $details;
 
     public function __construct(
         Details $details,
         RequestInterface $request
-    ) {
+    )
+    {
         $this->details = $details;
         $this->request = $request;
     }

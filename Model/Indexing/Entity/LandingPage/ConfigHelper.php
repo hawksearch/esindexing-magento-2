@@ -19,16 +19,14 @@ use HawkSearch\EsIndexing\Model\Indexing\AbstractConfigHelper;
 
 class ConfigHelper extends AbstractConfigHelper
 {
-    /**
-     * @var int|null
-     */
     private ?int $batchSize;
 
     public function __construct(
         IndexingConfig $indexingConfig,
         /** @todo change type: int -> ?int */
         int $batchSize = null
-    ) {
+    )
+    {
         parent::__construct($indexingConfig);
         $this->batchSize = $batchSize;
     }

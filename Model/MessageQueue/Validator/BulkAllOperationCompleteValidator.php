@@ -19,15 +19,12 @@ use Magento\Framework\Bulk\OperationInterface;
 
 class BulkAllOperationCompleteValidator implements OperationValidatorInterface
 {
-
-    /**
-     * @var BulkOperationManagement
-     */
     private BulkOperationManagement $bulkOperationManagement;
-    
+
     public function __construct(
         BulkOperationManagement $bulkOperationManagement
-    ) {
+    )
+    {
         $this->bulkOperationManagement = $bulkOperationManagement;
     }
 

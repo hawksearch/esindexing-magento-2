@@ -26,24 +26,9 @@ use Magento\Store\Model\StoreManagerInterface;
 
 class ConsumerProcessorPlugin
 {
-    /**
-     * @var SerializerInterface
-     */
     private SerializerInterface $serializer;
-
-    /**
-     * @var StoreManagerInterface
-     */
     private StoreManagerInterface $storeManager;
-
-    /**
-     * @var ContextInterface
-     */
     private ContextInterface $indexingContext;
-
-    /**
-     * @var Emulation
-     */
     private Emulation $emulation;
 
     public function __construct(

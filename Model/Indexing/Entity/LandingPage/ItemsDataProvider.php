@@ -25,19 +25,8 @@ use Magento\Store\Model\StoreManagerInterface;
 
 class ItemsDataProvider implements ItemsDataProviderInterface
 {
-    /**
-     * @var CategoryResource
-     */
     private CategoryResource $categoryResource;
-
-    /**
-     * @var StoreManagerInterface
-     */
     private StoreManagerInterface $storeManager;
-
-    /**
-     * @var CategoryFactory
-     */
     private CategoryFactory $categoryFactory;
 
     public function __construct(

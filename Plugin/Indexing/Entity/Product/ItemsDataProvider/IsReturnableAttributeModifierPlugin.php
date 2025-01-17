@@ -21,9 +21,6 @@ use Magento\Store\Model\ScopeInterface;
 
 class IsReturnableAttributeModifierPlugin
 {
-    /**
-     * @var ScopeConfigInterface
-     */
     private ScopeConfigInterface $scopeConfig;
 
     public function __construct(ScopeConfigInterface $scopeConfig)
@@ -52,11 +49,11 @@ class IsReturnableAttributeModifierPlugin
         foreach ($result as $item) {
             $isEnabled = $isEnabled !== null
                 ? $isEnabled
-                : (string) (int) $this->scopeConfig->isSetFlag(
-                \Magento\Rma\Model\Product\Source::XML_PATH_PRODUCTS_ALLOWED,
-                ScopeInterface::SCOPE_STORE,
-                $item->getStore()->getId()
-            );
+                : (string)(int)$this->scopeConfig->isSetFlag(
+                    \Magento\Rma\Model\Product\Source::XML_PATH_PRODUCTS_ALLOWED,
+                    ScopeInterface::SCOPE_STORE,
+                    $item->getStore()->getId()
+                );
 
             $item->setIsReturnable(
                 in_array($item->getIsReturnable(), $useConfigValues) ? $isEnabled : $item->getIsReturnable()

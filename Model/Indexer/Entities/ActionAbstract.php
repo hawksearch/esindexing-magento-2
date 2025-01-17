@@ -48,25 +48,21 @@ abstract class ActionAbstract
     ];
 
     /**
-     * @var ManagerInterface
      * @private 0.8.0 Visibility changed to private. Set via constructor injection.
      */
     private ManagerInterface $eventManager;
 
     /**
-     * @var MessageManagerInterface
      * @private 0.8.0 Visibility changed to private. Set via constructor injection.
      */
     private MessageManagerInterface $messageManager;
 
     /**
-     * @var BulkPublisherInterface
      * @private 0.8.0 Visibility changed to private. Set via constructor injection.
      */
     private BulkPublisherInterface $publisher;
 
     /**
-     * @var SchedulerInterface
      * @private 0.8.0 Visibility changed to private. Set via constructor injection.
      */
     private SchedulerInterface $entityScheduler;

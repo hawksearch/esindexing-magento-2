@@ -10,6 +10,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+
 namespace HawkSearch\EsIndexing\Observer;
 
 use HawkSearch\EsIndexing\Model\Config\Search as SearchConfig;
@@ -21,20 +22,14 @@ use Magento\Framework\View\Layout;
 
 class LayoutUpdateHandler implements ObserverInterface
 {
-    /**
-     * @var SearchConfig
-     */
     private SearchConfig $searchConfig;
-
-    /**
-     * @var CatalogHelper
-     */
     private CatalogHelper $catalogHelper;
 
     public function __construct(
         SearchConfig $searchConfig,
         CatalogHelper $catalogHelper
-    ) {
+    )
+    {
         $this->searchConfig = $searchConfig;
         $this->catalogHelper = $catalogHelper;
     }
@@ -79,8 +74,7 @@ class LayoutUpdateHandler implements ObserverInterface
             if (!$this->isCategoriesEnabled()) {
                 return $handles;
             }
-        }
-        else {
+        } else {
             if (!$this->searchConfig->isSearchEnabled()) {
                 return $handles;
             }

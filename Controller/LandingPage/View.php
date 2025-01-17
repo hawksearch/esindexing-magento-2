@@ -27,35 +27,11 @@ use Magento\Framework\View\Result\PageFactory;
 
 class View extends \Magento\Framework\App\Action\Action
 {
-
-    /**
-     * @var PageFactory
-     */
     private PageFactory $resultPageFactory;
-
-    /**
-     * @var Session
-     */
     private Session $session;
-
-    /**
-     * @var Registry
-     */
     private Registry $coreRegistry;
-
-    /**
-     * @var CategoryFactory
-     */
     private CategoryFactory $categoryFactory;
-
-    /**
-     * @var LandingPageManagementInterface
-     */
     private LandingPageManagementInterface $landingPageManagement;
-
-    /**
-     * @var LandingPageInterfaceFactory
-     */
     private LandingPageInterfaceFactory $landingPageInterfaceFactory;
 
     public function __construct(

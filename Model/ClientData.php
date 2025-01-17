@@ -21,9 +21,6 @@ use Magento\Framework\Api\AbstractSimpleObject;
 
 class ClientData extends AbstractSimpleObject implements ClientDataInterface
 {
-    /**
-     * @var CoordinateInterfaceFactory
-     */
     private CoordinateInterfaceFactory $coordinateFactory;
 
     /**
@@ -33,7 +30,8 @@ class ClientData extends AbstractSimpleObject implements ClientDataInterface
     public function __construct(
         CoordinateInterfaceFactory $coordinate,
         array $data = []
-    ) {
+    )
+    {
         parent::__construct($data);
         $this->coordinateFactory = $coordinate;
     }

@@ -18,11 +18,8 @@ use HawkSearch\EsIndexing\Api\Data\QueueOperationDataInterface;
 
 class QueueOperationData implements QueueOperationDataInterface
 {
-    /**
-     * @var string
-     */
     private string $data;
-
+    
     public function __construct(string $data)
     {
         $this->data = $data;

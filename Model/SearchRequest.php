@@ -28,19 +28,8 @@ use Magento\Framework\Api\AbstractSimpleObject;
 
 class SearchRequest extends AbstractSimpleObject implements SearchRequestInterface
 {
-    /**
-     * @var ClientDataInterfaceFactory
-     */
     private ClientDataInterfaceFactory $clientDataFactory;
-
-    /**
-     * @var VariantOptionsInterfaceFactory
-     */
     private VariantOptionsInterfaceFactory $variantOptionsFactory;
-
-    /**
-     * @var SmartBarInterfaceFactory
-     */
     private SmartBarInterfaceFactory $smartBarFactory;
 
     /**
@@ -54,7 +43,8 @@ class SearchRequest extends AbstractSimpleObject implements SearchRequestInterfa
         VariantOptionsInterfaceFactory $variantOptionsFactory,
         SmartBarInterfaceFactory $smartBarFactory,
         array $data = []
-    ) {
+    )
+    {
         parent::__construct($data);
         $this->clientDataFactory = $clientDataFactory;
         $this->variantOptionsFactory = $variantOptionsFactory;

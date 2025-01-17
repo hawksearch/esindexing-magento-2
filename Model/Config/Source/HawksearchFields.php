@@ -20,20 +20,14 @@ use Magento\Framework\Data\OptionSourceInterface;
 
 class HawksearchFields implements OptionSourceInterface
 {
-    /**
-     * @var array|null
-     */
     private ?array $fieldsCache = null;
-
-    /**
-     * @var FieldManagementInterface
-     */
     private FieldManagementInterface $fieldManagement;
 
     public function __construct(
         FieldManagementInterface $fieldManagement
 
-    ) {
+    )
+    {
         $this->fieldManagement = $fieldManagement;
     }
 

@@ -23,11 +23,7 @@ use Magento\Quote\Model\Quote\Item as QuoteItem;
 
 class Cart
 {
-    /**
-     * @var Quote
-     */
     private Quote $quote;
-
     private CheckoutSession $checkoutSession;
 
     public function __construct(CheckoutSession $checkoutSession)

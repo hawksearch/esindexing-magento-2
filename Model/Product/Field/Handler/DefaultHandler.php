@@ -29,14 +29,12 @@ use Magento\Framework\Exception\LocalizedException;
  */
 class DefaultHandler implements FieldHandlerInterface
 {
-    /**
-     * @var ProductAttributesProvider
-     */
     private ProductAttributesProvider $productAttributes;
 
     public function __construct(
         ProductAttributesProvider $productAttributes = null
-    ) {
+    )
+    {
         $this->productAttributes = $productAttributes ?: ObjectManager::getInstance()->get(ProductAttributesProvider::class);
     }
 

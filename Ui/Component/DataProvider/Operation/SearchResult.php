@@ -26,9 +26,6 @@ use Psr\Log\LoggerInterface as Logger;
 
 class SearchResult extends SearchResultParent
 {
-    /**
-     * @var IdentifierResolver
-     */
     private IdentifierResolver $identifierResolver;
 
     /**

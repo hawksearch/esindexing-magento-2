@@ -22,14 +22,7 @@ use Magento\Framework\View\LayoutInterface;
 
 class TrackSaleEventOnOrderSuccessObserver implements ObserverInterface
 {
-    /**
-     * @var EventTracking
-     */
     private EventTracking $eventTrackingConfig;
-
-    /**
-     * @var LayoutInterface
-     */
     private LayoutInterface $layout;
 
     public function __construct(

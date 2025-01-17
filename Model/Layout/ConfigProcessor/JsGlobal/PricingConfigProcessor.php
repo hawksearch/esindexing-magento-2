@@ -26,10 +26,6 @@ class PricingConfigProcessor implements LayoutConfigProcessorInterface
 {
     private LocaleFormat $localeFormat;
     private StoreManagerInterface $storeManager;
-
-    /**
-     * @var PricingHelper
-     */
     private PricingHelper $pricingHelper;
 
     public function __construct(
@@ -61,7 +57,7 @@ class PricingConfigProcessor implements LayoutConfigProcessorInterface
         $fakeIncludingTaxPriceRegularAmount = $fakeExcludingTaxPriceRegularAmount * 1.1; // tax 10%
         $fakeIncludingTaxPriceRegularAmountPattern = '${ $.price_regular_include_tax }';
         $fakeIncludingTaxPriceRegularAmountFormattedPattern = '${ $.price_regular_include_tax_formatted }';
-        $fakeExcludingTaxPriceAmount = $fakeExcludingTaxPriceRegularAmount * 50/100; // discounted price, 50% discount
+        $fakeExcludingTaxPriceAmount = $fakeExcludingTaxPriceRegularAmount * 50 / 100; // discounted price, 50% discount
         $fakeExcludingTaxPriceAmountPattern = '${ $.price_final }';
         $fakeExcludingTaxPriceAmountFormattedPattern = '${ $.price_final_formatted }';
         $fakeIncludingTaxPriceAmount = $fakeExcludingTaxPriceAmount * 1.1; // final price, tax 10%
@@ -113,8 +109,8 @@ TEMPLATE;
 </div>
 TEMPLATE;
         $priceTemplates['configurable']['regular'] =
-            $priceTemplates['bundle']['regular'] =
-            $priceTemplates['grouped']['regular'] = <<<TEMPLATE
+        $priceTemplates['bundle']['regular'] =
+        $priceTemplates['grouped']['regular'] = <<<TEMPLATE
 <div class="price-box price-final_price" data-role="priceBox" data-product-id="$fakeUid" data-price-box="product-id-$fakeUid">
   <span class="normal-price">
     <span class="price-container price-final_price tax weee">

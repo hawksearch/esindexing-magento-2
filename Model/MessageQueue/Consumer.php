@@ -27,19 +27,8 @@ use Magento\Framework\Serialize\SerializerInterface;
  */
 class Consumer
 {
-    /**
-     * @var SerializerInterface
-     */
     private SerializerInterface $serializer;
-
-    /**
-     * @var ObjectFactory
-     */
     private ObjectFactory $objectFactory;
-
-    /**
-     * @var ObjectHelper
-     */
     private ObjectHelper $objectHelper;
 
     public function __construct(

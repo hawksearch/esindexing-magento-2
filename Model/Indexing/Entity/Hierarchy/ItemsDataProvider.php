@@ -24,26 +24,16 @@ use Magento\Store\Model\StoreManagerInterface;
 
 class ItemsDataProvider implements ItemsDataProviderInterface
 {
-    /**
-     * @var CategoryResource
-     */
     private CategoryResource $categoryResource;
-
-    /**
-     * @var StoreManagerInterface
-     */
     private StoreManagerInterface $storeManager;
-
-    /**
-     * @var CategoryFactory
-     */
     private CategoryFactory $categoryFactory;
 
     public function __construct(
         CategoryResource $categoryResource,
         StoreManagerInterface $storeManager,
         CategoryFactory $categoryFactory
-    ) {
+    )
+    {
         $this->categoryResource = $categoryResource;
         $this->storeManager = $storeManager;
         $this->categoryFactory = $categoryFactory;

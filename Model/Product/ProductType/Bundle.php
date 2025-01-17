@@ -30,8 +30,7 @@ class Bundle extends CompositeType
     ];
 
     /**
-     * @var string
-     * @deprecated since 0.7.0 will be removed
+     * @private since 0.7.0 will be removed
      */
     private string $keySelectionsCollection = '_cache_instance_selections_collection_hawksearch';
 

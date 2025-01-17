@@ -20,14 +20,7 @@ namespace HawkSearch\EsIndexing\Model\MessageQueue;
  */
 class MessageTopicByObjectResolver implements MessageTopicResolverInterface
 {
-    /**
-     * @var string
-     */
     private string $topic;
-
-    /**
-     * @var string
-     */
     private string $resolverClass;
 
     public function __construct(

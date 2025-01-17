@@ -22,9 +22,6 @@ use HawkSearch\EsIndexing\Model\Indexing\ItemsIndexerInterface;
  */
 class HierarchyItemsIndexer implements ItemsIndexerInterface
 {
-    /**
-     * @var HierarchyManagementInterface
-     */
     private HierarchyManagementInterface $hierarchyManagement;
 
     public function __construct(

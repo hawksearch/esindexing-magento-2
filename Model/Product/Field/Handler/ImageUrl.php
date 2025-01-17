@@ -34,24 +34,9 @@ class ImageUrl implements FieldHandlerInterface
         'thumbnail_url' => 'product_thumbnail_image'
     ];
 
-    /**
-     * @var ImageHelper
-     */
     private ImageHelper $imageHelper;
-
-    /**
-     * @var UrlHelper
-     */
     private UrlHelper $urlHelper;
-
-    /**
-     * @var AdvancedConfig
-     */
     private AdvancedConfig $advancedConfig;
-
-    /**
-     * @var StoreManagerInterface
-     */
     private StoreManagerInterface $storeManager;
 
     public function __construct(

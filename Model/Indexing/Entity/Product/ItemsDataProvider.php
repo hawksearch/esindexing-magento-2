@@ -33,39 +33,12 @@ use Magento\Framework\App\ObjectManager;
  */
 class ItemsDataProvider implements ItemsDataProviderInterface
 {
-    /**
-     * @var ProductRepositoryInterface
-     */
     private ProductRepositoryInterface $productRepository;
-
-    /**
-     * @var SearchCriteriaBuilder
-     */
     private SearchCriteriaBuilder $searchCriteriaBuilder;
-
-    /**
-     * @var Visibility
-     */
     private Visibility $visibility;
-
-    /**
-     * @var Indexing
-     */
     private Indexing $indexingConfig;
-
-    /**
-     * @var CategoryCollectionFactory
-     */
     private CategoryCollectionFactory $categoryCollectionFactory;
-
-    /**
-     * @var ExcludeNotVisibleProductsFlagInterface
-     */
     private ExcludeNotVisibleProductsFlagInterface $excludeNotVisibleProductsFlag;
-
-    /**
-     * @var ProductDataProvider
-     */
     private ProductDataProvider $productDataProvider;
 
     /**
@@ -85,7 +58,8 @@ class ItemsDataProvider implements ItemsDataProviderInterface
         CategoryCollectionFactory $categoryCollectionFactory,
         ExcludeNotVisibleProductsFlagInterface $excludeNotVisibleProductsFlag = null,
         ProductDataProvider $productDataProvider = null
-    ) {
+    )
+    {
         $this->productRepository = $productRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->visibility = $visibility;

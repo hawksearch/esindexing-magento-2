@@ -23,9 +23,6 @@ use Magento\Framework\Api\AbstractSimpleObject;
 
 class Facet extends AbstractSimpleObject implements FacetInterface
 {
-    /**
-     * @var FacetBoostBuryInterfaceFactory
-     */
     private FacetBoostBuryInterfaceFactory $facetBoostBuryFactory;
 
     /**
@@ -56,7 +53,8 @@ class Facet extends AbstractSimpleObject implements FacetInterface
             self::IS_COLLAPSED_DEFAULT => false,
             self::SHOW_SLIDER_INPUTS => false
         ]
-    ) {
+    )
+    {
         parent::__construct($data);
         $this->facetBoostBuryFactory = $facetBoostBuryFactory;
     }

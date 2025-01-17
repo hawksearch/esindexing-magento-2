@@ -32,39 +32,12 @@ use Magento\Quote\Model\Quote\Item as QuoteItem;
 
 class SendCookieOnCartCompleteObserver implements ObserverInterface
 {
-    /**
-     * @var PublicCookieMetadata
-     */
     private PublicCookieMetadata $cookieMetadata;
-
-    /**
-     * @var DataStorageInterface
-     */
     private DataStorageInterface $cartItemsToAddDataStorage;
-
-    /**
-     * @var DataStorageInterface
-     */
     private DataStorageInterface $cartItemsToRemoveDataStorage;
-
-    /**
-     * @var EventTrackingConfig
-     */
     private EventTrackingConfig $eventTrackingConfig;
-
-    /**
-     * @var ProductEntityType
-     */
     private ProductEntityType $productEntityType;
-
-    /**
-     * @var CookieMetadataFactory
-     */
     private CookieMetadataFactory $cookieMetadataFactory;
-
-    /**
-     * @var CookieManagerInterface
-     */
     private CookieManagerInterface $cookieManager;
 
     /**
@@ -72,9 +45,6 @@ class SendCookieOnCartCompleteObserver implements ObserverInterface
      */
     private RequestInterface $httpRequest;
 
-    /**
-     * @var SerializerInterface
-     */
     private SerializerInterface $jsonSerializer;
 
     public function __construct(

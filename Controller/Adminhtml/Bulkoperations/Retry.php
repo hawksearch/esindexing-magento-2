@@ -10,6 +10,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+
 namespace HawkSearch\EsIndexing\Controller\Adminhtml\Bulkoperations;
 
 use HawkSearch\EsIndexing\Model\MessageQueue\Validator\BulkAccessValidator;
@@ -49,40 +50,12 @@ class Retry extends Action implements HttpPostActionInterface
      * Internal server error response code.
      */
     private const HTTP_INTERNAL_ERROR = 500;
-
-    /**
-     * @var BulkManagementInterface
-     */
     private BulkManagementInterface $bulkManagement;
-
-    /**
-     * @var BulkNotificationManagement
-     */
     private BulkNotificationManagement $notificationManagement;
-
-    /**
-     * @var BulkAccessValidator
-     */
     private BulkAccessValidator $bulkAccessValidator;
-
-    /**
-     * @var BulkSummaryInterfaceFactory
-     */
     private BulkSummaryInterfaceFactory $bulkSummaryFactory;
-
-    /**
-     * @var EntityManager
-     */
     private EntityManager $entityManager;
-
-    /**
-     * @var BulkStatusInterface
-     */
     private BulkStatusInterface $bulkStatus;
-
-    /**
-     * @var DataObjectFactory
-     */
     private DataObjectFactory $dataObjectFactory;
 
     public function __construct(
@@ -94,7 +67,8 @@ class Retry extends Action implements HttpPostActionInterface
         EntityManager $entityManager,
         BulkStatusInterface $bulkStatus,
         DataObjectFactory $dataObjectFactory
-    ) {
+    )
+    {
         parent::__construct($context);
         $this->bulkManagement = $bulkManagement;
         $this->notificationManagement = $notificationManagement;

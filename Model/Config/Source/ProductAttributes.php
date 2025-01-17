@@ -19,9 +19,6 @@ use Magento\Framework\Data\OptionSourceInterface;
 
 class ProductAttributes implements OptionSourceInterface
 {
-    /**
-     * @var Attributes
-     */
     private Attributes $attributes;
 
     public function __construct(

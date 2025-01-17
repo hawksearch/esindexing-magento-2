@@ -30,26 +30,16 @@ class Product implements IndexerActionInterface, MviewActionInterface
      */
     const INDEXER_ID = 'hawksearch_products';
 
-    /**
-     * @var ProductDataProvider
-     */
     private ProductDataProvider $productDataProvider;
-
-    /**
-     * @var Action
-     */
     private Action $action;
-
-    /**
-     * @var ConsoleOutput
-     */
     private ConsoleOutput $output;
 
     public function __construct(
         ProductDataProvider $productDataProvider,
         Action $action,
         ConsoleOutput $output
-    ) {
+    )
+    {
         $this->productDataProvider = $productDataProvider;
         $this->action = $action;
         $this->output = $output;

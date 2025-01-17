@@ -22,14 +22,7 @@ use Magento\Framework\Exception\RuntimeException;
  */
 class DataStorage implements DataStorageInterface
 {
-    /**
-     * @var string
-     */
     private string $name;
-
-    /**
-     * @var mixed
-     */
     private mixed $value;
 
     /**

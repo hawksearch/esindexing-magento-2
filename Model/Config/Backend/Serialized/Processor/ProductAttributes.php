@@ -49,55 +49,15 @@ class ProductAttributes implements ValueProcessorInterface
      * @var FacetInterface[]|null
      */
     private ?array $facetsCache = null;
-
-    /**
-     * @var AttributeProvider
-     */
     private AttributeProvider $attributeProvider;
-
-    /**
-     * @var AttributeFacade
-     */
     private AttributeFacade $attributeFacade;
-
-    /**
-     * @var ManagerInterface
-     */
     private ManagerInterface $message;
-
-    /**
-     * @var LoggerInterface
-     */
     private LoggerInterface $logger;
-
-    /**
-     * @var FieldInterfaceFactory
-     */
     private FieldInterfaceFactory $fieldFactory;
-
-    /**
-     * @var FacetInterfaceFactory
-     */
     private FacetInterfaceFactory $facetFactory;
-
-    /**
-     * @var FieldManagementInterface
-     */
     private FieldManagementInterface $fieldManagement;
-
-    /**
-     * @var FacetManagementInterface
-     */
     private FacetManagementInterface $facetManagement;
-
-    /**
-     * @var FieldExtendedInterfaceFactory
-     */
     private FieldExtendedInterfaceFactory $fieldExtendedFactory;
-
-    /**
-     * @var SerializerInterface|null
-     */
     private ?SerializerInterface $serializer;
 
     public function __construct(
@@ -111,7 +71,8 @@ class ProductAttributes implements ValueProcessorInterface
         FacetManagementInterface $facetManagement,
         FieldExtendedInterfaceFactory $fieldExtendedFactory,
         ?SerializerInterface $serializer = null
-    ) {
+    )
+    {
         $this->attributeProvider = $attributeProvider;
         $this->attributeFacade = $attributeFacade;
         $this->message = $message;
@@ -178,7 +139,7 @@ class ProductAttributes implements ValueProcessorInterface
     protected function filterValue(array $value): array
     {
         $usedFields = [];
-        $filterItem = function(array $v, string $k) use (&$usedFields) {
+        $filterItem = function (array $v, string $k) use (&$usedFields) {
             //check item key
             $isEmptyKey = $k === '__empty';
 
@@ -212,7 +173,7 @@ class ProductAttributes implements ValueProcessorInterface
         $attributes = array_column($oldConfigValue, self::COLUMN_ATTRIBUTE);
         $oldConfigCombined = array_combine($fields, $attributes);
 
-        $filterItem = function(array $v) use ($oldConfigCombined) {
+        $filterItem = function (array $v) use ($oldConfigCombined) {
             $isChangedField = !array_key_exists($v[self::COLUMN_FIELD], $oldConfigCombined)
                 && $v[self::COLUMN_FIELD] !== self::SELECT_OPTION_NEW_FILED_VALUE;
             $isChangedAttribute = isset($oldConfigCombined[$v[self::COLUMN_FIELD]])
@@ -230,7 +191,7 @@ class ProductAttributes implements ValueProcessorInterface
      */
     protected function getRowsCreated(array $rows): array
     {
-        $filterItem = function(array $v) {
+        $filterItem = function (array $v) {
             return $v[self::COLUMN_FIELD] === self::SELECT_OPTION_NEW_FILED_VALUE
                 && isset($v[self::COLUMN_FIELD_NEW]);
         };

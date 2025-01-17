@@ -21,7 +21,7 @@ use Magento\Framework\Mview\View\Subscription;
 class StagingSubscriptionPlugin
 {
     /**
-     * @var string[][]
+     * @var array<string, list<string>>
      */
     private array $allowedViewTables = [
         'hawksearch_products' => [
@@ -29,10 +29,6 @@ class StagingSubscriptionPlugin
         ]
 
     ];
-
-    /**
-     * @var TriggerFactory
-     */
     private TriggerFactory $triggerFactory;
 
     public function __construct(

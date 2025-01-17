@@ -25,29 +25,10 @@ use Magento\Quote\Model\Quote\Item as QuoteItem;
 
 class OnCartAddTrackingEventPlugin
 {
-    /**
-     * @var float
-     */
     private float $qty = 0;
-
-    /**
-     * @var bool
-     */
     private bool $isSkipAddNewItem = false;
-
-    /**
-     * @var DataStorageInterface
-     */
     private DataStorageInterface $cartItemsToAddDataStorage;
-
-    /**
-     * @var EventTrackingConfig
-     */
     private EventTrackingConfig $eventTrackingConfig;
-
-    /**
-     * @var DataObjectFactory
-     */
     private DataObjectFactory $dataObjectFactory;
 
     public function __construct(

@@ -18,9 +18,6 @@ use Magento\CatalogInventory\Model\StockRegistryStorage;
 
 class EntityRebuildPlugin
 {
-    /**
-     * @var StockRegistryStorage
-     */
     private StockRegistryStorage $stockRegistryStorage;
 
     public function __construct(

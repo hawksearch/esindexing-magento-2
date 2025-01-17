@@ -38,40 +38,15 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
             'description' => 'In favour of a new Field Handlers logic'
         ],
     ];
-
-    /**
-     * @var EntityRebuildInterface
-     */
     private EntityRebuildInterface $rebuilder;
-
-    /**
-     * @var ItemsDataProviderInterface
-     */
     private ItemsDataProviderInterface $itemsDataProvider;
-
     /**
      * @var FieldHandlerInterface<DataObject>
      */
     private FieldHandlerInterface $fieldHandler;
-
-    /**
-     * @var ItemsIndexerInterface
-     */
     private ItemsIndexerInterface $itemsIndexer;
-
-    /**
-     * @var AbstractConfigHelper
-     */
     private AbstractConfigHelper $configHelper;
-
-    /**
-     * @var string
-     */
     private string $typeName;
-
-    /**
-     * @var FieldNameProviderInterface
-     */
     private FieldNameProviderInterface $fieldNameProvider;
 
     /**

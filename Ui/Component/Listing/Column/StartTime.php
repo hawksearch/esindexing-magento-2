@@ -26,9 +26,6 @@ use Magento\Ui\Component\Listing\Columns\Date;
 
 class StartTime extends Date
 {
-    /**
-     * @var OperationResource
-     */
     private OperationResource $operationResource;
 
     /**

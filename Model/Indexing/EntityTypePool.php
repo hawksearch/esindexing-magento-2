@@ -27,11 +27,8 @@ use Magento\Framework\ObjectManager\TMapFactory;
  */
 class EntityTypePool implements EntityTypePoolInterface
 {
-    /**
-     * @var TMapFactory
-     */
     private TMapFactory $tmapFactory;
-
+    
     /**
      * @var TMap<TKey, TValue>
      */

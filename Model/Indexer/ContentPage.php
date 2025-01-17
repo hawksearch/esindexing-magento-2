@@ -29,20 +29,14 @@ class ContentPage implements IndexerActionInterface, MviewActionInterface
      */
     const INDEXER_ID = 'hawksearch_content_pages';
 
-    /**
-     * @var Action
-     */
     private Action $action;
-
-    /**
-     * @var ConsoleOutput
-     */
     private ConsoleOutput $output;
 
     public function __construct(
         Action $action,
         ConsoleOutput $output
-    ) {
+    )
+    {
         $this->action = $action;
         $this->output = $output;
     }

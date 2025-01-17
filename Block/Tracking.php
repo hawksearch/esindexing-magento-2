@@ -30,19 +30,8 @@ use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollection
  */
 class Tracking extends Template
 {
-    /**
-     * @var OrderCollectionFactory
-     */
     private OrderCollectionFactory $orderCollectionFactory;
-
-    /**
-     * @var ProductEntityType
-     */
     private ProductEntityType $productEntityType;
-
-    /**
-     * @var EventTrackingConfig
-     */
     private EventTrackingConfig $eventTrackingConfig;
 
     /**
@@ -60,7 +49,8 @@ class Tracking extends Template
         EventTrackingConfig $eventTrackingConfig,
         array $data = [],
         ?SerializerInterface $serializer = null
-    ) {
+    )
+    {
         $this->orderCollectionFactory = $orderCollectionFactory;
         $this->productEntityType = $productEntityType;
         $this->eventTrackingConfig = $eventTrackingConfig;
@@ -121,7 +111,7 @@ class Tracking extends Template
         /** @var Order $order */
         foreach ($ordersCollection as $order) {
             $items = [];
-            /** @var Item $item*/
+            /** @var Item $item */
             foreach ($order->getAllVisibleItems() as $item) {
                 $items[] = [
                     'uniqueId' => $this->productEntityType->getUniqueId((string)$item->getProductId()),

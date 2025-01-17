@@ -25,16 +25,8 @@ use Magento\Framework\Model\AbstractModel;
 
 class AttributePlugin extends AbstractPlugin
 {
-    /**
-     * @var bool
-     */
     private bool $isInvalidationNeeded = false;
-
     private IndexerInterface $productIndexer;
-
-    /**
-     * @var Attributes
-     */
     private Attributes $productAttributes;
 
     public function __construct(

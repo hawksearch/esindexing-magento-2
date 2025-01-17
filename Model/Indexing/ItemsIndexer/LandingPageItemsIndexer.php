@@ -23,11 +23,8 @@ use HawkSearch\EsIndexing\Model\Indexing\ItemsIndexerInterface;
  */
 class LandingPageItemsIndexer implements ItemsIndexerInterface
 {
-    /**
-     * @var LandingPageManagementInterface
-     */
     private LandingPageManagementInterface $landingPageManagement;
-
+ 
     public function __construct(
         LandingPageManagementInterface $landingPageManagement
     )

@@ -23,24 +23,9 @@ use Magento\Search\Helper\Data as SearchHelper;
 
 class RequestConfigProcessor implements LayoutConfigProcessorInterface
 {
-    /**
-     * @var SearchHelper
-     */
     private SearchHelper $searchHelper;
-
-    /**
-     * @var RequestInterface
-     */
     private RequestInterface $request;
-
-    /**
-     * @var UrlInterface
-     */
     private UrlInterface $urlBuilder;
-
-    /**
-     * @var FormKey
-     */
     private FormKey $formKey;
 
     public function __construct(

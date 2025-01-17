@@ -25,26 +25,16 @@ use Magento\Store\Model\StoreManagerInterface;
 
 class ReviewRatingSummary implements CustomJoinInterface
 {
-    /**
-     * @var SummaryFactory
-     */
     private SummaryFactory $sumResourceFactory;
-
-    /**
-     * @var StoreManagerInterface
-     */
     private StoreManagerInterface $storeManager;
-
-    /**
-     * @var ProductMetadataInterface
-     */
     private ProductMetadataInterface $productMetadata;
 
     public function __construct(
         SummaryFactory $sumResourceFactory,
         StoreManagerInterface $storeManager,
         ProductMetadataInterface $productMetadata
-    ) {
+    )
+    {
         $this->sumResourceFactory = $sumResourceFactory;
         $this->storeManager = $storeManager;
         $this->productMetadata = $productMetadata;

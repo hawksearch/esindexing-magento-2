@@ -25,9 +25,6 @@ use Magento\Framework\DataObject;
  */
 class CustomSortList implements FieldHandlerInterface
 {
-    /**
-     * @var ProductEntityTypeFactory
-     */
     private ProductEntityTypeFactory $productEntityTypeFactory;
 
     public function __construct(ProductEntityTypeFactory $productEntityTypeFactory)

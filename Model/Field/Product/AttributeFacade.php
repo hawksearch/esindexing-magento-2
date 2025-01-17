@@ -21,9 +21,6 @@ use HawkSearch\EsIndexing\Api\Data\FieldInterface;
  */
 class AttributeFacade
 {
-    /**
-     * @var AttributeAdapter
-     */
     private AttributeAdapter $attribute;
 
     /**

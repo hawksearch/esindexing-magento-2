@@ -24,14 +24,12 @@ class Entities implements ActionInterface
      */
     const INDEXER_ID = 'hawksearch_entities';
 
-    /**
-     * @var Action
-     */
     private Action $action;
 
     public function __construct(
         Action $action
-    ) {
+    )
+    {
         $this->action = $action;
     }
 

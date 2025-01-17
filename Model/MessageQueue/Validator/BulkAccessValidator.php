@@ -21,20 +21,14 @@ use Magento\Framework\Exception\NoSuchEntityException;
 
 class BulkAccessValidator
 {
-    /**
-     * @var OperationValidatorInterface
-     */
     private OperationValidatorInterface $operationTopicValidator;
-
-    /**
-     * @var BulkOperationsStatus
-     */
     private BulkOperationsStatus $bulkOperationsStatus;
 
     public function __construct(
         OperationValidatorInterface $operationTopicValidator,
         BulkOperationsStatus $bulkOperationsStatus
-    ) {
+    )
+    {
         $this->operationTopicValidator = $operationTopicValidator;
         $this->bulkOperationsStatus = $bulkOperationsStatus;
     }

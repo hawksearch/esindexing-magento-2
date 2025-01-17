@@ -23,14 +23,7 @@ use Magento\Store\Model\Store;
 
 class ItemsDataProvider implements ItemsDataProviderInterface
 {
-    /**
-     * @var PageRepositoryInterface
-     */
     private PageRepositoryInterface $pageRepository;
-
-    /**
-     * @var SearchCriteriaBuilder
-     */
     private SearchCriteriaBuilder $searchCriteriaBuilder;
 
     public function __construct(

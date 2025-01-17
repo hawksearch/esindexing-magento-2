@@ -37,19 +37,10 @@ class CustomAttributes extends AbstractFieldArray
     ];
 
     /**
-     * @var array
      * @private 0.8.0 Visibility changed to private. Set via constructor injection.
      */
     private array $columnRendererCache = [];
-
-    /**
-     * @var HawksearchFields
-     */
     private HawksearchFields $hawksearchFields;
-
-    /**
-     * @var ProductAttributes
-     */
     private ProductAttributes $productAttributes;
 
     /**

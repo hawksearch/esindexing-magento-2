@@ -33,6 +33,12 @@ class Composite implements FieldHandlerInterface
 {
     use PublicPropertyDeprecationTrait;
 
+    /**#@+
+     * Constants
+     */
+    public const HANDLER_DEFAULT_NAME = '__DEFAULT_HANDLER__';
+    /**#@-*/
+
     private array $deprecatedPublicProperties = [
         'handlers' => [
             'since' => '0.8.0',
@@ -40,15 +46,6 @@ class Composite implements FieldHandlerInterface
         ],
     ];
 
-    /**#@+
-     * Constants
-     */
-    public const HANDLER_DEFAULT_NAME = '__DEFAULT_HANDLER__';
-    /**#@-*/
-
-    /**
-     * @var ObjectManagerInterface
-     */
     private ObjectManagerInterface $objectManager;
 
     /**
@@ -58,10 +55,9 @@ class Composite implements FieldHandlerInterface
     private array $handlers = [
         self::HANDLER_DEFAULT_NAME => DataObjectHandler::class
     ];
-
+    
     /**
-     * Composite constructor.
-     *
+     * @param ObjectManagerInterface $objectManager
      * @param array<array-key, HandlerSignature> $handlers
      */
     public function __construct(

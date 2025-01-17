@@ -24,19 +24,8 @@ use Magento\Store\Model\Store;
 
 class StoreViewDisableIndexingPlugin
 {
-    /**
-     * @var IndexingConfig
-     */
     private IndexingConfig $indexingConfig;
-
-    /**
-     * @var WriterInterface
-     */
     private WriterInterface $configWriter;
-
-    /**
-     * @var ReinitableConfigInterface
-     */
     private ReinitableConfigInterface $reinitableConfig;
 
     public function __construct(

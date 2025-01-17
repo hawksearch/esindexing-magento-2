@@ -25,14 +25,7 @@ use Magento\Catalog\Api\Data\CategoryInterfaceFactory;
  */
 class CurrentCategory
 {
-    /**
-     * @var CategoryInterface
-     */
     private CategoryInterface $category;
-
-    /**
-     * @var CategoryInterfaceFactory
-     */
     private CategoryInterfaceFactory $categoryFactory;
 
     public function __construct(CategoryInterfaceFactory $categoryFactory)

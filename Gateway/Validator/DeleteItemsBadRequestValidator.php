@@ -24,14 +24,7 @@ use HawkSearch\Connector\Gateway\Validator\ResultInterfaceFactory;
 
 class DeleteItemsBadRequestValidator extends AbstractValidator
 {
-    /**
-     * @var HttpResponseReader
-     */
     private HttpResponseReader $httpResponseReader;
-
-    /**
-     * @var SubjectReader
-     */
     private SubjectReader $subjectReader;
 
     public function __construct(

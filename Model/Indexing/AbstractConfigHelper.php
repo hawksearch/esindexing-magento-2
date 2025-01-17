@@ -22,14 +22,12 @@ use HawkSearch\EsIndexing\Model\Config\Indexing as IndexingConfig;
  */
 abstract class AbstractConfigHelper
 {
-    /**
-     * @var IndexingConfig
-     */
     private IndexingConfig $indexingConfig;
 
     public function __construct(
         IndexingConfig $indexingConfig
-    ) {
+    )
+    {
         $this->indexingConfig = $indexingConfig;
     }
 

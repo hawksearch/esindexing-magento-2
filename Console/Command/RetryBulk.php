@@ -38,25 +38,9 @@ class RetryBulk extends Command
     private const FORBIDDEN_STATUSES = [
         OperationInterface::STATUS_TYPE_COMPLETE
     ];
-
-    /**
-     * @var BulkManagementInterface
-     */
     private BulkManagementInterface $bulkManagement;
-
-    /**
-     * @var BulkStatusInterface
-     */
     private BulkStatusInterface $bulkStatus;
-
-    /**
-     * @var BulkSummaryInterfaceFactory
-     */
     private BulkSummaryInterfaceFactory $bulkSummaryFactory;
-
-    /**
-     * @var EntityManager
-     */
     private EntityManager $entityManager;
 
     /**
@@ -86,7 +70,7 @@ class RetryBulk extends Command
     /**
      * @inheritDoc
      */
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->setName('hawksearch:retry-bulk')
             ->setDescription('Retry hawksearch indexing bulk failed operations')

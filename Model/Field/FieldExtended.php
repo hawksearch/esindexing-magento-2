@@ -18,10 +18,6 @@ use HawkSearch\EsIndexing\Api\Data\FieldInterface;
 
 class FieldExtended implements FieldExtendedInterface
 {
-
-    /**
-     * @var FieldInterface
-     */
     private FieldInterface $field;
 
     public function __construct(FieldInterface $field)

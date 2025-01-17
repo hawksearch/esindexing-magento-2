@@ -13,8 +13,6 @@
 
 namespace HawkSearch\EsIndexing\Controller;
 
-//use HawkSearch\Proxy\Helper\Data;
-//use HawkSearch\Proxy\Model\Config\Proxy as ProxyConfigProvider;
 use Magento\Framework\App\Action\Forward;
 use Magento\Framework\App\ActionFactory;
 use Magento\Framework\App\RequestInterface;
@@ -22,9 +20,6 @@ use Magento\Framework\App\RouterInterface;
 
 class LandingPageRouter implements RouterInterface
 {
-    /**
-     * @var ActionFactory
-     */
     private ActionFactory $actionFactory;
 
     public function __construct(

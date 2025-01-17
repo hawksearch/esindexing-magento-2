@@ -10,6 +10,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+
 namespace HawkSearch\EsIndexing\Observer;
 
 use HawkSearch\EsIndexing\Registry\CurrentCategory;
@@ -19,10 +20,10 @@ use Magento\Framework\Event\ObserverInterface;
 
 class InitCurrentCategoryObserver implements ObserverInterface
 {
-    /** @var CurrentCategory  */
     private CurrentCategory $currentCategory;
 
-    public function __construct(CurrentCategory $currentCategory) {
+    public function __construct(CurrentCategory $currentCategory)
+    {
         $this->currentCategory = $currentCategory;
     }
 

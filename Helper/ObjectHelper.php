@@ -28,24 +28,9 @@ use Magento\Framework\Api\SortOrderFactory;
  */
 class ObjectHelper
 {
-    /**
-     * @var SearchCriteriaBuilder
-     */
     private SearchCriteriaBuilder $searchCriteriaBuilder;
-
-    /**
-     * @var FilterFactory
-     */
     private FilterFactory $filterFactory;
-
-    /**
-     * @var SortOrderFactory
-     */
     private SortOrderFactory $sortOrderFactory;
-
-    /**
-     * @var FilterGroupBuilder
-     */
     private FilterGroupBuilder $filterGroupBuilder;
 
     public function __construct(
@@ -53,7 +38,8 @@ class ObjectHelper
         FilterFactory $filterFactory,
         SortOrderFactory $sortOrderFactory,
         FilterGroupBuilder $filterGroupBuilder
-    ) {
+    )
+    {
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->filterFactory = $filterFactory;
         $this->sortOrderFactory = $sortOrderFactory;
@@ -147,7 +133,8 @@ class ObjectHelper
      *
      * @return void
      * @throws \InvalidArgumentException
-     * @todo remove $key argument, use a closure for array_walk explicitely and use this method implicitely in the closure
+     * @todo remove $key argument, use a closure for array_walk explicitely and use this method implicitely in the
+     *     closure
      */
     public static function validateObjectValue(object $item, int $key, string $className)
     {

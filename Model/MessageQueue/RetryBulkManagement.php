@@ -21,14 +21,7 @@ use Magento\Framework\MessageQueue\BulkPublisherInterface;
 
 class RetryBulkManagement implements BulkManagementInterface
 {
-    /**
-     * @var OperationManagementInterface
-     */
     private OperationManagementInterface $operationManagement;
-
-    /**
-     * @var BulkPublisherInterface
-     */
     private BulkPublisherInterface $publisher;
 
     public function __construct(

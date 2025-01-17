@@ -22,11 +22,8 @@ use Magento\Framework\Model\AbstractModel;
 
 class PagePlugin
 {
-    /**
-     * @var IndexerInterface
-     */
     private IndexerInterface $pageIndexer;
-
+    
     public function __construct(
         IndexerRegistry $indexerRegistry
     )
