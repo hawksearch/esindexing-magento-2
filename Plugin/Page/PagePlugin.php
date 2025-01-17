@@ -25,11 +25,12 @@ class PagePlugin
     /**
      * @var IndexerInterface
      */
-    private $pageIndexer;
+    private IndexerInterface $pageIndexer;
 
     public function __construct(
         IndexerRegistry $indexerRegistry
-    ) {
+    )
+    {
         $this->pageIndexer = $indexerRegistry->get(ContentPageIndexer::INDEXER_ID);
     }
 

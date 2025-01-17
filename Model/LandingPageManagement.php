@@ -27,15 +27,17 @@ class LandingPageManagement implements LandingPageManagementInterface
     /**
      * @var InstructionManagerPoolInterface<string, InstructionManagerInterface>
      */
-    private $instructionManagerPool;
+    private InstructionManagerPoolInterface $instructionManagerPool;
 
     /**
      * LandingPageManagement constructor.
+     *
      * @param InstructionManagerPoolInterface<string, InstructionManagerInterface> $instructionManagerPool
      */
     public function __construct(
         InstructionManagerPoolInterface $instructionManagerPool
-    ){
+    )
+    {
         $this->instructionManagerPool = $instructionManagerPool;
     }
 

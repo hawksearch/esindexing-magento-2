@@ -22,7 +22,7 @@ class ProductAttributes implements OptionSourceInterface
     /**
      * @var Attributes
      */
-    private $attributes;
+    private Attributes $attributes;
 
     public function __construct(
         Attributes $attributes

@@ -34,30 +34,29 @@ use Psr\Log\LoggerInterface;
 class IndexManagement implements IndexManagementInterface
 {
     /**
-     *
      * @var array
      */
-    private $indicesListCache = [];
+    private array $indicesListCache = [];
 
     /**
-     * @var string
+     * @var array
      */
-    private $currentIndexCache;
+    private array $currentIndexCache = [];
 
     /**
      * @var InstructionManagerPoolInterface<string, InstructionManagerInterface>
      */
-    private $instructionManagerPool;
+    private InstructionManagerPoolInterface $instructionManagerPool;
 
     /**
      * @var LoggerInterface
      */
-    private $hawkLogger;
+    private LoggerInterface $hawkLogger;
 
     /**
      * @var StoreManagerInterface
      */
-    private $storeManager;
+    private StoreManagerInterface $storeManager;
 
     /**
      * @param InstructionManagerPoolInterface<string, InstructionManagerInterface> $instructionManagerPool
@@ -68,7 +67,8 @@ class IndexManagement implements IndexManagementInterface
         InstructionManagerPoolInterface $instructionManagerPool,
         LoggerFactoryInterface $loggerFactory,
         StoreManagerInterface $storeManager
-    ) {
+    )
+    {
         $this->instructionManagerPool = $instructionManagerPool;
         $this->hawkLogger = $loggerFactory->create();
         $this->storeManager = $storeManager;
@@ -98,7 +98,7 @@ class IndexManagement implements IndexManagementInterface
     /**
      * @inheritDoc
      */
-    public function getIndexName($useCurrent = false) : ?string
+    public function getIndexName($useCurrent = false): ?string
     {
         $indices = $this->getIndices();
         $currentIndex = $indices ? $this->getCurrentIndex() : '';
@@ -220,22 +220,25 @@ class IndexManagement implements IndexManagementInterface
 
     /**
      * Get current index used for searching
+     *
      * @return string|null
      * @throws InstructionException
      * @throws NotFoundException
      * @throws NoSuchEntityException
      */
-    private function getCurrentIndex() : ?string
+    private function getCurrentIndex(): ?string
     {
-        if ($this->getIndexFromCache(true) === null) {
+        $indexFromCache = current($this->getIndicesFromCache(true));
+        if ($indexFromCache === false || $indexFromCache === null) {
             /** @var EsIndexInterface $result */
             $result = $this->instructionManagerPool->get('hawksearch-esindexing')
                 ->executeByCode('getCurrentIndex')->get();
 
-            $this->addIndexToCache($result->getIndexName(), true);
+            $indexFromCache = $result->getIndexName();
+            $this->addIndexToCache($indexFromCache, true);
         }
 
-        return $this->getIndexFromCache(true);
+        return $indexFromCache;
     }
 
     /**
@@ -246,7 +249,7 @@ class IndexManagement implements IndexManagementInterface
      */
     private function getIndices()
     {
-        if ($this->getIndexFromCache() === null) {
+        if (empty($this->getIndicesFromCache())) {
             /** @var IndexListInterface $indexList */
             $indexList = $this->instructionManagerPool->get('hawksearch-esindexing')
                 ->executeByCode('getIndexList')->get();
@@ -256,7 +259,7 @@ class IndexManagement implements IndexManagementInterface
             }
         }
 
-        return (array)$this->getIndexFromCache();
+        return $this->getIndicesFromCache();
     }
 
     /**
@@ -277,6 +280,7 @@ class IndexManagement implements IndexManagementInterface
 
     /**
      * Reset cached values
+     *
      * @throws NoSuchEntityException
      * @TODO Replace with \Psr\Cache\CacheItemPoolInterface implementation
      */
@@ -318,16 +322,16 @@ class IndexManagement implements IndexManagementInterface
     }
 
     /**
-     * @return array|string|null
+     * @return array
      * @throws NoSuchEntityException
      * @TODO Replace with \Psr\Cache\CacheItemPoolInterface implementation
      */
-    private function getIndexFromCache(bool $isCurrent = false)
+    private function getIndicesFromCache(bool $isCurrent = false)
     {
         $storeId = $this->storeManager->getStore()->getId();
 
         return $isCurrent
-            ? ($this->currentIndexCache[$storeId] ?? null)
-            : ($this->indicesListCache[$storeId] ?? null);
+            ? (array)($this->currentIndexCache[$storeId] ?? null)
+            : ($this->indicesListCache[$storeId] ?? []);
     }
 }

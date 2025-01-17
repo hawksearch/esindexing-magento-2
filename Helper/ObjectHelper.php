@@ -31,22 +31,22 @@ class ObjectHelper
     /**
      * @var SearchCriteriaBuilder
      */
-    private $searchCriteriaBuilder;
+    private SearchCriteriaBuilder $searchCriteriaBuilder;
 
     /**
      * @var FilterFactory
      */
-    private $filterFactory;
+    private FilterFactory $filterFactory;
 
     /**
      * @var SortOrderFactory
      */
-    private $sortOrderFactory;
+    private SortOrderFactory $sortOrderFactory;
 
     /**
      * @var FilterGroupBuilder
      */
-    private $filterGroupBuilder;
+    private FilterGroupBuilder $filterGroupBuilder;
 
     public function __construct(
         SearchCriteriaBuilder $searchCriteriaBuilder,

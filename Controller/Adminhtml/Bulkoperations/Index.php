@@ -31,13 +31,13 @@ class Index extends Action implements HttpGetActionInterface
     /**
      * @var PageFactory
      */
-    private $resultPageFactory;
+    private PageFactory $resultPageFactory;
 
     /**
      * @var string
      */
-    private $menuId;
-    
+    private string $menuId;
+
     public function __construct(
         Context $context,
         PageFactory $resultPageFactory,

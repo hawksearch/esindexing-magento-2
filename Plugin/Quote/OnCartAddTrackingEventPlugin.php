@@ -26,35 +26,36 @@ use Magento\Quote\Model\Quote\Item as QuoteItem;
 class OnCartAddTrackingEventPlugin
 {
     /**
-     * @var int|float
+     * @var float
      */
-    private $qty;
+    private float $qty = 0;
 
     /**
      * @var bool
      */
-    private $isSkipAddNewItem;
+    private bool $isSkipAddNewItem = false;
 
     /**
      * @var DataStorageInterface
      */
-    private $cartItemsToAddDataStorage;
+    private DataStorageInterface $cartItemsToAddDataStorage;
 
     /**
      * @var EventTrackingConfig
      */
-    private $eventTrackingConfig;
+    private EventTrackingConfig $eventTrackingConfig;
 
     /**
      * @var DataObjectFactory
      */
-    private $dataObjectFactory;
+    private DataObjectFactory $dataObjectFactory;
 
     public function __construct(
         DataStorageInterface $cartItemsToAddDataStorage,
         EventTrackingConfig $eventTrackingConfig,
         DataObjectFactory $dataObjectFactory
-    ) {
+    )
+    {
         $this->cartItemsToAddDataStorage = $cartItemsToAddDataStorage;
         $this->eventTrackingConfig = $eventTrackingConfig;
         $this->dataObjectFactory = $dataObjectFactory;
@@ -106,7 +107,8 @@ class OnCartAddTrackingEventPlugin
         Quote $subject,
         Product $product,
         $request = null
-    ) {
+    )
+    {
         if ($this->isSkipAddNewItem) {
             return null;
         }
@@ -121,7 +123,7 @@ class OnCartAddTrackingEventPlugin
             return null;
         }
 
-        $this->qty = $request->getData('qty') ?: 0;
+        $this->qty = (float)$request->getData('qty') ?: 0;
 
         return null;
     }
@@ -136,7 +138,8 @@ class OnCartAddTrackingEventPlugin
     public function afterAddProduct(
         Quote $subject,
         $result
-    ) {
+    )
+    {
         if ($this->isSkipAddNewItem) {
             return $result;
         }

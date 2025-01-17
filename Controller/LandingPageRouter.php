@@ -25,7 +25,7 @@ class LandingPageRouter implements RouterInterface
     /**
      * @var ActionFactory
      */
-    protected $actionFactory;
+    private ActionFactory $actionFactory;
 
     public function __construct(
         ActionFactory $actionFactory

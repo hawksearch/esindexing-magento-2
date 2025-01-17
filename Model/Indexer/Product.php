@@ -33,17 +33,17 @@ class Product implements IndexerActionInterface, MviewActionInterface
     /**
      * @var ProductDataProvider
      */
-    private $productDataProvider;
+    private ProductDataProvider $productDataProvider;
 
     /**
      * @var Action
      */
-    private $action;
+    private Action $action;
 
     /**
      * @var ConsoleOutput
      */
-    private $output;
+    private ConsoleOutput $output;
 
     public function __construct(
         ProductDataProvider $productDataProvider,
@@ -51,8 +51,8 @@ class Product implements IndexerActionInterface, MviewActionInterface
         ConsoleOutput $output
     ) {
         $this->productDataProvider = $productDataProvider;
-        $this->output = $output;
         $this->action = $action;
+        $this->output = $output;
     }
 
     /**

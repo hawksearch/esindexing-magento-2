@@ -31,7 +31,7 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
 {
     use PublicMethodDeprecationTrait;
 
-    private $deprecatedMethods = [
+    private array $deprecatedMethods = [
         'getAttributeHandler' => [
             'since' => '0.7.0',
             'replacement' => __CLASS__ . '::getFieldHandler()',
@@ -42,37 +42,37 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
     /**
      * @var EntityRebuildInterface
      */
-    private $rebuilder;
+    private EntityRebuildInterface $rebuilder;
 
     /**
      * @var ItemsDataProviderInterface
      */
-    private $itemsDataProvider;
-
-    /**
-     * @var string
-     */
-    private $typeName;
+    private ItemsDataProviderInterface $itemsDataProvider;
 
     /**
      * @var FieldHandlerInterface<DataObject>
      */
-    private $fieldHandler;
+    private FieldHandlerInterface $fieldHandler;
 
     /**
      * @var ItemsIndexerInterface
      */
-    private $itemsIndexer;
+    private ItemsIndexerInterface $itemsIndexer;
 
     /**
      * @var AbstractConfigHelper
      */
-    private $configHelper;
+    private AbstractConfigHelper $configHelper;
+
+    /**
+     * @var string
+     */
+    private string $typeName;
 
     /**
      * @var FieldNameProviderInterface
      */
-    private $fieldNameProvider;
+    private FieldNameProviderInterface $fieldNameProvider;
 
     /**
      * @param EntityRebuildInterface $rebuilder
@@ -100,7 +100,8 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
          * @phpstan-ignore-next-line
          */
         FieldHandlerInterface $attributeHandler = null
-    ) {
+    )
+    {
         $this->rebuilder = $rebuilder;
         $this->itemsDataProvider = $itemsDataProvider;
         $this->fieldHandler = $fieldHandler;
@@ -128,8 +129,9 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
         }
         $this->itemsIndexer = $itemsIndexer;
         $this->configHelper = $configHelper;
-        $this->typeName = $typeName;
-        $this->fieldNameProvider = $fieldNameProvider ?: ObjectManager::getInstance()->get(FieldNameProviderInterface::class);
+        /** @todo Avoid setting empty string. Throw InvalidArgumentException */
+        $this->typeName = $typeName ?? '';
+        $this->fieldNameProvider = $fieldNameProvider ?? ObjectManager::getInstance()->get(FieldNameProviderInterface::class);
     }
 
     /**
@@ -160,7 +162,7 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
     /**
      * @inheritDoc
      */
-    public function getRebuilder() : EntityRebuildInterface
+    public function getRebuilder(): EntityRebuildInterface
     {
         return $this->rebuilder;
     }
@@ -168,7 +170,7 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
     /**
      * @inheritDoc
      */
-    public function getItemsDataProvider() : ItemsDataProviderInterface
+    public function getItemsDataProvider(): ItemsDataProviderInterface
     {
         return $this->itemsDataProvider;
     }
@@ -187,7 +189,7 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
      * @see self::getFieldHandler()
      * @phpstan-ignore-next-line
      */
-    public function getAttributeHandler() : FieldHandlerInterface
+    public function getAttributeHandler(): FieldHandlerInterface
     {
         $this->triggerPublicMethodDeprecationMessage(__FUNCTION__);
         return $this->getFieldHandler();
@@ -196,7 +198,7 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
     /**
      * @return FieldHandlerInterface<DataObject>
      */
-    public function getFieldHandler() : FieldHandlerInterface
+    public function getFieldHandler(): FieldHandlerInterface
     {
         return $this->fieldHandler;
     }

@@ -28,17 +28,17 @@ class ReviewRatingSummary implements CustomJoinInterface
     /**
      * @var SummaryFactory
      */
-    private $sumResourceFactory;
+    private SummaryFactory $sumResourceFactory;
 
     /**
      * @var StoreManagerInterface
      */
-    private $storeManager;
+    private StoreManagerInterface $storeManager;
 
     /**
      * @var ProductMetadataInterface
      */
-    private $productMetadata;
+    private ProductMetadataInterface $productMetadata;
 
     public function __construct(
         SummaryFactory $sumResourceFactory,

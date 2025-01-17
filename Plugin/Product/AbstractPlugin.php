@@ -23,11 +23,12 @@ abstract class AbstractPlugin
     /**
      * @var IndexerInterface
      */
-    protected $productIndexer;
+    private IndexerInterface $productIndexer;
 
     public function __construct(
         IndexerRegistry $indexerRegistry
-    ) {
+    )
+    {
         $this->productIndexer = $indexerRegistry->get(ProductIndexer::INDEXER_ID);
     }
 

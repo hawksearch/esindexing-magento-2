@@ -27,23 +27,24 @@ class VueAdditionalParametersProcessor implements LayoutConfigProcessorInterface
     /**
      * @var Registry
      */
-    private $registry;
+    private Registry $registry;
 
     /**
      * @var RequestInterface
      */
-    private $request;
+    private RequestInterface $request;
 
     /**
      * @var UrlFinderInterface
      */
-    private $urlFinder;
+    private UrlFinderInterface $urlFinder;
 
     public function __construct(
         Registry $registry,
         RequestInterface $request,
         UrlFinderInterface $urlFinder
-    ) {
+    )
+    {
         $this->registry = $registry;
         $this->request = $request;
         $this->urlFinder = $urlFinder;
@@ -103,6 +104,7 @@ class VueAdditionalParametersProcessor implements LayoutConfigProcessorInterface
 
     /**
      * Check if current page is a category page an return category
+     *
      * @return Category|null
      */
     protected function getCategoryPage()

@@ -24,11 +24,12 @@ class ImportPlugin
     /**
      * @var IndexerInterface
      */
-    private $productIndexer;
+    private IndexerInterface $productIndexer;
 
     public function __construct(
         IndexerRegistry $indexerRegistry
-    ) {
+    )
+    {
         $this->productIndexer = $indexerRegistry->get(ProductIndexer::INDEXER_ID);
     }
 

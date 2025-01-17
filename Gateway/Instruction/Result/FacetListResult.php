@@ -17,8 +17,8 @@ namespace HawkSearch\EsIndexing\Gateway\Instruction\Result;
 use HawkSearch\Connector\Gateway\Helper\HttpResponseReader;
 use HawkSearch\Connector\Gateway\Instruction\ResultInterface;
 use HawkSearch\Connector\Helper\DataObjectHelper as HawkSearchDataObjectHelper;
-use HawkSearch\EsIndexing\Api\Data\FacetInterfaceFactory;
 use HawkSearch\EsIndexing\Api\Data\FacetInterface;
+use HawkSearch\EsIndexing\Api\Data\FacetInterfaceFactory;
 use Magento\Framework\Api\DataObjectHelper;
 
 /**
@@ -27,29 +27,29 @@ use Magento\Framework\Api\DataObjectHelper;
 class FacetListResult implements ResultInterface
 {
     /**
-     * @var HttpResult
-     */
-    private $result;
-
-    /**
      * @var FacetInterfaceFactory
      */
-    private $facetFactory;
+    private FacetInterfaceFactory $facetFactory;
 
     /**
      * @var DataObjectHelper
      */
-    private $dataObjectHelper;
+    private DataObjectHelper $dataObjectHelper;
 
     /**
      * @var HawkSearchDataObjectHelper
      */
-    private $hawksearchDataObjectHelper;
+    private HawkSearchDataObjectHelper $hawksearchDataObjectHelper;
 
     /**
      * @var HttpResponseReader
      */
-    private $httpResponseReader;
+    private HttpResponseReader $httpResponseReader;
+
+    /**
+     * @var HttpResult
+     */
+    private array $result;
 
     /**
      * @param FacetInterfaceFactory $facetFactory
@@ -65,11 +65,11 @@ class FacetListResult implements ResultInterface
         HttpResponseReader $httpResponseReader,
         array $result = []
     ) {
-        $this->result = $result;
         $this->facetFactory = $facetFactory;
         $this->dataObjectHelper = $dataObjectHelper;
         $this->hawksearchDataObjectHelper = $hawksearchDataObjectHelper;
         $this->httpResponseReader = $httpResponseReader;
+        $this->result = $result;
     }
 
     /**

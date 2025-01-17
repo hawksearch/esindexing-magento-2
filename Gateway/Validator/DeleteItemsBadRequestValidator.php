@@ -27,13 +27,13 @@ class DeleteItemsBadRequestValidator extends AbstractValidator
     /**
      * @var HttpResponseReader
      */
-    private $httpResponseReader;
+    private HttpResponseReader $httpResponseReader;
 
     /**
      * @var SubjectReader
      */
-    private $subjectReader;
-    
+    private SubjectReader $subjectReader;
+
     public function __construct(
         ResultInterfaceFactory $resultFactory,
         HttpResponseReader $httpResponseReader,

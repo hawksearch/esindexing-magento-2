@@ -25,12 +25,12 @@ class CustomJoinProcessor implements CollectionProcessorInterface
     /**
      * @var CustomJoinInterface[]
      */
-    private $joins;
+    private array $joins;
 
     /**
      * @var array
      */
-    private $appliedJoins = [];
+    private array $appliedJoins = [];
 
     /**
      * @param CustomJoinInterface[] $customJoins

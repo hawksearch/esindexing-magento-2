@@ -26,11 +26,12 @@ class LandingPageItemsIndexer implements ItemsIndexerInterface
     /**
      * @var LandingPageManagementInterface
      */
-    private $landingPageManagement;
+    private LandingPageManagementInterface $landingPageManagement;
 
     public function __construct(
         LandingPageManagementInterface $landingPageManagement
-    ) {
+    )
+    {
         $this->landingPageManagement = $landingPageManagement;
     }
 

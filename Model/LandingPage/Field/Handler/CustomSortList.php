@@ -28,11 +28,8 @@ class CustomSortList implements FieldHandlerInterface
     /**
      * @var ProductEntityTypeFactory
      */
-    private $productEntityTypeFactory;
+    private ProductEntityTypeFactory $productEntityTypeFactory;
 
-    /**
-     * @param ProductEntityTypeFactory $productEntityTypeFactory
-     */
     public function __construct(ProductEntityTypeFactory $productEntityTypeFactory)
     {
         $this->productEntityTypeFactory = $productEntityTypeFactory;
@@ -49,7 +46,9 @@ class CustomSortList implements FieldHandlerInterface
         /** @var ProductEntityType $productEntityType */
         $productEntityType = $this->productEntityTypeFactory->create();
         $productIds = array_map(
-            function ($v) use ($productEntityType) {return $productEntityType->getUniqueId((string)$v);},
+            function ($v) use ($productEntityType) {
+                return $productEntityType->getUniqueId((string)$v);
+            },
             $productIds
         );
 

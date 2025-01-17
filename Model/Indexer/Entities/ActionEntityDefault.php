@@ -26,12 +26,12 @@ class ActionEntityDefault extends ActionAbstract
     /**
      * @var StoreManagerInterface
      */
-    private $storeManager;
+    private StoreManagerInterface $storeManager;
 
     /**
      * @var IndexingConfig
      */
-    private $indexingConfig;
+    private IndexingConfig $indexingConfig;
 
     public function __construct(
         ManagerInterface $eventManager,

@@ -22,11 +22,12 @@ class VueConnectionConfigProcessor implements LayoutConfigProcessorInterface
     /**
      * @var ApiSettings
      */
-    private $apiSettings;
+    private ApiSettings $apiSettings;
 
     public function __construct(
         ApiSettings $apiSettings
-    ) {
+    )
+    {
         $this->apiSettings = $apiSettings;
     }
 

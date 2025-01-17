@@ -26,16 +26,17 @@ class CategoryPlugin
     /**
      * @var IndexerInterface
      */
-    private $categoryIndexer;
+    private IndexerInterface $categoryIndexer;
 
     /**
      * @var IndexerInterface
      */
-    private $productIndexer;
+    private IndexerInterface $productIndexer;
 
     public function __construct(
         IndexerRegistry $indexerRegistry
-    ) {
+    )
+    {
         $this->categoryIndexer = $indexerRegistry->get(CategoryIndexer::INDEXER_ID);
         $this->productIndexer = $indexerRegistry->get(ProductIndexer::INDEXER_ID);
     }

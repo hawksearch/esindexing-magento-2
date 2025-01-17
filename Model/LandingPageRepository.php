@@ -14,36 +14,38 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model;
 
+use HawkSearch\EsIndexing\Api\LandingPageRepositoryInterface;
 use Laminas\Http\Request as HttpRequest;
 use Magento\Framework\App\CacheInterface as Cache;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
-class LandingPageRepository implements \HawkSearch\EsIndexing\Api\LandingPageRepositoryInterface
+class LandingPageRepository implements LandingPageRepositoryInterface
 {
     private const CACHE_KEY = 'hawksearch_landing_pages';
 
     /**
      * @var StoreManagerInterface
      */
-    private $storeManager;
+    private StoreManagerInterface $storeManager;
 
     /**
      * @var Cache
      */
-    private $cache;
+    private Cache $cache;
 
     /**
      * @var SerializerInterface
      */
-    private $serializer;
+    private SerializerInterface $serializer;
 
     public function __construct(
         StoreManagerInterface $storeManager,
         Cache $cache,
         SerializerInterface $serializer
-    ) {
+    )
+    {
         $this->storeManager = $storeManager;
         $this->cache = $cache;
         $this->serializer = $serializer;

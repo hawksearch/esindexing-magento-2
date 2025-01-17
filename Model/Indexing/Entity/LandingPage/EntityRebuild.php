@@ -48,42 +48,42 @@ class EntityRebuild extends AbstractEntityRebuild
     /**
      * @var LandingPageInterface[]
      */
-    private $landingPages;
+    private array $landingPages;
 
     /**
      * @var array
      */
-    private $customFieldMap;
+    private array $customFieldMap;
 
     /**
      * @var array
      */
-    private $customUrlMap;
+    private array $customUrlMap;
 
     /**
      * @var Cache
      */
-    private $cache;
+    private Cache $cache;
 
     /**
      * @var SerializerInterface
      */
-    private $serializer;
+    private SerializerInterface $serializer;
 
     /**
      * @var LandingPageManagementInterface
      */
-    private $landingPageManagement;
+    private LandingPageManagementInterface $landingPageManagement;
 
     /**
      * @var LandingPageInterfaceFactory
      */
-    private $landingPageFactory;
+    private LandingPageInterfaceFactory $landingPageFactory;
 
     /**
      * @var CustomUrl
      */
-    private $customUrlHandler;
+    private CustomUrl $customUrlHandler;
 
     /**
      * @param EntityTypePoolInterface<string, EntityTypeInterface> $entityTypePool
@@ -110,7 +110,8 @@ class EntityRebuild extends AbstractEntityRebuild
         LandingPageManagementInterface $landingPageManagement,
         LandingPageInterfaceFactory $landingPageFactory,
         CustomUrl $customUrlHandler
-    ) {
+    )
+    {
         parent::__construct(
             $entityTypePool,
             $eventManager,
@@ -176,7 +177,7 @@ class EntityRebuild extends AbstractEntityRebuild
      */
     protected function getLandingPages()
     {
-        if ($this->landingPages === null) {
+        if (!isset($this->landingPages)) {
             $this->landingPages = $this->landingPageManagement->getLandingPages();
         }
 
@@ -200,9 +201,9 @@ class EntityRebuild extends AbstractEntityRebuild
             $landingPages = $this->landingPageManagement->getLandingPages();
             $this->cache->save(
                 $this->serializer->serialize(array_map(
-                    function($page){
-                            return $page->__toArray();
-                        },
+                    function ($page) {
+                        return $page->__toArray();
+                    },
                     $landingPages
                 )),
                 $cacheKey,
@@ -219,7 +220,7 @@ class EntityRebuild extends AbstractEntityRebuild
      */
     protected function getCustomFieldMap()
     {
-        if ($this->customFieldMap === null) {
+        if (!isset($this->customFieldMap)) {
             $map = [];
             /** @var LandingPageInterface $item */
             foreach ($this->getLandingPages() as $item) {
@@ -239,7 +240,7 @@ class EntityRebuild extends AbstractEntityRebuild
      */
     protected function getCustomUrlMap()
     {
-        if ($this->customUrlMap === null) {
+        if (!isset($this->customUrlMap)) {
             $map = [];
             /** @var LandingPageInterface $item */
             foreach ($this->getLandingPages() as $item) {
@@ -336,7 +337,7 @@ class EntityRebuild extends AbstractEntityRebuild
 
             /** @var LandingPageInterface $current */
             $current = array_shift($existingPages);
-            if ($current !== null){
+            if ($current !== null) {
                 $convertedItem->setPageId($current->getPageId());
                 $resultItemsToUpdate[] = $convertedItem;
             }

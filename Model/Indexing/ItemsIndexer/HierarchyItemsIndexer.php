@@ -25,11 +25,12 @@ class HierarchyItemsIndexer implements ItemsIndexerInterface
     /**
      * @var HierarchyManagementInterface
      */
-    private $hierarchyManagement;
+    private HierarchyManagementInterface $hierarchyManagement;
 
     public function __construct(
         HierarchyManagementInterface $hierarchyManagement
-    ) {
+    )
+    {
         $this->hierarchyManagement = $hierarchyManagement;
     }
 

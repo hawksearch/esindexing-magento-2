@@ -28,14 +28,14 @@ use Magento\Framework\ObjectManager\TMapFactory;
 class EntityTypePool implements EntityTypePoolInterface
 {
     /**
-     * @var TMap<TKey, TValue>
-     */
-    private $types;
-
-    /**
      * @var TMapFactory
      */
     private TMapFactory $tmapFactory;
+
+    /**
+     * @var TMap<TKey, TValue>
+     */
+    private TMap $types;
 
     /**
      * @param TMapFactory $tmapFactory
@@ -44,7 +44,8 @@ class EntityTypePool implements EntityTypePoolInterface
     public function __construct(
         TMapFactory $tmapFactory,
         array $types = []
-    ) {
+    )
+    {
         $this->tmapFactory = $tmapFactory;
         $this->types = $tmapFactory->createSharedObjectsMap(
             [

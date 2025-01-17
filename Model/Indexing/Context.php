@@ -19,12 +19,12 @@ class Context implements ContextInterface
     /**
      * @var array
      */
-    private $indexNameCache = [];
+    private array $indexNameCache = [];
 
     /**
      * @var bool
      */
-    private $isFullReindex;
+    private bool $isFullReindex = false;
 
     /**
      * @inheritDoc

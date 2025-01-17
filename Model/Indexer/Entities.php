@@ -27,7 +27,7 @@ class Entities implements ActionInterface
     /**
      * @var Action
      */
-    private $action;
+    private Action $action;
 
     public function __construct(
         Action $action

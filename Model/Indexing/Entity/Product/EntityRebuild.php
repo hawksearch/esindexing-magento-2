@@ -42,22 +42,22 @@ class EntityRebuild extends AbstractEntityRebuild
     /**
      * @var Visibility
      */
-    private $visibility;
+    private Visibility $visibility;
 
     /**
      * @var Configuration
      */
-    private $catalogInventoryConfiguration;
+    private Configuration $catalogInventoryConfiguration;
 
     /**
      * @var StockRegistryInterface
      */
-    private $stockRegistry;
+    private StockRegistryInterface $stockRegistry;
 
     /**
      * @var Product
      */
-    private $productDataProvider;
+    private Product $productDataProvider;
 
     /**
      * @param EntityTypePoolInterface<string, EntityTypeInterface> $entityTypePool
