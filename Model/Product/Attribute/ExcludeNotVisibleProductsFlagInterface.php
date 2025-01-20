@@ -15,6 +15,8 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Product\Attribute;
 
 /**
+ * Interface to flag whether not visible products are excluded
+ *
  * @api
  * @since 0.8.0
  */

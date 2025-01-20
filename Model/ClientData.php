@@ -19,9 +19,6 @@ use HawkSearch\EsIndexing\Api\Data\CoordinateInterface;
 use HawkSearch\EsIndexing\Api\Data\CoordinateInterfaceFactory;
 use Magento\Framework\Api\AbstractSimpleObject;
 
-/**
- * ClientData Interface used in SearchRequest
- */
 class ClientData extends AbstractSimpleObject implements ClientDataInterface
 {
     /**

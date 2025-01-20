@@ -30,17 +30,11 @@ class ApiSettings extends ConnectorApiSettings
     const INDEXING_API_URL = 'indexing_api_url';
     const SEARCH_API_URL = 'search_api_url';
     /**#@-*/
-
-    /**
-     * ApiSettings constructor.
-     * @param ScopeConfigInterface $scopeConfig
-     * @param null $configRootPath
-     * @param null $configGroup
-     */
+    
     public function __construct(
         ScopeConfigInterface $scopeConfig,
-        $configRootPath = null,
-        $configGroup = null
+        ?string $configRootPath = null,
+        ?string $configGroup = null
     )
     {
         parent::__construct($scopeConfig, $configRootPath, $configGroup);
