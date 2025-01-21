@@ -14,30 +14,10 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Plugin\Store;
 
-use HawkSearch\EsIndexing\Model\Config\Indexing as IndexingConfig;
-use Magento\Framework\Indexer\IndexerRegistry;
 use Magento\Framework\Model\AbstractModel;
 
 abstract class AbstractPlugin
 {
-    /**
-     * @var IndexerRegistry
-     */
-    protected $indexerRegistry;
-
-    /**
-     * @var IndexingConfig
-     */
-    protected $indexingConfig;
-
-    public function __construct(
-        IndexerRegistry $indexerRegistry,
-        IndexingConfig $indexingConfig
-    ) {
-        $this->indexerRegistry = $indexerRegistry;
-        $this->indexingConfig = $indexingConfig;
-    }
-
     /**
      * Validate changes for invalidating indexer
      *
