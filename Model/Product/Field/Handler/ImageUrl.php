@@ -17,7 +17,6 @@ namespace HawkSearch\EsIndexing\Model\Product\Field\Handler;
 use HawkSearch\Connector\Helper\Url as UrlHelper;
 use HawkSearch\EsIndexing\Model\Config\Advanced as AdvancedConfig;
 use HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface;
-use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Helper\Image as ImageHelper;
 use Magento\Catalog\Model\Product as ProductModel;
 use Magento\Framework\DataObject;
@@ -87,7 +86,7 @@ class ImageUrl implements FieldHandlerInterface
      * @return string
      * @throws NoSuchEntityException
      */
-    private function getImageIdUrl(ProductInterface $product, string $imageId)
+    private function getImageIdUrl(ProductModel $product, string $imageId)
     {
         $imageUrl = $this->imageHelper->init($product, $imageId)->getUrl();
         $uri = $this->urlHelper->getUriInstance($imageUrl);

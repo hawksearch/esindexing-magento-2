@@ -16,7 +16,6 @@ namespace HawkSearch\EsIndexing\Model\Product\Field\Handler;
 
 use HawkSearch\EsIndexing\Model\Indexing\FieldHandlerInterface;
 use HawkSearch\EsIndexing\Model\Product\Attributes as ProductAttributesProvider;
-use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product as ProductModel;
 use Magento\Catalog\Model\ResourceModel\Eav\Attribute as AttributeResource;
 use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
@@ -76,7 +75,7 @@ class DefaultHandler implements FieldHandlerInterface
      * @param AttributeResource $attribute
      * @return mixed
      */
-    private function getProductAttributeText(ProductInterface $product, AttributeResource $attribute)
+    private function getProductAttributeText(ProductModel $product, AttributeResource $attribute)
     {
         $value = $product->getData($attribute->getAttributeCode());
         $valueText = null;

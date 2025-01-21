@@ -22,7 +22,6 @@ use HawkSearch\EsIndexing\Model\Indexing\ContextInterface;
 use HawkSearch\EsIndexing\Model\Indexing\EntityTypeInterface;
 use HawkSearch\EsIndexing\Model\Indexing\EntityTypePoolInterface;
 use HawkSearch\EsIndexing\Model\Product;
-use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product as ProductModel;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Catalog\Model\Product\Visibility;
@@ -103,7 +102,7 @@ class EntityRebuild extends AbstractEntityRebuild
      * @param ItemType $product
      * @return bool
      */
-    private function isProductInStock(ProductInterface $product)
+    private function isProductInStock(ProductModel $product)
     {
         $stockItem = $this->stockRegistry->getStockItem($product->getId());
 
