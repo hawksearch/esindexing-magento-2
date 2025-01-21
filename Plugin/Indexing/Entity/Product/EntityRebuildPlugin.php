@@ -15,7 +15,6 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Plugin\Indexing\Entity\Product;
 
 use Magento\CatalogInventory\Model\StockRegistryStorage;
-use Magento\Framework\App\ObjectManager;
 
 class EntityRebuildPlugin
 {
@@ -24,15 +23,11 @@ class EntityRebuildPlugin
      */
     private StockRegistryStorage $stockRegistryStorage;
 
-    /**
-     * @param StockRegistryStorage|null $stockRegistryStorage
-     */
     public function __construct(
-        StockRegistryStorage $stockRegistryStorage = null
+        StockRegistryStorage $stockRegistryStorage
     )
     {
-        $this->stockRegistryStorage = $stockRegistryStorage ?: ObjectManager::getInstance()
-            ->get(StockRegistryStorage::class);
+        $this->stockRegistryStorage = $stockRegistryStorage;
     }
 
     /**
