@@ -93,7 +93,20 @@ The following classes in `\HawkSearch\EsIndexing` namespace are defined as `@api
 - Model\Product\ProductType\DefaultType
 - Model\Product\ProductTypePool
 
+### DEPRECATIONS
 
+- Deprecate usage of protected property `Block\Adminhtml\System\Config\Product\CustomAttributes::columnRendererCache`. Visibility changed to private.
+- Deprecate usage of protected property `Model\Indexer\Entities\ActionAbstract::eventManager`. Visibility changed to private. Set via constructor injection.
+- Deprecate usage of protected property `Model\Indexer\Entities\ActionAbstract::messageManager`. Visibility changed to private. Set via constructor injection.
+- Deprecate usage of protected property `Model\Indexer\Entities\ActionAbstract::publisher`. Visibility changed to private. Set via constructor injection.
+- Deprecate usage of protected property `Model\Indexer\Entities\ActionAbstract::entityScheduler`. Visibility changed to private. Set via constructor injection.
+- Deprecate usage of protected property `Model\Indexer\Entities\SchedulerComposite::schedulers`. Visibility changed to private. Set via constructor injection.
+- Deprecate usage of protected property `Model\Indexing\AbstractEntityRebuild::entityTypePool`. Visibility changed to private. Set via constructor injection.
+- Deprecate usage of protected property `Model\Indexing\AbstractEntityRebuild::eventManager`. Visibility changed to private. Set via constructor injection.
+- Deprecate usage of protected property `Model\Indexing\AbstractEntityRebuild::hawkLogger`. Visibility changed to private. Set via `$loggerFactory` constructor injection.
+- Deprecate usage of protected property `Model\Indexing\AbstractEntityRebuild::storeManager`. Visibility changed to private. Set via constructor injection.
+- Deprecate usage of protected property `Model\Indexing\AbstractEntityRebuild::indexingContext`. Visibility changed to private. Set via constructor injection.
+- Deprecate usage of protected property `Model\Indexing\FieldHandler\Composite::handlers`. Visibility changed to private. Set via constructor injection.
 
 ## [0.7.4] - 2024-11-19
 ### FIXES

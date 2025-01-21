@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Block\Adminhtml\System\Config\Product;
 
+use HawkSearch\Connector\Compatibility\PublicPropertyDeprecationTrait;
 use HawkSearch\EsIndexing\Block\Adminhtml\Form\Field\Select;
 use HawkSearch\EsIndexing\Model\Config\Backend\Serialized\Processor\ValueProcessorInterface;
 use HawkSearch\EsIndexing\Model\Config\Source\HawksearchFields;
@@ -26,10 +27,20 @@ use Magento\Framework\Exception\LocalizedException;
 
 class CustomAttributes extends AbstractFieldArray
 {
+    use PublicPropertyDeprecationTrait;
+
+    private array $deprecatedPublicProperties = [
+        'columnRendererCache' => [
+            'since' => '0.8.0',
+            'description' => 'Visibility changed to private.'
+        ]
+    ];
+
     /**
      * @var array
+     * @private 0.8.0 Visibility changed to private. Set via constructor injection.
      */
-    protected $columnRendererCache = [];
+    private array $columnRendererCache = [];
 
     /**
      * @var HawksearchFields
@@ -61,6 +72,7 @@ class CustomAttributes extends AbstractFieldArray
 
     /**
      * Prepare rendering the new field by adding all the needed columns
+     *
      * @throws LocalizedException
      */
     protected function _prepareToRender()
@@ -70,7 +82,7 @@ class CustomAttributes extends AbstractFieldArray
             [
                 'label' => __('Hawk Field Name'),
                 'class' => 'required-entry',
-                'options' => function() {
+                'options' => function () {
                     return $this->hawksearchFields->toOptionArray();
                 },
             ]
@@ -80,7 +92,7 @@ class CustomAttributes extends AbstractFieldArray
             ValueProcessorInterface::COLUMN_ATTRIBUTE,
             [
                 'label' => __('Product Attribute'),
-                'options' => function() {
+                'options' => function () {
                     return $this->productAttributes->toOptionArray();
                 },
             ]

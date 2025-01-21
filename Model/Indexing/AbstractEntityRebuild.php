@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Indexing;
 
 use HawkSearch\Connector\Compatibility\PublicMethodDeprecationTrait;
+use HawkSearch\Connector\Compatibility\PublicPropertyDeprecationTrait;
 use HawkSearch\Connector\Logger\LoggerFactoryInterface;
 use HawkSearch\EsIndexing\Helper\ObjectHelper;
 use HawkSearch\EsIndexing\Model\Indexing\Field\NameProviderInterface as FieldNameProviderInterface;
@@ -35,8 +36,9 @@ use Psr\Log\LoggerInterface;
 abstract class AbstractEntityRebuild implements EntityRebuildInterface
 {
     use PublicMethodDeprecationTrait;
+    use PublicPropertyDeprecationTrait;
 
-    private $deprecatedMethods = [
+    private array $deprecatedMethods = [
         'getAttributeValue' => [
             'since' => '0.7.0',
             'replacement' => __CLASS__ . '::getFieldValue()',
@@ -47,6 +49,29 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
             'replacement' => FieldNameProviderInterface::class,
             'description' => "The method will be removed. Using of 'code' and 'value' options is deprecated. Use " . FieldHandlerInterface::class . " to migrate fields with values."
         ]
+    ];
+
+    private array $deprecatedPublicProperties = [
+        'entityTypePool' => [
+            'since' => '0.8.0',
+            'description' => 'Visibility changed to private. Set via constructor injection.'
+        ],
+        'eventManager' => [
+            'since' => '0.8.0',
+            'description' => 'Visibility changed to private. Set via constructor injection.'
+        ],
+        'hawkLogger' => [
+            'since' => '0.8.0',
+            'description' => 'Visibility changed to private. Set via $loggerFactory constructor injection.'
+        ],
+        'storeManager' => [
+            'since' => '0.8.0',
+            'description' => 'Visibility changed to private. Set via constructor injection.'
+        ],
+        'indexingContext' => [
+            'since' => '0.8.0',
+            'description' => 'Visibility changed to private. Set via constructor injection.'
+        ],
     ];
 
     /**
@@ -66,28 +91,33 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
 
     /**
      * @var EntityTypePoolInterface<string, EntityTypeInterface>
+     * @deprecated 0.8.0 Visibility changed to private. Set via constructor injection.
      */
-    protected $entityTypePool;
+    private EntityTypePoolInterface $entityTypePool;
 
     /**
      * @var EventManagerInterface
+     * @deprecated 0.8.0 Visibility changed to private. Set via constructor injection.
      */
-    protected $eventManager;
+    private EventManagerInterface $eventManager;
 
     /**
      * @var LoggerInterface
+     * @deprecated 0.8.0 Visibility changed to private. Set via constructor injection.
      */
-    protected $hawkLogger;
+    private LoggerInterface $hawkLogger;
 
     /**
      * @var StoreManagerInterface
+     * @deprecated 0.8.0 Visibility changed to private. Set via constructor injection.
      */
-    protected $storeManager;
+    private StoreManagerInterface $storeManager;
 
     /**
      * @var ContextInterface
+     * @deprecated 0.8.0 Visibility changed to private. Set via constructor injection.
      */
-    protected $indexingContext;
+    private ContextInterface $indexingContext;
 
     /**
      * @var ObjectHelper

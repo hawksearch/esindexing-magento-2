@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexer\Entities;
 
+use HawkSearch\Connector\Compatibility\PublicPropertyDeprecationTrait;
 use Magento\Framework\ObjectManager\TMap;
 use Magento\Framework\ObjectManager\TMapFactory;
 use Magento\Store\Api\Data\StoreInterface;
@@ -27,10 +28,20 @@ use Magento\Store\Api\Data\StoreInterface;
  */
 class SchedulerComposite implements SchedulerInterface
 {
+    use PublicPropertyDeprecationTrait;
+
+    private array $deprecatedPublicProperties = [
+        'schedulers' => [
+            'since' => '0.8.0',
+            'description' => 'Visibility changed to private. Set via constructor injection.'
+        ],
+    ];
+
     /**
      * @var TMap<TKey, TValue>
+     * @private 0.8.0 Visibility changed to private. Set via constructor injection.
      */
-    protected $schedulers;
+    private TMap $schedulers;
 
     /**
      * @param TMapFactory $tmapFactory
@@ -39,7 +50,8 @@ class SchedulerComposite implements SchedulerInterface
     public function __construct(
         TMapFactory $tmapFactory,
         array $schedulers = []
-    ) {
+    )
+    {
         $this->schedulers = $tmapFactory->create(
             [
                 'array' => $schedulers,

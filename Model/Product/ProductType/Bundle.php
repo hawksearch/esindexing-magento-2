@@ -14,16 +14,26 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Product\ProductType;
 
+use HawkSearch\Connector\Compatibility\PublicPropertyDeprecationTrait;
 use Magento\Bundle\Model\Product\Price;
 use Magento\Catalog\Api\Data\ProductInterface;
 
 class Bundle extends CompositeType
 {
+    use PublicPropertyDeprecationTrait;
+
+    private array $deprecatedPublicProperties = [
+        'keySelectionsCollection' => [
+            'since' => '0.7.0',
+            'description' => 'Property will be removed.'
+        ],
+    ];
+
     /**
      * @var string
      * @deprecated since 0.7.0 will be removed
      */
-    protected string $keySelectionsCollection = '_cache_instance_selections_collection_hawksearch';
+    private string $keySelectionsCollection = '_cache_instance_selections_collection_hawksearch';
 
     /**
      * @inheritDoc
