@@ -38,6 +38,7 @@ class CustomAttributes extends AbstractFieldArray
 
     /**
      * @private 0.8.0 Visibility changed to private. Set via constructor injection.
+     * @var array<string, mixed>
      */
     private array $columnRendererCache = [];
     private HawksearchFields $hawksearchFields;
@@ -62,12 +63,14 @@ class CustomAttributes extends AbstractFieldArray
     }
 
     /**
-     * Prepare rendering the new field by adding all the needed columns
-     *
-     * @throws LocalizedException
+     * Define columns
      */
-    protected function _prepareToRender()
+    protected function _construct(): void
     {
+        $this->setHtmlId('_' . uniqid());
+        $this->_addAfter = false;
+        $this->_addButtonLabel = __('Add New Mapping');
+
         $this->addColumn(
             ValueProcessorInterface::COLUMN_FIELD,
             [
@@ -89,9 +92,7 @@ class CustomAttributes extends AbstractFieldArray
             ]
         );
 
-        $this->_addAfter = false;
-        $this->_addButtonLabel = __('Add New Mapping');
-        $this->setHtmlId('_' . uniqid());
+        parent::_construct();
     }
 
     /**
@@ -118,7 +119,7 @@ class CustomAttributes extends AbstractFieldArray
     }
 
     /**
-     * Prepare existing row data object
+     * Set select options attributes
      *
      * @throws LocalizedException
      */
