@@ -92,9 +92,15 @@ class CustomAttributesTest extends TestCase
         $this->hawksearchFieldsMock = $this->getMockBuilder(HawksearchFields::class)
             ->disableOriginalConstructor()
             ->getMock();
+        $this->hawksearchFieldsMock->expects($this->any())
+            ->method('toOptionArray')
+            ->willReturn(self::OPTIONS_FIELD);
         $this->productAttributesMock = $this->getMockBuilder(ProductAttributes::class)
             ->disableOriginalConstructor()
             ->getMock();
+        $this->productAttributesMock->expects($this->any())
+            ->method('toOptionArray')
+            ->willReturn(self::OPTIONS_ATTRIBUTE);
 
         $this->elementMock = $this->getMockBuilder(Text::class)
             ->addMethods([
@@ -241,28 +247,15 @@ class CustomAttributesTest extends TestCase
         $this->assertEquals($expectedHtml, $this->block->render($this->elementMock));
     }
 
-    private function initBlockMocksForColumnTests(): void
-    {
-        $this->templateBlockMock->expects($this->once())
-            ->method('setTemplate')
-            ->willReturnSelf();
-        $this->templateBlockMock->expects($this->once())
-            ->method('setData')
-            ->willReturnSelf();
-        $this->block->render($this->elementMock);
-    }
-
     public function testColumnsCountAndOrder(): void
     {
-        $this->initBlockMocksForColumnTests();
-
         $columns = $this->block->getColumns();
         $expectedOrder = array_keys($this->provideColumndsData());
         $actualOrder = array_keys($columns);
 
         $this->assertSameSize(
             $this->provideColumndsData(),
-            $this->block->getColumns(),
+            $columns,
             'Test columns count'
         );
         $this->assertEquals(
@@ -276,16 +269,8 @@ class CustomAttributesTest extends TestCase
      * @depends      testColumnsCountAndOrder
      * @dataProvider provideColumndsData
      */
-    public function testColumnsDataIsValid(string $columnName, bool $required, string $label, array $options): void
+    public function testColumnsInitialised(string $columnName, bool $required, string $label, array $options): void
     {
-        $this->initBlockMocksForColumnTests();
-        $this->hawksearchFieldsMock->expects($this->any())
-            ->method('toOptionArray')
-            ->willReturn(self::OPTIONS_FIELD);
-        $this->productAttributesMock->expects($this->any())
-            ->method('toOptionArray')
-            ->willReturn(self::OPTIONS_ATTRIBUTE);
-
         $columns = $this->block->getColumns();
 
         // test required
@@ -302,12 +287,9 @@ class CustomAttributesTest extends TestCase
         // test options
         if (!empty($options)) {
             $this->assertArrayHasKey('options', $columns[$columnName], 'Test column options');
-            $this->assertIsCallable($columns[$columnName]['options'], 'Test column options');
-            $this->assertEquals($options, $columns[$columnName]['options']());
+            $this->assertIsArray($columns[$columnName]['options'], 'Test column options');
+            $this->assertEquals($options, $columns[$columnName]['options']);
         }
-
-        // test readonly param added
-        $this->assertArrayHasKey('readonly', $columns[$columnName], 'Test `readonly` param added');
     }
 
     public function provideColumndsData(): array
@@ -329,6 +311,100 @@ class CustomAttributesTest extends TestCase
                 'Product Attribute',
                 self::OPTIONS_ATTRIBUTE,
             ]
+        ];
+    }
+
+    public function testAddColumnAdded(): void
+    {
+        $testColumns = [
+            'new_column' => [
+                'label' => 'New Column',
+            ],
+        ];
+
+        $columns = $this->block->getColumns();
+        $this->assertArrayNotHasKey('new_column', $columns);
+
+        $this->block->addColumn('new_column', $testColumns['new_column']);
+        $columns = $this->block->getColumns();
+        $this->assertArrayHasKey('new_column', $columns);
+
+        $newColumn = $columns['new_column'];
+        $this->assertArrayHasKey('readonly', $newColumn, 'Test `readonly` param added');
+        $this->assertArrayHasKey('renderer', $newColumn, 'Test `renderer` param added');
+        $this->assertInstanceOf(FormFieldSelect::class, $newColumn['renderer'], 'Test `renderer`');
+    }
+
+    /**
+     * @depends      testAddColumnAdded
+     * @dataProvider provideColumnOptionsData
+     */
+    public function testAddColumnOptions(string $columnName, array $columnData, array $optionsResult): void
+    {
+        $this->block->addColumn($columnName, $columnData);
+        $columns = $this->block->getColumns();
+        $newColumn = $columns[$columnName];
+
+        $this->assertArrayHasKey('options', $newColumn);
+        $this->assertIsArray($newColumn['options']);
+        $this->assertEquals($newColumn['options'], $optionsResult);
+    }
+
+    public function provideColumnOptionsData(): array
+    {
+        $validOptions = self::OPTIONS_FIELD;
+        return [
+            'no options' => [
+                'test_column',
+                [
+                    'label' => 'New Column'
+                ],
+                []
+            ],
+            'empty options' => [
+                'test_column',
+                [
+                    'label' => 'New Column',
+                    'options' => []
+                ],
+                []
+            ],
+            'array options' => [
+                'test_column',
+                [
+                    'label' => 'New Column',
+                    'options' => $validOptions
+                ],
+                $validOptions
+            ],
+            'wrong type options' => [
+                'test_column',
+                [
+                    'label' => 'New Column',
+                    'options' => 'wrong options type'
+                ],
+                []
+            ],
+            'callable options return array' => [
+                'test_column',
+                [
+                    'label' => 'New Column',
+                    'options' => function () use ($validOptions) {
+                        return $validOptions;
+                    }
+                ],
+                $validOptions
+            ],
+            'callable options return non array' => [
+                'test_column',
+                [
+                    'label' => 'New Column',
+                    'options' => function () {
+                        return 'wrong options type';
+                    }
+                ],
+                []
+            ],
         ];
     }
 

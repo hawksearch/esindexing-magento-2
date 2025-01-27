@@ -105,17 +105,23 @@ class CustomAttributes extends AbstractFieldArray
     public function addColumn($name, $params)
     {
         parent::addColumn($name, $params);
-        if (!isset($this->_columns[$name])) {
-            return;
+
+        $options = $this->_getParam($params, 'options') ?? [];
+
+        if (is_callable($options)) {
+            $options = $options();
+            if (!is_array($options)) {
+                $options = [];
+            }
         }
 
-        $this->_columns[$name]['readonly'] = $this->_getParam($params, 'readonly', false);
-
-        $options = $this->_getParam($params, 'options');
-        if ($options !== null) {
-            $this->_columns[$name]['options'] = $options;
+        if (!is_array($options)) {
+            $options = [];
         }
+
+        $this->_columns[$name]['options'] = $options;
         $this->_columns[$name]['renderer'] = $this->getColumnRenderer($name);
+        $this->_columns[$name]['readonly'] = $this->_getParam($params, 'readonly', false);
     }
 
     /**
@@ -156,11 +162,8 @@ class CustomAttributes extends AbstractFieldArray
 
         $columnData = $this->_columns[$columnName];
         if (!array_key_exists($columnName, $this->columnRendererCache) || !$this->columnRendererCache[$columnName]) {
-            $renderer = $this->resolveSelectFieldRenderer($columnName);
-
-            $renderer = $columnData['renderer'] ?: $renderer ?? false;
-
-            $this->columnRendererCache[$columnName] = $renderer;
+            /** @todo Replace by {@see self::getRenderer} call */
+            $this->columnRendererCache[$columnName] = $columnData['renderer'] ?: $this->resolveSelectFieldRenderer($columnName);
         }
 
         return $this->columnRendererCache[$columnName];
@@ -176,22 +179,22 @@ class CustomAttributes extends AbstractFieldArray
             throw new \Exception('Wrong column name specified.');
         }
 
-        $columnData = $this->_columns[$columnName];
-        if (empty($columnData['options'])) {
-            return null;
-        }
+        return $this->getRenderer($this->_columns[$columnName]['options']);
+    }
 
+    /**
+     * @param list<array<mixed>> $options
+     * @return Select
+     * @throws LocalizedException
+     */
+    private function getRenderer(array $options): Select
+    {
         /** @var Select $renderer */
         $renderer = $this->getLayout()->createBlock(
             Select::class,
             '',
             ['data' => ['is_render_to_js_template' => true]]
         );
-
-        $options = $columnData['options'];
-        if (is_callable($options)) {
-            $options = $options();
-        }
 
         $renderer->setOptions($options);
 
