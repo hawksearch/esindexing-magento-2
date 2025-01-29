@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Block\Adminhtml\System\Config\Product;
 
+use HawkSearch\Connector\Compatibility\PublicMethodDeprecationTrait;
 use HawkSearch\Connector\Compatibility\PublicPropertyDeprecationTrait;
 use HawkSearch\EsIndexing\Block\Adminhtml\Form\Field\Select;
 use HawkSearch\EsIndexing\Model\Config\Backend\Serialized\Processor\ValueProcessorInterface;
@@ -28,12 +29,26 @@ use Magento\Framework\Exception\LocalizedException;
 class CustomAttributes extends AbstractFieldArray
 {
     use PublicPropertyDeprecationTrait;
+    use PublicMethodDeprecationTrait;
 
     private array $deprecatedPublicProperties = [
         'columnRendererCache' => [
             'since' => '0.8.0',
             'description' => 'Visibility changed to private.'
         ]
+    ];
+
+    private array $deprecatedMethods = [
+        'getColumnRenderer' => [
+            'since' => '0.8.0',
+            'replacement' => __CLASS__ . '::addColumn() after plugin',
+            'description' => 'It is not designed to override column renderer this way.'
+        ],
+        'resolveSelectFieldRenderer' => [
+            'since' => '0.8.0',
+            'replacement' => __CLASS__ . '::addColumn() after plugin',
+            'description' => 'It is not designed to override column renderer this way.'
+        ],
     ];
 
     /**
@@ -150,11 +165,12 @@ class CustomAttributes extends AbstractFieldArray
     }
 
     /**
-     * @return void
      * @throws LocalizedException
      * @throws \Exception
+     * @deprecated 0.8.0 It is not designed to override column renderer this way. Use after plugin for addColumn()
+     *     method
      */
-    protected function getColumnRenderer(string $columnName)
+    private function getColumnRenderer(string $columnName): Select
     {
         if (empty($this->_columns[$columnName])) {
             throw new \Exception('Wrong column name specified.');
@@ -170,10 +186,12 @@ class CustomAttributes extends AbstractFieldArray
     }
 
     /**
-     * @return Select|null
      * @throws \Exception
+     * @deprecated 0.8.0 It is not designed to override column renderer this way. Use after plugin for addColumn()
+     *     method.
+     * @see self::getRenderer()
      */
-    protected function resolveSelectFieldRenderer(string $columnName)
+    private function resolveSelectFieldRenderer(string $columnName): Select
     {
         if (empty($this->_columns[$columnName])) {
             throw new \Exception('Wrong column name specified.');

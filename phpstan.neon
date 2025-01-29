@@ -18,6 +18,7 @@ parameters:
         - Registry
         - Service
         - Setup
+        - Test
         - Ui
         - view/adminhtml/templates
         - view/frontend/templates
@@ -33,8 +34,14 @@ parameters:
         # ###################################
     ignoreErrors:
         -
-            # Private property defined in class and used in trait \HawkSearch\Connector\Compatibility\PublicMethodDeprecationTrait
-            message: '#Property [a-zA-Z0-9\\_]+::\$deprecatedMethods is never read, only written.#'
+            # Private properties defined in class and used in traits of \HawkSearch\Connector\Compatibility
+            message: '#Property [a-zA-Z0-9\\_]+::\$(deprecatedMethods|deprecatedPublicProperties) is never read, only written.#'
+        -
+            # Private properties defined in class and used in traits of \HawkSearch\Connector\Compatibility
+            message: '#Property [a-zA-Z0-9\\_]+::\$(deprecatedMethods|deprecatedPublicProperties) type has no value type specified in iterable type array.#'
+        -
+            message: '#Method [a-zA-Z0-9\\_]+::[a-zA-Z0-9_]+\(\) has parameter \$[a-zA-Z0-9_]+ with no value type specified in iterable type array.#'
+            path: *Test.php
         -
             message: '#Variable \$block might not be defined.#'
             path: *.phtml

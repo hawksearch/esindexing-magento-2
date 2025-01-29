@@ -74,7 +74,6 @@ class CustomAttributesTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->setUpLegacy($this);
 
         $eventManagerMock = $this->getMockBuilder(ManagerInterface::class)
             ->disableOriginalConstructor()
@@ -165,12 +164,6 @@ class CustomAttributesTest extends TestCase
         $this->block->setLayout($this->layoutMock);
     }
 
-    protected function tearDown(): void
-    {
-        $this->tearDownLegacy($this);
-        parent::tearDown();
-    }
-
     /**
      * @requires PHP <8.2.0
      * @group legacy
@@ -178,6 +171,8 @@ class CustomAttributesTest extends TestCase
     #[RequiresPhp('<8.2.0')]
     public function testAccessingDeprecatedPropertiesPhp81(): void
     {
+        $this->setUpLegacy($this);
+
         $model = new TestFixtureSubCustomAttributesLegacy(
             $this->contextMock,
             $this->hawksearchFieldsMock,
@@ -193,6 +188,8 @@ class CustomAttributesTest extends TestCase
             "Since 0.8.0: Property HawkSearch\EsIndexing\Block\Adminhtml\System\Config\Product\CustomAttributes::columnRendererCache has been deprecated and it's public/protected usage will be discontinued. Visibility changed to private.",
             "Since 0.8.0: Property HawkSearch\EsIndexing\Block\Adminhtml\System\Config\Product\CustomAttributes::columnRendererCache has been deprecated and it's public/protected usage will be discontinued. Visibility changed to private.",
         ]);
+
+        $this->tearDownLegacy($this);
     }
 
     /**
@@ -202,6 +199,8 @@ class CustomAttributesTest extends TestCase
     #[RequiresPhp('>=8.2.0')]
     public function testAccessingDeprecatedPropertiesPhp82(): void
     {
+        $this->setUpLegacy($this);
+
         $model = new TestFixtureSubCustomAttributesLegacy(
             $this->contextMock,
             $this->hawksearchFieldsMock,
@@ -218,6 +217,35 @@ class CustomAttributesTest extends TestCase
             "Since 0.8.0: Property HawkSearch\EsIndexing\Block\Adminhtml\System\Config\Product\CustomAttributes::columnRendererCache has been deprecated and it's public/protected usage will be discontinued. Visibility changed to private.",
             "Since 0.8.0: Property HawkSearch\EsIndexing\Block\Adminhtml\System\Config\Product\CustomAttributes::columnRendererCache has been deprecated and it's public/protected usage will be discontinued. Visibility changed to private.",
         ]);
+
+        $this->tearDownLegacy($this);
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testAccessingDeprecatedMethods(): void
+    {
+        $this->setUpLegacy($this);
+
+        $model = new TestFixtureSubCustomAttributesLegacy(
+            $this->contextMock,
+            $this->hawksearchFieldsMock,
+            $this->productAttributesMock,
+            []
+        );
+
+        $model->callDeprecatedProtectedMethods();
+
+        $this::assertSame(
+            [
+                "Since 0.8.0: Method HawkSearch\EsIndexing\Block\Adminhtml\System\Config\Product\CustomAttributes::resolveSelectFieldRenderer() has been deprecated and it's public/protected usage will be discontinued. Use HawkSearch\EsIndexing\Block\Adminhtml\System\Config\Product\CustomAttributes::addColumn() after plugin instead. It is not designed to override column renderer this way.",
+                "Since 0.8.0: Method HawkSearch\EsIndexing\Block\Adminhtml\System\Config\Product\CustomAttributes::getColumnRenderer() has been deprecated and it's public/protected usage will be discontinued. Use HawkSearch\EsIndexing\Block\Adminhtml\System\Config\Product\CustomAttributes::addColumn() after plugin instead. It is not designed to override column renderer this way.",
+            ],
+            $this->deprecations
+        );
+
+        $this->tearDownLegacy($this);
     }
 
     public function testRender(): void
@@ -511,4 +539,16 @@ class CustomAttributesTest extends TestCase
 class TestFixtureSubCustomAttributesLegacy extends CustomAttributes
 {
     use AccessClassPropertyFixtureTrait;
+
+    public function callDeprecatedProtectedMethods(): void
+    {
+        $ret = $this->resolveSelectFieldRenderer('field');
+        $ret = $this->getColumnRenderer('field');
+    }
+
+    protected function resolveSelectFieldRenderer(string $columnName)
+    {
+        $method = 'resolveSelectFieldRenderer';
+        return parent::$method($columnName);
+    }
 }
