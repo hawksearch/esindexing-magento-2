@@ -25,19 +25,8 @@ class LandingPageRepository implements LandingPageRepositoryInterface
 {
     private const CACHE_KEY = 'hawksearch_landing_pages';
 
-    /**
-     * @var StoreManagerInterface
-     */
     private StoreManagerInterface $storeManager;
-
-    /**
-     * @var Cache
-     */
     private Cache $cache;
-
-    /**
-     * @var SerializerInterface
-     */
     private SerializerInterface $serializer;
 
     public function __construct(
@@ -51,24 +40,17 @@ class LandingPageRepository implements LandingPageRepositoryInterface
         $this->serializer = $serializer;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getByUrl(string $url)
     {
         // TODO: Implement getByUrl() method.
     }
 
-    /**
-     * @inheritDoc
-     */
     public function get(int $id)
     {
         // TODO: Implement get() method.
     }
 
     /**
-     * @inheritDoc
      * @TODO move pages storage resource to MySQL
      * @TODO do not call Hawk API in repository
      */

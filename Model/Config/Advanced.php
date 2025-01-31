@@ -19,11 +19,7 @@ use HawkSearch\Connector\Model\ConfigProvider;
 
 class Advanced extends ConfigProvider
 {
-    /**#@+
-     * Configuration paths
-     */
     public const CONFIG_REMOVE_PUB_ASSETS_URL = 'remove_pub_assets_url';
-    /**#@-*/
 
     /**
      * Check if setting is enabled

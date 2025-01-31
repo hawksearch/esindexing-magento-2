@@ -23,14 +23,10 @@ use Magento\Framework\App\Config\ValueInterface;
  */
 interface ValueProcessorInterface
 {
-    /**#@+
-     * Constants
-     */
     const COLUMN_ATTRIBUTE = 'attribute';
     const COLUMN_FIELD = 'field';
     const COLUMN_FIELD_NEW = 'field_new';
     const SELECT_OPTION_NEW_FILED_VALUE = '--insert--new--';
-    /**#@-*/
 
     /**
      * Process config value before serialization

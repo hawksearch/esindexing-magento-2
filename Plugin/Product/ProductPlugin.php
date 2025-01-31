@@ -23,14 +23,7 @@ use Magento\Framework\Model\AbstractModel;
 
 class ProductPlugin extends AbstractPlugin
 {
-    /**
-     * @var IndexerInterface
-     */
     private IndexerInterface $categoryIndexer;
-
-    /**
-     * @var ProductDataProvider
-     */
     private ProductDataProvider $productDataProvider;
 
     public function __construct(

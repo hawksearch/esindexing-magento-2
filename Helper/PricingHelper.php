@@ -28,14 +28,7 @@ use Magento\Tax\Model\Config as TaxConfig;
  */
 class PricingHelper extends AbstractHelper
 {
-    /**
-     * @var TaxHelper
-     */
     private TaxHelper $taxHelper;
-
-    /**
-     * @var CatalogHelper
-     */
     private CatalogHelper $catalogHelper;
 
     public function __construct(
@@ -76,7 +69,7 @@ class PricingHelper extends AbstractHelper
         $store = $product->getStore();
         $includingTax = $this->isIncludeTax($store, $forceIncludeTax);
 
-        return (float) $this->catalogHelper->getTaxPrice(
+        return (float)$this->catalogHelper->getTaxPrice(
             $product,
             $price,
             $includingTax,

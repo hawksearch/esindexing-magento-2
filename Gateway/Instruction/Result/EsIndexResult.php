@@ -26,24 +26,9 @@ use Magento\Framework\Api\DataObjectHelper;
  */
 class EsIndexResult implements ResultInterface
 {
-    /**
-     * @var EsIndexInterfaceFactory
-     */
     private EsIndexInterfaceFactory $esIndexFactory;
-
-    /**
-     * @var DataObjectHelper
-     */
     private DataObjectHelper $dataObjectHelper;
-
-    /**
-     * @var HawkSearchDataObjectHelper
-     */
     private HawkSearchDataObjectHelper $hawksearchDataObjectHelper;
-
-    /**
-     * @var HttpResponseReader
-     */
     private HttpResponseReader $httpResponseReader;
 
     /**

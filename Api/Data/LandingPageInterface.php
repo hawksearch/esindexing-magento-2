@@ -10,6 +10,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+
 namespace HawkSearch\EsIndexing\Api\Data;
 
 /**
@@ -25,9 +26,6 @@ namespace HawkSearch\EsIndexing\Api\Data;
  */
 interface LandingPageInterface
 {
-    /**#@+
-     * Constants for keys of data array
-     */
     public const FIELD_PAGE_ID = "PageId";
     public const FIELD_SYNC_GUID = "SyncGuid";
     public const FIELD_NAME = "Name";
@@ -55,7 +53,6 @@ interface LandingPageInterface
     public const FIELD_IS_NO_INDEX = "IsNoIndex";
     public const FIELD_IS_NO_FOLLOW = "IsNoFollow";
     public const FIELD_CUSTOM_SORT_LIST = "CustomSortList";
-    /**#@-*/
 
     /**
      * @return int|null

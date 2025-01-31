@@ -38,10 +38,6 @@ class Composite extends FieldHandler\Composite
      * @var ProductTypePoolInterface<string, ProductTypeInterface>
      */
     private ProductTypePoolInterface $productTypePool;
-
-    /**
-     * @var ValueProcessorInterface
-     */
     private ValueProcessorInterface $valueProcessor;
 
     /**
@@ -55,7 +51,8 @@ class Composite extends FieldHandler\Composite
         ProductTypePoolInterface $productTypePool,
         ValueProcessorInterface $valueProcessor,
         array $handlers = []
-    ) {
+    )
+    {
         parent::__construct($objectManager, $handlers);
         $this->productTypePool = $productTypePool;
         $this->valueProcessor = $valueProcessor;

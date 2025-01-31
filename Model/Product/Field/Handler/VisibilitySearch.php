@@ -24,11 +24,8 @@ use Magento\Framework\DataObject;
  */
 class VisibilitySearch implements FieldHandlerInterface
 {
-    /**
-     * @var Visibility
-     */
     private Visibility $visibility;
-
+    
     public function __construct(
         Visibility $visibility
     )

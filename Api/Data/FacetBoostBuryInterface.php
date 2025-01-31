@@ -27,17 +27,13 @@ namespace HawkSearch\EsIndexing\Api\Data;
  */
 interface FacetBoostBuryInterface
 {
-    /**#@+
-     * Constants for keys of data array
-     */
     const BOOST_VALUES = 'BoostValues';
     const BURY_VALUES = 'BuryValues';
-    /**#@-*/
 
     /**
      * @return \HawkSearch\EsIndexing\Api\Data\FacetValueOrderInfoInterface[]
      */
-    public function getBoostValues() : array;
+    public function getBoostValues(): array;
 
     /**
      * @param \HawkSearch\EsIndexing\Api\Data\FacetValueOrderInfoInterface[]|null $value
@@ -48,7 +44,7 @@ interface FacetBoostBuryInterface
     /**
      * @return \HawkSearch\EsIndexing\Api\Data\FacetValueOrderInfoInterface[]
      */
-    public function getBuryValues() : array;
+    public function getBuryValues(): array;
 
     /**
      * @param \HawkSearch\EsIndexing\Api\Data\FacetValueOrderInfoInterface[]|null $value

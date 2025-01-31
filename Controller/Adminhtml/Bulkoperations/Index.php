@@ -28,21 +28,15 @@ class Index extends Action implements HttpGetActionInterface
      */
     const ADMIN_RESOURCE = 'HawkSearch_EsIndexing::bulk_operations';
 
-    /**
-     * @var PageFactory
-     */
     private PageFactory $resultPageFactory;
-
-    /**
-     * @var string
-     */
     private string $menuId;
 
     public function __construct(
         Context $context,
         PageFactory $resultPageFactory,
         string $menuId = 'HawkSearch_EsIndexing::bulk_operations'
-    ) {
+    )
+    {
         $this->resultPageFactory = $resultPageFactory;
         $this->menuId = $menuId;
         parent::__construct($context);

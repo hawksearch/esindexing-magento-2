@@ -21,7 +21,6 @@ use Magento\Framework\Api\AbstractSimpleObject;
 class EsIndex extends AbstractSimpleObject implements EsIndexInterface
 {
     /**
-     * @inheritDoc
      * @return string
      */
     public function getIndexName(): string
@@ -29,9 +28,6 @@ class EsIndex extends AbstractSimpleObject implements EsIndexInterface
         return (string)$this->_get(self::INDEX_NAME);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setIndexName(string $value)
     {
         return $this->setData(self::INDEX_NAME, $value);

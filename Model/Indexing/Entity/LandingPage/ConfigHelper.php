@@ -19,32 +19,24 @@ use HawkSearch\EsIndexing\Model\Indexing\AbstractConfigHelper;
 
 class ConfigHelper extends AbstractConfigHelper
 {
-    /**
-     * @var int|null
-     */
     private ?int $batchSize;
 
     public function __construct(
         IndexingConfig $indexingConfig,
         /** @todo change type: int -> ?int */
         int $batchSize = null
-    ) {
+    )
+    {
         parent::__construct($indexingConfig);
         $this->batchSize = $batchSize;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function isEnabled($store = null)
     {
         //@todo check if indexing of landing page entity is allowed
         return parent::isEnabled($store);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getBatchSize($store = null)
     {
         return $this->batchSize ?? parent::getBatchSize($store);

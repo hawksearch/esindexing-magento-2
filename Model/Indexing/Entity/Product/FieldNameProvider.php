@@ -19,9 +19,6 @@ use HawkSearch\EsIndexing\Model\Product\Attributes as ProductAttributesProvider;
 
 class FieldNameProvider implements NameProviderInterface
 {
-    /**
-     * @var ProductAttributesProvider
-     */
     private ProductAttributesProvider $productAttributes;
 
     public function __construct(ProductAttributesProvider $productAttributes)
@@ -29,9 +26,6 @@ class FieldNameProvider implements NameProviderInterface
         $this->productAttributes = $productAttributes;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getList(): array
     {
         return array_fill_keys(array_keys($this->productAttributes->getFieldToAttributeMap()), []);

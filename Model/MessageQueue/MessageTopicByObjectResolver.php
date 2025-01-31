@@ -20,14 +20,7 @@ namespace HawkSearch\EsIndexing\Model\MessageQueue;
  */
 class MessageTopicByObjectResolver implements MessageTopicResolverInterface
 {
-    /**
-     * @var string
-     */
     private string $topic;
-
-    /**
-     * @var string
-     */
     private string $resolverClass;
 
     public function __construct(
@@ -39,9 +32,6 @@ class MessageTopicByObjectResolver implements MessageTopicResolverInterface
         $this->resolverClass = $resolverClass;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function resolve(object $object)
     {
         return $object instanceof $this->resolverClass ? $this->topic : '';

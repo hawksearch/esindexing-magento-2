@@ -21,14 +21,7 @@ use Magento\Framework\MessageQueue\BulkPublisherInterface;
 
 class RetryBulkManagement implements BulkManagementInterface
 {
-    /**
-     * @var OperationManagementInterface
-     */
     private OperationManagementInterface $operationManagement;
-
-    /**
-     * @var BulkPublisherInterface
-     */
     private BulkPublisherInterface $publisher;
 
     public function __construct(
@@ -42,8 +35,6 @@ class RetryBulkManagement implements BulkManagementInterface
 
     /**
      * It is used to reschedule bulk operations
-     *
-     * @inheritDoc
      */
     public function scheduleBulk($bulkUuid, array $operations, $description, $userId = null)
     {

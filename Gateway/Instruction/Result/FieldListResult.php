@@ -17,8 +17,8 @@ namespace HawkSearch\EsIndexing\Gateway\Instruction\Result;
 use HawkSearch\Connector\Gateway\Helper\HttpResponseReader;
 use HawkSearch\Connector\Gateway\Instruction\ResultInterface;
 use HawkSearch\Connector\Helper\DataObjectHelper as HawkSearchDataObjectHelper;
-use HawkSearch\EsIndexing\Api\Data\FieldInterfaceFactory;
 use HawkSearch\EsIndexing\Api\Data\FieldInterface;
+use HawkSearch\EsIndexing\Api\Data\FieldInterfaceFactory;
 use Magento\Framework\Api\DataObjectHelper;
 
 /**
@@ -30,25 +30,9 @@ class FieldListResult implements ResultInterface
      * @var HttpResult
      */
     private array $result;
-
-    /**
-     * @var FieldInterfaceFactory
-     */
     private FieldInterfaceFactory $fieldFactory;
-
-    /**
-     * @var DataObjectHelper
-     */
     private DataObjectHelper $dataObjectHelper;
-
-    /**
-     * @var HawkSearchDataObjectHelper
-     */
     private HawkSearchDataObjectHelper $hawksearchDataObjectHelper;
-
-    /**
-     * @var HttpResponseReader
-     */
     private HttpResponseReader $httpResponseReader;
 
     /**
@@ -64,7 +48,8 @@ class FieldListResult implements ResultInterface
         HawkSearchDataObjectHelper $hawksearchDataObjectHelper,
         HttpResponseReader $httpResponseReader,
         array $result = []
-    ) {
+    )
+    {
         $this->result = $result;
         $this->fieldFactory = $fieldInterfaceFactory;
         $this->dataObjectHelper = $dataObjectHelper;

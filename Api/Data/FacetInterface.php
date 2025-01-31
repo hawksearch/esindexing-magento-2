@@ -26,9 +26,6 @@ namespace HawkSearch\EsIndexing\Api\Data;
  */
 interface FacetInterface
 {
-    /**#@+
-     * Constants for keys of data array
-     */
     const SYNC_GUID = 'SyncGuid';
     const FACET_ID = 'FacetId';
     const NAME = 'Name';
@@ -74,12 +71,11 @@ interface FacetInterface
     const NUMERIC_PRECISION = 'NumericPrecision';
     const CURRENCY_SYMBOL = 'CurrencySymbol';
     const DEFAULT_ITEM_TYPE = 'DefaultItemType';
-    /**#@-*/
 
     /**
      * @return string
      */
-    public function getSyncGuid() : string;
+    public function getSyncGuid(): string;
 
     /**
      * @param string|null $value
@@ -90,7 +86,7 @@ interface FacetInterface
     /**
      * @return int
      */
-    public function getFacetId() : int;
+    public function getFacetId(): int;
 
     /**
      * @return $this
@@ -100,7 +96,7 @@ interface FacetInterface
     /**
      * @return string
      */
-    public function getName() : string;
+    public function getName(): string;
 
     /**
      * @param string|null $value
@@ -111,7 +107,7 @@ interface FacetInterface
     /**
      * @return string
      */
-    public function getFacetType() : string;
+    public function getFacetType(): string;
 
     /**
      * @param string|null $value
@@ -122,7 +118,7 @@ interface FacetInterface
     /**
      * @return string
      */
-    public function getFieldType() : string;
+    public function getFieldType(): string;
 
     /**
      * @param string|null $value
@@ -133,7 +129,7 @@ interface FacetInterface
     /**
      * @return int
      */
-    public function getMaxCount() : int;
+    public function getMaxCount(): int;
 
     /**
      * @return $this
@@ -143,7 +139,7 @@ interface FacetInterface
     /**
      * @return int
      */
-    public function getMinHitCount() : int;
+    public function getMinHitCount(): int;
 
     /**
      * @return $this
@@ -153,7 +149,7 @@ interface FacetInterface
     /**
      * @return string
      */
-    public function getField() : string;
+    public function getField(): string;
 
     /**
      * @param string|null $value
@@ -164,7 +160,7 @@ interface FacetInterface
     /**
      * @return string
      */
-    public function getParam() : string;
+    public function getParam(): string;
 
     /**
      * @param string|null $value
@@ -175,7 +171,7 @@ interface FacetInterface
     /**
      * @return string
      */
-    public function getDisplayType() : string;
+    public function getDisplayType(): string;
 
     /**
      * @param string|null $value
@@ -186,7 +182,7 @@ interface FacetInterface
     /**
      * @return int
      */
-    public function getScrollHeight() : int;
+    public function getScrollHeight(): int;
 
     /**
      * @return $this
@@ -196,7 +192,7 @@ interface FacetInterface
     /**
      * @return int
      */
-    public function getScrollThreshold() : int;
+    public function getScrollThreshold(): int;
 
     /**
      * @return $this
@@ -206,7 +202,7 @@ interface FacetInterface
     /**
      * @return int
      */
-    public function getTruncateThreshold() : int;
+    public function getTruncateThreshold(): int;
 
     /**
      * @return $this
@@ -216,7 +212,7 @@ interface FacetInterface
     /**
      * @return int
      */
-    public function getSearchThreshold() : int;
+    public function getSearchThreshold(): int;
 
     /**
      * @return $this
@@ -226,7 +222,7 @@ interface FacetInterface
     /**
      * @return int
      */
-    public function getSortOrder() : int;
+    public function getSortOrder(): int;
 
     /**
      * @return $this
@@ -236,7 +232,7 @@ interface FacetInterface
     /**
      * @return bool
      */
-    public function getExpandSelection() : bool;
+    public function getExpandSelection(): bool;
 
     /**
      * @return $this
@@ -246,7 +242,7 @@ interface FacetInterface
     /**
      * @return bool
      */
-    public function getIsCurrency() : bool;
+    public function getIsCurrency(): bool;
 
     /**
      * @return $this
@@ -256,7 +252,7 @@ interface FacetInterface
     /**
      * @return bool
      */
-    public function getIsNumeric() : bool;
+    public function getIsNumeric(): bool;
 
     /**
      * @return $this
@@ -266,7 +262,7 @@ interface FacetInterface
     /**
      * @return bool
      */
-    public function getIsSearch() : bool;
+    public function getIsSearch(): bool;
 
     /**
      * @return $this
@@ -276,7 +272,7 @@ interface FacetInterface
     /**
      * @return bool
      */
-    public function getIsVisible() : bool;
+    public function getIsVisible(): bool;
 
     /**
      * @return $this
@@ -286,7 +282,7 @@ interface FacetInterface
     /**
      * @return string
      */
-    public function getUBound() : string;
+    public function getUBound(): string;
 
     /**
      * @param string|null $value
@@ -297,7 +293,7 @@ interface FacetInterface
     /**
      * @return string
      */
-    public function getLBound() : string;
+    public function getLBound(): string;
 
     /**
      * @param string|null $value
@@ -308,7 +304,7 @@ interface FacetInterface
     /**
      * @return string
      */
-    public function getIncrement() : string;
+    public function getIncrement(): string;
 
     /**
      * @param string|null $value
@@ -319,7 +315,7 @@ interface FacetInterface
     /**
      * @return int
      */
-    public function getNofVisible() : int;
+    public function getNofVisible(): int;
 
     /**
      * @return $this
@@ -329,7 +325,7 @@ interface FacetInterface
     /**
      * @return int
      */
-    public function getHeight() : int;
+    public function getHeight(): int;
 
     /**
      * @return $this
@@ -339,7 +335,7 @@ interface FacetInterface
     /**
      * @return string
      */
-    public function getDisplayRuleXML() : string;
+    public function getDisplayRuleXML(): string;
 
     /**
      * @param string|null $value
@@ -350,7 +346,7 @@ interface FacetInterface
     /**
      * @return string
      */
-    public function getSortBy() : string;
+    public function getSortBy(): string;
 
     /**
      * @param string|null $value
@@ -361,7 +357,7 @@ interface FacetInterface
     /**
      * @return int
      */
-    public function getParentId() : int;
+    public function getParentId(): int;
 
     /**
      * @return $this
@@ -371,7 +367,7 @@ interface FacetInterface
     /**
      * @return bool
      */
-    public function getIsCollapsible() : bool;
+    public function getIsCollapsible(): bool;
 
     /**
      * @return $this
@@ -381,7 +377,7 @@ interface FacetInterface
     /**
      * @return bool
      */
-    public function getIsCollapsedDefault() : bool;
+    public function getIsCollapsedDefault(): bool;
 
     /**
      * @return $this
@@ -391,7 +387,7 @@ interface FacetInterface
     /**
      * @return string
      */
-    public function getSwatchData() : string;
+    public function getSwatchData(): string;
 
     /**
      * @param string|null $value
@@ -402,7 +398,7 @@ interface FacetInterface
     /**
      * @return int
      */
-    public function getFacetRangeDisplayType() : int;
+    public function getFacetRangeDisplayType(): int;
 
     /**
      * @return $this
@@ -412,7 +408,7 @@ interface FacetInterface
     /**
      * @return bool
      */
-    public function getPreloadChildren() : bool;
+    public function getPreloadChildren(): bool;
 
     /**
      * @return $this
@@ -422,7 +418,7 @@ interface FacetInterface
     /**
      * @return string
      */
-    public function getTooltip() : string;
+    public function getTooltip(): string;
 
     /**
      * @param string|null $value
@@ -433,7 +429,7 @@ interface FacetInterface
     /**
      * @return bool
      */
-    public function getShowSliderInputs() : bool;
+    public function getShowSliderInputs(): bool;
 
     /**
      * @return $this
@@ -443,7 +439,7 @@ interface FacetInterface
     /**
      * @return bool
      */
-    public function getShowFacetImageCount() : bool;
+    public function getShowFacetImageCount(): bool;
 
     /**
      * @return $this
@@ -453,7 +449,7 @@ interface FacetInterface
     /**
      * @return \HawkSearch\EsIndexing\Api\Data\FacetRangeModelInterface[]
      */
-    public function getFacetRanges() : array;
+    public function getFacetRanges(): array;
 
     /**
      * @param \HawkSearch\EsIndexing\Api\Data\FacetRangeModelInterface[]|null $value
@@ -464,7 +460,7 @@ interface FacetInterface
     /**
      * @return string
      */
-    public function getTags() : string;
+    public function getTags(): string;
 
     /**
      * @param string|null $value
@@ -475,7 +471,7 @@ interface FacetInterface
     /**
      * @return string
      */
-    public function getCreateDate() : string;
+    public function getCreateDate(): string;
 
     /**
      * @param string|null $value
@@ -486,7 +482,7 @@ interface FacetInterface
     /**
      * @return string
      */
-    public function getModifyDate() : string;
+    public function getModifyDate(): string;
 
     /**
      * @param string|null $value
@@ -497,7 +493,7 @@ interface FacetInterface
     /**
      * @return \HawkSearch\EsIndexing\Api\Data\FacetBoostBuryInterface
      */
-    public function getBoostBury() : FacetBoostBuryInterface;
+    public function getBoostBury(): FacetBoostBuryInterface;
 
     /**
      * @param \HawkSearch\EsIndexing\Api\Data\FacetBoostBuryInterface|null $value
@@ -508,7 +504,7 @@ interface FacetInterface
     /**
      * @return string
      */
-    public function getListName() : string;
+    public function getListName(): string;
 
     /**
      * @param string|null $value
@@ -519,7 +515,7 @@ interface FacetInterface
     /**
      * @return int
      */
-    public function getNumericPrecision() : int;
+    public function getNumericPrecision(): int;
 
     /**
      * @return $this
@@ -529,7 +525,7 @@ interface FacetInterface
     /**
      * @return string
      */
-    public function getCurrencySymbol() : string;
+    public function getCurrencySymbol(): string;
 
     /**
      * @param string|null $value
@@ -540,7 +536,7 @@ interface FacetInterface
     /**
      * @return string
      */
-    public function getDefaultItemType() : string;
+    public function getDefaultItemType(): string;
 
     /**
      * @param string|null $value

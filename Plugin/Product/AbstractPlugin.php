@@ -20,11 +20,8 @@ use Magento\Framework\Indexer\IndexerRegistry;
 
 abstract class AbstractPlugin
 {
-    /**
-     * @var IndexerInterface
-     */
     private IndexerInterface $productIndexer;
-
+    
     public function __construct(
         IndexerRegistry $indexerRegistry
     )

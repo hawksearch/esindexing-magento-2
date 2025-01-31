@@ -19,11 +19,7 @@ use HawkSearch\Connector\Model\ConfigProvider;
 
 class Products extends ConfigProvider
 {
-    /**#@+
-     * Configuration paths
-     */
     public const CONFIG_CUSTOM_ATTRIBUTES = 'custom_attributes';
-    /**#@-*/
 
     /**
      * Return product attributes configuration in JSON format

@@ -30,26 +30,16 @@ class Product implements IndexerActionInterface, MviewActionInterface
      */
     const INDEXER_ID = 'hawksearch_products';
 
-    /**
-     * @var ProductDataProvider
-     */
     private ProductDataProvider $productDataProvider;
-
-    /**
-     * @var Action
-     */
     private Action $action;
-
-    /**
-     * @var ConsoleOutput
-     */
     private ConsoleOutput $output;
 
     public function __construct(
         ProductDataProvider $productDataProvider,
         Action $action,
         ConsoleOutput $output
-    ) {
+    )
+    {
         $this->productDataProvider = $productDataProvider;
         $this->action = $action;
         $this->output = $output;
@@ -59,7 +49,6 @@ class Product implements IndexerActionInterface, MviewActionInterface
      * This indexer is not designed to run full reindex
      *
      * @see Entities
-     * @inheritDoc
      */
     public function executeFull()
     {
@@ -72,7 +61,6 @@ class Product implements IndexerActionInterface, MviewActionInterface
     }
 
     /**
-     * @inheritDoc
      * @throws LocalizedException
      */
     public function executeList(array $ids)
@@ -81,7 +69,6 @@ class Product implements IndexerActionInterface, MviewActionInterface
     }
 
     /**
-     * @inheritDoc
      * @throws LocalizedException
      */
     public function executeRow($id)
@@ -90,7 +77,6 @@ class Product implements IndexerActionInterface, MviewActionInterface
     }
 
     /**
-     * @inheritDoc
      * @throws LocalizedException
      */
     public function execute($ids)

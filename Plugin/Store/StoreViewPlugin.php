@@ -25,19 +25,8 @@ use Magento\Store\Model\Store as StoreModel;
 
 class StoreViewPlugin extends AbstractPlugin
 {
-    /**
-     * @var IndexerInterface
-     */
     private IndexerInterface $productIndexer;
-
-    /**
-     * @var IndexerInterface
-     */
     private IndexerInterface $categoryIndexer;
-
-    /**
-     * @var IndexingConfig
-     */
     private IndexingConfig $indexingConfig;
 
     public function __construct(
@@ -67,9 +56,6 @@ class StoreViewPlugin extends AbstractPlugin
         return $result;
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function validate(AbstractModel $model)
     {
         /** @var StoreModel $model */

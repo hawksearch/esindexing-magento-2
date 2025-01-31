@@ -33,24 +33,9 @@ class BulkOperationManagement
 {
     public const OPERATION_TOPIC_PREFIX = 'hawksearch.indexing.';
 
-    /**
-     * @var SearchCriteriaBuilderFactory
-     */
     private SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory;
-
-    /**
-     * @var OperationRepositoryInterface
-     */
     private OperationRepositoryInterface $operationRepository;
-
-    /**
-     * @var OperationCollectionFactory
-     */
     private OperationCollectionFactory $operationCollectionFactory;
-
-    /**
-     * @var BulkCollectionFactory
-     */
     private BulkCollectionFactory $bulkCollectionFactory;
 
     public function __construct(
@@ -58,7 +43,8 @@ class BulkOperationManagement
         OperationRepositoryInterface $operationRepository,
         OperationCollectionFactory $operationCollectionFactory,
         BulkCollectionFactory $bulkCollectionFactory
-    ) {
+    )
+    {
         $this->searchCriteriaBuilderFactory = $searchCriteriaBuilderFactory;
         $this->operationRepository = $operationRepository;
         $this->operationCollectionFactory = $operationCollectionFactory;

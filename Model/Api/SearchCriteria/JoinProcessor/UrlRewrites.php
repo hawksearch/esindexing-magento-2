@@ -23,7 +23,6 @@ class UrlRewrites implements CustomJoinInterface
 {
 
     /**
-     * @inheritDoc
      * @param ProductCollection $collection
      */
     public function apply(AbstractDb $collection)

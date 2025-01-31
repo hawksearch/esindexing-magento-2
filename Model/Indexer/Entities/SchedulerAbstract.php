@@ -28,29 +28,10 @@ use Magento\Store\Api\Data\StoreInterface;
  */
 class SchedulerAbstract implements SchedulerInterface
 {
-    /**
-     * @var EventManagerInterface
-     */
     private EventManagerInterface $eventManager;
-
-    /**
-     * @var SearchCriteriaBuilder
-     */
     private SearchCriteriaBuilder $searchCriteriaBuilder;
-
-    /**
-     * @var EntityTypeInterface
-     */
     private EntityTypeInterface $entityType;
-
-    /**
-     * @var MessageManagerInterface
-     */
     private MessageManagerInterface $messageManager;
-
-    /**
-     * @var MessageTopicResolverInterface
-     */
     private MessageTopicResolverInterface $messageTopicResolver;
 
     public function __construct(
@@ -59,7 +40,8 @@ class SchedulerAbstract implements SchedulerInterface
         EntityTypeInterface $entityType,
         MessageManagerInterface $messageManager,
         MessageTopicResolverInterface $messageTopicResolver
-    ) {
+    )
+    {
         $this->eventManager = $eventManager;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->entityType = $entityType;

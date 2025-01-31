@@ -21,11 +21,8 @@ use Magento\ImportExport\Model\Import;
 
 class ImportPlugin
 {
-    /**
-     * @var IndexerInterface
-     */
     private IndexerInterface $productIndexer;
-
+    
     public function __construct(
         IndexerRegistry $indexerRegistry
     )

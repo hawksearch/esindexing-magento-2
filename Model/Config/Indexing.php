@@ -19,13 +19,9 @@ use HawkSearch\Connector\Model\ConfigProvider;
 
 class Indexing extends ConfigProvider
 {
-    /**#@+
-     * Configuration paths
-     */
     public const CONFIG_ITEMS_BATCH_SIZE = 'items_batch_size';
     public const CONFIG_ENABLE_INDEXING = 'enable_indexing';
     public const CONFIG_PRODUCTS_INCLUDE_CATEGORIES_HIERARCHY = 'products_include_categories_hierarchy';
-    /**#@-*/
 
     public const ENABLE_INDEXING_DEFAULT = 0;
 

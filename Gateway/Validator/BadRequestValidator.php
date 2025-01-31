@@ -24,14 +24,7 @@ use HawkSearch\Connector\Gateway\Validator\ResultInterfaceFactory;
 
 class BadRequestValidator extends AbstractValidator
 {
-    /**
-     * @var HttpResponseReader
-     */
     private HttpResponseReader $httpResponseReader;
-
-    /**
-     * @var SubjectReader
-     */
     private SubjectReader $subjectReader;
 
     public function __construct(
@@ -45,9 +38,6 @@ class BadRequestValidator extends AbstractValidator
         $this->subjectReader = $subjectReader;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function validate(array $validationSubject): ResultInterface
     {
         $response = $this->subjectReader->readResponse($validationSubject);

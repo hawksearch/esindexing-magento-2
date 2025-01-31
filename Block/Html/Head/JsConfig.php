@@ -20,18 +20,12 @@ use Magento\Framework\View\Element\Template;
 
 class JsConfig extends Template
 {
-    /**
-     * @var SerializerInterface
-     */
     private SerializerInterface $serializer;
-
-    /**
-     * @var LayoutConfigProcessorInterface
-     */
     private LayoutConfigProcessorInterface $configProcessor;
 
     /**
      * Config constructor.
+     *
      * @param Template\Context $context
      * @param SerializerInterface $serializer
      * @param LayoutConfigProcessorInterface $configProcessor
@@ -43,15 +37,13 @@ class JsConfig extends Template
         LayoutConfigProcessorInterface $configProcessor,
         array $data = []
 
-    ) {
+    )
+    {
         $this->configProcessor = $configProcessor;
         $this->serializer = $serializer;
         parent::__construct($context, $data);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getJsLayout()
     {
         return $this->serializer->serialize($this->configProcessor->process($this->jsLayout ?? []));

@@ -16,43 +16,24 @@ namespace HawkSearch\EsIndexing\Model\Indexing;
 
 class Context implements ContextInterface
 {
-    /**
-     * @var array
-     */
     private array $indexNameCache = [];
-
-    /**
-     * @var bool
-     */
     private bool $isFullReindex = false;
 
-    /**
-     * @inheritDoc
-     */
     public function setIndexName(int $storeId, string $indexName)
     {
         $this->indexNameCache[$storeId] = $indexName;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getIndexName(int $storeId)
     {
         return $this->indexNameCache[$storeId] ?? '';
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setIsFullReindex(bool $isFull)
     {
         $this->isFullReindex = $isFull;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function isFullReindex()
     {
         return $this->isFullReindex;

@@ -19,9 +19,6 @@ use HawkSearch\Connector\Gateway\Validator\ResultInterface;
 
 class FieldsBadRequestValidator extends BadRequestValidator
 {
-    /**
-     * @inheritDoc
-     */
     public function validate(array $validationSubject): ResultInterface
     {
         $result = parent::validate($validationSubject);

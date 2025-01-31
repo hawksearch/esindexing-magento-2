@@ -19,12 +19,8 @@ namespace HawkSearch\EsIndexing\Api\Data;
  */
 interface BoostQueryInterface
 {
-    /**#@+
-     * Constants for keys of data array
-     */
     public const FIELD_QUERY = 'Query';
     public const FIELD_BOOST = 'Boost';
-    /**#@-*/
 
     /**
      * @return string

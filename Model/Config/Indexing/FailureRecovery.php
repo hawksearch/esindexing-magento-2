@@ -19,13 +19,9 @@ use HawkSearch\Connector\Model\ConfigProvider;
 class FailureRecovery extends ConfigProvider
 {
     private const CONFIG_ENABLE = 'enable';
-    /**#@+
-     * Configuration paths
-     */
     private const CONFIG_MAXIMUM_RETRIES = 'maximum_retries';
     private const CONFIG_MAXIMUM_OPEN_DELAY = 'maximum_open_delay';
     private const CONFIG_CRON_EXPR = 'cron_expr';
-    /**#@-*/
 
     /**
      * Default maximum retry attempts.

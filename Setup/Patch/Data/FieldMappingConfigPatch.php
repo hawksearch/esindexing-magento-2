@@ -23,14 +23,7 @@ class FieldMappingConfigPatch implements DataPatchInterface
 {
     const CONFIG_PATH_ATTRIBUTES = 'hawksearch_product_settings/products/custom_attributes';
 
-    /**
-     * @var ModuleDataSetupInterface
-     */
     private ModuleDataSetupInterface $moduleDataSetup;
-
-    /**
-     * @var Json
-     */
     private Json $json;
 
     public function __construct(
@@ -42,24 +35,17 @@ class FieldMappingConfigPatch implements DataPatchInterface
         $this->json = $json;
     }
 
-    /**
-     * @inheritDoc
-     */
     public static function getDependencies()
     {
         return [];
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getAliases()
     {
         return [];
     }
 
     /**
-     * @inheritDoc
      * @throws LocalizedException
      */
     public function apply()

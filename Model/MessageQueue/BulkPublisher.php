@@ -33,54 +33,15 @@ class BulkPublisher extends AbstractSimpleObject implements BulkPublisherInterfa
 {
     public const DEFAULT_BULK_DESCRIPTION = 'Hawksearch indexing bulk operation';
 
-    /**
-     * @var SerializerInterface
-     */
     private SerializerInterface $serializer;
-
-    /**
-     * @var OperationRepositoryInterface
-     */
     private OperationRepositoryInterface $operationRepository;
-
-    /**
-     * @var IdentityGeneratorInterface
-     */
     private IdentityGeneratorInterface $identityService;
-
-    /**
-     * @var BulkManagementInterface
-     */
     private BulkManagementInterface $bulkManagement;
-
-    /**
-     * @var UserContextInterface
-     */
     private UserContextInterface $userContext;
-
-    /**
-     * @var LoggerInterface
-     */
     private LoggerInterface $logger;
-
-    /**
-     * @var SaveMultipleOperationsInterface
-     */
     private SaveMultipleOperationsInterface $saveMultipleOperations;
-
-    /**
-     * @var QueueOperationDataInterfaceFactory
-     */
     private QueueOperationDataInterfaceFactory $queueOperationDataFactory;
-
-    /**
-     * @var MessageManagerInterface
-     */
     private MessageManagerInterface $messageManager;
-
-    /**
-     * @var string
-     */
     private string $bulkDescription;
 
     /**
@@ -124,7 +85,6 @@ class BulkPublisher extends AbstractSimpleObject implements BulkPublisherInterfa
     }
 
     /**
-     * @inheritDoc
      * @throws LocalizedException
      * @throws \Exception
      */

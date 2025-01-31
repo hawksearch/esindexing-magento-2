@@ -28,29 +28,10 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
  */
 class CatalogConfigProcessor implements LayoutConfigProcessorInterface
 {
-    /**
-     * @var CurrentCategory
-     */
     private CurrentCategory $currentCategory;
-
-    /**
-     * @var CategoryUrlPathGenerator
-     */
     private CategoryUrlPathGenerator $categoryUrlPathGenerator;
-
-    /**
-     * @var ScopeConfigInterface
-     */
     private ScopeConfigInterface $scopeConfig;
-
-    /**
-     * @var DbStorage
-     */
     private DbStorage $urlFinder;
-
-    /**
-     * @var AdvancedCategoryConfig
-     */
     private AdvancedCategoryConfig $advancedCategoryConfig;
 
     public function __construct(
@@ -71,8 +52,6 @@ class CatalogConfigProcessor implements LayoutConfigProcessorInterface
     /**
      * Process configurations
      * Uses format supported by mage/utils/template templates syntax
-     *
-     * @inheritDoc
      */
     public function process(array $jsConfig)
     {
@@ -81,9 +60,9 @@ class CatalogConfigProcessor implements LayoutConfigProcessorInterface
             'catalog' => [
                 'isCategoryPage' => $this->isCategoryPage(),
                 'useCategoryPathInProductUrl' => $urlRewritesConfig && $this->scopeConfig->isSetFlag(
-                    \Magento\Catalog\Helper\Product::XML_PATH_PRODUCT_URL_USE_CATEGORY,
-                    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-                ),
+                        \Magento\Catalog\Helper\Product::XML_PATH_PRODUCT_URL_USE_CATEGORY,
+                        \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                    ),
                 'productUrlTemplate' => $this->getProductUrlTemplate(),
                 'categoryProducts' => $urlRewritesConfig
             ]

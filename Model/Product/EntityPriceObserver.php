@@ -22,9 +22,6 @@ use Magento\Framework\Event\ObserverInterface;
 
 class EntityPriceObserver implements ObserverInterface
 {
-    /**
-     * @var PriceManagementInterface
-     */
     private PriceManagementInterface $priceManagement;
 
     public function __construct(
@@ -36,8 +33,6 @@ class EntityPriceObserver implements ObserverInterface
 
     /**
      * Add product entity pricing data to the index data
-     *
-     * @inheritDoc
      */
     public function execute(Observer $observer)
     {

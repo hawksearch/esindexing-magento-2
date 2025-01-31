@@ -23,19 +23,8 @@ use Magento\Search\Model\QueryFactory;
 
 class ResultIndexPlugin
 {
-    /**
-     * @var QueryFactory
-     */
     private QueryFactory $queryFactory;
-
-    /**
-     * @var ViewInterface
-     */
     private ViewInterface $view;
-
-    /**
-     * @var SearchConfig
-     */
     private SearchConfig $searchConfig;
 
     public function __construct(

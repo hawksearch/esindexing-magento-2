@@ -21,17 +21,11 @@ use Magento\Framework\Api\AbstractSimpleObject;
 class IndexList extends AbstractSimpleObject implements IndexListInterface
 {
 
-    /**
-     * @inheritDoc
-     */
     public function getIndexNames(): array
     {
         return (array)$this->_get(self::FIELD_INDEX_NAMES);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setIndexNames(array $value)
     {
         return $this->setData(self::FIELD_INDEX_NAMES, $value);

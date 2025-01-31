@@ -19,11 +19,7 @@ use HawkSearch\Connector\Model\ConfigProvider;
 
 class Search extends ConfigProvider
 {
-    /**#@+
-     * Configuration paths
-     */
     public const CONFIG_ENABLE_SEARCH = 'enable_search';
-    /**#@-*/
 
     /**
      * Check if search is enabled for selected store

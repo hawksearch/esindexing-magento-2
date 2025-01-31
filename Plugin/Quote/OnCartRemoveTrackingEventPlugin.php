@@ -21,19 +21,8 @@ use Magento\Quote\Model\Quote\Item as QuoteItem;
 
 class OnCartRemoveTrackingEventPlugin
 {
-    /**
-     * @var float
-     */
     private float $qty = 0;
-
-    /**
-     * @var DataStorageInterface
-     */
     private DataStorageInterface $cartItemsToRemoveDataStorage;
-
-    /**
-     * @var EventTrackingConfig
-     */
     private EventTrackingConfig $eventTrackingConfig;
 
     public function __construct(

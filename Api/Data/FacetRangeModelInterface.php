@@ -27,9 +27,6 @@ namespace HawkSearch\EsIndexing\Api\Data;
  */
 interface FacetRangeModelInterface
 {
-    /**#@+
-     * Constants for keys of data array
-     */
     const RANGE_ID = 'RangeId';
     const NAME = 'Name';
     const L_BOUND = 'LBound';
@@ -37,12 +34,11 @@ interface FacetRangeModelInterface
     const SORT_ORDER = 'SortOrder';
     const ASSET_NAME = 'AssetName';
     const ASSET_URL = 'AssetUrl';
-    /**#@-*/
 
     /**
      * @return int
      */
-    public function getRangeId() : int;
+    public function getRangeId(): int;
 
     /**
      * @return $this
@@ -52,7 +48,7 @@ interface FacetRangeModelInterface
     /**
      * @return string
      */
-    public function getName() : string;
+    public function getName(): string;
 
     /**
      * @param string|null $value
@@ -63,7 +59,7 @@ interface FacetRangeModelInterface
     /**
      * @return string
      */
-    public function getLBound() : string;
+    public function getLBound(): string;
 
     /**
      * @param string|null $value
@@ -74,7 +70,7 @@ interface FacetRangeModelInterface
     /**
      * @return string
      */
-    public function getUBound() : string;
+    public function getUBound(): string;
 
     /**
      * @param string|null $value
@@ -85,7 +81,7 @@ interface FacetRangeModelInterface
     /**
      * @return int
      */
-    public function getSortOrder() : int;
+    public function getSortOrder(): int;
 
     /**
      * @return $this
@@ -95,7 +91,7 @@ interface FacetRangeModelInterface
     /**
      * @return string
      */
-    public function getAssetName() : string;
+    public function getAssetName(): string;
 
     /**
      * @param string|null $value
@@ -106,7 +102,7 @@ interface FacetRangeModelInterface
     /**
      * @return string
      */
-    public function getAssetUrl() : string;
+    public function getAssetUrl(): string;
 
     /**
      * @param string|null $value

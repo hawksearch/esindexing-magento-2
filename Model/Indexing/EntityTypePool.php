@@ -27,9 +27,6 @@ use Magento\Framework\ObjectManager\TMapFactory;
  */
 class EntityTypePool implements EntityTypePoolInterface
 {
-    /**
-     * @var TMapFactory
-     */
     private TMapFactory $tmapFactory;
 
     /**
@@ -67,9 +64,6 @@ class EntityTypePool implements EntityTypePoolInterface
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     public function get(string $entityTypeName): EntityTypeInterface
     {
         $types = $this->getList();
@@ -80,9 +74,6 @@ class EntityTypePool implements EntityTypePoolInterface
         throw new NotFoundException(__('Unknown Entity Type %1', $entityTypeName));
     }
 
-    /**
-     * @inheritDoc
-     */
     public function create(string $entityTypeName): EntityTypeInterface
     {
         $entityType = $this->get($entityTypeName);
@@ -96,9 +87,6 @@ class EntityTypePool implements EntityTypePoolInterface
         return $instances[$entityTypeName];
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getList()
     {
         return $this->types;

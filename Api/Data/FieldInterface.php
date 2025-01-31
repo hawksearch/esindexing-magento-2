@@ -25,9 +25,6 @@ namespace HawkSearch\EsIndexing\Api\Data;
  */
 interface FieldInterface
 {
-    /**#@+
-     * Constants for keys of data array
-     */
     const FIELD_ID = 'FieldId';
     const SYNC_GUID = 'SyncGuid';
     const LABEL = 'Label';
@@ -71,16 +68,11 @@ interface FieldInterface
     const MODIFY_DATE = 'ModifyDate';
     const IS_CHILD = 'IsChild';
     const IS_HIERARCHICAL = 'IsHierarchical';
-    /**#@-*/
 
-    /**#@+
-     * Field Type Constants
-     */
     const FIELD_TYPE_FACET = 'facet';
     const FIELD_TYPE_KEYWORD = 'keyword';
     const FIELD_TYPE_UNINDEXED = 'unindexed';
     const FIELD_TYPE_TEXT = 'text';
-    /**#@-*/
 
     /**
      * @return int

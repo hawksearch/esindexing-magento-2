@@ -24,12 +24,8 @@ namespace HawkSearch\EsIndexing\Api\Data;
  */
 interface CoordinateInterface
 {
-    /**#@+
-     * Constants for keys of data array
-     */
     const FIELD_LATITUDE = 'Latitude';
     const FIELD_LONGITUDE = 'Longitude';
-    /**#@-*/
 
     /**
      * @return float

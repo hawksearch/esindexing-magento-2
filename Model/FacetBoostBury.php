@@ -23,7 +23,6 @@ class FacetBoostBury extends AbstractSimpleObject implements FacetBoostBuryInter
 {
 
     /**
-     * @inheritDoc
      * @throws \InvalidArgumentException
      */
     public function getBoostValues(): array
@@ -38,16 +37,12 @@ class FacetBoostBury extends AbstractSimpleObject implements FacetBoostBuryInter
         return $value;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setBoostValues(?array $value): FacetBoostBuryInterface
     {
         return $this->setData(self::BOOST_VALUES, $value);
     }
 
     /**
-     * @inheritDoc
      * @throws \InvalidArgumentException
      */
     public function getBuryValues(): array
@@ -62,9 +57,6 @@ class FacetBoostBury extends AbstractSimpleObject implements FacetBoostBuryInter
         return $value;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setBuryValues(?array $value): FacetBoostBuryInterface
     {
         return $this->setData(self::BURY_VALUES, $value);

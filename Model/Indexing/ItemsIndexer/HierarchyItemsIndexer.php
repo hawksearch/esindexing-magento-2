@@ -22,9 +22,6 @@ use HawkSearch\EsIndexing\Model\Indexing\ItemsIndexerInterface;
  */
 class HierarchyItemsIndexer implements ItemsIndexerInterface
 {
-    /**
-     * @var HierarchyManagementInterface
-     */
     private HierarchyManagementInterface $hierarchyManagement;
 
     public function __construct(
@@ -34,9 +31,6 @@ class HierarchyItemsIndexer implements ItemsIndexerInterface
         $this->hierarchyManagement = $hierarchyManagement;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function add(array $items, string $indexName)
     {
         $this->update($items, $indexName);

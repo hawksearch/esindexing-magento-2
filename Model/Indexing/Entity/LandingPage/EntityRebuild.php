@@ -49,40 +49,12 @@ class EntityRebuild extends AbstractEntityRebuild
      * @var LandingPageInterface[]
      */
     private array $landingPages;
-
-    /**
-     * @var array
-     */
     private array $customFieldMap;
-
-    /**
-     * @var array
-     */
     private array $customUrlMap;
-
-    /**
-     * @var Cache
-     */
     private Cache $cache;
-
-    /**
-     * @var SerializerInterface
-     */
     private SerializerInterface $serializer;
-
-    /**
-     * @var LandingPageManagementInterface
-     */
     private LandingPageManagementInterface $landingPageManagement;
-
-    /**
-     * @var LandingPageInterfaceFactory
-     */
     private LandingPageInterfaceFactory $landingPageFactory;
-
-    /**
-     * @var CustomUrl
-     */
     private CustomUrl $customUrlHandler;
 
     /**

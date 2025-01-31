@@ -28,35 +28,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class RetryBulk extends Command
 {
-    /**#@+
-     * Constants for keys of data array
-     */
     private const INPUT_BULK_UUID = 'bulk-uuid';
     private const INPUT_STATUSES = 'statuses';
-    /**#@-*/
 
     private const FORBIDDEN_STATUSES = [
         OperationInterface::STATUS_TYPE_COMPLETE
     ];
-
-    /**
-     * @var BulkManagementInterface
-     */
     private BulkManagementInterface $bulkManagement;
-
-    /**
-     * @var BulkStatusInterface
-     */
     private BulkStatusInterface $bulkStatus;
-
-    /**
-     * @var BulkSummaryInterfaceFactory
-     */
     private BulkSummaryInterfaceFactory $bulkSummaryFactory;
-
-    /**
-     * @var EntityManager
-     */
     private EntityManager $entityManager;
 
     /**
@@ -83,10 +63,7 @@ class RetryBulk extends Command
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->setName('hawksearch:retry-bulk')
             ->setDescription('Retry hawksearch indexing bulk failed operations')
@@ -102,9 +79,6 @@ class RetryBulk extends Command
         parent::configure();
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $bulkUuid = $input->getArgument(self::INPUT_BULK_UUID);

@@ -30,14 +30,7 @@ use Psr\Log\LoggerInterface as Logger;
 class SearchResult extends \Magento\AsynchronousOperations\Ui\Component\DataProvider\SearchResult
 {
 
-    /**
-     * @var OperationCollectionFactory
-     */
     private OperationCollectionFactory $operationCollectionFactory;
-
-    /**
-     * @var OperationResource
-     */
     private OperationResource $operationResource;
 
     /**
@@ -89,7 +82,6 @@ class SearchResult extends \Magento\AsynchronousOperations\Ui\Component\DataProv
     }
 
     /**
-     * @inheritDoc
      * @return $this
      */
     protected function _initSelect()

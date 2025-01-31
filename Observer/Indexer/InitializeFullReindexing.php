@@ -23,9 +23,6 @@ use Magento\Framework\Event\ObserverInterface;
 
 class InitializeFullReindexing implements ObserverInterface
 {
-    /**
-     * @var IndexManagementInterface
-     */
     private IndexManagementInterface $indexManagement;
 
     public function __construct(
@@ -37,8 +34,6 @@ class InitializeFullReindexing implements ObserverInterface
 
     /**
      * Perform actions related to full reindexing initialization
-     *
-     * @inheritDoc
      */
     public function execute(Observer $observer)
     {

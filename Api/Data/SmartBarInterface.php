@@ -19,9 +19,6 @@ namespace HawkSearch\EsIndexing\Api\Data;
  */
 interface SmartBarInterface
 {
-    /**#@+
-     * Constants for keys of data array
-     */
     public const FIELD_BOOST_AND_BURY = 'BoostAndBury';
     public const FIELD_VISIBILITY_RULES = 'VisibilityRules';
     public const FIELD_PERSONALIZED_BOOST = 'PersonalizedBoost';
@@ -32,7 +29,6 @@ interface SmartBarInterface
     public const FIELD_POPULARITY_LANDING_PAGE_BOOST = 'PopularityLandingPageBoost';
     public const FIELD_KEYWORD_REPLACEMENT = 'KeywordReplacement';
     public const FIELD_PREVIEW_DATE = 'PreviewDate';
-    /**#@-*/
 
     /**
      * @return bool

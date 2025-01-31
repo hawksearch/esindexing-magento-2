@@ -33,29 +33,10 @@ use Magento\Framework\Pricing\PriceCurrencyInterface;
  */
 abstract class DefaultType implements ProductTypeInterface
 {
-    /**
-     * @var PriceCurrencyInterface
-     */
     private PriceCurrencyInterface $priceCurrency;
-
-    /**
-     * @var GroupSourceInterface
-     */
     private GroupSourceInterface $customerGroupSource;
-
-    /**
-     * @var GroupManagementInterface
-     */
     private GroupManagementInterface $groupManagement;
-
-    /**
-     * @var ModuleManager
-     */
     private ModuleManager $moduleManager;
-
-    /**
-     * @var PricingHelper
-     */
     private PricingHelper $pricingHelper;
 
     public function __construct(
@@ -64,7 +45,8 @@ abstract class DefaultType implements ProductTypeInterface
         GroupManagementInterface $groupManagement,
         ModuleManager $moduleManager,
         PricingHelper $pricingHelper
-    ) {
+    )
+    {
         $this->priceCurrency = $priceCurrency;
         $this->customerGroupSource = $customerGroupSource;
         $this->groupManagement = $groupManagement;
@@ -74,7 +56,6 @@ abstract class DefaultType implements ProductTypeInterface
 
     /**
      * @param ProductModel $product
-     * @inheritDoc
      */
     public function getPriceData(ProductInterface $product): array
     {
@@ -144,9 +125,6 @@ abstract class DefaultType implements ProductTypeInterface
         return max((float)$product->getMaxPrice(), $this->getPriceMin($product));
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getChildProducts(ProductInterface $product): array
     {
         return [];
@@ -231,7 +209,7 @@ abstract class DefaultType implements ProductTypeInterface
      * @param float $price
      * @param PriceData $priceData
      */
-    protected function addSuffixedValue (string $priceName, string $suffix, float $price, array &$priceData)
+    protected function addSuffixedValue(string $priceName, string $suffix, float $price, array &$priceData)
     {
         $priceData = array_merge($priceData, $this->getSuffixedPrice($priceName, $suffix, $price));
     }

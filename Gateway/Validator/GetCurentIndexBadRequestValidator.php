@@ -21,9 +21,6 @@ class GetCurentIndexBadRequestValidator extends BadRequestValidator
 {
     private const NO_INDEX_MESSAGE = "Unable to retrieve the current index name.";
 
-    /**
-     * @inheritDoc
-     */
     public function validate(array $validationSubject): ResultInterface
     {
         $result = parent::validate($validationSubject);

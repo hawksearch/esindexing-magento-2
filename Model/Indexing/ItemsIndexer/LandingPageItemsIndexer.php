@@ -23,9 +23,6 @@ use HawkSearch\EsIndexing\Model\Indexing\ItemsIndexerInterface;
  */
 class LandingPageItemsIndexer implements ItemsIndexerInterface
 {
-    /**
-     * @var LandingPageManagementInterface
-     */
     private LandingPageManagementInterface $landingPageManagement;
 
     public function __construct(
@@ -38,7 +35,6 @@ class LandingPageItemsIndexer implements ItemsIndexerInterface
     /**
      * @param LandingPageInterface[] $items
      * @param string $indexName
-     * @inheritDoc
      */
     public function add(array $items, string $indexName)
     {
@@ -50,7 +46,6 @@ class LandingPageItemsIndexer implements ItemsIndexerInterface
      *
      * @param LandingPageInterface[] $items
      * @param string $indexName
-     * @inheritDoc
      */
     public function update(array $items, string $indexName)
     {
@@ -59,8 +54,6 @@ class LandingPageItemsIndexer implements ItemsIndexerInterface
 
     /**
      * Uses hierarchy API to remove hierarchy items
-     *
-     * @inheritDoc
      */
     public function delete(array $items, string $indexName)
     {

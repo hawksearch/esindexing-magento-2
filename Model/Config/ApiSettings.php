@@ -24,13 +24,10 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
  */
 class ApiSettings extends ConnectorApiSettings
 {
-    /**#@+
-     * Configuration paths
-     */
     const INDEXING_API_URL = 'indexing_api_url';
     const SEARCH_API_URL = 'search_api_url';
-    /**#@-*/
-    
+
+
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         ?string $configRootPath = null,

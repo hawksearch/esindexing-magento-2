@@ -26,24 +26,9 @@ use Magento\Framework\Api\DataObjectHelper;
  */
 class LandingPageResult implements ResultInterface
 {
-    /**
-     * @var LandingPageInterfaceFactory
-     */
     private LandingPageInterfaceFactory $landingPageFactory;
-
-    /**
-     * @var DataObjectHelper
-     */
     private DataObjectHelper $dataObjectHelper;
-
-    /**
-     * @var HawkSearchDataObjectHelper
-     */
     private HawkSearchDataObjectHelper $hawksearchDataObjectHelper;
-
-    /**
-     * @var HttpResponseReader
-     */
     private HttpResponseReader $httpResponseReader;
 
     /**
@@ -64,7 +49,8 @@ class LandingPageResult implements ResultInterface
         HawkSearchDataObjectHelper $hawksearchDataObjectHelper,
         HttpResponseReader $httpResponseReader,
         array $result = []
-    ) {
+    )
+    {
         $this->landingPageFactory = $landingPageFactory;
         $this->dataObjectHelper = $dataObjectHelper;
         $this->hawksearchDataObjectHelper = $hawksearchDataObjectHelper;

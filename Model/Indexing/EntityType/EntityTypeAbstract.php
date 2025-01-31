@@ -38,40 +38,15 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
             'description' => 'In favour of a new Field Handlers logic'
         ],
     ];
-
-    /**
-     * @var EntityRebuildInterface
-     */
     private EntityRebuildInterface $rebuilder;
-
-    /**
-     * @var ItemsDataProviderInterface
-     */
     private ItemsDataProviderInterface $itemsDataProvider;
-
     /**
      * @var FieldHandlerInterface<DataObject>
      */
     private FieldHandlerInterface $fieldHandler;
-
-    /**
-     * @var ItemsIndexerInterface
-     */
     private ItemsIndexerInterface $itemsIndexer;
-
-    /**
-     * @var AbstractConfigHelper
-     */
     private AbstractConfigHelper $configHelper;
-
-    /**
-     * @var string
-     */
     private string $typeName;
-
-    /**
-     * @var FieldNameProviderInterface
-     */
     private FieldNameProviderInterface $fieldNameProvider;
 
     /**
@@ -134,57 +109,38 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
         $this->fieldNameProvider = $fieldNameProvider ?? ObjectManager::getInstance()->get(FieldNameProviderInterface::class);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getTypeName(): string
     {
         return $this->typeName;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setTypeName(string $type)
     {
         $this->typeName = $type;
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getUniqueId(string $itemId)
     {
         return $this->getTypeName() . '_' . $itemId;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getRebuilder(): EntityRebuildInterface
     {
         return $this->rebuilder;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getItemsDataProvider(): ItemsDataProviderInterface
     {
         return $this->itemsDataProvider;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getItemsIndexer(): ItemsIndexerInterface
     {
         return $this->itemsIndexer;
     }
 
     /**
-     * @inheritDoc
      * @deprecated 0.7.0 In favour of a new Field Handlers logic
      * @see self::getFieldHandler()
      * @phpstan-ignore-next-line
@@ -203,17 +159,11 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
         return $this->fieldHandler;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getConfigHelper(): AbstractConfigHelper
     {
         return $this->configHelper;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getFieldNameProvider(): FieldNameProviderInterface
     {
         return $this->fieldNameProvider;

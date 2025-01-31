@@ -26,16 +26,12 @@ namespace HawkSearch\EsIndexing\Api\Data;
  */
 interface HierarchyInterface
 {
-    /**#@+
-     * Constants for keys of data array
-     */
     public const FIELD_HIERARCHY_ID = "HierarchyId";
     public const FIELD_NAME = "Name";
     public const FIELD_PARENT_HIERARCHY_ID = "ParentHierarchyId";
     public const FIELD_IS_ACTIVE = "IsActive";
     public const FIELD_SORTORDER = "SortOrder";
     public const FIELD_CUSTOM = "Custom";
-    /**#@-*/
 
     /**
      * @return string

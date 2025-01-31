@@ -24,19 +24,8 @@ use Magento\UrlRewrite\Service\V1\Data\UrlRewrite;
 
 class VueAdditionalParametersProcessor implements LayoutConfigProcessorInterface
 {
-    /**
-     * @var Registry
-     */
     private Registry $registry;
-
-    /**
-     * @var RequestInterface
-     */
     private RequestInterface $request;
-
-    /**
-     * @var UrlFinderInterface
-     */
     private UrlFinderInterface $urlFinder;
 
     public function __construct(
@@ -50,9 +39,6 @@ class VueAdditionalParametersProcessor implements LayoutConfigProcessorInterface
         $this->urlFinder = $urlFinder;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function process(array $jsConfig)
     {
         $params = [];

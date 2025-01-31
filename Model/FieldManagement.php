@@ -40,12 +40,12 @@ class FieldManagement implements FieldManagementInterface
      */
     public function __construct(
         InstructionManagerPoolInterface $instructionManagerPool
-    ) {
+    )
+    {
         $this->instructionManagerPool = $instructionManagerPool;
     }
 
     /**
-     * @inheritDoc
      * @deprecated
      * @see self::getFields()
      */
@@ -54,18 +54,12 @@ class FieldManagement implements FieldManagementInterface
         return $this->getFields();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getFields(): array
     {
         return $this->instructionManagerPool->get('hawksearch-esindexing')
             ->executeByCode('getFields')->get();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function addField(FieldInterface $field): FieldInterface
     {
         /** @var FieldInterface $returnedField */
@@ -81,9 +75,6 @@ class FieldManagement implements FieldManagementInterface
         return $returnedField;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function updateField(FieldInterface $field): FieldInterface
     {
         /** @var FieldInterface $returnedField */

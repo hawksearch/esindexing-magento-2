@@ -21,11 +21,7 @@ namespace HawkSearch\EsIndexing\Api\Data;
  */
 interface IndexListInterface
 {
-    /**#@+
-     * Constants for keys of data array
-     */
     public const FIELD_INDEX_NAMES = 'IndexNames';
-    /**#@-*/
 
     /**
      * @return string[]

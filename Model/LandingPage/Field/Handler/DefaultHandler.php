@@ -20,9 +20,6 @@ use Magento\Framework\DataObject;
 
 class DefaultHandler extends DataObjectHandler
 {
-    /**
-     * @var DataObjectHelper
-     */
     private DataObjectHelper $dataObjectHelper;
 
     public function __construct(DataObjectHelper $dataObjectHelper)

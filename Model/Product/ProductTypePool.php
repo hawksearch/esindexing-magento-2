@@ -27,11 +27,7 @@ use Magento\Framework\ObjectManager\TMapFactory;
  */
 class ProductTypePool implements ProductTypePoolInterface
 {
-    /**
-     * @var ProductTypeInterfaceFactory
-     */
     private ProductTypeInterfaceFactory $productTypeFactory;
-
     /**
      * @var TMap<TKey, TValue>
      */

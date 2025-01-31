@@ -23,14 +23,7 @@ use Magento\Store\Model\StoreManagerInterface;
 
 class ActionFull extends ActionAbstract
 {
-    /**
-     * @var StoreManagerInterface
-     */
     private StoreManagerInterface $storeManager;
-
-    /**
-     * @var IndexingConfig
-     */
     private IndexingConfig $indexingConfig;
 
     public function __construct(
@@ -40,7 +33,8 @@ class ActionFull extends ActionAbstract
         SchedulerInterface $entityScheduler,
         StoreManagerInterface $storeManager,
         IndexingConfig $indexingConfig
-    ) {
+    )
+    {
         parent::__construct(
             $eventManager,
             $messageManager,

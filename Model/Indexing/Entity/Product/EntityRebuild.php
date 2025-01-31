@@ -38,24 +38,9 @@ use Magento\Store\Model\StoreManagerInterface;
  */
 class EntityRebuild extends AbstractEntityRebuild
 {
-    /**
-     * @var Visibility
-     */
     private Visibility $visibility;
-
-    /**
-     * @var Configuration
-     */
     private Configuration $catalogInventoryConfiguration;
-
-    /**
-     * @var StockRegistryInterface
-     */
     private StockRegistryInterface $stockRegistry;
-
-    /**
-     * @var Product
-     */
     private Product $productDataProvider;
 
     /**
@@ -82,7 +67,8 @@ class EntityRebuild extends AbstractEntityRebuild
         StockRegistryInterface $stockRegistry,
         Product\Attributes $productAttributes,
         Product $productDataProvider
-    ) {
+    )
+    {
         parent::__construct(
             $entityTypePool,
             $eventManager,

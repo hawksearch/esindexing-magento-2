@@ -41,49 +41,20 @@ class Product
      * @var AbstractType[]|null
      */
     private ?array $productAllTypes = null;
-
-    /**
-     * @var ProductFactory
-     */
     private ProductFactory $productFactory;
-
-    /**
-     * @var Type
-     */
     private Type $productType;
-
-    /**
-     * @var FulltextResource
-     */
     private FulltextResource $fulltextResource;
-
-    /**
-     * @var ProductResource
-     */
     private ProductResource $productResource;
-
-    /**
-     * @var MetadataPool
-     */
     private MetadataPool $metadataPool;
-
-    /**
-     * Product constructor.
-     *
-     * @param ProductFactory $productFactory
-     * @param Type $productType
-     * @param FulltextResource $fulltextResource
-     * @param ProductResource|null $productResource
-     * @param MetadataPool|null $metadataPool
-     */
+    
     public function __construct(
         ProductFactory $productFactory,
         Type $productType,
         FulltextResource $fulltextResource,
         ProductResource $productResource = null,
         MetadataPool $metadataPool = null
-
-    ) {
+    )
+    {
         $this->productFactory = $productFactory;
         $this->productType = $productType;
         $this->fulltextResource = $fulltextResource;

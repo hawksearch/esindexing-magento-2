@@ -30,25 +30,9 @@ class FieldResult implements ResultInterface
      * @var HttpResult
      */
     private array $result;
-
-    /**
-     * @var FieldInterfaceFactory
-     */
     private FieldInterfaceFactory $fieldFactory;
-
-    /**
-     * @var DataObjectHelper
-     */
     private DataObjectHelper $dataObjectHelper;
-
-    /**
-     * @var HawkSearchDataObjectHelper
-     */
     private HawkSearchDataObjectHelper $hawksearchDataObjectHelper;
-
-    /**
-     * @var HttpResponseReader
-     */
     private HttpResponseReader $httpResponseReader;
 
     /**
@@ -64,7 +48,8 @@ class FieldResult implements ResultInterface
         HawkSearchDataObjectHelper $hawksearchDataObjectHelper,
         HttpResponseReader $httpResponseReader,
         array $result = []
-    ) {
+    )
+    {
         $this->result = $result;
         $this->fieldFactory = $fieldFactory;
         $this->dataObjectHelper = $dataObjectHelper;

@@ -23,14 +23,7 @@ use Magento\Framework\Indexer\IndexerRegistry;
 
 class CategoryPlugin
 {
-    /**
-     * @var IndexerInterface
-     */
     private IndexerInterface $categoryIndexer;
-
-    /**
-     * @var IndexerInterface
-     */
     private IndexerInterface $productIndexer;
 
     public function __construct(

@@ -33,62 +33,17 @@ use Magento\Store\Model\StoreManagerInterface;
 
 class AsynchronousOperationProcessorPlugin
 {
-    /**
-     * @var MessageEncoder
-     */
     private MessageEncoder $messageEncoder;
-
-    /**
-     * @var OperationManagementInterface
-     */
     private OperationManagementInterface $operationManagement;
-
-    /**
-     * @var OperationValidatorInterface
-     */
     private OperationValidatorInterface $bulkAllOperationCompleteValidator;
-
-    /**
-     * @var OperationValidatorInterface
-     */
     private OperationValidatorInterface $operationTopicValidator;
-    /**
-     * @var OperationValidatorInterface
-     */
     private OperationValidatorInterface $operationOpenStatusValidator;
-
-    /**
-     * @var HierarchyManagementInterface
-     */
     private HierarchyManagementInterface $hierarchyManagement;
-
-    /**
-     * @var IndexManagementInterface
-     */
     private IndexManagementInterface $indexManagement;
-
-    /**
-     * @var MessageValidator
-     */
     private MessageValidator $messageValidator;
-
-    /**
-     * @var StoreManagerInterface
-     */
     private StoreManagerInterface $storeManager;
-
-    /**
-     * @var Indexing\Context
-     */
     private Indexing\Context $indexingContext;
-    /**
-     * @var Emulation
-     */
     private Emulation $emulation;
-
-    /**
-     * @var BulkOperationManagement
-     */
     private BulkOperationManagement $bulkOperationManagement;
 
     public function __construct(

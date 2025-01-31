@@ -23,14 +23,7 @@ use Magento\Store\Model\Store;
 
 class ItemsDataProvider implements ItemsDataProviderInterface
 {
-    /**
-     * @var PageRepositoryInterface
-     */
     private PageRepositoryInterface $pageRepository;
-
-    /**
-     * @var SearchCriteriaBuilder
-     */
     private SearchCriteriaBuilder $searchCriteriaBuilder;
 
     public function __construct(
@@ -42,9 +35,6 @@ class ItemsDataProvider implements ItemsDataProviderInterface
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getItems(int $storeId, ?array $entityIds = null, int $currentPage = 1, int $pageSize = 0)
     {
         return $this->getPageCollection($storeId, $entityIds, $currentPage, $pageSize);

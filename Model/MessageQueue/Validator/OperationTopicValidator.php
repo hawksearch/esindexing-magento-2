@@ -23,7 +23,6 @@ class OperationTopicValidator implements OperationValidatorInterface
     const ERROR_CODE = 10111;
 
     /**
-     * @inheritDoc
      * @throws InvalidBulkOperationException
      */
     public function validate(OperationInterface $operation): bool

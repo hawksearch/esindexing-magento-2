@@ -10,6 +10,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+
 namespace HawkSearch\EsIndexing\Model\Api\SearchCriteria\CollectionProcessor;
 
 use Magento\Framework\Api\SearchCriteria\CollectionProcessor\JoinProcessor\CustomJoinInterface;
@@ -23,21 +24,22 @@ use Magento\Framework\Data\Collection\AbstractDb;
 class CustomJoinProcessor implements CollectionProcessorInterface
 {
     /**
-     * @var CustomJoinInterface[]
+     * @var array<string, CustomJoinInterface>
      */
     private array $joins;
 
     /**
-     * @var array
+     * @var array<string, true>
      */
     private array $appliedJoins = [];
 
     /**
-     * @param CustomJoinInterface[] $customJoins
+     * @param array<string, CustomJoinInterface> $customJoins
      */
     public function __construct(
         array $customJoins = []
-    ) {
+    )
+    {
         $this->joins = $customJoins;
     }
 

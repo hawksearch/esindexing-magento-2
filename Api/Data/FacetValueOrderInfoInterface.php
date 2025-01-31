@@ -27,17 +27,13 @@ namespace HawkSearch\EsIndexing\Api\Data;
  */
 interface FacetValueOrderInfoInterface
 {
-    /**#@+
-     * Constants for keys of data array
-     */
     const VALUE = 'Value';
     const SORT_ORDER = 'SortOrder';
-    /**#@-*/
 
     /**
      * @return string
      */
-    public function getValue() : string;
+    public function getValue(): string;
 
     /**
      * @param string|null $value
@@ -48,7 +44,7 @@ interface FacetValueOrderInfoInterface
     /**
      * @return int
      */
-    public function getSortOrder() : int;
+    public function getSortOrder(): int;
 
     /**
      * @return $this

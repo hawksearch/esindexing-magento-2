@@ -61,7 +61,6 @@ abstract class CompositeType extends DefaultType
     }
 
     /**
-     * @inheritdoc
      * @return array<int, float|null>
      */
     protected function getCustomerGroupPrices(ProductInterface $product): array
@@ -78,7 +77,7 @@ abstract class CompositeType extends DefaultType
             $childGroupPrices[$subProduct->getId()] = parent::getCustomerGroupPrices($subProduct);
             $childGroupPrices[$subProduct->getId()] = array_filter(
                 $childGroupPrices[$subProduct->getId()],
-                function($v) {
+                function ($v) {
                     return !(null === $v || '' === $v);
                 }
             );
@@ -97,9 +96,6 @@ abstract class CompositeType extends DefaultType
         return $groupPrices;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getPriceData(ProductInterface $product): array
     {
         $result = parent::getPriceData($product);
@@ -109,18 +105,12 @@ abstract class CompositeType extends DefaultType
         return $result;
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function getPriceRegular(ProductInterface $product): float
     {
         $basePrice = parent::getPriceRegular($product);
         return $basePrice ?: max($this->getPriceMin($product), 0);
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function getPriceFinal(ProductInterface $product): float
     {
         $basePrice = parent::getPriceFinal($product);

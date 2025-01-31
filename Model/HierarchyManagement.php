@@ -42,7 +42,6 @@ class HierarchyManagement implements HierarchyManagementInterface
     }
 
     /**
-     * @inheritDoc
      * @throws NotFoundException
      * @throws InstructionException
      */
@@ -62,7 +61,6 @@ class HierarchyManagement implements HierarchyManagementInterface
     }
 
     /**
-     * @inheritDoc
      * @throws NotFoundException
      * @throws InstructionException
      */
@@ -76,9 +74,6 @@ class HierarchyManagement implements HierarchyManagementInterface
             ->get('hawksearch-esindexing')->executeByCode('rebuildHierarchy', $data)->get();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function deleteHierarchyItems(array $ids, string $indexName)
     {
         if (!$ids) {

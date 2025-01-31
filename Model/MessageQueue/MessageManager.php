@@ -38,19 +38,8 @@ class MessageManager extends AbstractSimpleObject implements MessageManagerInter
 {
     public const DATA_MESSAGES = 'messages';
 
-    /**
-     * @var StoreManagerInterface
-     */
     private StoreManagerInterface $storeManager;
-
-    /**
-     * @var LoggerInterface
-     */
     private LoggerInterface $logger;
-
-    /**
-     * @var IndexManagementInterface
-     */
     private IndexManagementInterface $indexManagement;
 
     /**

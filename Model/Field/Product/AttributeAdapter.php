@@ -22,20 +22,14 @@ use Magento\Framework\DataObject;
  */
 class AttributeAdapter
 {
-    /**
-     * @var ProductAttributeInterface
-     */
     private ProductAttributeInterface $attribute;
-
-    /**
-     * @var string
-     */
     private string $attributeCode;
 
     public function __construct(
         ProductAttributeInterface $attribute,
         string $attributeCode
-    ) {
+    )
+    {
         $this->attribute = $attribute;
         $this->attributeCode = $attributeCode;
     }

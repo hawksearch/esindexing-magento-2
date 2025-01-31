@@ -24,11 +24,8 @@ use Magento\Store\Model\StoreManagerInterface;
  */
 class Url implements FieldHandlerInterface
 {
-    /**
-     * @var StoreManagerInterface
-     */
     private StoreManagerInterface $storeManager;
-
+    
     public function __construct(
         StoreManagerInterface $storeManager
     )

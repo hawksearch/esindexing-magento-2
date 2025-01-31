@@ -19,19 +19,16 @@ use Magento\Framework\Data\OptionSourceInterface;
 
 class ProductAttributes implements OptionSourceInterface
 {
-    /**
-     * @var Attributes
-     */
     private Attributes $attributes;
 
     public function __construct(
         Attributes $attributes
-    ) {
+    )
+    {
         $this->attributes = $attributes;
     }
 
     /**
-     * @inheritDoc
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function toOptionArray()
