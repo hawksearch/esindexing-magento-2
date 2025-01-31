@@ -33,7 +33,13 @@ use Psr\Log\LoggerInterface;
  */
 class IndexManagement implements IndexManagementInterface
 {
+    /**
+     * @var array<int, ?array<string, string>>
+     */
     private array $indicesListCache = [];
+    /**
+     * @var array<int, ?string>
+     */
     private array $currentIndexCache = [];
 
     /**
@@ -52,8 +58,7 @@ class IndexManagement implements IndexManagementInterface
         InstructionManagerPoolInterface $instructionManagerPool,
         LoggerFactoryInterface $loggerFactory,
         StoreManagerInterface $storeManager
-    )
-    {
+    ) {
         $this->instructionManagerPool = $instructionManagerPool;
         $this->hawkLogger = $loggerFactory->create();
         $this->storeManager = $storeManager;
@@ -77,7 +82,7 @@ class IndexManagement implements IndexManagementInterface
         $this->hawkLogger->info("--- initializeFullReindex FINISHED ---");
     }
 
-    public function getIndexName($useCurrent = false): ?string
+    public function getIndexName(bool $useCurrent = false): ?string
     {
         $indices = $this->getIndices();
         $currentIndex = $indices ? $this->getCurrentIndex() : '';
@@ -260,18 +265,18 @@ class IndexManagement implements IndexManagementInterface
      */
     private function resetIndexCache()
     {
-        $storeId = $this->storeManager->getStore()->getId();
+        $storeId = $this->getStoreId();
         $this->indicesListCache[$storeId] = null;
         $this->currentIndexCache[$storeId] = null;
     }
 
     /**
      * @throws NoSuchEntityException
-     * @TODO Replace with \Psr\Cache\CacheItemPoolInterface implementation
+     * @TODO Replace with {@see \Psr\Cache\CacheItemPoolInterface} implementation
      */
     private function addIndexToCache(string $index, bool $isCurrent = false)
     {
-        $storeId = $this->storeManager->getStore()->getId();
+        $storeId = $this->getStoreId();
 
         $this->indicesListCache[$storeId] = $this->indicesListCache[$storeId] ?? [];
         $this->indicesListCache[$storeId][$index] = $index;
@@ -287,7 +292,7 @@ class IndexManagement implements IndexManagementInterface
      */
     private function removeIndexFromCache(string $index)
     {
-        $storeId = $this->storeManager->getStore()->getId();
+        $storeId = $this->getStoreId();
 
         unset($this->indicesListCache[$storeId][$index]);
         if (isset($this->currentIndexCache[$storeId]) && $this->currentIndexCache[$storeId] === $index) {
@@ -302,10 +307,18 @@ class IndexManagement implements IndexManagementInterface
      */
     private function getIndicesFromCache(bool $isCurrent = false)
     {
-        $storeId = $this->storeManager->getStore()->getId();
+        $storeId = $this->getStoreId();
 
         return $isCurrent
             ? (array)($this->currentIndexCache[$storeId] ?? null)
             : ($this->indicesListCache[$storeId] ?? []);
+    }
+
+    /**
+     * @throws NoSuchEntityException
+     */
+    private function getStoreId(): int
+    {
+        return (int)$this->storeManager->getStore()->getId();
     }
 }

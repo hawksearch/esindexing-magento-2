@@ -24,6 +24,7 @@ interface HierarchyManagementInterface
 {
     /**
      * @param list<array<string, mixed>> $items
+     * @param string $indexName
      * @return void
      * @todo use \HawkSearch\EsIndexing\Api\Data\HierarchyInterface[] as input array
      */
@@ -36,6 +37,7 @@ interface HierarchyManagementInterface
 
     /**
      * @param string[] $ids
+     * @param string $indexName
      * @return void
      */
     public function deleteHierarchyItems(array $ids, string $indexName);

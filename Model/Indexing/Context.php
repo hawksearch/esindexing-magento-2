@@ -16,6 +16,9 @@ namespace HawkSearch\EsIndexing\Model\Indexing;
 
 class Context implements ContextInterface
 {
+    /**
+     * @var array<int, string>
+     */
     private array $indexNameCache = [];
     private bool $isFullReindex = false;
 

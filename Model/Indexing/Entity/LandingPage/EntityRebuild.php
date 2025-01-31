@@ -49,7 +49,13 @@ class EntityRebuild extends AbstractEntityRebuild
      * @var LandingPageInterface[]
      */
     private array $landingPages;
+    /**
+     * @var array<string, LandingPageInterface>
+     */
     private array $customFieldMap;
+    /**
+     * @var array<string, LandingPageInterface>
+     */
     private array $customUrlMap;
     private Cache $cache;
     private SerializerInterface $serializer;
@@ -82,8 +88,7 @@ class EntityRebuild extends AbstractEntityRebuild
         LandingPageManagementInterface $landingPageManagement,
         LandingPageInterfaceFactory $landingPageFactory,
         CustomUrl $customUrlHandler
-    )
-    {
+    ) {
         parent::__construct(
             $entityTypePool,
             $eventManager,

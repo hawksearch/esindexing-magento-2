@@ -73,7 +73,13 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
             'description' => 'Visibility changed to private. Set via constructor injection.'
         ],
     ];
+    /**
+     * @var array<string, int>
+     */
     private array $itemsToRemoveCache = [];
+    /**
+     * @var array<string, int>
+     */
     private array $itemsToIndexCache = [];
     private EntityTypeInterface $entityType;
 
@@ -121,8 +127,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
         StoreManagerInterface $storeManager,
         ContextInterface $indexingContext,
         ObjectHelper $objectHelper
-    )
-    {
+    ) {
         $this->entityTypePool = $entityTypePool;
         $this->eventManager = $eventManager;
         $this->hawkLogger = $loggerFactory->create();

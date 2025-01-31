@@ -17,12 +17,12 @@ namespace HawkSearch\EsIndexing\Plugin\Eav\Entity\Attribute\Source\Table;
 use Magento\Eav\Model\Entity\Attribute\Source\Table;
 
 /**
-* Performance workaround for issue https://github.com/magento/magento2/issues/38934
-* Please note this around plugin doesn't call $proceed callable,
-* and it will prevent the execution of all the plugins next in the chain and the original method call
-*
-* @link https://github.com/magento/magento2/issues/38934
-*/
+ * Performance workaround for issue https://github.com/magento/magento2/issues/38934
+ * Please note this around plugin doesn't call $proceed callable,
+ * and it will prevent the execution of all the plugins next in the chain and the original method call
+ *
+ * @link https://github.com/magento/magento2/issues/38934
+ */
 class SpecificOptionsPlugin
 {
     /**
@@ -68,7 +68,7 @@ class SpecificOptionsPlugin
      * @return array
      * @noinspection PhpMissingParamTypeInspection
      */
-    private function addEmptyOption(array $options, $emptyOption): array
+    private function addEmptyOption(array $options, array $emptyOption): array
     {
         array_unshift($options, $emptyOption);
         return $options;

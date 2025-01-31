@@ -26,6 +26,10 @@ use Magento\Framework\Serialize\Serializer\Json;
  */
 class Attributes
 {
+
+    /**
+     * @var array<string, string>
+     */
     private array $attributes;
     private Config $eavConfig;
     private Json $jsonSerializer;
@@ -35,8 +39,7 @@ class Attributes
         Config $eavConfig,
         Json $jsonSerializer,
         ProductsConfig $attributesConfigProvider
-    )
-    {
+    ) {
         $this->eavConfig = $eavConfig;
         $this->jsonSerializer = $jsonSerializer;
         $this->attributesConfigProvider = $attributesConfigProvider;
