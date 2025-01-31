@@ -25,6 +25,7 @@ use Magento\Framework\Data\Collection\Db\FetchStrategyInterface as FetchStrategy
 use Magento\Framework\Data\Collection\EntityFactoryInterface as EntityFactory;
 use Magento\Framework\DB\Select;
 use Magento\Framework\Event\ManagerInterface as EventManager;
+use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Psr\Log\LoggerInterface as Logger;
 
 class SearchResult extends \Magento\AsynchronousOperations\Ui\Component\DataProvider\SearchResult
@@ -44,7 +45,7 @@ class SearchResult extends \Magento\AsynchronousOperations\Ui\Component\DataProv
      * @param OperationCollectionFactory $operationCollectionFactory
      * @param OperationResource $operationResourceConfig
      * @param string $mainTable
-     * @param string $resourceModel
+     * @param AbstractResource $resourceModel
      * @param string $identifierName
      *
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
@@ -63,8 +64,7 @@ class SearchResult extends \Magento\AsynchronousOperations\Ui\Component\DataProv
         $mainTable = 'magento_bulk',
         $resourceModel = null,
         $identifierName = 'uuid'
-    )
-    {
+    ) {
         $this->operationCollectionFactory = $operationCollectionFactory;
         $this->operationResource = $operationResourceConfig;
         parent::__construct(

@@ -40,8 +40,7 @@ class CatalogConfigProcessor implements LayoutConfigProcessorInterface
         ScopeConfigInterface $scopeConfig,
         DbStorage $urlFinder,
         AdvancedCategoryConfig $advancedCategoryConfig
-    )
-    {
+    ) {
         $this->currentCategory = $currentCategory;
         $this->categoryUrlPathGenerator = $categoryUrlPathGenerator;
         $this->scopeConfig = $scopeConfig;
@@ -77,7 +76,7 @@ class CatalogConfigProcessor implements LayoutConfigProcessorInterface
     private function isCategoryPage(): bool
     {
         $category = $this->getCurrentCategory();
-        if (!$category || !$category->getId()) {
+        if (!$category->getId()) {
             return false;
         }
 
