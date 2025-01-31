@@ -16,10 +16,16 @@ namespace HawkSearch\EsIndexing\Test\Unit\Block\Adminhtml\System\Config\Product;
 
 use HawkSearch\Connector\Test\Unit\Compatibility\Fixtures\AccessClassPropertyFixtureTrait;
 use HawkSearch\Connector\Test\Unit\Compatibility\LegacyBaseTrait;
+use HawkSearch\EsIndexing\Block\Adminhtml\Form\Field\Select as FormFieldSelect;
 use HawkSearch\EsIndexing\Block\Adminhtml\System\Config\Product\CustomAttributes;
+use HawkSearch\EsIndexing\Model\Config\Backend\Serialized\Processor\ValueProcessorInterface;
 use HawkSearch\EsIndexing\Model\Config\Source\HawksearchFields;
 use HawkSearch\EsIndexing\Model\Config\Source\ProductAttributes;
+use Magento\Backend\Block\Template;
 use Magento\Backend\Block\Template\Context;
+use Magento\Framework\Data\Form\Element\Text;
+use Magento\Framework\Event\ManagerInterface;
+use Magento\Framework\View\Layout;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -27,30 +33,135 @@ class CustomAttributesTest extends TestCase
 {
     use LegacyBaseTrait;
 
+    private const OPTIONS_FIELD = [
+        [
+            'value' => '',
+            'label' => '--Please Select Field--'
+        ],
+        [
+            'value' => 'test_field_id',
+            'label' => 'Test Field'
+        ],
+    ];
+    private const OPTIONS_ATTRIBUTE = [
+        [
+            'value' => '',
+            'label' => '--Please Select Attribute--'
+        ],
+        [
+            'value' => 'test_attribute_id',
+            'label' => 'Test Attribute'
+        ],
+    ];
+
     private Context|MockObject $contextMock;
     private MockObject|HawksearchFields $hawksearchFieldsMock;
     private MockObject|ProductAttributes $productAttributesMock;
+    /**
+     * @var array<string, mixed>
+     */
+    private array $elementTestData;
+    /**
+     * @var array<string, mixed>
+     */
+    private array $blockTestData;
+    private Text|MockObject $elementMock;
+    private MockObject|Layout $layoutMock;
+    private CustomAttributes $block;
+    private Template|MockObject $templateBlockMock;
+    private MockObject|FormFieldSelect $selectBlockMock;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->setUpLegacy($this);
 
+        $eventManagerMock = $this->getMockBuilder(ManagerInterface::class)
+            ->disableOriginalConstructor()
+            ->getMockForAbstractClass();
+        $this->layoutMock = $this->createMock(Layout::class);
         $this->contextMock = $this->getMockBuilder(Context::class)
             ->disableOriginalConstructor()
             ->getMock();
+        $this->contextMock->expects($this->any())
+            ->method('getEventManager')
+            ->willReturn($eventManagerMock);
+        $this->contextMock->expects($this->any())
+            ->method('getLayout')
+            ->willReturn($this->layoutMock);
         $this->hawksearchFieldsMock = $this->getMockBuilder(HawksearchFields::class)
             ->disableOriginalConstructor()
             ->getMock();
+        $this->hawksearchFieldsMock->expects($this->any())
+            ->method('toOptionArray')
+            ->willReturn(self::OPTIONS_FIELD);
         $this->productAttributesMock = $this->getMockBuilder(ProductAttributes::class)
             ->disableOriginalConstructor()
             ->getMock();
-    }
+        $this->productAttributesMock->expects($this->any())
+            ->method('toOptionArray')
+            ->willReturn(self::OPTIONS_ATTRIBUTE);
 
-    protected function tearDown(): void
-    {
-        $this->tearDownLegacy($this);
-        parent::tearDown();
+        $this->elementMock = $this->getMockBuilder(Text::class)
+            ->addMethods([
+                'getLabel',
+                'getValue',
+            ])
+            ->onlyMethods(['getHtmlId'])
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->elementTestData = [
+            'htmlId' => 'test_element_field_id',
+            'label' => 'test_element_label',
+        ];
+        $this->elementMock->expects(
+            $this->any()
+        )->method(
+            'getHtmlId'
+        )->willReturn(
+            $this->elementTestData['htmlId']
+        );
+        $this->elementMock->expects(
+            $this->any()
+        )->method(
+            'getLabel'
+        )->willReturn(
+            $this->elementTestData['label']
+        );
+
+        $this->templateBlockMock = $this->getMockBuilder(Template::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['setTemplate', 'setData', 'toHtml'])
+            ->getMock();
+
+        $this->selectBlockMock = $this->getMockBuilder(FormFieldSelect::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->layoutMock->expects($this->any())
+            ->method('createBlock')
+            ->willReturnMap([
+                [Template::class, '', [], $this->templateBlockMock],
+                [
+                    FormFieldSelect::class,
+                    '',
+                    ['data' => ['is_render_to_js_template' => true]],
+                    $this->selectBlockMock
+                ],
+            ]);
+
+        $this->blockTestData = [
+            'template' => '',
+            'name' => 'CustomAttributesTest_name',
+            'id' => 'CustomAttributesTest_id',
+        ];
+        $this->block = new CustomAttributes(
+            $this->contextMock,
+            $this->hawksearchFieldsMock,
+            $this->productAttributesMock,
+            $this->blockTestData
+        );
+        $this->block->setLayout($this->layoutMock);
     }
 
     /**
@@ -60,6 +171,8 @@ class CustomAttributesTest extends TestCase
     #[RequiresPhp('<8.2.0')]
     public function testAccessingDeprecatedPropertiesPhp81(): void
     {
+        $this->setUpLegacy($this);
+
         $model = new TestFixtureSubCustomAttributesLegacy(
             $this->contextMock,
             $this->hawksearchFieldsMock,
@@ -75,6 +188,8 @@ class CustomAttributesTest extends TestCase
             "Since 0.8.0: Property HawkSearch\EsIndexing\Block\Adminhtml\System\Config\Product\CustomAttributes::columnRendererCache has been deprecated and it's public/protected usage will be discontinued. Visibility changed to private.",
             "Since 0.8.0: Property HawkSearch\EsIndexing\Block\Adminhtml\System\Config\Product\CustomAttributes::columnRendererCache has been deprecated and it's public/protected usage will be discontinued. Visibility changed to private.",
         ]);
+
+        $this->tearDownLegacy($this);
     }
 
     /**
@@ -84,6 +199,8 @@ class CustomAttributesTest extends TestCase
     #[RequiresPhp('>=8.2.0')]
     public function testAccessingDeprecatedPropertiesPhp82(): void
     {
+        $this->setUpLegacy($this);
+
         $model = new TestFixtureSubCustomAttributesLegacy(
             $this->contextMock,
             $this->hawksearchFieldsMock,
@@ -100,6 +217,319 @@ class CustomAttributesTest extends TestCase
             "Since 0.8.0: Property HawkSearch\EsIndexing\Block\Adminhtml\System\Config\Product\CustomAttributes::columnRendererCache has been deprecated and it's public/protected usage will be discontinued. Visibility changed to private.",
             "Since 0.8.0: Property HawkSearch\EsIndexing\Block\Adminhtml\System\Config\Product\CustomAttributes::columnRendererCache has been deprecated and it's public/protected usage will be discontinued. Visibility changed to private.",
         ]);
+
+        $this->tearDownLegacy($this);
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testAccessingDeprecatedMethods(): void
+    {
+        $this->setUpLegacy($this);
+
+        $model = new TestFixtureSubCustomAttributesLegacy(
+            $this->contextMock,
+            $this->hawksearchFieldsMock,
+            $this->productAttributesMock,
+            []
+        );
+
+        $model->callDeprecatedProtectedMethods();
+
+        $this::assertSame(
+            [
+                "Since 0.8.0: Method HawkSearch\EsIndexing\Block\Adminhtml\System\Config\Product\CustomAttributes::resolveSelectFieldRenderer() has been deprecated and it's public/protected usage will be discontinued. Use HawkSearch\EsIndexing\Block\Adminhtml\System\Config\Product\CustomAttributes::addColumn() after plugin instead. It is not designed to override column renderer this way.",
+                "Since 0.8.0: Method HawkSearch\EsIndexing\Block\Adminhtml\System\Config\Product\CustomAttributes::getColumnRenderer() has been deprecated and it's public/protected usage will be discontinued. Use HawkSearch\EsIndexing\Block\Adminhtml\System\Config\Product\CustomAttributes::addColumn() after plugin instead. It is not designed to override column renderer this way.",
+            ],
+            $this->deprecations
+        );
+
+        $this->tearDownLegacy($this);
+    }
+
+    public function testRender(): void
+    {
+        $templateBlockTestData = [
+            'html' => 'template_block_test',
+        ];
+
+        $this->templateBlockMock->expects($this->once())
+            ->method('setTemplate')
+            ->with('HawkSearch_EsIndexing::system/config/product/custom-attributes-js.phtml')
+            ->willReturnSelf();
+        $this->templateBlockMock->expects($this->once())
+            ->method('setData')
+            ->with([
+                'html_id' => $this->block->getHtmlId(),
+                'new_field_option_value' => ValueProcessorInterface::SELECT_OPTION_NEW_FILED_VALUE,
+                'base_class_prefix' => 'arrayRow'
+            ])
+            ->willReturnSelf();
+        $this->templateBlockMock->expects($this->once())
+            ->method('toHtml')
+            ->willReturn($templateBlockTestData['html']);
+
+
+        $expectedHtml = '<tr id="row_test_element_field_id"><td class="label"><label for="test_element_field_id"><span>test_element_label</span></label></td><td class="value">template_block_test</td><td class=""></td></tr>';
+        $this->assertEquals($expectedHtml, $this->block->render($this->elementMock));
+    }
+
+    public function testColumnsCountAndOrder(): void
+    {
+        $columns = $this->block->getColumns();
+        $expectedOrder = array_keys($this->provideColumndsData());
+        $actualOrder = array_keys($columns);
+
+        $this->assertSameSize(
+            $this->provideColumndsData(),
+            $columns,
+            'Test columns count'
+        );
+        $this->assertEquals(
+            $expectedOrder,
+            $actualOrder,
+            'Test columns ordered correctly'
+        );
+    }
+
+    /**
+     * @depends      testColumnsCountAndOrder
+     * @dataProvider provideColumndsData
+     */
+    public function testColumnsInitialised(string $columnName, bool $required, string $label, array $options): void
+    {
+        $columns = $this->block->getColumns();
+
+        // test required
+        if ($required) {
+            $this->assertArrayHasKey('class', $columns[$columnName], 'Test column is required');
+            $this->assertNotNull($columns[$columnName]['class'], 'Test column is required');
+            $this->assertStringContainsString('required-entry', $columns[$columnName]['class'], 'Test column is required');
+        }
+
+        // test label
+        $this->assertArrayHasKey('label', $columns[$columnName], 'Test column label');
+        $this->assertEquals($label, $columns[$columnName]['label'], 'Test column label');
+
+        // test options
+        if (!empty($options)) {
+            $this->assertArrayHasKey('options', $columns[$columnName], 'Test column options');
+            $this->assertIsArray($columns[$columnName]['options'], 'Test column options');
+            $this->assertEquals($options, $columns[$columnName]['options']);
+        }
+    }
+
+    public function provideColumndsData(): array
+    {
+        return [
+            ValueProcessorInterface::COLUMN_FIELD => [
+                //  $columnName
+                ValueProcessorInterface::COLUMN_FIELD,
+                // $required
+                true,
+                // $label
+                'Hawk Field Name',
+                // $options
+                self::OPTIONS_FIELD,
+            ],
+            ValueProcessorInterface::COLUMN_ATTRIBUTE => [
+                ValueProcessorInterface::COLUMN_ATTRIBUTE,
+                false,
+                'Product Attribute',
+                self::OPTIONS_ATTRIBUTE,
+            ]
+        ];
+    }
+
+    public function testAddColumnAdded(): void
+    {
+        $testColumns = [
+            'new_column' => [
+                'label' => 'New Column',
+            ],
+        ];
+
+        $columns = $this->block->getColumns();
+        $this->assertArrayNotHasKey('new_column', $columns);
+
+        $this->block->addColumn('new_column', $testColumns['new_column']);
+        $columns = $this->block->getColumns();
+        $this->assertArrayHasKey('new_column', $columns);
+
+        $newColumn = $columns['new_column'];
+        $this->assertArrayHasKey('readonly', $newColumn, 'Test `readonly` param added');
+        $this->assertArrayHasKey('renderer', $newColumn, 'Test `renderer` param added');
+        $this->assertInstanceOf(FormFieldSelect::class, $newColumn['renderer'], 'Test `renderer`');
+    }
+
+    /**
+     * @depends      testAddColumnAdded
+     * @dataProvider provideColumnOptionsData
+     */
+    public function testAddColumnOptions(string $columnName, array $columnData, array $optionsResult): void
+    {
+        $this->block->addColumn($columnName, $columnData);
+        $columns = $this->block->getColumns();
+        $newColumn = $columns[$columnName];
+
+        $this->assertArrayHasKey('options', $newColumn);
+        $this->assertIsArray($newColumn['options']);
+        $this->assertEquals($newColumn['options'], $optionsResult);
+    }
+
+    public function provideColumnOptionsData(): array
+    {
+        $validOptions = self::OPTIONS_FIELD;
+        return [
+            'no options' => [
+                'test_column',
+                [
+                    'label' => 'New Column'
+                ],
+                []
+            ],
+            'empty options' => [
+                'test_column',
+                [
+                    'label' => 'New Column',
+                    'options' => []
+                ],
+                []
+            ],
+            'array options' => [
+                'test_column',
+                [
+                    'label' => 'New Column',
+                    'options' => $validOptions
+                ],
+                $validOptions
+            ],
+            'wrong type options' => [
+                'test_column',
+                [
+                    'label' => 'New Column',
+                    'options' => 'wrong options type'
+                ],
+                []
+            ],
+            'callable options return array' => [
+                'test_column',
+                [
+                    'label' => 'New Column',
+                    'options' => function () use ($validOptions) {
+                        return $validOptions;
+                    }
+                ],
+                $validOptions
+            ],
+            'callable options return non array' => [
+                'test_column',
+                [
+                    'label' => 'New Column',
+                    'options' => function () {
+                        return 'wrong options type';
+                    }
+                ],
+                []
+            ],
+        ];
+    }
+
+    /**
+     * @return void
+     */
+    public function testGetAddButtonLabel(): void
+    {
+        $this->assertEquals("Add New Mapping", $this->block->getAddButtonLabel());
+    }
+
+    public function testIsAddAfter(): void
+    {
+        $this->assertFalse($this->block->isAddAfter());
+    }
+
+    public function testGetArrayRows_option_extra_attrs(): void
+    {
+        $rowsTestOptions = $rowsTestData = [
+            'row_1' => [
+                'field' => 'row_1_field',
+                'attribute' => 'row_1_attribute',
+            ],
+            'row_2' => [
+                'field' => 'row_2_field',
+                'attribute' => 'row_2_attribute',
+            ],
+        ];
+        $map = [];
+
+        $columns = $this->block->getColumns();
+        foreach ($rowsTestData as $rowId => $rowData) {
+            foreach ($rowData as $field => $value) {
+                if (isset($columns[$field]['options'])) {
+                    $map[] = [$value, $value];
+                    $rowsTestOptions[$rowId][$field] = 'option_' . $value;
+                } else {
+                    unset($rowsTestOptions[$rowId][$field]);
+                }
+            }
+        }
+
+        $this->elementMock->expects($this->atLeastOnce())
+            ->method('getValue')
+            ->willReturn($rowsTestData);
+        $this->block->setElement($this->elementMock);
+
+        $this->selectBlockMock->expects($this->any())
+            ->method('calcOptionHash')
+            ->willReturnMap($map);
+
+        $rows = $this->block->getArrayRows();
+
+        foreach ($rows as $rowKey => $rowData) {
+            $this->assertEquals(array_values($rowsTestOptions[$rowKey]), array_keys($rowData['option_extra_attrs']));
+        }
+    }
+
+    /**
+     * @dataProvider provideRowIdTestData
+     */
+    public function testGetArrayRows_rowId(mixed $rowId, array $rowData, bool $result): void
+    {
+        $rowsTestData = [
+            $rowId => $rowData
+        ];
+
+        $this->elementMock->expects($this->atLeastOnce())
+            ->method('getValue')
+            ->willReturn($rowsTestData);
+        $this->block->setElement($this->elementMock);
+
+        $row = current($this->block->getArrayRows());
+
+        $this->assertEquals($rowId === $row['_id'], $result);
+    }
+
+    public function provideRowIdTestData(): array
+    {
+        return [
+            'string row id' => [
+                'string_row_id',
+                [
+                    'field' => 'row_1_field',
+                    'attribute' => 'row_1_attribute',
+                ],
+                true
+            ],
+            'int row id' => [
+                0,
+                [
+                    'field' => 'row_1_field',
+                    'attribute' => 'row_1_attribute',
+                ],
+                false
+            ],
+        ];
     }
 }
 
@@ -109,4 +539,16 @@ class CustomAttributesTest extends TestCase
 class TestFixtureSubCustomAttributesLegacy extends CustomAttributes
 {
     use AccessClassPropertyFixtureTrait;
+
+    public function callDeprecatedProtectedMethods(): void
+    {
+        $ret = $this->resolveSelectFieldRenderer('field');
+        $ret = $this->getColumnRenderer('field');
+    }
+
+    protected function resolveSelectFieldRenderer(string $columnName)
+    {
+        $method = 'resolveSelectFieldRenderer';
+        return parent::$method($columnName);
+    }
 }

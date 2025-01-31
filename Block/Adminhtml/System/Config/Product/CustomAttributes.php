@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Block\Adminhtml\System\Config\Product;
 
+use HawkSearch\Connector\Compatibility\PublicMethodDeprecationTrait;
 use HawkSearch\Connector\Compatibility\PublicPropertyDeprecationTrait;
 use HawkSearch\EsIndexing\Block\Adminhtml\Form\Field\Select;
 use HawkSearch\EsIndexing\Model\Config\Backend\Serialized\Processor\ValueProcessorInterface;
@@ -28,6 +29,7 @@ use Magento\Framework\Exception\LocalizedException;
 class CustomAttributes extends AbstractFieldArray
 {
     use PublicPropertyDeprecationTrait;
+    use PublicMethodDeprecationTrait;
 
     private array $deprecatedPublicProperties = [
         'columnRendererCache' => [
@@ -36,8 +38,22 @@ class CustomAttributes extends AbstractFieldArray
         ]
     ];
 
+    private array $deprecatedMethods = [
+        'getColumnRenderer' => [
+            'since' => '0.8.0',
+            'replacement' => __CLASS__ . '::addColumn() after plugin',
+            'description' => 'It is not designed to override column renderer this way.'
+        ],
+        'resolveSelectFieldRenderer' => [
+            'since' => '0.8.0',
+            'replacement' => __CLASS__ . '::addColumn() after plugin',
+            'description' => 'It is not designed to override column renderer this way.'
+        ],
+    ];
+
     /**
      * @private 0.8.0 Visibility changed to private. Set via constructor injection.
+     * @var array<string, mixed>
      */
     private array $columnRendererCache = [];
     private HawksearchFields $hawksearchFields;
@@ -62,12 +78,14 @@ class CustomAttributes extends AbstractFieldArray
     }
 
     /**
-     * Prepare rendering the new field by adding all the needed columns
-     *
-     * @throws LocalizedException
+     * Define columns
      */
-    protected function _prepareToRender()
+    protected function _construct(): void
     {
+        $this->setHtmlId('_' . uniqid());
+        $this->_addAfter = false;
+        $this->_addButtonLabel = __('Add New Mapping');
+
         $this->addColumn(
             ValueProcessorInterface::COLUMN_FIELD,
             [
@@ -89,9 +107,7 @@ class CustomAttributes extends AbstractFieldArray
             ]
         );
 
-        $this->_addAfter = false;
-        $this->_addButtonLabel = __('Add New Mapping');
-        $this->setHtmlId('_' . uniqid());
+        parent::_construct();
     }
 
     /**
@@ -104,21 +120,27 @@ class CustomAttributes extends AbstractFieldArray
     public function addColumn($name, $params)
     {
         parent::addColumn($name, $params);
-        if (!isset($this->_columns[$name])) {
-            return;
+
+        $options = $this->_getParam($params, 'options') ?? [];
+
+        if (is_callable($options)) {
+            $options = $options();
+            if (!is_array($options)) {
+                $options = [];
+            }
         }
 
-        $this->_columns[$name]['readonly'] = $this->_getParam($params, 'readonly', false);
-
-        $options = $this->_getParam($params, 'options');
-        if ($options !== null) {
-            $this->_columns[$name]['options'] = $options;
+        if (!is_array($options)) {
+            $options = [];
         }
+
+        $this->_columns[$name]['options'] = $options;
         $this->_columns[$name]['renderer'] = $this->getColumnRenderer($name);
+        $this->_columns[$name]['readonly'] = $this->_getParam($params, 'readonly', false);
     }
 
     /**
-     * Prepare existing row data object
+     * Set select options attributes
      *
      * @throws LocalizedException
      */
@@ -143,11 +165,12 @@ class CustomAttributes extends AbstractFieldArray
     }
 
     /**
-     * @return void
      * @throws LocalizedException
      * @throws \Exception
+     * @deprecated 0.8.0 It is not designed to override column renderer this way. Use after plugin for addColumn()
+     *     method
      */
-    protected function getColumnRenderer(string $columnName)
+    private function getColumnRenderer(string $columnName): Select
     {
         if (empty($this->_columns[$columnName])) {
             throw new \Exception('Wrong column name specified.');
@@ -155,42 +178,41 @@ class CustomAttributes extends AbstractFieldArray
 
         $columnData = $this->_columns[$columnName];
         if (!array_key_exists($columnName, $this->columnRendererCache) || !$this->columnRendererCache[$columnName]) {
-            $renderer = $this->resolveSelectFieldRenderer($columnName);
-
-            $renderer = $columnData['renderer'] ?: $renderer ?? false;
-
-            $this->columnRendererCache[$columnName] = $renderer;
+            /** @todo Replace by {@see self::getRenderer} call */
+            $this->columnRendererCache[$columnName] = $columnData['renderer'] ?: $this->resolveSelectFieldRenderer($columnName);
         }
 
         return $this->columnRendererCache[$columnName];
     }
 
     /**
-     * @return Select|null
      * @throws \Exception
+     * @deprecated 0.8.0 It is not designed to override column renderer this way. Use after plugin for addColumn()
+     *     method.
+     * @see self::getRenderer()
      */
-    protected function resolveSelectFieldRenderer(string $columnName)
+    private function resolveSelectFieldRenderer(string $columnName): Select
     {
         if (empty($this->_columns[$columnName])) {
             throw new \Exception('Wrong column name specified.');
         }
 
-        $columnData = $this->_columns[$columnName];
-        if (empty($columnData['options'])) {
-            return null;
-        }
+        return $this->getRenderer($this->_columns[$columnName]['options']);
+    }
 
+    /**
+     * @param list<array<mixed>> $options
+     * @return Select
+     * @throws LocalizedException
+     */
+    private function getRenderer(array $options): Select
+    {
         /** @var Select $renderer */
         $renderer = $this->getLayout()->createBlock(
             Select::class,
             '',
             ['data' => ['is_render_to_js_template' => true]]
         );
-
-        $options = $columnData['options'];
-        if (is_callable($options)) {
-            $options = $options();
-        }
 
         $renderer->setOptions($options);
 
