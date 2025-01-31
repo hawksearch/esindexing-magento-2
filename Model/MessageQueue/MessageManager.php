@@ -53,15 +53,19 @@ class MessageManager extends AbstractSimpleObject implements MessageManagerInter
         LoggerFactoryInterface $loggerFactory,
         IndexManagementInterface $indexManagement,
         array $data = []
-    )
-    {
+    ) {
         $this->storeManager = $storeManager;
         $this->logger = $loggerFactory->create();
         $this->indexManagement = $indexManagement;
         parent::__construct($data);
     }
 
-    public function addMessage($topicName, $data)
+    /**
+     * @param string $topicName
+     * @param MessageType $data
+     * @return $this
+     */
+    public function addMessage(string $topicName, array $data)
     {
         $messages = $this->_get(self::DATA_MESSAGES);
         $messages[] = [
@@ -72,30 +76,37 @@ class MessageManager extends AbstractSimpleObject implements MessageManagerInter
         return $this->setMessages($messages);
     }
 
+    /**
+     * @param list<array{topic: string, data: MessageType}> $messages
+     * @return $this
+     */
     public function setMessages(array $messages)
     {
         return $this->setData(self::DATA_MESSAGES, $messages);
     }
 
+    /**
+     * @return list<array{topic: string, data: MessageType}>
+     */
     public function getMessages()
     {
         return array_values($this->_get(self::DATA_MESSAGES));
     }
 
     /**
-     * Set current store_id in messageData['application_headers']
+     * Set current store_id in $messageData['application_headers']
      * so consumer may check store_id and execute operation in correct store scope.
      * Prevent publishing inconsistent messages because of store_id not defined or wrong.
      * Set other operation global data
      *
-     * @param MessageType $data
+     * @param MessageType $messageData
      * @return array
      */
-    private function updateApplicationHeaders(array $data)
+    private function updateApplicationHeaders(array $messageData)
     {
         try {
             $storeId = $this->storeManager->getStore()->getId();
-            $isFullReindex = $data['full_reindex'] ?? false;
+            $isFullReindex = $messageData['full_reindex'] ?? false;
             $indexName = $this->indexManagement->getIndexName(!$isFullReindex);
         } catch (NoSuchEntityException $e) {
             $errorMessage = sprintf(
@@ -106,11 +117,11 @@ class MessageManager extends AbstractSimpleObject implements MessageManagerInter
             throw new \LogicException($errorMessage);
         }
 
-        $data['application_headers'] = $data['application_headers'] ?? [];
-        $data['application_headers']['store_id'] = $storeId;
-        $data['application_headers']['index'] = $indexName;
-        $data['application_headers']['full_reindex'] = $isFullReindex;
+        $messageData['application_headers'] = $messageData['application_headers'] ?? [];
+        $messageData['application_headers']['store_id'] = $storeId;
+        $messageData['application_headers']['index'] = $indexName;
+        $messageData['application_headers']['full_reindex'] = $isFullReindex;
 
-        return $data;
+        return $messageData;
     }
 }

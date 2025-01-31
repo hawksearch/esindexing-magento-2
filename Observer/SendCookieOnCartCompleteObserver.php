@@ -41,7 +41,7 @@ class SendCookieOnCartCompleteObserver implements ObserverInterface
     private CookieManagerInterface $cookieManager;
 
     /**
-     * @var HttpRequest
+     * @var HttpRequest|RequestInterface
      */
     private RequestInterface $httpRequest;
 
@@ -56,8 +56,7 @@ class SendCookieOnCartCompleteObserver implements ObserverInterface
         CookieManagerInterface $cookieManager,
         RequestInterface $httpRequest,
         SerializerInterface $jsonSerializer
-    )
-    {
+    ) {
         $this->cartItemsToAddDataStorage = $cartItemsToAddDataStorage;
         $this->cartItemsToRemoveDataStorage = $cartItemsToRemoveDataStorage;
         $this->eventTrackingConfig = $eventTrackingConfig;
