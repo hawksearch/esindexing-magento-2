@@ -1,10 +1,12 @@
 | Q             | A
-| ------------- | ---
+|---------------| ---
 | Branch?       | 0.8 for features/bugs / master for hot fixes <!-- see below -->
 | Bug fix?      | yes/no <!-- please update CHANGELOG-*.md file -->
 | New feature?  | yes/no <!-- please update CHANGELOG-*.md file -->
 | Deprecations? | yes/no <!-- please update UPGRADE-*.md and CHANGELOG-*.md files -->
-| Issues        | Fix/Ref #... <!-- prefix each issue number with "Fix #", no need to create an issue if none exists, explain below instead -->
+| BC breaks?    | yes/no <!-- please update UPGRADE-*.md and CHANGELOG-*.md files -->
+| Tests pass?   | yes/no
+| Tickets       | Fix/Ref #... <!-- prefix each issue number with "Fix #", no need to create an issue if none exists, explain below instead -->
 
 <!--
 Replace this notice by a description of your feature/bugfix.
