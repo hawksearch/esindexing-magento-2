@@ -75,8 +75,7 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
          * @phpstan-ignore-next-line
          */
         FieldHandlerInterface $attributeHandler = null
-    )
-    {
+    ) {
         $this->rebuilder = $rebuilder;
         $this->itemsDataProvider = $itemsDataProvider;
         $this->fieldHandler = $fieldHandler;
@@ -88,7 +87,7 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
                 '$fieldHandler',
                 'Update dependencies in di.xml file.'
             );
-            if ($attributeHandler instanceof FieldHandlerInterface) {
+            if (!($attributeHandler instanceof \HawkSearch\EsIndexing\Model\Indexing\AttributeHandlerInterface)) {
                 $this->fieldHandler = $attributeHandler;
             } else {
                 throw new \InvalidArgumentException(
@@ -97,7 +96,7 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
                         '$attributeHandler',
                         __METHOD__,
                         FieldHandlerInterface::class,
-                        get_class($attributeHandler)
+                        \HawkSearch\EsIndexing\Model\Indexing\AttributeHandlerInterface::class
                     )->render()
                 );
             }
