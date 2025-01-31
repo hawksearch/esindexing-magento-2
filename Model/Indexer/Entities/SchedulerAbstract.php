@@ -40,8 +40,7 @@ class SchedulerAbstract implements SchedulerInterface
         EntityTypeInterface $entityType,
         MessageManagerInterface $messageManager,
         MessageTopicResolverInterface $messageTopicResolver
-    )
-    {
+    ) {
         $this->eventManager = $eventManager;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->entityType = $entityType;
@@ -50,6 +49,7 @@ class SchedulerAbstract implements SchedulerInterface
     }
 
     /**
+     * @return void
      * @throws InputException
      */
     public function schedule(StoreInterface $store, ?array $ids = null)

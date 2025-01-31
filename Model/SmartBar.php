@@ -19,7 +19,6 @@ use Magento\Framework\Api\AbstractSimpleObject;
 
 class SmartBar extends AbstractSimpleObject implements SmartBarInterface
 {
-
     public function getBoostAndBury(): bool
     {
         return !!$this->_get(self::FIELD_BOOST_AND_BURY);

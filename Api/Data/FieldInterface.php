@@ -82,7 +82,7 @@ interface FieldInterface
     /**
      * @return $this
      */
-    public function setFieldId(int $value): FieldInterface;
+    public function setFieldId(int $value): self;
 
     /**
      * @return string
@@ -93,7 +93,7 @@ interface FieldInterface
      * @param string|null $value
      * @return $this
      */
-    public function setSyncGuid(?string $value): FieldInterface;
+    public function setSyncGuid(?string $value): self;
 
     /**
      * @return string
@@ -104,7 +104,7 @@ interface FieldInterface
      * @param string|null $value
      * @return $this
      */
-    public function setLabel(?string $value): FieldInterface;
+    public function setLabel(?string $value): self;
 
     /**
      * @return string
@@ -115,7 +115,7 @@ interface FieldInterface
      * @param string|null $value
      * @return $this
      */
-    public function setName(?string $value): FieldInterface;
+    public function setName(?string $value): self;
 
     /**
      * @return bool
@@ -125,7 +125,7 @@ interface FieldInterface
     /**
      * @return $this
      */
-    public function setIsPrimaryKey(bool $value): FieldInterface;
+    public function setIsPrimaryKey(bool $value): self;
 
     /**
      * @return string
@@ -136,7 +136,7 @@ interface FieldInterface
      * @param string|null $value
      * @return $this
      */
-    public function setType(?string $value): FieldInterface;
+    public function setType(?string $value): self;
 
     /**
      * @return string
@@ -147,7 +147,7 @@ interface FieldInterface
      * @param string|null $value
      * @return $this
      */
-    public function setFieldType(?string $value): FieldInterface;
+    public function setFieldType(?string $value): self;
 
     /**
      * @return int
@@ -157,7 +157,7 @@ interface FieldInterface
     /**
      * @return $this
      */
-    public function setBoost(int $value): FieldInterface;
+    public function setBoost(int $value): self;
 
     /**
      * @return int
@@ -167,7 +167,7 @@ interface FieldInterface
     /**
      * @return $this
      */
-    public function setFacetHandler(int $value): FieldInterface;
+    public function setFacetHandler(int $value): self;
 
     /**
      * @return bool
@@ -177,7 +177,7 @@ interface FieldInterface
     /**
      * @return $this
      */
-    public function setIsOutput(bool $value): FieldInterface;
+    public function setIsOutput(bool $value): self;
 
     /**
      * @return bool
@@ -187,7 +187,7 @@ interface FieldInterface
     /**
      * @return $this
      */
-    public function setIsShingle(bool $value): FieldInterface;
+    public function setIsShingle(bool $value): self;
 
     /**
      * @return bool
@@ -197,7 +197,7 @@ interface FieldInterface
     /**
      * @return $this
      */
-    public function setIsBestFragment(bool $value): FieldInterface;
+    public function setIsBestFragment(bool $value): self;
 
     /**
      * @return bool
@@ -207,7 +207,7 @@ interface FieldInterface
     /**
      * @return $this
      */
-    public function setIsDictionary(bool $value): FieldInterface;
+    public function setIsDictionary(bool $value): self;
 
     /**
      * @return bool
@@ -217,7 +217,7 @@ interface FieldInterface
     /**
      * @return $this
      */
-    public function setIsSort(bool $value): FieldInterface;
+    public function setIsSort(bool $value): self;
 
     /**
      * @return bool
@@ -227,7 +227,7 @@ interface FieldInterface
     /**
      * @return $this
      */
-    public function setIsPrefix(bool $value): FieldInterface;
+    public function setIsPrefix(bool $value): self;
 
     /**
      * @return bool
@@ -237,7 +237,7 @@ interface FieldInterface
     /**
      * @return $this
      */
-    public function setIsHidden(bool $value): FieldInterface;
+    public function setIsHidden(bool $value): self;
 
     /**
      * @return bool
@@ -247,7 +247,7 @@ interface FieldInterface
     /**
      * @return $this
      */
-    public function setIsCompare(bool $value): FieldInterface;
+    public function setIsCompare(bool $value): self;
 
     /**
      * @return int
@@ -257,7 +257,7 @@ interface FieldInterface
     /**
      * @return $this
      */
-    public function setSortOrder(int $value): FieldInterface;
+    public function setSortOrder(int $value): self;
 
     /**
      * @return string
@@ -268,7 +268,7 @@ interface FieldInterface
      * @param string|null $value
      * @return $this
      */
-    public function setPartialQuery(?string $value): FieldInterface;
+    public function setPartialQuery(?string $value): self;
 
     /**
      * @return bool
@@ -278,7 +278,7 @@ interface FieldInterface
     /**
      * @return $this
      */
-    public function setIsKeywordText(bool $value): FieldInterface;
+    public function setIsKeywordText(bool $value): self;
 
     /**
      * @return bool
@@ -288,7 +288,7 @@ interface FieldInterface
     /**
      * @return $this
      */
-    public function setIsQuery(bool $value): FieldInterface;
+    public function setIsQuery(bool $value): self;
 
     /**
      * @return bool
@@ -298,7 +298,7 @@ interface FieldInterface
     /**
      * @return $this
      */
-    public function setIsQueryText(bool $value): FieldInterface;
+    public function setIsQueryText(bool $value): self;
 
     /**
      * @return bool
@@ -308,7 +308,7 @@ interface FieldInterface
     /**
      * @return $this
      */
-    public function setSkipCustom(bool $value): FieldInterface;
+    public function setSkipCustom(bool $value): self;
 
     /**
      * @return bool
@@ -318,7 +318,7 @@ interface FieldInterface
     /**
      * @return $this
      */
-    public function setStripHtml(bool $value): FieldInterface;
+    public function setStripHtml(bool $value): self;
 
     /**
      * @return int
@@ -328,7 +328,7 @@ interface FieldInterface
     /**
      * @return $this
      */
-    public function setMinNGramAnalyzer(int $value): FieldInterface;
+    public function setMinNGramAnalyzer(int $value): self;
 
     /**
      * @return int
@@ -338,7 +338,7 @@ interface FieldInterface
     /**
      * @return $this
      */
-    public function setMaxNGramAnalyzer(int $value): FieldInterface;
+    public function setMaxNGramAnalyzer(int $value): self;
 
     /**
      * @return int
@@ -348,7 +348,7 @@ interface FieldInterface
     /**
      * @return $this
      */
-    public function setCoordinateType(int $value): FieldInterface;
+    public function setCoordinateType(int $value): self;
 
     /**
      * @return bool
@@ -358,7 +358,7 @@ interface FieldInterface
     /**
      * @return $this
      */
-    public function setOmitNorms(bool $value): FieldInterface;
+    public function setOmitNorms(bool $value): self;
 
     /**
      * @return string
@@ -369,7 +369,7 @@ interface FieldInterface
      * @param string|null $value
      * @return $this
      */
-    public function setItemMapping(?string $value): FieldInterface;
+    public function setItemMapping(?string $value): self;
 
     /**
      * @return string
@@ -380,7 +380,7 @@ interface FieldInterface
      * @param string|null $value
      * @return $this
      */
-    public function setDefaultValue(?string $value): FieldInterface;
+    public function setDefaultValue(?string $value): self;
 
     /**
      * @return bool
@@ -390,7 +390,7 @@ interface FieldInterface
     /**
      * @return $this
      */
-    public function setUseForPrediction(bool $value): FieldInterface;
+    public function setUseForPrediction(bool $value): self;
 
     /**
      * @return string
@@ -401,7 +401,7 @@ interface FieldInterface
      * @param string|null $value
      * @return $this
      */
-    public function setCopyTo(?string $value): FieldInterface;
+    public function setCopyTo(?string $value): self;
 
     /**
      * @return string
@@ -412,7 +412,7 @@ interface FieldInterface
      * @param string|null $value
      * @return $this
      */
-    public function setAnalyzer(?string $value): FieldInterface;
+    public function setAnalyzer(?string $value): self;
 
     /**
      * @return bool
@@ -422,7 +422,7 @@ interface FieldInterface
     /**
      * @return $this
      */
-    public function setDoNotStore(bool $value): FieldInterface;
+    public function setDoNotStore(bool $value): self;
 
     /**
      * @return string
@@ -433,7 +433,7 @@ interface FieldInterface
      * @param string|null $value
      * @return $this
      */
-    public function setTags(?string $value): FieldInterface;
+    public function setTags(?string $value): self;
 
     /**
      * @return int[]
@@ -444,7 +444,7 @@ interface FieldInterface
      * @param int[]|null $value
      * @return $this
      */
-    public function setIterations(?array $value): FieldInterface;
+    public function setIterations(?array $value): self;
 
     /**
      * @return string
@@ -455,7 +455,7 @@ interface FieldInterface
      * @param string|null $value
      * @return $this
      */
-    public function setAnalyzerLanguage(?string $value): FieldInterface;
+    public function setAnalyzerLanguage(?string $value): self;
 
     /**
      * @return string
@@ -466,7 +466,7 @@ interface FieldInterface
      * @param string|null $value
      * @return $this
      */
-    public function setPreviewMapping(?string $value): FieldInterface;
+    public function setPreviewMapping(?string $value): self;
 
     /**
      * @return bool
@@ -476,7 +476,7 @@ interface FieldInterface
     /**
      * @return $this
      */
-    public function setOmitTfAndPos(bool $value): FieldInterface;
+    public function setOmitTfAndPos(bool $value): self;
 
     /**
      * @return string
@@ -487,7 +487,7 @@ interface FieldInterface
      * @param string|null $value
      * @return $this
      */
-    public function setCreateDate(?string $value): FieldInterface;
+    public function setCreateDate(?string $value): self;
 
     /**
      * @return string
@@ -498,7 +498,7 @@ interface FieldInterface
      * @param string|null $value
      * @return $this
      */
-    public function setModifyDate(?string $value): FieldInterface;
+    public function setModifyDate(?string $value): self;
 
     /**
      * @return bool
@@ -508,7 +508,7 @@ interface FieldInterface
     /**
      * @return $this
      */
-    public function setIsChild(bool $value): FieldInterface;
+    public function setIsChild(bool $value): self;
 
     /**
      * @return bool
@@ -518,5 +518,5 @@ interface FieldInterface
     /**
      * @return $this
      */
-    public function setIsHierarchical(bool $value): FieldInterface;
+    public function setIsHierarchical(bool $value): self;
 }

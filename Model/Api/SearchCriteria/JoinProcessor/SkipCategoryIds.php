@@ -26,9 +26,12 @@ class SkipCategoryIds implements CustomJoinInterface
 {
     /**
      * @param AbstractCollection $collection
+     * @return bool
      */
     public function apply(AbstractDb $collection)
     {
         $collection->setFlag('category_ids_added', true);
+
+        return true;
     }
 }

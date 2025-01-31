@@ -24,6 +24,7 @@ use Magento\Backend\Model\View\Result\Redirect;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Bulk\BulkManagementInterface;
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\DataObject\Factory as DataObjectFactory;
 use Magento\Framework\EntityManager\EntityManager;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -67,8 +68,7 @@ class Retry extends Action implements HttpPostActionInterface
         EntityManager $entityManager,
         BulkStatusInterface $bulkStatus,
         DataObjectFactory $dataObjectFactory
-    )
-    {
+    ) {
         parent::__construct($context);
         $this->bulkManagement = $bulkManagement;
         $this->notificationManagement = $notificationManagement;
@@ -79,11 +79,17 @@ class Retry extends Action implements HttpPostActionInterface
         $this->dataObjectFactory = $dataObjectFactory;
     }
 
+    /**
+     * @return bool
+     */
     protected function _isAllowed()
     {
         return parent::_isAllowed() && $this->bulkAccessValidator->isAllowed($this->getRequest()->getParam('uuid'));
     }
 
+    /**
+     * @return ResultInterface
+     */
     public function execute()
     {
         $bulkUuid = $this->getRequest()->getParam('uuid');

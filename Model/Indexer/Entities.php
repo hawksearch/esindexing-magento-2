@@ -19,20 +19,19 @@ use Magento\Framework\Indexer\ActionInterface;
 
 class Entities implements ActionInterface
 {
-    /**
-     * Indexer ID in configuration
-     */
     const INDEXER_ID = 'hawksearch_entities';
 
     private Action $action;
 
     public function __construct(
         Action $action
-    )
-    {
+    ) {
         $this->action = $action;
     }
 
+    /**
+     * @return void
+     */
     public function executeFull()
     {
         $this->action->execute();
@@ -40,15 +39,15 @@ class Entities implements ActionInterface
 
     /**
      * This indexer is not designed to run partial index updates
+     *
+     * @return void
      */
-    public function executeList(array $ids)
-    {
-    }
+    public function executeList(array $ids) {}
 
     /**
      * This indexer is not designed to run partial index updates
+     *
+     * @return void
      */
-    public function executeRow($id)
-    {
-    }
+    public function executeRow($id) {}
 }

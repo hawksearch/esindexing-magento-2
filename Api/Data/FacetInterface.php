@@ -81,7 +81,7 @@ interface FacetInterface
      * @param string|null $value
      * @return $this
      */
-    public function setSyncGuid(?string $value): FacetInterface;
+    public function setSyncGuid(?string $value): self;
 
     /**
      * @return int
@@ -91,7 +91,7 @@ interface FacetInterface
     /**
      * @return $this
      */
-    public function setFacetId(int $value): FacetInterface;
+    public function setFacetId(int $value): self;
 
     /**
      * @return string
@@ -102,7 +102,7 @@ interface FacetInterface
      * @param string|null $value
      * @return $this
      */
-    public function setName(?string $value): FacetInterface;
+    public function setName(?string $value): self;
 
     /**
      * @return string
@@ -113,7 +113,7 @@ interface FacetInterface
      * @param string|null $value
      * @return $this
      */
-    public function setFacetType(?string $value): FacetInterface;
+    public function setFacetType(?string $value): self;
 
     /**
      * @return string
@@ -124,7 +124,7 @@ interface FacetInterface
      * @param string|null $value
      * @return $this
      */
-    public function setFieldType(?string $value): FacetInterface;
+    public function setFieldType(?string $value): self;
 
     /**
      * @return int
@@ -134,7 +134,7 @@ interface FacetInterface
     /**
      * @return $this
      */
-    public function setMaxCount(int $value): FacetInterface;
+    public function setMaxCount(int $value): self;
 
     /**
      * @return int
@@ -144,7 +144,7 @@ interface FacetInterface
     /**
      * @return $this
      */
-    public function setMinHitCount(int $value): FacetInterface;
+    public function setMinHitCount(int $value): self;
 
     /**
      * @return string
@@ -155,7 +155,7 @@ interface FacetInterface
      * @param string|null $value
      * @return $this
      */
-    public function setField(?string $value): FacetInterface;
+    public function setField(?string $value): self;
 
     /**
      * @return string
@@ -166,7 +166,7 @@ interface FacetInterface
      * @param string|null $value
      * @return $this
      */
-    public function setParam(?string $value): FacetInterface;
+    public function setParam(?string $value): self;
 
     /**
      * @return string
@@ -177,7 +177,7 @@ interface FacetInterface
      * @param string|null $value
      * @return $this
      */
-    public function setDisplayType(?string $value): FacetInterface;
+    public function setDisplayType(?string $value): self;
 
     /**
      * @return int
@@ -187,7 +187,7 @@ interface FacetInterface
     /**
      * @return $this
      */
-    public function setScrollHeight(int $value): FacetInterface;
+    public function setScrollHeight(int $value): self;
 
     /**
      * @return int
@@ -197,7 +197,7 @@ interface FacetInterface
     /**
      * @return $this
      */
-    public function setScrollThreshold(int $value): FacetInterface;
+    public function setScrollThreshold(int $value): self;
 
     /**
      * @return int
@@ -207,7 +207,7 @@ interface FacetInterface
     /**
      * @return $this
      */
-    public function setTruncateThreshold(int $value): FacetInterface;
+    public function setTruncateThreshold(int $value): self;
 
     /**
      * @return int
@@ -217,7 +217,7 @@ interface FacetInterface
     /**
      * @return $this
      */
-    public function setSearchThreshold(int $value): FacetInterface;
+    public function setSearchThreshold(int $value): self;
 
     /**
      * @return int
@@ -227,7 +227,7 @@ interface FacetInterface
     /**
      * @return $this
      */
-    public function setSortOrder(int $value): FacetInterface;
+    public function setSortOrder(int $value): self;
 
     /**
      * @return bool
@@ -237,7 +237,7 @@ interface FacetInterface
     /**
      * @return $this
      */
-    public function setExpandSelection(bool $value): FacetInterface;
+    public function setExpandSelection(bool $value): self;
 
     /**
      * @return bool
@@ -247,7 +247,7 @@ interface FacetInterface
     /**
      * @return $this
      */
-    public function setIsCurrency(bool $value): FacetInterface;
+    public function setIsCurrency(bool $value): self;
 
     /**
      * @return bool
@@ -257,7 +257,7 @@ interface FacetInterface
     /**
      * @return $this
      */
-    public function setIsNumeric(bool $value): FacetInterface;
+    public function setIsNumeric(bool $value): self;
 
     /**
      * @return bool
@@ -267,7 +267,7 @@ interface FacetInterface
     /**
      * @return $this
      */
-    public function setIsSearch(bool $value): FacetInterface;
+    public function setIsSearch(bool $value): self;
 
     /**
      * @return bool
@@ -277,7 +277,7 @@ interface FacetInterface
     /**
      * @return $this
      */
-    public function setIsVisible(bool $value): FacetInterface;
+    public function setIsVisible(bool $value): self;
 
     /**
      * @return string
@@ -288,7 +288,7 @@ interface FacetInterface
      * @param string|null $value
      * @return $this
      */
-    public function setUBound(?string $value): FacetInterface;
+    public function setUBound(?string $value): self;
 
     /**
      * @return string
@@ -299,7 +299,7 @@ interface FacetInterface
      * @param string|null $value
      * @return $this
      */
-    public function setLBound(?string $value): FacetInterface;
+    public function setLBound(?string $value): self;
 
     /**
      * @return string
@@ -310,7 +310,7 @@ interface FacetInterface
      * @param string|null $value
      * @return $this
      */
-    public function setIncrement(?string $value): FacetInterface;
+    public function setIncrement(?string $value): self;
 
     /**
      * @return int
@@ -320,7 +320,7 @@ interface FacetInterface
     /**
      * @return $this
      */
-    public function setNofVisible(int $value): FacetInterface;
+    public function setNofVisible(int $value): self;
 
     /**
      * @return int
@@ -330,7 +330,7 @@ interface FacetInterface
     /**
      * @return $this
      */
-    public function setHeight(int $value): FacetInterface;
+    public function setHeight(int $value): self;
 
     /**
      * @return string
@@ -341,7 +341,7 @@ interface FacetInterface
      * @param string|null $value
      * @return $this
      */
-    public function setDisplayRuleXML(?string $value): FacetInterface;
+    public function setDisplayRuleXML(?string $value): self;
 
     /**
      * @return string
@@ -352,7 +352,7 @@ interface FacetInterface
      * @param string|null $value
      * @return $this
      */
-    public function setSortBy(?string $value): FacetInterface;
+    public function setSortBy(?string $value): self;
 
     /**
      * @return int
@@ -362,7 +362,7 @@ interface FacetInterface
     /**
      * @return $this
      */
-    public function setParentId(int $value): FacetInterface;
+    public function setParentId(int $value): self;
 
     /**
      * @return bool
@@ -372,7 +372,7 @@ interface FacetInterface
     /**
      * @return $this
      */
-    public function setIsCollapsible(bool $value): FacetInterface;
+    public function setIsCollapsible(bool $value): self;
 
     /**
      * @return bool
@@ -382,7 +382,7 @@ interface FacetInterface
     /**
      * @return $this
      */
-    public function setIsCollapsedDefault(bool $value): FacetInterface;
+    public function setIsCollapsedDefault(bool $value): self;
 
     /**
      * @return string
@@ -393,7 +393,7 @@ interface FacetInterface
      * @param string|null $value
      * @return $this
      */
-    public function setSwatchData(?string $value): FacetInterface;
+    public function setSwatchData(?string $value): self;
 
     /**
      * @return int
@@ -403,7 +403,7 @@ interface FacetInterface
     /**
      * @return $this
      */
-    public function setFacetRangeDisplayType(int $value): FacetInterface;
+    public function setFacetRangeDisplayType(int $value): self;
 
     /**
      * @return bool
@@ -413,7 +413,7 @@ interface FacetInterface
     /**
      * @return $this
      */
-    public function setPreloadChildren(bool $value): FacetInterface;
+    public function setPreloadChildren(bool $value): self;
 
     /**
      * @return string
@@ -424,7 +424,7 @@ interface FacetInterface
      * @param string|null $value
      * @return $this
      */
-    public function setTooltip(?string $value): FacetInterface;
+    public function setTooltip(?string $value): self;
 
     /**
      * @return bool
@@ -434,7 +434,7 @@ interface FacetInterface
     /**
      * @return $this
      */
-    public function setShowSliderInputs(bool $value): FacetInterface;
+    public function setShowSliderInputs(bool $value): self;
 
     /**
      * @return bool
@@ -444,7 +444,7 @@ interface FacetInterface
     /**
      * @return $this
      */
-    public function setShowFacetImageCount(bool $value): FacetInterface;
+    public function setShowFacetImageCount(bool $value): self;
 
     /**
      * @return \HawkSearch\EsIndexing\Api\Data\FacetRangeModelInterface[]
@@ -455,7 +455,7 @@ interface FacetInterface
      * @param \HawkSearch\EsIndexing\Api\Data\FacetRangeModelInterface[]|null $value
      * @return $this
      */
-    public function setFacetRanges(?array $value): FacetInterface;
+    public function setFacetRanges(?array $value): self;
 
     /**
      * @return string
@@ -466,7 +466,7 @@ interface FacetInterface
      * @param string|null $value
      * @return $this
      */
-    public function setTags(?string $value): FacetInterface;
+    public function setTags(?string $value): self;
 
     /**
      * @return string
@@ -477,7 +477,7 @@ interface FacetInterface
      * @param string|null $value
      * @return $this
      */
-    public function setCreateDate(?string $value): FacetInterface;
+    public function setCreateDate(?string $value): self;
 
     /**
      * @return string
@@ -488,7 +488,7 @@ interface FacetInterface
      * @param string|null $value
      * @return $this
      */
-    public function setModifyDate(?string $value): FacetInterface;
+    public function setModifyDate(?string $value): self;
 
     /**
      * @return \HawkSearch\EsIndexing\Api\Data\FacetBoostBuryInterface
@@ -499,7 +499,7 @@ interface FacetInterface
      * @param \HawkSearch\EsIndexing\Api\Data\FacetBoostBuryInterface|null $value
      * @return $this
      */
-    public function setBoostBury(?FacetBoostBuryInterface $value): FacetInterface;
+    public function setBoostBury(?FacetBoostBuryInterface $value): self;
 
     /**
      * @return string
@@ -510,7 +510,7 @@ interface FacetInterface
      * @param string|null $value
      * @return $this
      */
-    public function setListName(?string $value): FacetInterface;
+    public function setListName(?string $value): self;
 
     /**
      * @return int
@@ -520,7 +520,7 @@ interface FacetInterface
     /**
      * @return $this
      */
-    public function setNumericPrecision(int $value): FacetInterface;
+    public function setNumericPrecision(int $value): self;
 
     /**
      * @return string
@@ -531,7 +531,7 @@ interface FacetInterface
      * @param string|null $value
      * @return $this
      */
-    public function setCurrencySymbol(?string $value): FacetInterface;
+    public function setCurrencySymbol(?string $value): self;
 
     /**
      * @return string
@@ -542,5 +542,5 @@ interface FacetInterface
      * @param string|null $value
      * @return $this
      */
-    public function setDefaultItemType(?string $value): FacetInterface;
+    public function setDefaultItemType(?string $value): self;
 }

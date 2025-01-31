@@ -69,8 +69,7 @@ class BulkPublisher extends AbstractSimpleObject implements BulkPublisherInterfa
         MessageManagerInterface $messageManager,
         string $bulkDescription = null,
         array $data = []
-    )
-    {
+    ) {
         parent::__construct($data);
         $this->serializer = $serializer;
         $this->operationRepository = $operationRepository;
@@ -85,8 +84,9 @@ class BulkPublisher extends AbstractSimpleObject implements BulkPublisherInterfa
     }
 
     /**
-     * @throws LocalizedException
+     * @return void
      * @throws \Exception
+     * @throws LocalizedException
      */
     public function publish()
     {

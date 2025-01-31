@@ -23,6 +23,9 @@ use Magento\Framework\DataObject;
  */
 class NarrowXml implements FieldHandlerInterface
 {
+    /**
+     * @return string
+     */
     public function handle(DataObject $item, string $fieldName)
     {
         $xml = simplexml_load_string(

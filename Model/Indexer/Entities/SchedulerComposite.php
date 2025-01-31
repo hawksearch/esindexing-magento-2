@@ -50,8 +50,7 @@ class SchedulerComposite implements SchedulerInterface
     public function __construct(
         TMapFactory $tmapFactory,
         array $schedulers = []
-    )
-    {
+    ) {
         $this->schedulers = $tmapFactory->create(
             [
                 'array' => $schedulers,
@@ -60,6 +59,9 @@ class SchedulerComposite implements SchedulerInterface
         );
     }
 
+    /**
+     * @return void
+     */
     public function schedule(StoreInterface $store, ?array $ids = null)
     {
         foreach ($this->schedulers as $scheduler) {

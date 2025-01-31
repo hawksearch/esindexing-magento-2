@@ -18,6 +18,9 @@ use HawkSearch\EsIndexing\Model\Layout\LayoutConfigProcessorInterface;
 
 class CommonConfigProcessor implements LayoutConfigProcessorInterface
 {
+    /**
+     * @return array<string, mixed>
+     */
     public function process(array $jsConfig)
     {
         $config = [

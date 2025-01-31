@@ -17,6 +17,7 @@ namespace HawkSearch\EsIndexing\Controller\Adminhtml\Bulkoperations;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\Action\HttpGetActionInterface;
+use Magento\Framework\View\Result\Page;
 use Magento\Framework\View\Result\PageFactory;
 
 class Index extends Action implements HttpGetActionInterface
@@ -35,8 +36,7 @@ class Index extends Action implements HttpGetActionInterface
         Context $context,
         PageFactory $resultPageFactory,
         string $menuId = 'HawkSearch_EsIndexing::bulk_operations'
-    )
-    {
+    ) {
         $this->resultPageFactory = $resultPageFactory;
         $this->menuId = $menuId;
         parent::__construct($context);
@@ -45,7 +45,7 @@ class Index extends Action implements HttpGetActionInterface
     /**
      * Bulk list action
      *
-     * @return \Magento\Framework\View\Result\Page
+     * @return Page
      */
     public function execute()
     {

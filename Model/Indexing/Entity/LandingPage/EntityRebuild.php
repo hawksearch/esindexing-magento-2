@@ -151,7 +151,7 @@ class EntityRebuild extends AbstractEntityRebuild
     }
 
     /**
-     * @return array
+     * @return LandingPageInterface[]
      * @throws NoSuchEntityException
      */
     protected function getLandingPages()
@@ -164,7 +164,7 @@ class EntityRebuild extends AbstractEntityRebuild
     }
 
     /**
-     * @return array|LandingPageInterface[]
+     * @return LandingPageInterface[]
      * @throws NoSuchEntityException
      */
     protected function getCachedLandingPages()
@@ -194,7 +194,7 @@ class EntityRebuild extends AbstractEntityRebuild
     }
 
     /**
-     * @return LandingPageInterface[]
+     * @return array<string, LandingPageInterface>
      * @throws NoSuchEntityException
      */
     protected function getCustomFieldMap()
@@ -214,7 +214,7 @@ class EntityRebuild extends AbstractEntityRebuild
     }
 
     /**
-     * @return LandingPageInterface[]
+     * @return array<string, LandingPageInterface>
      * @throws NoSuchEntityException
      */
     protected function getCustomUrlMap()
@@ -236,6 +236,7 @@ class EntityRebuild extends AbstractEntityRebuild
     /**
      * Delete Landing pages by Custom field ids
      *
+     * @return void
      * @throws NoSuchEntityException
      * @throws NotFoundException
      */
@@ -288,6 +289,9 @@ class EntityRebuild extends AbstractEntityRebuild
         return $itemsToIndex;
     }
 
+    /**
+     * @return void
+     */
     protected function addIndexItems(array $items, string $indexName)
     {
         if (!$items) {
@@ -297,6 +301,9 @@ class EntityRebuild extends AbstractEntityRebuild
         $this->getEntityType()->getItemsIndexer()->add($this->convertItems($items), $indexName);
     }
 
+    /**
+     * @return void
+     */
     protected function updateIndexItems(array $items, string $indexName)
     {
         if (!$items) {

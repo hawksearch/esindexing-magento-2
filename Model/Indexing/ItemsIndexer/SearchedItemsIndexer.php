@@ -35,14 +35,14 @@ class SearchedItemsIndexer implements ItemsIndexerInterface
      */
     public function __construct(
         InstructionManagerPoolInterface $instructionManagerPool
-    )
-    {
+    ) {
         $this->instructionManagerPool = $instructionManagerPool;
     }
 
     /**
-     * @throws InstructionException
+     * @return void
      * @throws NotFoundException
+     * @throws InstructionException
      */
     public function add(array $items, string $indexName)
     {
@@ -52,8 +52,9 @@ class SearchedItemsIndexer implements ItemsIndexerInterface
     /**
      * Uses api/v2/indexing/index-ixtems API call for items indexing
      *
-     * @throws InstructionException
+     * @return void
      * @throws NotFoundException
+     * @throws InstructionException
      */
     public function update(array $items, string $indexName)
     {
@@ -75,8 +76,9 @@ class SearchedItemsIndexer implements ItemsIndexerInterface
     /**
      * Uses api/v2/indexing/delete-items API call for removing items from the index
      *
-     * @throws InstructionException
+     * @return void
      * @throws NotFoundException
+     * @throws InstructionException
      */
     public function delete(array $items, string $indexName)
     {

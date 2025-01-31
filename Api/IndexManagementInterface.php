@@ -38,10 +38,8 @@ interface IndexManagementInterface
      * Get active index for indexing
      * Use current index for partial delta index updates
      * Current index is used for searching
-     *
-     * @return string
      */
-    public function getIndexName(bool $useCurrent = false) : ?string;
+    public function getIndexName(bool $useCurrent = false): ?string;
 
     /**
      * @return void

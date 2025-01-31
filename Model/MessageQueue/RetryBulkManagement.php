@@ -27,14 +27,15 @@ class RetryBulkManagement implements BulkManagementInterface
     public function __construct(
         OperationManagementInterface $operationManagement,
         BulkPublisherInterface $publisher
-    )
-    {
+    ) {
         $this->operationManagement = $operationManagement;
         $this->publisher = $publisher;
     }
 
     /**
      * It is used to reschedule bulk operations
+     *
+     * @return bool
      */
     public function scheduleBulk($bulkUuid, array $operations, $description, $userId = null)
     {
@@ -60,6 +61,7 @@ class RetryBulkManagement implements BulkManagementInterface
 
 
     /**
+     * @return bool
      * @throws \LogicException
      */
     public function deleteBulk($bulkId)

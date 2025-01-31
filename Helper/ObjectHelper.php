@@ -38,8 +38,7 @@ class ObjectHelper
         FilterFactory $filterFactory,
         SortOrderFactory $sortOrderFactory,
         FilterGroupBuilder $filterGroupBuilder
-    )
-    {
+    ) {
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->filterFactory = $filterFactory;
         $this->sortOrderFactory = $sortOrderFactory;
@@ -47,12 +46,16 @@ class ObjectHelper
     }
 
     /**
+     * @phpstan-type keyFilterGroups SearchCriteria::FILTER_GROUPS
+     * @phpstan-type keySortOrders SearchCriteria::SORT_ORDERS
+     * @phpstan-type keyPageSize SearchCriteria::PAGE_SIZE
+     * @phpstan-type keyCurrentPage SearchCriteria::CURRENT_PAGE
      * @param array{
-     *     "SearchCriteria::FILTER_GROUPS":array<mixed>,
-     *     "SearchCriteria::SORT_ORDERS":array<mixed>,
-     *     "SearchCriteria::PAGE_SIZE":?int,
-     *     "SearchCriteria::CURRENT_PAGE":?int,
-     * } $data
+     *              keyFilterGroups: array<mixed>,
+     *              keySortOrders: array<mixed>,
+     *              keyPageSize: ?int,
+     *              keyCurrentPage: ?int,
+     *        } $data
      * @return SearchCriteria
      */
     public function convertArrayToSearchCriteriaObject(array $data)

@@ -25,6 +25,9 @@ class Custom implements FieldHandlerInterface
 {
     public const CUSTOM_FIELD_PREFIX = "__mage_catid__";
 
+    /**
+     * @return string
+     */
     public function handle(DataObject $item, string $fieldName)
     {
         return self::CUSTOM_FIELD_PREFIX . $item->getId();

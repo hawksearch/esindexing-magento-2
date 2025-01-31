@@ -37,13 +37,15 @@ class JsConfig extends Template
         LayoutConfigProcessorInterface $configProcessor,
         array $data = []
 
-    )
-    {
+    ) {
         $this->configProcessor = $configProcessor;
         $this->serializer = $serializer;
         parent::__construct($context, $data);
     }
 
+    /**
+     * @return string
+     */
     public function getJsLayout()
     {
         return $this->serializer->serialize($this->configProcessor->process($this->jsLayout ?? []));

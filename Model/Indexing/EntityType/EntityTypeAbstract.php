@@ -113,12 +113,18 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
         return $this->typeName;
     }
 
+    /**
+     * @return $this
+     */
     public function setTypeName(string $type)
     {
         $this->typeName = $type;
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getUniqueId(string $itemId)
     {
         return $this->getTypeName() . '_' . $itemId;

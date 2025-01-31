@@ -40,6 +40,9 @@ class CurrentCategory
         return $this->category;
     }
 
+    /**
+     * @return void
+     */
     public function set(CategoryInterface $category)
     {
         $this->category = $category;

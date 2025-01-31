@@ -25,6 +25,9 @@ use Magento\Framework\DataObject;
  */
 class DataObjectHandler implements FieldHandlerInterface
 {
+    /**
+     * @return mixed
+     */
     public function handle(DataObject $item, string $fieldName)
     {
         return $item->getData($fieldName);

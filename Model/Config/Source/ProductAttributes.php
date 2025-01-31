@@ -23,12 +23,12 @@ class ProductAttributes implements OptionSourceInterface
 
     public function __construct(
         Attributes $attributes
-    )
-    {
+    ) {
         $this->attributes = $attributes;
     }
 
     /**
+     * @return list<array{label: \Stringable, value: ?string}>
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function toOptionArray()
@@ -44,7 +44,7 @@ class ProductAttributes implements OptionSourceInterface
         foreach ($allAttributes as $code => $label) {
             $options[] = [
                 'value' => $code,
-                'label' => $code ? $code : $label,
+                'label' => $code ?: $label,
             ];
         }
 

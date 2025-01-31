@@ -25,18 +25,23 @@ class ConfigHelper extends AbstractConfigHelper
         IndexingConfig $indexingConfig,
         /** @todo change type: int -> ?int */
         int $batchSize = null
-    )
-    {
+    ) {
         parent::__construct($indexingConfig);
         $this->batchSize = $batchSize;
     }
 
+    /**
+     * @return bool
+     */
     public function isEnabled($store = null)
     {
         //@todo check if indexing of landing page entity is allowed
         return parent::isEnabled($store);
     }
 
+    /**
+     * @return int
+     */
     public function getBatchSize($store = null)
     {
         return $this->batchSize ?? parent::getBatchSize($store);

@@ -26,12 +26,14 @@ class MessageTopicByObjectResolver implements MessageTopicResolverInterface
     public function __construct(
         string $topic,
         string $resolverClass
-    )
-    {
+    ) {
         $this->topic = $topic;
         $this->resolverClass = $resolverClass;
     }
 
+    /**
+     * @return string
+     */
     public function resolve(object $object)
     {
         return $object instanceof $this->resolverClass ? $this->topic : '';

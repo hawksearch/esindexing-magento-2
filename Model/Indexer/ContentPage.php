@@ -24,9 +24,6 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 
 class ContentPage implements IndexerActionInterface, MviewActionInterface
 {
-    /**
-     * Indexer ID in configuration
-     */
     const INDEXER_ID = 'hawksearch_content_pages';
 
     private Action $action;
@@ -35,8 +32,7 @@ class ContentPage implements IndexerActionInterface, MviewActionInterface
     public function __construct(
         Action $action,
         ConsoleOutput $output
-    )
-    {
+    ) {
         $this->action = $action;
         $this->output = $output;
     }
@@ -44,6 +40,7 @@ class ContentPage implements IndexerActionInterface, MviewActionInterface
     /**
      * This indexer is not designed to run full reindex
      *
+     * @return void
      * @see Entities
      */
     public function executeFull()
@@ -56,19 +53,26 @@ class ContentPage implements IndexerActionInterface, MviewActionInterface
         $this->output->writeln('<comment>' . $phrase . '</comment>');
     }
 
+    /**
+     * @return void
+     */
     public function executeList(array $ids)
     {
         $this->execute($ids);
     }
 
+    /**
+     * @return void
+     */
     public function executeRow($id)
     {
         $this->execute([$id]);
     }
 
     /**
-     * @throws NoSuchEntityException
+     * @return void
      * @throws InputException
+     * @throws NoSuchEntityException
      */
     public function execute($ids)
     {

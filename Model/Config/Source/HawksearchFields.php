@@ -35,6 +35,7 @@ class HawksearchFields implements OptionSourceInterface
 
     /**
      * @noinspection PhpMissingReturnTypeInspection
+     * @return list<array{label: \Stringable, value: ?string}>
      */
     public function toOptionArray()
     {
@@ -42,12 +43,12 @@ class HawksearchFields implements OptionSourceInterface
         foreach ($this->getFields() as $field) {
             $options[] = [
                 'value' => $field->getName(),
-                'label' => $field->getName()
+                'label' => $field->getName(),
             ];
         }
         array_unshift($options, [
             'value' => null,
-            'label' => '--Please Select--'
+            'label' => __('--Please Select--'),
         ]);
 
         return $options;

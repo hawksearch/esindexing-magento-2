@@ -27,16 +27,13 @@ class BulkAccessValidator
     public function __construct(
         OperationValidatorInterface $operationTopicValidator,
         BulkOperationsStatus $bulkOperationsStatus
-    )
-    {
+    ) {
         $this->operationTopicValidator = $operationTopicValidator;
         $this->bulkOperationsStatus = $bulkOperationsStatus;
     }
 
     /**
      * Check if content is allowed
-     *
-     * @return bool
      */
     public function isAllowed(string $bulkUuid): bool
     {

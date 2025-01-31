@@ -33,14 +33,16 @@ class RequestConfigProcessor implements LayoutConfigProcessorInterface
         RequestInterface $request,
         UrlInterface $urlBuilder,
         FormKey $formKey
-    )
-    {
+    ) {
         $this->searchHelper = $searchHelper;
         $this->request = $request;
         $this->urlBuilder = $urlBuilder;
         $this->formKey = $formKey;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function process(array $jsConfig)
     {
         $jsConfig['request'] = [

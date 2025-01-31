@@ -45,7 +45,10 @@ class EntityRebuild extends AbstractEntityRebuild
     {
         return (int)$entityItem->getId();
     }
-    
+
+    /**
+     * @return mixed
+     */
     protected function castAttributeValue(mixed $value)
     {
         return $value === '' ? null : $value;

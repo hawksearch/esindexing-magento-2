@@ -23,11 +23,13 @@ class VueParamsMappingProcessor implements LayoutConfigProcessorInterface
 
     public function __construct(
         SearchHelper $searchHelper
-    )
-    {
+    ) {
         $this->searchHelper = $searchHelper;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function process(array $jsConfig)
     {
         $jsConfig['paramsMapping'] = [

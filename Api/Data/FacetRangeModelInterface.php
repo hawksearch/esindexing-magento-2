@@ -43,7 +43,7 @@ interface FacetRangeModelInterface
     /**
      * @return $this
      */
-    public function setRangeId(int $value): FacetRangeModelInterface;
+    public function setRangeId(int $value): self;
 
     /**
      * @return string
@@ -54,7 +54,7 @@ interface FacetRangeModelInterface
      * @param string|null $value
      * @return $this
      */
-    public function setName(?string $value): FacetRangeModelInterface;
+    public function setName(?string $value): self;
 
     /**
      * @return string
@@ -65,7 +65,7 @@ interface FacetRangeModelInterface
      * @param string|null $value
      * @return $this
      */
-    public function setLBound(?string $value): FacetRangeModelInterface;
+    public function setLBound(?string $value): self;
 
     /**
      * @return string
@@ -76,7 +76,7 @@ interface FacetRangeModelInterface
      * @param string|null $value
      * @return $this
      */
-    public function setUBound(?string $value): FacetRangeModelInterface;
+    public function setUBound(?string $value): self;
 
     /**
      * @return int
@@ -86,7 +86,7 @@ interface FacetRangeModelInterface
     /**
      * @return $this
      */
-    public function setSortOrder(int $value): FacetRangeModelInterface;
+    public function setSortOrder(int $value): self;
 
     /**
      * @return string
@@ -97,7 +97,7 @@ interface FacetRangeModelInterface
      * @param string|null $value
      * @return $this
      */
-    public function setAssetName(?string $value): FacetRangeModelInterface;
+    public function setAssetName(?string $value): self;
 
     /**
      * @return string
@@ -108,5 +108,5 @@ interface FacetRangeModelInterface
      * @param string|null $value
      * @return $this
      */
-    public function setAssetUrl(?string $value): FacetRangeModelInterface;
+    public function setAssetUrl(?string $value): self;
 }

@@ -58,8 +58,7 @@ class ItemsDataProvider implements ItemsDataProviderInterface
         CategoryCollectionFactory $categoryCollectionFactory,
         ExcludeNotVisibleProductsFlagInterface $excludeNotVisibleProductsFlag = null,
         ProductDataProvider $productDataProvider = null
-    )
-    {
+    ) {
         $this->productRepository = $productRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->visibility = $visibility;
@@ -95,8 +94,12 @@ class ItemsDataProvider implements ItemsDataProviderInterface
      * @param int $pageSize
      * @return ItemType[]
      */
-    protected function getProductCollection(int $storeId, ?array $productIds = null, int $currentPage = 1, int $pageSize = 0): array
-    {
+    protected function getProductCollection(
+        int $storeId,
+        ?array $productIds = null,
+        int $currentPage = 1,
+        int $pageSize = 0
+    ): array {
         $this->searchCriteriaBuilder->addFilter('store_id', $storeId);
 
         if ($productIds && count($productIds) > 0) {

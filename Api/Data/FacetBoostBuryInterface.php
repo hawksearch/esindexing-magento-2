@@ -39,7 +39,7 @@ interface FacetBoostBuryInterface
      * @param \HawkSearch\EsIndexing\Api\Data\FacetValueOrderInfoInterface[]|null $value
      * @return $this
      */
-    public function setBoostValues(?array $value): FacetBoostBuryInterface;
+    public function setBoostValues(?array $value): self;
 
     /**
      * @return \HawkSearch\EsIndexing\Api\Data\FacetValueOrderInfoInterface[]
@@ -50,6 +50,6 @@ interface FacetBoostBuryInterface
      * @param \HawkSearch\EsIndexing\Api\Data\FacetValueOrderInfoInterface[]|null $value
      * @return $this
      */
-    public function setBuryValues(?array $value): FacetBoostBuryInterface;
+    public function setBuryValues(?array $value): self;
 
 }

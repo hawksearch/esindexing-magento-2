@@ -50,8 +50,7 @@ class SearchResult extends SearchResultParent
         $mainTable = 'magento_operation',
         $resourceModel = null,
         $identifierName = 'id'
-    )
-    {
+    ) {
         $this->identifierResolver = $identifierResolver;
         parent::__construct(
             $entityFactory,
@@ -66,6 +65,9 @@ class SearchResult extends SearchResultParent
         );
     }
 
+    /**
+     * @return void
+     */
     protected function _initSelect()
     {
         $bulkUuid = $this->identifierResolver->execute();
@@ -74,9 +76,11 @@ class SearchResult extends SearchResultParent
             ->reset(Select::WHERE)
             ->from(['main_table' => $this->getMainTable()])
             ->where('bulk_uuid=?', $bulkUuid);
-        return $this;
     }
 
+    /**
+     * @return $this
+     */
     protected function _afterLoad()
     {
         parent::_afterLoad();

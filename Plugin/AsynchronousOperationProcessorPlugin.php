@@ -59,8 +59,7 @@ class AsynchronousOperationProcessorPlugin
         Indexing\Context $indexingContext,
         Emulation $emulation,
         BulkOperationManagement $bulkOperationManagement
-    )
-    {
+    ) {
         $this->messageEncoder = $messageEncoder;
         $this->operationManagement = $operationManagement;
         $this->bulkAllOperationCompleteValidator = $bulkAllOperationCompleteValidator;
@@ -76,7 +75,7 @@ class AsynchronousOperationProcessorPlugin
     }
 
     /**
-     * @return array
+     * @return ?array
      * @throws LocalizedException
      */
     public function beforeProcess(OperationProcessor $subject, string $encodedMessage)

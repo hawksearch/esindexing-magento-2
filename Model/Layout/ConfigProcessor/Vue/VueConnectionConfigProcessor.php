@@ -23,11 +23,14 @@ class VueConnectionConfigProcessor implements LayoutConfigProcessorInterface
 
     public function __construct(
         ApiSettings $apiSettings
-    )
-    {
+    ) {
         $this->apiSettings = $apiSettings;
     }
 
+
+    /**
+     * @return array<string, mixed>
+     */
     public function process(array $jsConfig)
     {
         $connectionConfig = [

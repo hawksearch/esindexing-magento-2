@@ -33,6 +33,10 @@ class MessageTopicResolverComposite implements MessageTopicResolverInterface
         $this->resolvers = $resolvers;
     }
 
+    /**
+     * @return string
+     * @throws InputException
+     */
     public function resolve(object $object)
     {
         foreach ($this->resolvers as $resolver) {

@@ -59,8 +59,7 @@ class Composite implements FieldHandlerInterface
     public function __construct(
         ObjectManagerInterface $objectManager,
         array $handlers = []
-    )
-    {
+    ) {
         $this->objectManager = $objectManager;
         $this->mergeTypes($handlers);
     }
@@ -68,6 +67,7 @@ class Composite implements FieldHandlerInterface
     /**
      * @param TItem $item
      * @param key-of<HandlersMap> $fieldName
+     * @return mixed
      */
     public function handle(DataObject $item, string $fieldName)
     {

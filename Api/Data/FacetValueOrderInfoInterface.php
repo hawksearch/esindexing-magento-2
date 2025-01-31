@@ -39,7 +39,7 @@ interface FacetValueOrderInfoInterface
      * @param string|null $value
      * @return $this
      */
-    public function setValue(?string $value): FacetValueOrderInfoInterface;
+    public function setValue(?string $value): self;
 
     /**
      * @return int
@@ -49,5 +49,5 @@ interface FacetValueOrderInfoInterface
     /**
      * @return $this
      */
-    public function setSortOrder(int $value): FacetValueOrderInfoInterface;
+    public function setSortOrder(int $value): self;
 }

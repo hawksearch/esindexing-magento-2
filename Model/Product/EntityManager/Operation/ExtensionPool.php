@@ -15,12 +15,16 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Product\EntityManager\Operation;
 
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Framework\EntityManager\Operation\ExtensionInterface;
 
 /**
  * Do not process extension attributes for ProductRepository used for collecting products for indexing
  */
 class ExtensionPool extends \Magento\Framework\EntityManager\Operation\ExtensionPool
 {
+    /**
+     * @return ExtensionInterface[]
+     */
     public function getActions($entityType, $actionName)
     {
         if ($entityType === ProductInterface::class && $actionName === 'read') {

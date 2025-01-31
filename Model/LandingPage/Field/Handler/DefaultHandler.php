@@ -27,6 +27,9 @@ class DefaultHandler extends DataObjectHandler
         $this->dataObjectHelper = $dataObjectHelper;
     }
 
+    /**
+     * @return mixed
+     */
     public function handle(DataObject $item, string $fieldName)
     {
         $fieldName = $this->dataObjectHelper->camelCaseToSnakeCase($fieldName);

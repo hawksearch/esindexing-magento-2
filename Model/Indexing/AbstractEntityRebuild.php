@@ -50,7 +50,6 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
             'description' => "The method will be removed. Using of 'code' and 'value' options is deprecated. Use " . FieldHandlerInterface::class . " to migrate fields with values."
         ]
     ];
-
     private array $deprecatedPublicProperties = [
         'entityTypePool' => [
             'since' => '0.8.0',
@@ -73,6 +72,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
             'description' => 'Visibility changed to private. Set via constructor injection.'
         ],
     ];
+
     /**
      * @var array<string, int>
      */
@@ -82,28 +82,23 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
      */
     private array $itemsToIndexCache = [];
     private EntityTypeInterface $entityType;
-
     /**
      * @var EntityTypePoolInterface<string, EntityTypeInterface>
      * @private 0.8.0 Visibility changed to private. Set via constructor injection.
      */
     private EntityTypePoolInterface $entityTypePool;
-
     /**
      * @private 0.8.0 Visibility changed to private. Set via constructor injection.
      */
     private EventManagerInterface $eventManager;
-
     /**
      * @private 0.8.0 Visibility changed to private. Set via constructor injection.
      */
     private LoggerInterface $hawkLogger;
-
     /**
      * @private 0.8.0 Visibility changed to private. Set via constructor injection.
      */
     private StoreManagerInterface $storeManager;
-
     /**
      * @private 0.8.0 Visibility changed to private. Set via constructor injection.
      */
@@ -162,6 +157,11 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
      */
     abstract protected function getEntityId(DataObject $entityItem): ?int;
 
+    /**
+     * @return void
+     * @throws LocalizedException
+     * @throws NotFoundException
+     */
     public function rebuild(SearchCriteriaInterface $searchCriteria)
     {
         if (!$this->getEntityType()->getConfigHelper()->isEnabled()) {
@@ -182,7 +182,6 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
             $this->rebuildBatch($searchCriteria, $ids);
         }
     }
-
 
     /**
      * Rebuild one batch of Entity items
@@ -318,7 +317,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     /**
      * @param TItem[] $fullItemsList Full list of items to be indexed
      * @param array<int>|null $entityIds List of entity IDs used for items selection
-     * @return array
+     * @return array<int, TItem>
      * @throws LocalizedException
      * @todo $entityIds: remove unused argument
      */
@@ -345,7 +344,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
 
     /**
      * @param TItem $item
-     * @return array
+     * @return array<array-key, list<mixed>>
      * @throws LocalizedException
      */
     protected function convertEntityToIndexDataArray(DataObject $item): array
@@ -422,7 +421,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     }
 
     /**
-     * @return mixed
+     * @return list<mixed>|null
      */
     protected function castAttributeValue(mixed $value)
     {
@@ -448,7 +447,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
      *     values.
      * @see FieldNameProviderInterface
      */
-    protected function getIndexedAttributes(DataObject $item = null): array
+    protected function getIndexedAttributes(DataObject $item = null): array // @phpstan-ignore-line
     {
         return [];
     }
@@ -504,7 +503,6 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     }
 
     /**
-     * @return EntityTypeInterface
      * @throws NotFoundException
      * @todo Refactor and get rid of iterating EntityTypePool
      */
@@ -575,6 +573,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     /**
      * @param TItem[] $items Key of an array item is item ID
      * @param string $indexName
+     * @return void
      * @throws LocalizedException
      * @throws NotFoundException
      */
@@ -616,6 +615,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     /**
      * @param string[] $ids
      * @param string $indexName
+     * @return void
      * @throws NotFoundException
      */
     protected function deleteIndexItems(array $ids, string $indexName)

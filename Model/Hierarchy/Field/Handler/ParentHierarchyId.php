@@ -23,6 +23,9 @@ use Magento\Framework\DataObject;
  */
 class ParentHierarchyId implements FieldHandlerInterface
 {
+    /**
+     * @return int
+     */
     public function handle(DataObject $item, string $fieldName)
     {
         if ($item->getLevel() == 1) {

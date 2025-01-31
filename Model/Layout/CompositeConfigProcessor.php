@@ -31,11 +31,13 @@ class CompositeConfigProcessor implements LayoutConfigProcessorInterface
      */
     public function __construct(
         array $configProcessors
-    )
-    {
+    ) {
         $this->configProcessors = $configProcessors;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function process(array $jsConfig)
     {
         foreach ($this->configProcessors as $configProcessor) {

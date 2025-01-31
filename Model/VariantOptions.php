@@ -19,7 +19,6 @@ use Magento\Framework\Api\AbstractSimpleObject;
 
 class VariantOptions extends AbstractSimpleObject implements VariantOptionsInterface
 {
-
     public function getCountFacetHitOnChild(): bool
     {
         return !!$this->_get(self::FIELD_COUNT_FACET_HIT_ON_CHILD);

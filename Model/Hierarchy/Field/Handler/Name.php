@@ -25,12 +25,15 @@ class Name implements FieldHandlerInterface
 {
     public const PARENT_HIERARCHY_NAME = 'category';
 
+    /**
+     * @return string
+     */
     public function handle(DataObject $item, string $fieldName)
     {
         if ($item->getLevel() == 1) {
             return self::PARENT_HIERARCHY_NAME;
         } else {
-            return $item->getName();
+            return (string)$item->getName();
         }
     }
 }

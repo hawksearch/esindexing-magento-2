@@ -41,8 +41,7 @@ class EntityTypePool implements EntityTypePoolInterface
     public function __construct(
         TMapFactory $tmapFactory,
         array $types = []
-    )
-    {
+    ) {
         $this->tmapFactory = $tmapFactory;
         $this->types = $tmapFactory->createSharedObjectsMap(
             [
@@ -87,6 +86,9 @@ class EntityTypePool implements EntityTypePoolInterface
         return $instances[$entityTypeName];
     }
 
+    /**
+     * @return TMap<TKey, TValue>
+     */
     public function getList()
     {
         return $this->types;

@@ -10,6 +10,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+
 namespace HawkSearch\EsIndexing\Model\Product;
 
 
@@ -26,6 +27,7 @@ interface PriceManagementInterface
     /**
      * @param ProductInterface $product
      * @param PriceData $itemData
+     * @return void
      */
     public function collectPrices(ProductInterface $product, array &$itemData);
 }

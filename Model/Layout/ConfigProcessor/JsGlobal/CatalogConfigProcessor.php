@@ -51,6 +51,8 @@ class CatalogConfigProcessor implements LayoutConfigProcessorInterface
     /**
      * Process configurations
      * Uses format supported by mage/utils/template templates syntax
+     *
+     * @return array<string, mixed>
      */
     public function process(array $jsConfig)
     {

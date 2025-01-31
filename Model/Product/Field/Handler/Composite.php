@@ -23,6 +23,7 @@ use Magento\Catalog\Model\Product as ProductModel;
 use Magento\Catalog\Model\ResourceModel\Eav\Attribute as AttributeResource;
 use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
 use Magento\Framework\DataObject;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\ObjectManagerInterface;
 
 /**
@@ -51,13 +52,16 @@ class Composite extends FieldHandler\Composite
         ProductTypePoolInterface $productTypePool,
         ValueProcessorInterface $valueProcessor,
         array $handlers = []
-    )
-    {
+    ) {
         parent::__construct($objectManager, $handlers);
         $this->productTypePool = $productTypePool;
         $this->valueProcessor = $valueProcessor;
     }
 
+    /**
+     * @return list<mixed>
+     * @throws LocalizedException
+     */
     public function handle(DataObject $item, string $fieldName)
     {
         $value = $this->formatValue(parent::handle($item, $fieldName));

@@ -29,12 +29,13 @@ class Url implements FieldHandlerInterface
     private StoreManagerInterface $storeManager;
 
     public function __construct(
-        StoreManagerInterface $storeManager)
-    {
+        StoreManagerInterface $storeManager
+    ) {
         $this->storeManager = $storeManager;
     }
 
     /**
+     * @return string
      * @throws NoSuchEntityException
      */
     public function handle(DataObject $item, string $fieldName)

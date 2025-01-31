@@ -23,6 +23,9 @@ use Magento\Framework\DataObject;
  */
 class PageType implements FieldHandlerInterface
 {
+    /**
+     * @return string
+     */
     public function handle(DataObject $item, string $fieldName)
     {
         return 'ProductListing';

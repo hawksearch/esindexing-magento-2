@@ -23,6 +23,9 @@ use Magento\Framework\DataObject;
  */
 class IsActive implements FieldHandlerInterface
 {
+    /**
+     * @return bool
+     */
     public function handle(DataObject $item, string $fieldName)
     {
         return (bool)$item->getIsActive();

@@ -28,6 +28,9 @@ class EsIndex extends AbstractSimpleObject implements EsIndexInterface
         return (string)$this->_get(self::INDEX_NAME);
     }
 
+    /**
+     * @return $this
+     */
     public function setIndexName(string $value)
     {
         return $this->setData(self::INDEX_NAME, $value);
