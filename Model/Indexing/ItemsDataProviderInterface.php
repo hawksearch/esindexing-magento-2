@@ -18,6 +18,8 @@ namespace HawkSearch\EsIndexing\Model\Indexing;
 /**
  * @api
  * @since 0.8.0
+ *
+ * @template T of object
  */
 interface ItemsDataProviderInterface
 {
@@ -26,7 +28,7 @@ interface ItemsDataProviderInterface
      * @param array<int>|null $entityIds
      * @param int $currentPage
      * @param int $pageSize
-     * @return array
+     * @return T[]
      * @todo $entityIds: default value null -> []
      * @todo $entityIds: change type ?array -> array
      */

@@ -97,6 +97,12 @@ class CatalogConfigProcessor implements LayoutConfigProcessorInterface
         return $this->categoryUrlPathGenerator->getUrlPath($this->getCurrentCategory()) . '/' . '${ $.product_url_slug }';
     }
 
+    /**
+     * @return array{}|array{
+     *     "productUrlRewriteExceptions": array<int, string>,
+     *     "noUrlRewriteProducts": list<int>,
+     * }
+     */
     private function getUrlRewritesConfig(): array
     {
         $category = $this->getCurrentCategory();

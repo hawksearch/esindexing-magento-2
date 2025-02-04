@@ -43,7 +43,7 @@ interface ClientDataInterface
     public function setVisitId(?string $value): self;
 
     /**
-     * @return array
+     * @return array<string, string>
      */
     public function getCustom(): array;
 
@@ -53,7 +53,7 @@ interface ClientDataInterface
     public function setCustom(?array $value): self;
 
     /**
-     * @return array
+     * @return array<string, list<string>>
      */
     public function getExtendedCustom(): array;
 
@@ -63,7 +63,7 @@ interface ClientDataInterface
     public function setExtendedCustom(?array $value): self;
 
     /**
-     * @return array
+     * @return list<int>
      */
     public function getPreviewBuckets(): array;
 

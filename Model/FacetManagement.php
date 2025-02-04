@@ -39,8 +39,7 @@ class FacetManagement implements FacetManagementInterface
      */
     public function __construct(
         InstructionManagerPoolInterface $instructionManagerPool
-    )
-    {
+    ) {
         $this->instructionManagerPool = $instructionManagerPool;
     }
 
@@ -80,6 +79,9 @@ class FacetManagement implements FacetManagementInterface
         return $returnedFacet;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function collectFacetData(FacetInterface $facet): array
     {
         if ($facet instanceof AbstractSimpleObject) {

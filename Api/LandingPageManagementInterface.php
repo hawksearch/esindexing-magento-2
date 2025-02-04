@@ -10,6 +10,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+
 namespace HawkSearch\EsIndexing\Api;
 
 use HawkSearch\EsIndexing\Api\Data\LandingPageInterface;
@@ -28,7 +29,7 @@ interface LandingPageManagementInterface
     public function getLandingPages();
 
     /**
-     * @return array
+     * @return list<string>
      */
     public function getLandingPageUrls();
 

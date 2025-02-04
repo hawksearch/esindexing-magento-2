@@ -42,6 +42,9 @@ interface EntityTypeInterface
 
     public function getRebuilder(): EntityRebuildInterface;
 
+    /**
+     * @return ItemsDataProviderInterface<object>
+     */
     public function getItemsDataProvider(): ItemsDataProviderInterface;
 
     public function getItemsIndexer(): ItemsIndexerInterface;
@@ -56,6 +59,6 @@ interface EntityTypeInterface
     /*public function getFieldHandler() : FieldHandlerInterface<DataObject>;*/
 
     public function getConfigHelper(): AbstractConfigHelper;
-    
+
     /*public function getFieldNameProvider(): FieldNameProviderInterface;*/
 }

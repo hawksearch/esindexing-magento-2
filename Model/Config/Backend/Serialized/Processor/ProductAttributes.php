@@ -34,7 +34,14 @@ use Magento\Framework\Serialize\SerializerInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * @phpstan-type ValueItemRow array{'field': string, 'attribute': string, 'field_new'?: string}
+ * @phpstan-type keyColumnField ValueProcessorInterface::COLUMN_FIELD
+ * @phpstan-type keyColumnAttribute ValueProcessorInterface::COLUMN_ATTRIBUTE
+ * @phpstan-type keyColumnFieldNew ValueProcessorInterface::COLUMN_FIELD_NEW
+ * @phpstan-type ValueItemRow array{
+ *     keyColumnField: string,
+ *     keyColumnAttribute: string,
+ *     keyColumnFieldNew?: string
+ * }
  * @phpstan-type ValueItems array<string, ValueItemRow>
  * @implements ValueProcessorInterface<ValueItems, ValueItems>
  */
@@ -71,8 +78,7 @@ class ProductAttributes implements ValueProcessorInterface
         FacetManagementInterface $facetManagement,
         FieldExtendedInterfaceFactory $fieldExtendedFactory,
         ?SerializerInterface $serializer = null
-    )
-    {
+    ) {
         $this->attributeProvider = $attributeProvider;
         $this->attributeFacade = $attributeFacade;
         $this->message = $message;
@@ -85,6 +91,11 @@ class ProductAttributes implements ValueProcessorInterface
         $this->serializer = $serializer ?? ObjectManager::getInstance()->get(SerializerInterface::class);
     }
 
+    /**
+     * @param ValueItems $value
+     * @param ValueInterface $configValue
+     * @return ValueItems
+     */
     public function process(array $value, ValueInterface $configValue): array
     {
         $value = $resultSave = $this->filterValue($value);

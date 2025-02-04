@@ -136,12 +136,12 @@ interface SearchRequestInterface
     public function setPaginationSetCode(?string $value): self;
 
     /**
-     * @return array
+     * @return array<string, list<array<string, string>>>
      */
     public function getFacetSelections(): array;
 
     /**
-     * @param array<string, list<array<string, mixed>>>|null $value
+     * @param array<string, list<array<string, string>>>|null $value
      */
     public function setFacetSelections(?array $value): self;
 
