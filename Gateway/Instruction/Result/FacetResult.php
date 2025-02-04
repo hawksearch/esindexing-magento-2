@@ -59,8 +59,6 @@ class FacetResult implements ResultInterface
 
     /**
      * Returns facet result interpretation
-     *
-     * @return FacetInterface
      */
     public function get(): FacetInterface
     {

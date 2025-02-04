@@ -28,7 +28,6 @@ class EventTracking extends ConfigProvider
      * Check if Event Tracking is enabled for selected store
      *
      * @param null|int|string $store
-     * @return bool
      * @noinspection PhpMissingParamTypeInspection
      */
     public function isEnabled($store = null): bool

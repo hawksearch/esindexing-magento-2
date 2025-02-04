@@ -32,9 +32,6 @@ class CurrentCategory
         $this->category = $categoryFactory->create();
     }
 
-    /**
-     * @return CategoryInterface
-     */
     public function get(): CategoryInterface
     {
         return $this->category;

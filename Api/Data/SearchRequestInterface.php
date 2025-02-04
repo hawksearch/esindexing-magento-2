@@ -55,198 +55,84 @@ interface SearchRequestInterface
     public const FIELD_SEARCH_TYPE = 'SearchType';
     public const FIELD_IGNORE_SPELLCHECK = 'IgnoreSpellcheck';
 
-    /**
-     * @return string
-     */
     public function getIndexName(): string;
 
-    /**
-     * @param string|null $value
-     * @return $this
-     */
     public function setIndexName(?string $value): self;
 
-    /**
-     * @return string
-     */
     public function getQuery(): string;
 
-    /**
-     * @param string|null $value
-     * @return $this
-     */
     public function setQuery(?string $value): self;
 
 
-    /**
-     * @return \HawkSearch\EsIndexing\Api\Data\VariantOptionsInterface
-     */
     public function getVariant(): VariantOptionsInterface;
 
 
-    /**
-     * @param \HawkSearch\EsIndexing\Api\Data\VariantOptionsInterface|null $value
-     * @return $this
-     */
     public function setVariant(?VariantOptionsInterface $value): self;
 
     /**
-     * @return \HawkSearch\EsIndexing\Api\Data\BoostQueryInterface[]
+     * @return BoostQueryInterface[]
      */
     public function getBoostQueries(): array;
 
     /**
-     * @param \HawkSearch\EsIndexing\Api\Data\BoostQueryInterface[]|null $value
-     * @return $this
+     * @param BoostQueryInterface[]|null $value
      */
     public function setBoostQueries(?array $value): self;
 
-    /**
-     * @return int
-     */
     public function getDistanceUnitType(): int;
 
-    /**
-     * @return $this
-     */
     public function setDistanceUnitType(int $value): self;
 
-    /**
-     * @return int
-     */
     public function getRequestType(): int;
 
-    /**
-     * @return $this
-     */
     public function setRequestType(int $value): self;
 
-    /**
-     * @return string
-     */
     public function getImageData(): string;
 
-    /**
-     * @param string|null $value
-     * @return $this
-     */
     public function setImageData(?string $value): self;
 
-    /**
-     * @return string
-     */
     public function getImageText(): string;
 
-    /**
-     * @param string|null $value
-     * @return $this
-     */
     public function setImageText(?string $value): self;
 
-    /**
-     * @return int
-     */
     public function getKValue(): int;
 
-    /**
-     * @return $this
-     */
     public function setKValue(int $value): self;
 
-    /**
-     * @return string
-     */
     public function getClientGuid(): string;
 
-    /**
-     * @param string|null $value
-     * @return $this
-     */
     public function setClientGuid(?string $value): self;
 
-    /**
-     * @return string
-     */
     public function getKeyword(): string;
 
-    /**
-     * @param string|null $value
-     * @return $this
-     */
     public function setKeyword(?string $value): self;
 
-    /**
-     * @return int
-     */
     public function getPageId(): int;
 
-    /**
-     * @return $this
-     */
     public function setPageId(int $value): self;
 
-    /**
-     * @return int
-     */
     public function getPageNo(): int;
 
-    /**
-     * @return $this
-     */
     public function setPageNo(int $value): self;
 
-    /**
-     * @return int
-     */
     public function getMaxPerPage(): int;
 
-    /**
-     * @return $this
-     */
     public function setMaxPerPage(int $value): self;
 
-    /**
-     * @return string
-     */
     public function getSearchWithin(): string;
 
-    /**
-     * @param string|null $value
-     * @return $this
-     */
     public function setSearchWithin(?string $value): self;
 
-    /**
-     * @return string
-     */
     public function getSortBy(): string;
 
-    /**
-     * @param string|null $value
-     * @return $this
-     */
     public function setSortBy(?string $value): self;
 
-    /**
-     * @return string
-     */
     public function getSortingSetCode(): string;
 
-    /**
-     * @param string|null $value
-     * @return $this
-     */
     public function setSortingSetCode(?string $value): self;
 
-    /**
-     * @return string
-     */
     public function getPaginationSetCode(): string;
 
-    /**
-     * @param string|null $value
-     * @return $this
-     */
     public function setPaginationSetCode(?string $value): self;
 
     /**
@@ -256,50 +142,23 @@ interface SearchRequestInterface
 
     /**
      * @param array<string, list<array<string, mixed>>>|null $value
-     * @return $this
      */
     public function setFacetSelections(?array $value): self;
 
-    /**
-     * @return string
-     */
     public function getCustomUrl(): string;
 
-    /**
-     * @param string|null $value
-     * @return $this
-     */
     public function setCustomUrl(?string $value): self;
 
-    /**
-     * @return bool
-     */
     public function getIsInPreview(): bool;
 
-    /**
-     * @return $this
-     */
     public function setIsInPreview(bool $value): self;
 
-    /**
-     * @return bool
-     */
     public function getIs100CoverageTurnedOn(): bool;
 
-    /**
-     * @return $this
-     */
     public function setIs100CoverageTurnedOn(bool $value): self;
 
-    /**
-     * @return string
-     */
     public function getExplainDocId(): string;
 
-    /**
-     * @param string|null $value
-     * @return $this
-     */
     public function setExplainDocId(?string $value): self;
 
     /**
@@ -309,7 +168,6 @@ interface SearchRequestInterface
 
     /**
      * @param string[]|null $value
-     * @return $this
      */
     public function setFacetOverride(?array $value): self;
 
@@ -320,50 +178,22 @@ interface SearchRequestInterface
 
     /**
      * @param string[]|null $value
-     * @return $this
      */
     public function setFieldOverride(?array $value): self;
 
-    /**
-     * @return \HawkSearch\EsIndexing\Api\Data\SmartBarInterface
-     */
     public function getSmartBar(): SmartBarInterface;
 
-    /**
-     * @param \HawkSearch\EsIndexing\Api\Data\SmartBarInterface|null $value
-     * @return $this
-     */
     public function setSmartBar(?SmartBarInterface $value): self;
 
-    /**
-     * @return \HawkSearch\EsIndexing\Api\Data\ClientDataInterface
-     */
     public function getClientData(): ClientDataInterface;
 
-    /**
-     * @param \HawkSearch\EsIndexing\Api\Data\ClientDataInterface|null $value
-     * @return $this
-     */
     public function setClientData(?ClientDataInterface $value): self;
 
-    /**
-     * @return string
-     */
     public function getSearchType(): string;
 
-    /**
-     * @param string|null $value
-     * @return $this
-     */
     public function setSearchType(?string $value): self;
 
-    /**
-     * @return bool
-     */
     public function getIgnoreSpellcheck(): bool;
 
-    /**
-     * @return $this
-     */
     public function setIgnoreSpellcheck(bool $value): self;
 }

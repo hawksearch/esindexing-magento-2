@@ -72,9 +72,6 @@ class CatalogConfigProcessor implements LayoutConfigProcessorInterface
         return array_merge_recursive($jsConfig, $config);
     }
 
-    /**
-     * @return bool
-     */
     private function isCategoryPage(): bool
     {
         $category = $this->getCurrentCategory();
@@ -90,25 +87,16 @@ class CatalogConfigProcessor implements LayoutConfigProcessorInterface
         return true;
     }
 
-    /**
-     * @return CategoryInterface
-     */
     private function getCurrentCategory(): CategoryInterface
     {
         return $this->currentCategory->get();
     }
 
-    /**
-     * @return string
-     */
     private function getProductUrlTemplate(): string
     {
         return $this->categoryUrlPathGenerator->getUrlPath($this->getCurrentCategory()) . '/' . '${ $.product_url_slug }';
     }
 
-    /**
-     * @return array
-     */
     private function getUrlRewritesConfig(): array
     {
         $category = $this->getCurrentCategory();
@@ -147,17 +135,11 @@ class CatalogConfigProcessor implements LayoutConfigProcessorInterface
         ];
     }
 
-    /**
-     * @return string
-     */
     private function getCategoryUrlPath(): string
     {
         return $this->categoryUrlPathGenerator->getUrlPath($this->getCurrentCategory()) . '/';
     }
 
-    /**
-     * @return bool
-     */
     private function useCategoryPathInProductUrl(): bool
     {
         return $this->scopeConfig->isSetFlag(

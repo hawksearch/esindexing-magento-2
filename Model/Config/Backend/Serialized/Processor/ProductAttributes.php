@@ -201,7 +201,6 @@ class ProductAttributes implements ValueProcessorInterface
 
     /**
      * @param ValueItemRow $fieldData
-     * @return FieldInterface
      * @throws CouldNotSaveException
      */
     protected function addNewFiled(array $fieldData): FieldInterface
@@ -219,7 +218,6 @@ class ProductAttributes implements ValueProcessorInterface
 
     /**
      * @param ValueItemRow $fieldData
-     * @return FieldInterface
      * @throws NotFoundException|CouldNotSaveException
      */
     protected function updateFiled(array $fieldData): FieldInterface
@@ -247,9 +245,6 @@ class ProductAttributes implements ValueProcessorInterface
         return $this->fieldsCache;
     }
 
-    /**
-     * @return FieldInterface
-     */
     protected function getFieldByName(string $name): FieldInterface
     {
         foreach ($this->getFields() as $field) {
@@ -273,9 +268,6 @@ class ProductAttributes implements ValueProcessorInterface
         return $this->facetsCache;
     }
 
-    /**
-     * @return FacetInterface
-     */
     protected function getFacetByField(FieldExtendedInterface $field): FacetInterface
     {
         $result = $this->facetFactory->create();
@@ -299,7 +291,6 @@ class ProductAttributes implements ValueProcessorInterface
     }
 
     /**
-     * @return FacetInterface
      * @throws CouldNotSaveException
      */
     protected function updateFacet(FieldExtendedInterface $field): FacetInterface

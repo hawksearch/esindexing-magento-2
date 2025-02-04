@@ -45,7 +45,6 @@ class StoreGroupPlugin extends AbstractPlugin
      * @param StoreGroupResourceModel $subject
      * @param StoreGroupResourceModel $result
      * @param StoreGroupModel $group
-     * @return StoreGroupResourceModel
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -66,7 +65,6 @@ class StoreGroupPlugin extends AbstractPlugin
      * Validate changes for invalidating indexer
      *
      * @param StoreGroupModel $model
-     * @return bool
      */
     protected function validate(AbstractModel $model): bool
     {

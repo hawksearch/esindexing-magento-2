@@ -59,8 +59,6 @@ class FieldResult implements ResultInterface
 
     /**
      * Returns result interpretation
-     *
-     * @return FieldInterface
      */
     public function get(): FieldInterface
     {

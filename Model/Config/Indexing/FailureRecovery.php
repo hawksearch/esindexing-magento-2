@@ -32,7 +32,6 @@ class FailureRecovery extends ConfigProvider
      * Check if Failure Recovery automation cron is enabled
      *
      * @param null|int|string $store
-     * @return bool
      * @noinspection PhpMissingParamTypeInspection
      */
     public function isEnabled($store = null): bool
@@ -44,7 +43,6 @@ class FailureRecovery extends ConfigProvider
      * Return the maximum number of times to retry processing an event after an error occurred
      *
      * @param null|int|string $store
-     * @return int
      * @noinspection PhpMissingParamTypeInspection
      */
     public function getMaximumRetries($store = null): int
@@ -56,7 +54,6 @@ class FailureRecovery extends ConfigProvider
      * Return maximum holding time for incomplete events
      *
      * @param null|int|string $store
-     * @return int
      * @noinspection PhpMissingParamTypeInspection
      */
     public function getMaximumOpenDelay($store = null): int

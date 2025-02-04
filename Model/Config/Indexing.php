@@ -29,7 +29,6 @@ class Indexing extends ConfigProvider
      * Return items batch size for indexing job single operation
      *
      * @param null|int|string $store
-     * @return int
      * @noinspection PhpMissingParamTypeInspection
      */
     public function getItemsBatchSize($store = null): int
@@ -41,7 +40,6 @@ class Indexing extends ConfigProvider
      * Check if backend indexing is enabled for selected store
      *
      * @param null|int|string $store
-     * @return bool
      * @noinspection PhpMissingParamTypeInspection
      */
     public function isIndexingEnabled($store = null): bool
@@ -53,7 +51,6 @@ class Indexing extends ConfigProvider
      * Check if products should include hierarchy with all parent categories
      *
      * @param null|int|string $store
-     * @return bool
      * @noinspection PhpMissingParamTypeInspection
      */
     public function isProductsIncludeCategoriesHierarchy($store = null): bool

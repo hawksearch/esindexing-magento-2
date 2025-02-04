@@ -436,9 +436,6 @@ class CustomAttributesTest extends TestCase
         ];
     }
 
-    /**
-     * @return void
-     */
     public function testGetAddButtonLabel(): void
     {
         $this->assertEquals("Add New Mapping", $this->block->getAddButtonLabel());

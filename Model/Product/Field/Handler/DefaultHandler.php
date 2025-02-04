@@ -60,9 +60,6 @@ class DefaultHandler implements FieldHandlerInterface
         return $value;
     }
 
-    /**
-     * @return string
-     */
     private function getAttributeCodeByFieldName(string $fieldName): string
     {
         return $this->productAttributes->getFieldToAttributeMap()[$fieldName] ?? '';

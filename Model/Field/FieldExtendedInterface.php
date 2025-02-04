@@ -22,25 +22,14 @@ use HawkSearch\EsIndexing\Api\Data\FieldInterface;
  */
 interface FieldExtendedInterface
 {
-    /**
-     * @return bool
-     */
     public function isSearchable(): bool;
 
-    /**
-     * @return bool
-     */
     public function isFilterable(): bool;
 
-    /**
-     * @return bool
-     */
     public function isSortable(): bool;
 
     /**
      * Return initial field
-     *
-     * @return FieldInterface
      */
     public function getField(): FieldInterface;
 }

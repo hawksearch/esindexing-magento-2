@@ -73,7 +73,6 @@ class RetryBulkManagement implements BulkManagementInterface
      * Publish list of operations to the corresponding message queues.
      *
      * @param OperationInterface[] $operations
-     * @return void
      */
     private function publishOperations(array $operations): void
     {

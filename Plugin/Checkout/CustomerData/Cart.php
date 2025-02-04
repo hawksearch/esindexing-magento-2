@@ -58,7 +58,6 @@ class Cart
     /**
      * Get active quote
      *
-     * @return ?Quote
      * @throws LocalizedException
      * @throws NoSuchEntityException
      * @todo change return type: ?Quote -> Quote
@@ -77,7 +76,6 @@ class Cart
      *
      * @param int $id
      * @param QuoteItem[] $itemsHaystack
-     * @return QuoteItem | null
      * @todo make private
      */
     private function findItemById(int $id, array $itemsHaystack): ?QuoteItem

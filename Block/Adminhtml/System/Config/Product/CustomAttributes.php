@@ -202,7 +202,6 @@ class CustomAttributes extends AbstractFieldArray
 
     /**
      * @param list<array<mixed>> $options
-     * @return Select
      * @throws LocalizedException
      */
     private function getRenderer(array $options): Select

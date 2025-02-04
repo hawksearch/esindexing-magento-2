@@ -41,7 +41,6 @@ class ResultIndexPlugin
     /**
      * @param Index $subject
      * @param null $result
-     * @return void
      */
     public function afterExecute(Index $subject, $result): void
     {

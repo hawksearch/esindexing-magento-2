@@ -50,9 +50,6 @@ class View extends \Magento\Framework\App\Action\Action
         $this->landingPageInterfaceFactory = $landingPageInterfaceFactory;
     }
 
-    /**
-     * @return ResultInterface
-     */
     public function execute(): ResultInterface
     {
         $category = $this->categoryFactory->create();

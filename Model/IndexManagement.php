@@ -85,9 +85,6 @@ class IndexManagement implements IndexManagementInterface
         $this->hawkLogger->info("--- initializeFullReindex FINISHED ---");
     }
 
-    /**
-     * @return string|null
-     */
     public function getIndexName(bool $useCurrent = false): ?string
     {
         $indices = $this->getIndices();

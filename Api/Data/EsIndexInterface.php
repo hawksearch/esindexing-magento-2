@@ -25,13 +25,7 @@ interface EsIndexInterface
 {
     public const INDEX_NAME = 'IndexName';
 
-    /**
-     * @return string|null
-     */
     public function getIndexName(): ?string;
 
-    /**
-     * @return $this
-     */
     public function setIndexName(string $value);
 }

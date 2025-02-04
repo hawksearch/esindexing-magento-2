@@ -48,7 +48,6 @@ class OnCartRemoveTrackingEventPlugin
      * @param Quote $subject
      * @param QuoteItem $result
      * @param int $itemId
-     * @return QuoteItem
      * @throws \Magento\Framework\Exception\RuntimeException
      * @noinspection PhpMissingParamTypeInspection
      */
@@ -65,7 +64,6 @@ class OnCartRemoveTrackingEventPlugin
      * @param Quote $subject
      * @param Quote $result
      * @param int $itemId
-     * @return Quote
      * @throws \Magento\Framework\Exception\RuntimeException
      * @noinspection PhpMissingParamTypeInspection
      */

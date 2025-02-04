@@ -40,9 +40,6 @@ class StoreViewPlugin extends AbstractPlugin
 
     /**
      * Invalidate indexer on store view save
-     *
-     * @return StoreResourceModel
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterSave(

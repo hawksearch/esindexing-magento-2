@@ -31,25 +31,22 @@ interface FacetBoostBuryInterface
     const BURY_VALUES = 'BuryValues';
 
     /**
-     * @return \HawkSearch\EsIndexing\Api\Data\FacetValueOrderInfoInterface[]
+     * @return FacetValueOrderInfoInterface[]
      */
     public function getBoostValues(): array;
 
     /**
-     * @param \HawkSearch\EsIndexing\Api\Data\FacetValueOrderInfoInterface[]|null $value
-     * @return $this
+     * @param FacetValueOrderInfoInterface[]|null $value
      */
     public function setBoostValues(?array $value): self;
 
     /**
-     * @return \HawkSearch\EsIndexing\Api\Data\FacetValueOrderInfoInterface[]
+     * @return FacetValueOrderInfoInterface[]
      */
     public function getBuryValues(): array;
 
     /**
-     * @param \HawkSearch\EsIndexing\Api\Data\FacetValueOrderInfoInterface[]|null $value
-     * @return $this
+     * @param FacetValueOrderInfoInterface[]|null $value
      */
     public function setBuryValues(?array $value): self;
-
 }

@@ -18,9 +18,6 @@ use HawkSearch\Connector\Gateway\Http\TransferInterface;
 
 class TransferIdBuilderPlugin
 {
-    /**
-     * @return string
-     */
     public function afterGetUri(TransferInterface $subject, string $result): string
     {
         $openCurlyBracket = str_replace('%', '\%', rawurlencode('{'));

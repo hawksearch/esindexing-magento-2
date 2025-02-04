@@ -22,16 +22,13 @@ use Magento\Framework\DataObject;
  * @api
  * @since 0.8.0
  *
- * @method FieldHandlerInterface<DataObject> getFieldHandler() Use this method in your class implementations for smooth transitions
- *          since 0.10.0. Method will be added in 0.10.0
+ * @method FieldHandlerInterface<DataObject> getFieldHandler() Use this method in your class implementations for smooth
+ *     transitions since 0.10.0. Method will be added in 0.10.0
  * @method FieldNameProviderInterface getFieldNameProvider() Method will be added in 0.10.0
  */
 interface EntityTypeInterface
 {
-    /**
-     * @return string
-     */
-    public function getTypeName() : string;
+    public function getTypeName(): string;
 
     /**
      * @return $this
@@ -43,41 +40,22 @@ interface EntityTypeInterface
      */
     public function getUniqueId(string $itemId);
 
-    /**
-     * @return EntityRebuildInterface
-     */
-    public function getRebuilder() : EntityRebuildInterface;
+    public function getRebuilder(): EntityRebuildInterface;
 
-    /**
-     * @return ItemsDataProviderInterface
-     */
-    public function getItemsDataProvider() : ItemsDataProviderInterface;
+    public function getItemsDataProvider(): ItemsDataProviderInterface;
 
-    /**
-     * @return ItemsIndexerInterface
-     */
-    public function getItemsIndexer() : ItemsIndexerInterface;
+    public function getItemsIndexer(): ItemsIndexerInterface;
 
     /**
      * @deprecated 0.7.0 in favour of a new Field Handlers logic
      * @see self::getFieldHandler()
-     * @return AttributeHandlerInterface|FieldHandlerInterface
      * @phpstan-ignore-next-line
      */
-    public function getAttributeHandler() : FieldHandlerInterface;
+    public function getAttributeHandler(): FieldHandlerInterface;
 
-    /**
-     * @return FieldHandlerInterface<DataObject>
-     */
-    /*public function getFieldHandler() : FieldHandlerInterface;*/
+    /*public function getFieldHandler() : FieldHandlerInterface<DataObject>;*/
 
-    /**
-     * @return AbstractConfigHelper
-     */
-    public function getConfigHelper() : AbstractConfigHelper;
-
-    /**
-     * @return FieldNameProviderInterface
-     */
+    public function getConfigHelper(): AbstractConfigHelper;
+    
     /*public function getFieldNameProvider(): FieldNameProviderInterface;*/
 }

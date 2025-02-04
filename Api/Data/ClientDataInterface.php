@@ -34,26 +34,12 @@ interface ClientDataInterface
     const FIELD_ORIGIN = 'Origin';
     const FIELD_ZIP_CODE = 'ZipCode';
 
-    /**
-     * @return string
-     */
     public function getVisitorId(): string;
 
-    /**
-     * @param string|null $value
-     * @return $this
-     */
     public function setVisitorId(?string $value): self;
 
-    /**
-     * @return string
-     */
     public function getVisitId(): string;
 
-    /**
-     * @param string|null $value
-     * @return $this
-     */
     public function setVisitId(?string $value): self;
 
     /**
@@ -63,7 +49,6 @@ interface ClientDataInterface
 
     /**
      * @param array<string, string>|null $value
-     * @return $this
      */
     public function setCustom(?array $value): self;
 
@@ -74,7 +59,6 @@ interface ClientDataInterface
 
     /**
      * @param array<string, list<string>>|null $value
-     * @return $this
      */
     public function setExtendedCustom(?array $value): self;
 
@@ -85,40 +69,18 @@ interface ClientDataInterface
 
     /**
      * @param list<int>|null $value
-     * @return $this
      */
     public function setPreviewBuckets(?array $value): self;
 
-    /**
-     * @return string
-     */
     public function getSource(): string;
 
-    /**
-     * @param string|null $value
-     * @return $this
-     */
     public function setSource(?string $value): self;
 
-    /**
-     * @return \HawkSearch\EsIndexing\Api\Data\CoordinateInterface
-     */
     public function getOrigin(): CoordinateInterface;
 
-    /**
-     * @param \HawkSearch\EsIndexing\Api\Data\CoordinateInterface|null $value
-     * @return $this
-     */
     public function setOrigin(?CoordinateInterface $value): self;
 
-    /**
-     * @return string
-     */
     public function getZipCode(): string;
 
-    /**
-     * @param string|null $value
-     * @return $this
-     */
     public function setZipCode(?string $value): self;
 }

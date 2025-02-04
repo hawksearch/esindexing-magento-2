@@ -22,8 +22,5 @@ namespace HawkSearch\EsIndexing\Model\Product\Attribute;
  */
 interface ExcludeNotVisibleProductsFlagInterface
 {
-    /**
-     * @return bool
-     */
     public function execute(): bool;
 }
