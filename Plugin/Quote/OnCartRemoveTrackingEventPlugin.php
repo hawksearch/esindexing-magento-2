@@ -28,8 +28,7 @@ class OnCartRemoveTrackingEventPlugin
     public function __construct(
         DataStorageInterface $cartItemsToRemoveDataStorage,
         EventTrackingConfig $eventTrackingConfig
-    )
-    {
+    ) {
         $this->cartItemsToRemoveDataStorage = $cartItemsToRemoveDataStorage;
         $this->eventTrackingConfig = $eventTrackingConfig;
     }
@@ -37,15 +36,12 @@ class OnCartRemoveTrackingEventPlugin
     /**
      * @param Quote $subject
      * @param int $itemId
-     * @return null
      * @noinspection PhpMissingParamTypeInspection
      */
-    public function beforeUpdateItem(Quote $subject, $itemId)
+    public function beforeUpdateItem(Quote $subject, $itemId): void
     {
         $item = $subject->getItemById($itemId);
         $this->qty = $item ? $item->getQty() : 0;
-
-        return null;
     }
 
     /**
@@ -56,7 +52,7 @@ class OnCartRemoveTrackingEventPlugin
      * @throws \Magento\Framework\Exception\RuntimeException
      * @noinspection PhpMissingParamTypeInspection
      */
-    public function afterUpdateItem(Quote $subject, QuoteItem $result, $itemId)
+    public function afterUpdateItem(Quote $subject, QuoteItem $result, $itemId): QuoteItem
     {
         if ($this->qty > $result->getQty() && (int)$itemId === (int)$result->getItemId()) {
             $this->addItemToTriggerList($result, $this->qty - $result->getQty());
@@ -73,7 +69,7 @@ class OnCartRemoveTrackingEventPlugin
      * @throws \Magento\Framework\Exception\RuntimeException
      * @noinspection PhpMissingParamTypeInspection
      */
-    public function afterRemoveItem(Quote $subject, Quote $result, $itemId)
+    public function afterRemoveItem(Quote $subject, Quote $result, $itemId): Quote
     {
         $item = $subject->getItemById($itemId);
         if ($item instanceof QuoteItem) {
@@ -84,10 +80,9 @@ class OnCartRemoveTrackingEventPlugin
     }
 
     /**
-     * @return void
      * @throws \Magento\Framework\Exception\RuntimeException
      */
-    private function addItemToTriggerList(QuoteItem $resultItem, float $qty)
+    private function addItemToTriggerList(QuoteItem $resultItem, float $qty): void
     {
         if ($this->eventTrackingConfig->isEnabled()) {
             $this->cartItemsToRemoveDataStorage->reset();

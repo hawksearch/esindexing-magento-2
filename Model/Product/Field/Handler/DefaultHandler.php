@@ -71,9 +71,8 @@ class DefaultHandler implements FieldHandlerInterface
     /**
      * @param ItemType $product
      * @param AttributeResource $attribute
-     * @return mixed
      */
-    private function getProductAttributeText(ProductModel $product, AttributeResource $attribute)
+    private function getProductAttributeText(ProductModel $product, AttributeResource $attribute): mixed
     {
         $value = $product->getData($attribute->getAttributeCode());
         $valueText = null;

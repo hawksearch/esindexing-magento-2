@@ -32,8 +32,7 @@ class AttributePlugin extends AbstractPlugin
     public function __construct(
         IndexerRegistry $indexerRegistry,
         Attributes $productAttributes
-    )
-    {
+    ) {
         parent::__construct($indexerRegistry);
         $this->productIndexer = $indexerRegistry->get(ProductIndexer::INDEXER_ID);
         $this->productAttributes = $productAttributes;
@@ -44,28 +43,24 @@ class AttributePlugin extends AbstractPlugin
      *
      * @param AttributeResourceModel $subject
      * @param Attribute $attribute
-     * @return void
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function beforeDelete(
         AttributeResourceModel $subject,
         AbstractModel $attribute
-    )
-    {
+    ): void {
         $this->isInvalidationNeeded = $this->isIndexInvalidationNeeded($attribute);
     }
 
     /**
      * Invalidate product indexer on attribute delete
      *
-     * @return AttributeResourceModel
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterDelete(
         AttributeResourceModel $subject,
         AttributeResourceModel $result
-    )
-    {
+    ): AttributeResourceModel {
         if ($this->isInvalidationNeeded) {
             $this->productIndexer->invalidate();
         }
@@ -80,7 +75,6 @@ class AttributePlugin extends AbstractPlugin
      * becasue new attributes should be added to indexed attributes list first
      *
      * @param Attribute $attribute
-     * @return bool
      */
     private function isIndexInvalidationNeeded(AbstractModel $attribute): bool
     {

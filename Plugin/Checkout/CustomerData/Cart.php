@@ -41,7 +41,7 @@ class Cart
      * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterGetSectionData(CustomerDataCart $subject, array $result)
+    public function afterGetSectionData(CustomerDataCart $subject, array $result): array
     {
         $items = $this->getQuote()->getAllVisibleItems();
         if (is_array($result['items'])) {
@@ -77,10 +77,10 @@ class Cart
      *
      * @param int $id
      * @param QuoteItem[] $itemsHaystack
-     * @return QuoteItem | bool
+     * @return QuoteItem | null
      * @todo make private
      */
-    protected function findItemById(int $id, array $itemsHaystack)
+    private function findItemById(int $id, array $itemsHaystack): ?QuoteItem
     {
         foreach ($itemsHaystack as $item) {
             /** @var QuoteItem $item */
@@ -89,6 +89,6 @@ class Cart
             }
         }
 
-        return false;
+        return null;
     }
 }

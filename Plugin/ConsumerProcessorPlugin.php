@@ -36,8 +36,7 @@ class ConsumerProcessorPlugin
         StoreManagerInterface $storeManager,
         ContextInterface $indexingContext,
         Emulation $emulation
-    )
-    {
+    ) {
         $this->serializer = $serializer;
         $this->storeManager = $storeManager;
         $this->indexingContext = $indexingContext;
@@ -45,11 +44,10 @@ class ConsumerProcessorPlugin
     }
 
     /**
-     * @return null
      * @throws LocalizedException
      * @throws NoSuchEntityException
      */
-    public function beforeProcess(Consumer $subject, QueueOperationDataInterface $operation)
+    public function beforeProcess(Consumer $subject, QueueOperationDataInterface $operation): void
     {
         $data = $this->serializer->unserialize($operation->getData());
 
@@ -68,7 +66,5 @@ class ConsumerProcessorPlugin
 
         $isFullReindex = $applicationHeaders['full_reindex'] ?? false;
         $this->indexingContext->setIsFullReindex($isFullReindex);
-
-        return null;
     }
 }

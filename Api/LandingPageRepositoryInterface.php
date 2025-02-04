@@ -10,22 +10,14 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+
 namespace HawkSearch\EsIndexing\Api;
 
 interface LandingPageRepositoryInterface
 {
-    /**
-     * @return mixed
-     */
-    public function getByUrl(string $url);
+    public function getByUrl(string $url): mixed;
 
-    /**
-     * @return mixed
-     */
-    public function get(int $id);
+    public function get(int $id): mixed;
 
-    /**
-     * @return mixed
-     */
-    public function getList();
+    public function getList(): mixed;
 }

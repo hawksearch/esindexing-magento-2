@@ -67,8 +67,7 @@ class EntityRebuild extends AbstractEntityRebuild
         StockRegistryInterface $stockRegistry,
         Product\Attributes $productAttributes,
         Product $productDataProvider
-    )
-    {
+    ) {
         parent::__construct(
             $entityTypePool,
             $eventManager,
@@ -86,9 +85,8 @@ class EntityRebuild extends AbstractEntityRebuild
 
     /**
      * @param ItemType $product
-     * @return bool
      */
-    private function isProductInStock(ProductModel $product)
+    private function isProductInStock(ProductModel $product): bool
     {
         $stockItem = $this->stockRegistry->getStockItem($product->getId());
 

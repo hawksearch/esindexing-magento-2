@@ -81,7 +81,7 @@ class RetryBulk extends Command
     /**
      * @return int
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $bulkUuid = $input->getArgument(self::INPUT_BULK_UUID);
         $statuses = $input->getArgument(self::INPUT_STATUSES);

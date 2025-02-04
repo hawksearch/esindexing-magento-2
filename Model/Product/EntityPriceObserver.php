@@ -26,15 +26,14 @@ class EntityPriceObserver implements ObserverInterface
 
     public function __construct(
         PriceManagementInterface $priceManagement
-    )
-    {
+    ) {
         $this->priceManagement = $priceManagement;
     }
 
     /**
      * Add product entity pricing data to the index data
      */
-    public function execute(Observer $observer)
+    public function execute(Observer $observer): void
     {
         /** @var DataObject $itemData */
         $itemData = $observer->getData('item_data');
@@ -42,13 +41,11 @@ class EntityPriceObserver implements ObserverInterface
         $product = $observer->getData('item');
 
         if (!$product instanceof ProductInterface) {
-            return $this;
+            return;
         }
 
         $priceInfo = [];
         $this->priceManagement->collectPrices($product, $priceInfo);
         $itemData->addData($priceInfo);
-
-        return $this;
     }
 }

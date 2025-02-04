@@ -27,7 +27,7 @@ class IndexItemsContext extends AbstractSimpleObject implements IndexItemsContex
         return (string)$this->_get(self::FIELD_INDEX_NAME);
     }
 
-    public function setIndexName(?string $value)
+    public function setIndexName(?string $value): IndexItemsContextInterface
     {
         return $this->setData(self::FIELD_INDEX_NAME, $value);
     }
@@ -44,7 +44,7 @@ class IndexItemsContext extends AbstractSimpleObject implements IndexItemsContex
         return $value;
     }
 
-    public function setItems(?array $value)
+    public function setItems(?array $value): IndexItemsContextInterface
     {
         return $this->setData(self::FIELD_ITEMS, $value);
     }

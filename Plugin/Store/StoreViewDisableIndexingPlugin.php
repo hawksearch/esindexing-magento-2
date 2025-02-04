@@ -32,8 +32,7 @@ class StoreViewDisableIndexingPlugin
         IndexingConfig $indexingConfig,
         WriterInterface $configWriter,
         ReinitableConfigInterface $reinitableConfig
-    )
-    {
+    ) {
         $this->indexingConfig = $indexingConfig;
         $this->configWriter = $configWriter;
         $this->reinitableConfig = $reinitableConfig;
@@ -49,8 +48,11 @@ class StoreViewDisableIndexingPlugin
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterSave(StoreResourceModel $subject, StoreResourceModel $result, AbstractModel $store)
-    {
+    public function afterSave(
+        StoreResourceModel $subject,
+        StoreResourceModel $result,
+        AbstractModel $store
+    ): StoreResourceModel {
         if ($store->isObjectNew() && $this->indexingConfig->isIndexingEnabled($store->getId())) {
             $this->configWriter->save(
                 $this->indexingConfig->getPath(IndexingConfig::CONFIG_ENABLE_INDEXING),

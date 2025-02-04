@@ -50,9 +50,6 @@ class BulkAccessValidator
         return $isAllowed;
     }
 
-    /**
-     * @return bool
-     */
     private function isTopicAllowed(OperationInterface $operation): bool
     {
         $isAllowed = true;

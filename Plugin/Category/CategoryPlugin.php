@@ -28,8 +28,7 @@ class CategoryPlugin
 
     public function __construct(
         IndexerRegistry $indexerRegistry
-    )
-    {
+    ) {
         $this->categoryIndexer = $indexerRegistry->get(CategoryIndexer::INDEXER_ID);
         $this->productIndexer = $indexerRegistry->get(ProductIndexer::INDEXER_ID);
     }
@@ -37,20 +36,24 @@ class CategoryPlugin
     /**
      * Reindex on page save.
      *
-     * @return CategoryResource
      * @throws \Exception
      */
-    public function aroundSave(CategoryResource $categoryResource, \Closure $proceed, CategoryModel $object)
-    {
+    public function aroundSave(
+        CategoryResource $categoryResource,
+        \Closure $proceed,
+        CategoryModel $object
+    ): CategoryResource {
         return $this->addCommitCallback($categoryResource, $proceed, $object);
     }
 
     /**
-     * @return CategoryResource
      * @throws \Exception
      */
-    public function aroundDelete(CategoryResource $categoryResource, \Closure $proceed, CategoryModel $object)
-    {
+    public function aroundDelete(
+        CategoryResource $categoryResource,
+        \Closure $proceed,
+        CategoryModel $object
+    ): CategoryResource {
         $object->setAffectedProductIds(array_keys($object->getProductsPosition()));
         return $this->addCommitCallback($categoryResource, $proceed, $object);
     }
@@ -58,11 +61,13 @@ class CategoryPlugin
     /**
      * Reindex catalog search.
      *
-     * @return CategoryResource
      * @throws \Exception
      */
-    private function addCommitCallback(CategoryResource $categoryResource, \Closure $proceed, CategoryModel $category)
-    {
+    private function addCommitCallback(
+        CategoryResource $categoryResource,
+        \Closure $proceed,
+        CategoryModel $category
+    ): CategoryResource {
         try {
             $categoryResource->beginTransaction();
             $result = $proceed($category);
@@ -84,10 +89,8 @@ class CategoryPlugin
 
     /**
      * Reindex category if indexer is not scheduled
-     *
-     * @return void
      */
-    protected function reindexCategoryRow(int $pageId)
+    private function reindexCategoryRow(int $pageId): void
     {
         if (!$this->categoryIndexer->isScheduled()) {
             $this->categoryIndexer->reindexRow($pageId);
@@ -98,9 +101,8 @@ class CategoryPlugin
      * Reindex products if indexer is not scheduled
      *
      * @param int[] $productIds
-     * @return void
      */
-    protected function reindexProductList(array $productIds)
+    private function reindexProductList(array $productIds): void
     {
         if (!$this->productIndexer->isScheduled()) {
             $this->productIndexer->reindexList($productIds);

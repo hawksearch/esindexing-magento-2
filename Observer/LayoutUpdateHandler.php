@@ -28,13 +28,12 @@ class LayoutUpdateHandler implements ObserverInterface
     public function __construct(
         SearchConfig $searchConfig,
         CatalogHelper $catalogHelper
-    )
-    {
+    ) {
         $this->searchConfig = $searchConfig;
         $this->catalogHelper = $catalogHelper;
     }
 
-    public function execute(Observer $observer)
+    public function execute(Observer $observer): void
     {
         /** @var Layout $layout */
         $layout = $observer->getData('layout');
@@ -50,9 +49,6 @@ class LayoutUpdateHandler implements ObserverInterface
         $layout->getUpdate()->addHandle($handles);
     }
 
-    /**
-     * @return array
-     */
     private function getResultsHandles(string $action): array
     {
         $allowedActions = [
@@ -81,10 +77,7 @@ class LayoutUpdateHandler implements ObserverInterface
 
         return $handles;
     }
-
-    /**
-     * @return bool
-     */
+    
     private function isCategoriesEnabled(): bool
     {
         //@todo replace with \HawkSearch\EsIndexing\Registry\CurrentCategory::get()

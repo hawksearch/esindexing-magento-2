@@ -67,7 +67,7 @@ class SendCookieOnCartCompleteObserver implements ObserverInterface
         $this->jsonSerializer = $jsonSerializer;
     }
 
-    public function execute(Observer $observer)
+    public function execute(Observer $observer): void
     {
         if (!$this->eventTrackingConfig->isEnabled() || $this->httpRequest->isXmlHttpRequest()) {
             return;
@@ -84,9 +84,13 @@ class SendCookieOnCartCompleteObserver implements ObserverInterface
     }
 
     /**
-     * @return array
+     * @return array{
+     *     uniqueId: string,
+     *     itemPrice: float,
+     *     quantity: float
+     * }
      */
-    protected function formatCartItem(QuoteItem $item)
+    private function formatCartItem(QuoteItem $item): array
     {
         return [
             'uniqueId' => $this->productEntityType->getUniqueId($item->getProductId()),
@@ -98,12 +102,11 @@ class SendCookieOnCartCompleteObserver implements ObserverInterface
     /**
      * @param string $cookieName
      * @param QuoteItem[] $cartItems
-     * @return void
      * @throws InputException
      * @throws CookieSizeLimitReachedException
      * @throws FailureToSendException
      */
-    protected function setCookieForCartItems(string $cookieName, array $cartItems)
+    private function setCookieForCartItems(string $cookieName, array $cartItems): void
     {
         if (!empty($cartItems)) {
             $cartItems = array_map([$this, 'formatCartItem'], $cartItems);
@@ -114,11 +117,8 @@ class SendCookieOnCartCompleteObserver implements ObserverInterface
             );
         }
     }
-
-    /**
-     * @return PublicCookieMetadata
-     */
-    private function getCookieMetaData()
+    
+    private function getCookieMetaData(): PublicCookieMetadata
     {
         if (!isset($this->cookieMetadata)) {
             $this->cookieMetadata = $this->cookieMetadataFactory->createPublicCookieMetadata()

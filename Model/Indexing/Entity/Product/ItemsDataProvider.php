@@ -134,7 +134,6 @@ class ItemsDataProvider implements ItemsDataProviderInterface
 
     /**
      * @param ItemType[] $products
-     * @return void
      */
     private function addParentCategoriesToProducts(array $products): void
     {
@@ -177,10 +176,9 @@ class ItemsDataProvider implements ItemsDataProviderInterface
      * Add parent ids data to loaded items
      *
      * @param ItemType[] $products
-     * @return void
      * @throws Exception
      */
-    private function addParentIds(array $products)
+    private function addParentIds(array $products): void
     {
         $parentsMap = $this->productDataProvider->getParentsByChildMap(array_keys($products));
         foreach ($products as $item) {
@@ -194,10 +192,9 @@ class ItemsDataProvider implements ItemsDataProviderInterface
      * Load child products collection and add its data to loaded product items
      *
      * @param ItemType[] $products
-     * @return void
      * @throws Exception
      */
-    private function addChildProducts(array $products)
+    private function addChildProducts(array $products): void
     {
         if (!$products) {
             return;

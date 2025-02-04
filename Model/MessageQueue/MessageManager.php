@@ -100,9 +100,9 @@ class MessageManager extends AbstractSimpleObject implements MessageManagerInter
      * Set other operation global data
      *
      * @param MessageType $messageData
-     * @return array
+     * @return MessageType
      */
-    private function updateApplicationHeaders(array $messageData)
+    private function updateApplicationHeaders(array $messageData): array
     {
         try {
             $storeId = $this->storeManager->getStore()->getId();

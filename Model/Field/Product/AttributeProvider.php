@@ -41,10 +41,7 @@ class AttributeProvider
         $this->productAttributeFactory = $productAttributeFactory;
         $this->instanceName = $instanceName;
     }
-
-    /**
-     * @return AttributeAdapter
-     */
+    
     public function getByCode(string $attributeCode): AttributeAdapter
     {
         if (!isset($this->cachedAttributes[$attributeCode])) {

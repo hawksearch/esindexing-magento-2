@@ -38,7 +38,7 @@ interface EntityTypePoolInterface
      *
      * @return iterable<TValue>
      */
-    public function getList();
+    public function getList(): iterable;
 
     /**
      * Create not shared entity type instance by its type name

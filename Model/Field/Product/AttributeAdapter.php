@@ -15,7 +15,6 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Field\Product;
 
 use Magento\Catalog\Api\Data\ProductAttributeInterface;
-use Magento\Framework\DataObject;
 
 /**
  * @internal experimental feature
@@ -28,36 +27,29 @@ class AttributeAdapter
     public function __construct(
         ProductAttributeInterface $attribute,
         string $attributeCode
-    )
-    {
+    ) {
         $this->attribute = $attribute;
         $this->attributeCode = $attributeCode;
     }
 
     /**
      * Get product attribute instance.
-     *
-     * @return ProductAttributeInterface|DataObject
      */
-    public function getAttribute()
+    public function getAttribute(): ProductAttributeInterface
     {
         return $this->attribute;
     }
 
     /**
      * Get product attribute code.
-     *
-     * @return string
      */
-    public function getAttributeCode()
+    public function getAttributeCode(): string
     {
         return $this->attributeCode;
     }
 
     /**
      * Check if attribute is searchable.
-     *
-     * @return bool
      */
     public function isSearchable(): bool
     {
@@ -66,8 +58,6 @@ class AttributeAdapter
 
     /**
      * Check if attribute is filterable.
-     *
-     * @return bool
      */
     public function isFilterable(): bool
     {
@@ -76,8 +66,6 @@ class AttributeAdapter
 
     /**
      * Check if attribute is sortable.
-     *
-     * @return bool
      */
     public function isSortable(): bool
     {

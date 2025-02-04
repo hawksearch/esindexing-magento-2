@@ -28,13 +28,12 @@ class TrackSaleEventOnOrderSuccessObserver implements ObserverInterface
     public function __construct(
         EventTracking $eventTrackingConfig,
         LayoutInterface $layout
-    )
-    {
+    ) {
         $this->eventTrackingConfig = $eventTrackingConfig;
         $this->layout = $layout;
     }
 
-    public function execute(Observer $observer)
+    public function execute(Observer $observer): void
     {
         if (!$this->eventTrackingConfig->isEnabled()) {
             return;

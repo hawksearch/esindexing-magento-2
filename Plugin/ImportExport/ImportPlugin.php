@@ -22,21 +22,19 @@ use Magento\ImportExport\Model\Import;
 class ImportPlugin
 {
     private IndexerInterface $productIndexer;
-    
+
     public function __construct(
         IndexerRegistry $indexerRegistry
-    )
-    {
+    ) {
         $this->productIndexer = $indexerRegistry->get(ProductIndexer::INDEXER_ID);
     }
 
     /**
      * Invalidate index after import
      *
-     * @return bool
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterImportSource(Import $subject, mixed $import)
+    public function afterImportSource(Import $subject, mixed $import): mixed
     {
         if (!$this->productIndexer->isScheduled()) {
             $this->productIndexer->invalidate();

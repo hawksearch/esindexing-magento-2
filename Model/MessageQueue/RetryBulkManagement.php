@@ -75,7 +75,7 @@ class RetryBulkManagement implements BulkManagementInterface
      * @param OperationInterface[] $operations
      * @return void
      */
-    private function publishOperations(array $operations)
+    private function publishOperations(array $operations): void
     {
         $operationsByTopics = [];
         foreach ($operations as $operation) {

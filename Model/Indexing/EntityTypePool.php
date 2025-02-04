@@ -89,7 +89,7 @@ class EntityTypePool implements EntityTypePoolInterface
     /**
      * @return TMap<TKey, TValue>
      */
-    public function getList()
+    public function getList(): iterable
     {
         return $this->types;
     }

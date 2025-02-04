@@ -33,28 +33,29 @@ class LandingPageRepository implements LandingPageRepositoryInterface
         StoreManagerInterface $storeManager,
         Cache $cache,
         SerializerInterface $serializer
-    )
-    {
+    ) {
         $this->storeManager = $storeManager;
         $this->cache = $cache;
         $this->serializer = $serializer;
     }
 
-    public function getByUrl(string $url)
+    public function getByUrl(string $url): mixed
     {
         // TODO: Implement getByUrl() method.
+        return null;
     }
 
-    public function get(int $id)
+    public function get(int $id): mixed
     {
         // TODO: Implement get() method.
+        return null;
     }
 
     /**
      * @TODO move pages storage resource to MySQL
      * @TODO do not call Hawk API in repository
      */
-    public function getList()
+    public function getList(): mixed
     {
         if (($serialized = $this->cache->load($this->getCacheKey()))) {
             $landingPages = $this->serializer->unserialize($serialized);
@@ -75,7 +76,7 @@ class LandingPageRepository implements LandingPageRepositoryInterface
      * @TODO move pages storage resource to MySQL
      * @throws NoSuchEntityException
      */
-    private function getCacheKey()
+    private function getCacheKey(): string
     {
         return self::CACHE_KEY . $this->storeManager->getStore()->getId();
     }
