@@ -23,6 +23,8 @@ parameters:
         - view/adminhtml/templates
         - view/frontend/templates
     excludePaths:
+        - */Test/Unit/Fixtures/*
+        - */Test/Unit/*/Fixtures/*
         # ####################################
         # Exclude until features are anounced
         #
@@ -41,7 +43,7 @@ parameters:
             message: '#Property [a-zA-Z0-9\\_]+::\$(deprecatedMethods|deprecatedPublicProperties) type has no value type specified in iterable type array.#'
         -
             message: '#Method [a-zA-Z0-9\\_]+::[a-zA-Z0-9_]+\(\) has parameter \$[a-zA-Z0-9_]+ with no value type specified in iterable type array.#'
-            path: *Test.php
+            path: */Test/Unit/*
         -
             message: '#Variable \$block might not be defined.#'
             path: *.phtml
@@ -51,6 +53,8 @@ parameters:
         -
             message: '#Variable \$escaper might not be defined.#'
             path: *.phtml
+#        -
+#            message: '#\(string\) does not accept Magento\\Framework\\Phrase.#'
 #        -
 #            identifier: missingType.parameter
 #            paths:
