@@ -233,7 +233,7 @@ abstract class DefaultType implements ProductTypeInterface
     }
 
     /**
-     * @return array<int, array{"label":\Stringable, "value": numeric}>
+     * @return list<array{"label":\Stringable, "value": int}>
      */
     protected function getCustomerGroups(): array
     {
@@ -241,19 +241,22 @@ abstract class DefaultType implements ProductTypeInterface
             return [];
         }
 
-        $groups = $this->customerGroupSource->toOptionArray();
-        $resultGroups = [];
+        $resultGroups = $groups = $this->customerGroupSource->toOptionArray();
         if ($this->moduleManager->isEnabled('Magento_SharedCatalog')) {
+            /** @see \Magento\SharedCatalog\Plugin\Source\CustomerGroupPlugin */
             $firstElement = current($groups);
-            if (isset($firstElement['value']) && is_array($firstElement['value'])) {
+            if ($firstElement !== false && isset($firstElement['value']) && is_array($firstElement['value'])) {
                 $resultGroups = $firstElement['value'];
-            }
-            $sharedCatalogs = next($groups);
-            if ($sharedCatalogs !== false && isset($sharedCatalogs['value']) && is_array($sharedCatalogs['value'])) {
-                $resultGroups = array_merge($resultGroups, $sharedCatalogs['value']);
+                $sharedCatalogs = next($groups);
+                if ($sharedCatalogs !== false && isset($sharedCatalogs['value']) && is_array($sharedCatalogs['value'])) {
+                    $resultGroups = array_merge($resultGroups, $sharedCatalogs['value']);
+                }
             }
         }
 
+        array_walk($resultGroups, function (array &$group) {
+            $group['value'] = (int)$group['value'];
+        });
         return $resultGroups;
     }
 
@@ -294,7 +297,7 @@ abstract class DefaultType implements ProductTypeInterface
 
     /**
      * @param ProductModel $product
-     * @return array<int, ?float>
+     * @return array<int, float>
      * @throws LocalizedException
      */
     protected function getTierPrices(ProductInterface $product): array
@@ -306,7 +309,7 @@ abstract class DefaultType implements ProductTypeInterface
         $productTierPrices = $product->getTierPrices();
         if (!is_null($productTierPrices)) {
             foreach ($productTierPrices as $productTierPrice) {
-                $pricesByGroup[$productTierPrice->getCustomerGroupId()][] = $productTierPrice->getValue();
+                $pricesByGroup[(int)$productTierPrice->getCustomerGroupId()][] = (float)$productTierPrice->getValue();
             }
         }
 
@@ -316,14 +319,13 @@ abstract class DefaultType implements ProductTypeInterface
 
         $allGroupsId = $this->getAllCustomerGroupsId();
         $groupTierPrices = [];
-        $allGroupsPrice = $productTierPrices[$allGroupsId] ?? null;
+        $allGroupsPrice = $pricesByGroup[$allGroupsId] ?? null;
         foreach ($this->getCustomerGroups() as $group) {
             $groupId = $group['value'];
+            $groupPrice = $pricesByGroup[$groupId] ?? $allGroupsPrice;
 
-            $groupTierPrices[$groupId] = $pricesByGroup[$groupId] ?? $allGroupsPrice;
-
-            if ($groupTierPrices[$groupId] !== null) {
-                $groupTierPrices[$groupId] = $this->handleTax($product, (float)$groupTierPrices[$groupId]);
+            if ($groupPrice !== null) {
+                $groupTierPrices[$groupId] = $this->handleTax($product, $groupPrice);
             }
         }
 
