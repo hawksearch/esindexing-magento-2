@@ -43,20 +43,18 @@ class Product
     private ?array $productAllTypes = null;
     private ProductFactory $productFactory;
     private Type $productType;
-    private FulltextResource $fulltextResource;
     private ProductResource $productResource;
     private MetadataPool $metadataPool;
 
     public function __construct(
         ProductFactory $productFactory,
         Type $productType,
-        FulltextResource $fulltextResource,
+        FulltextResource $fulltextResource, // @todo remove $fulltextResource argument
         ProductResource $productResource = null,
         MetadataPool $metadataPool = null
     ) {
         $this->productFactory = $productFactory;
         $this->productType = $productType;
-        $this->fulltextResource = $fulltextResource;
         $this->productResource = $productResource ?: ObjectManager::getInstance()->get(ProductResource::class);
         $this->metadataPool = $metadataPool ?: ObjectManager::getInstance()->get(MetadataPool::class);
     }

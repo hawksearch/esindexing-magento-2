@@ -81,7 +81,7 @@ class ItemsDataProvider implements ItemsDataProviderInterface
         $categories->addPathFilter($pathFilterRegex)
             ->addAttributeToSelect('name');
 
-        if ($entityIds && count($entityIds) > 0) {
+        if ($entityIds) {
             $categories->addIdFilter($entityIds);
         }
         $categories->setCurPage($currentPage)

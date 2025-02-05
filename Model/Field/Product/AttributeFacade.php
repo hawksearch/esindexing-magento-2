@@ -50,7 +50,7 @@ class AttributeFacade
         return $this;
     }
 
-    private function isFieldSearchable(FieldInterface $field): bool
+    private function isFieldSearchable(FieldInterface $field): bool // @phpstan-ignore method.unused
     {
         return $field->getIsQuery()
             && in_array($field->getFieldType(), ['keyword', 'facet', 'text']);
@@ -72,7 +72,7 @@ class AttributeFacade
 
     }
 
-    private function isFieldFilterable(FieldInterface $field): bool
+    private function isFieldFilterable(FieldInterface $field): bool // @phpstan-ignore method.unused
     {
         return $field->getFieldType() === FieldInterface::FIELD_TYPE_FACET;
     }
@@ -90,7 +90,7 @@ class AttributeFacade
         }
     }
 
-    private function isFieldSortable(FieldInterface $field): bool
+    private function isFieldSortable(FieldInterface $field): bool // @phpstan-ignore method.unused
     {
         return $field->getIsSort();
     }

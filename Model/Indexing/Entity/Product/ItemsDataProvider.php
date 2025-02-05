@@ -102,7 +102,7 @@ class ItemsDataProvider implements ItemsDataProviderInterface
     ): array {
         $this->searchCriteriaBuilder->addFilter('store_id', $storeId);
 
-        if ($productIds && count($productIds) > 0) {
+        if ($productIds) {
             $this->searchCriteriaBuilder->addFilter('entity_id', $productIds, 'in');
         }
 

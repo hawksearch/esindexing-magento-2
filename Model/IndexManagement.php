@@ -214,7 +214,7 @@ class IndexManagement implements IndexManagementInterface
     private function getCurrentIndex(): ?string
     {
         $indexFromCache = current($this->getIndicesFromCache(true));
-        if ($indexFromCache === false || $indexFromCache === null) {
+        if ($indexFromCache === false) {
             /** @var EsIndexInterface $result */
             $result = $this->instructionManagerPool->get('hawksearch-esindexing')
                 ->executeByCode('getCurrentIndex')->get();

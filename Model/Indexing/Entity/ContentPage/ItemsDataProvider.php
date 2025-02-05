@@ -65,7 +65,7 @@ class ItemsDataProvider implements ItemsDataProviderInterface
             'in'
         );
 
-        if ($entityIds && count($entityIds) > 0) {
+        if ($entityIds) {
             $this->searchCriteriaBuilder->addFilter('page_id', $entityIds, 'in');
         }
 

@@ -24,13 +24,12 @@ use Magento\Store\Model\StoreManagerInterface;
  */
 class Url implements FieldHandlerInterface
 {
-    private StoreManagerInterface $storeManager;
-
+    /**
+     * @todo remove $storeManager argument
+     */
     public function __construct(
         StoreManagerInterface $storeManager
-    ) {
-        $this->storeManager = $storeManager;
-    }
+    ) {}
 
     /**
      * @return string

@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Gateway\Instruction\Result;
 
 use HawkSearch\Connector\Gateway\Helper\HttpResponseReader;
+use HawkSearch\Connector\Gateway\Http\ClientInterface;
 use HawkSearch\Connector\Gateway\Instruction\ResultInterface;
 use HawkSearch\Connector\Helper\DataObjectHelper as HawkSearchDataObjectHelper;
 use HawkSearch\EsIndexing\Api\Data\FacetInterface;
@@ -22,7 +23,7 @@ use HawkSearch\EsIndexing\Api\Data\FacetInterfaceFactory;
 use Magento\Framework\Api\DataObjectHelper;
 
 /**
- * @phpstan-import-type HttpResult from ResultInterface
+ * @phpstan-import-type HttpResult from ClientInterface
  */
 class FacetListResult implements ResultInterface
 {
@@ -49,8 +50,7 @@ class FacetListResult implements ResultInterface
         HawkSearchDataObjectHelper $hawksearchDataObjectHelper,
         HttpResponseReader $httpResponseReader,
         array $result = []
-    )
-    {
+    ) {
         $this->facetFactory = $facetFactory;
         $this->dataObjectHelper = $dataObjectHelper;
         $this->hawksearchDataObjectHelper = $hawksearchDataObjectHelper;

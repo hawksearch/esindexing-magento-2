@@ -73,7 +73,7 @@ class Composite extends FieldHandler\Composite
 
         /** @var ProductResource $productResource */
         $productResource = $item->getResource();
-        /** @var AttributeResource $attributeResource */
+        /** @var AttributeResource|false $attributeResource */
         $attributeResource = $productResource->getAttribute($fieldName);
 
         if ($attributeResource) {

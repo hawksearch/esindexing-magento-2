@@ -86,12 +86,13 @@ class ItemsDataProvider implements ItemsDataProviderInterface
             ->addAttributeToSort('parent_id')
             ->addAttributeToSort('position');
 
-        if ($entityIds && count($entityIds) > 0) {
+        if ($entityIds) {
             $categories->addIdFilter($entityIds);
         }
         $categories->setCurPage($currentPage)
             ->setPageSize($pageSize);
 
+        /** @var CategoryInterface[] */
         return $categories->getItems();
     }
 }

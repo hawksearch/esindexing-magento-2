@@ -41,7 +41,7 @@ class TrackSaleEventOnOrderSuccessObserver implements ObserverInterface
 
         $orderIds = (array)$observer->getEvent()->getData('order_ids');
 
-        /** @var TrackingBlock $block */
+        /** @var TrackingBlock|false $block */
         $block = $this->layout->getBlock('hawksearch.esindexing.eventtracking');
         if ($block) {
             $block->setData('order_ids', $orderIds);

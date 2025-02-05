@@ -27,5 +27,8 @@ interface EsIndexInterface
 
     public function getIndexName(): ?string;
 
+    /**
+     * @return $this
+     */
     public function setIndexName(string $value);
 }

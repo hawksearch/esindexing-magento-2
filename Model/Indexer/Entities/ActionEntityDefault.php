@@ -65,7 +65,9 @@ class ActionEntityDefault extends ActionAbstract
         } catch (\Exception $e) {
             throw new LocalizedException(__($e->getMessage()), $e);
         } finally {
-            $this->storeManager->setCurrentStore($currentStore);
+            if (isset($currentStore)) {
+                $this->storeManager->setCurrentStore($currentStore);
+            }
         }
 
         return $this;

@@ -152,6 +152,8 @@ class RetryFailedOperations
         foreach ($items as $item) {
             $item->setData('operation_key', $item->getData('operation_key_orig'));
         }
+
+        /** @var OperationInterface[] */
         return $collection->getItems();
     }
 
@@ -205,6 +207,8 @@ class RetryFailedOperations
         foreach ($items as $item) {
             $item->setData('operation_key', $item->getData('operation_key_orig'));
         }
+
+        /** @var OperationInterface[] */
         return $collection->getItems();
     }
 

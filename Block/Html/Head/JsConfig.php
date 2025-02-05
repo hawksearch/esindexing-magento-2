@@ -48,6 +48,6 @@ class JsConfig extends Template
      */
     public function getJsLayout()
     {
-        return $this->serializer->serialize($this->configProcessor->process($this->jsLayout ?? []));
+        return $this->serializer->serialize($this->configProcessor->process($this->jsLayout));
     }
 }

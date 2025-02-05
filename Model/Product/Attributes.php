@@ -120,7 +120,7 @@ class Attributes
     }
 
     /**
-     * @return array<string, string>
+     * @return list<string>
      */
     public function getIndexedAttributes()
     {

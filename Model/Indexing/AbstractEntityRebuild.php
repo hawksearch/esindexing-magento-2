@@ -435,6 +435,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
             $value = array_values($value);
         }
 
+        /** @phpstan-ignore function.impossibleType */
         return $value !== null && !is_array($value) ? [$value] : $value;
     }
 
@@ -515,6 +516,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
                 $proxyPosition = strlen(get_class($rebuilder)) - strlen('\Proxy');
                 if (strpos(get_class($rebuilder), '\Proxy', -$proxyPosition) === $proxyPosition) {
                     $parentClass = get_parent_class($rebuilder);
+                    /** @phpstan-ignore booleanOr.alwaysTrue */
                     if ($this instanceof $parentClass || is_subclass_of($this, $parentClass)) {
                         break;
                     }

@@ -34,14 +34,7 @@ use Magento\Framework\Serialize\SerializerInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * @phpstan-type keyColumnField ValueProcessorInterface::COLUMN_FIELD
- * @phpstan-type keyColumnAttribute ValueProcessorInterface::COLUMN_ATTRIBUTE
- * @phpstan-type keyColumnFieldNew ValueProcessorInterface::COLUMN_FIELD_NEW
- * @phpstan-type ValueItemRow array{
- *     keyColumnField: string,
- *     keyColumnAttribute: string,
- *     keyColumnFieldNew?: string
- * }
+ * @phpstan-type ValueItemRow array<self::COLUMN_*, string>
  * @phpstan-type ValueItems array<string, ValueItemRow>
  * @implements ValueProcessorInterface<ValueItems, ValueItems>
  */
