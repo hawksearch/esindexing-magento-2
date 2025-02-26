@@ -23,6 +23,9 @@ use Magento\Framework\DataObject;
  */
 class HierarchyId implements FieldHandlerInterface
 {
+    /**
+     * @return int
+     */
     public function handle(DataObject $item, string $fieldName)
     {
         return (int)$item->getId();

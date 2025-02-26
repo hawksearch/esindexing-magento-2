@@ -32,8 +32,7 @@ class PricingConfigProcessor implements LayoutConfigProcessorInterface
         LocaleFormat $localeFormat,
         StoreManagerInterface $storeManager,
         PricingHelper $pricingHelper
-    )
-    {
+    ) {
         $this->localeFormat = $localeFormat;
         $this->storeManager = $storeManager;
         $this->pricingHelper = $pricingHelper;
@@ -42,6 +41,8 @@ class PricingConfigProcessor implements LayoutConfigProcessorInterface
     /**
      * Process configurations
      * Uses format supported by mage/utils/template templates syntax
+     *
+     * @return array<string, mixed>
      */
     public function process(array $jsConfig)
     {

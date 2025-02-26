@@ -25,14 +25,16 @@ use Magento\Store\Model\StoreManagerInterface;
 class Url implements FieldHandlerInterface
 {
     private StoreManagerInterface $storeManager;
-    
+
     public function __construct(
         StoreManagerInterface $storeManager
-    )
-    {
+    ) {
         $this->storeManager = $storeManager;
     }
 
+    /**
+     * @return string
+     */
     public function handle(DataObject $item, string $fieldName)
     {
         /**

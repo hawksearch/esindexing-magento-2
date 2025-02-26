@@ -70,8 +70,7 @@ class CustomAttributes extends AbstractFieldArray
         HawksearchFields $hawksearchFields,
         ProductAttributes $productAttributes,
         array $data = []
-    )
-    {
+    ) {
         $this->hawksearchFields = $hawksearchFields;
         $this->productAttributes = $productAttributes;
         parent::__construct($context, $data);
@@ -116,6 +115,7 @@ class CustomAttributes extends AbstractFieldArray
      * @param string $name
      * @param array<string, mixed> $params
      * @return void
+     * @throws LocalizedException
      */
     public function addColumn($name, $params)
     {
@@ -219,6 +219,10 @@ class CustomAttributes extends AbstractFieldArray
         return $renderer;
     }
 
+    /**
+     * @return string
+     * @throws LocalizedException
+     */
     protected function _getElementHtml(AbstractElement $element)
     {
         $html = parent::_getElementHtml($element);

@@ -14,8 +14,16 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexing\Entity\Product\Scheduler;
 
-class ItemsDataProvider extends \HawkSearch\EsIndexing\Model\Indexing\Entity\Product\ItemsDataProvider
+use HawkSearch\EsIndexing\Model\Indexing\Entity\Product\ItemsDataProvider as ItemsDataProviderParent;
+
+/**
+ * @phpstan-import-type ItemType from ItemsDataProviderParent
+ */
+class ItemsDataProvider extends ItemsDataProviderParent
 {
+    /**
+     * @return ItemType[]
+     */
     public function getItems(int $storeId, ?array $entityIds = null, int $currentPage = 1, int $pageSize = 0)
     {
         return $this->getProductCollection($storeId, $entityIds, $currentPage, $pageSize);

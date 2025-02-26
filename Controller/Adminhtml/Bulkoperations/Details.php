@@ -39,8 +39,7 @@ class Details extends Action implements HttpGetActionInterface
         PageFactory $resultPageFactory,
         BulkAccessValidator $bulkAccessValidator,
         string $menuId = 'HawkSearch_EsIndexing::bulk_operations'
-    )
-    {
+    ) {
         $this->resultPageFactory = $resultPageFactory;
         $this->bulkAccessValidator = $bulkAccessValidator;
         $this->menuId = $menuId;
@@ -48,7 +47,7 @@ class Details extends Action implements HttpGetActionInterface
     }
 
     /**
-     * @noinspection PhpMissingReturnTypeInspection
+     * @return bool
      */
     protected function _isAllowed()
     {
@@ -59,7 +58,6 @@ class Details extends Action implements HttpGetActionInterface
      * Bulk list action
      *
      * @return Page
-     * @noinspection PhpMissingReturnTypeInspection
      */
     public function execute()
     {

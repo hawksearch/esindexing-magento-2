@@ -32,6 +32,9 @@ class CustomSortList implements FieldHandlerInterface
         $this->productEntityTypeFactory = $productEntityTypeFactory;
     }
 
+    /**
+     * @return string
+     */
     public function handle(DataObject $item, string $fieldName)
     {
         $positionsHash = $item->getProductsPosition();

@@ -25,14 +25,16 @@ use Magento\Framework\DataObject;
 class VisibilitySearch implements FieldHandlerInterface
 {
     private Visibility $visibility;
-    
+
     public function __construct(
         Visibility $visibility
-    )
-    {
+    ) {
         $this->visibility = $visibility;
     }
 
+    /**
+     * @return bool
+     */
     public function handle(DataObject $item, string $fieldName)
     {
         return in_array($item->getVisibility(), $this->visibility->getVisibleInSearchIds());

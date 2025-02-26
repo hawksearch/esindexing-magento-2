@@ -15,15 +15,20 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Gateway\Request;
 
 use HawkSearch\Connector\Gateway\InstructionException;
+use HawkSearch\Connector\Gateway\InstructionInterface;
 use HawkSearch\Connector\Gateway\Request\BuilderInterface;
 use HawkSearch\EsIndexing\Api\Data\LandingPageInterface;
 use HawkSearch\EsIndexing\Model\LandingPage;
 
+/**
+ * @phpstan-import-type RequestSubject from InstructionInterface
+ */
 class LandingPageListBuilder implements BuilderInterface
 {
     /**
      * Build request with Landing Pages collection
      *
+     * @return RequestSubject
      * @throws InstructionException
      */
     public function build(array $buildSubject)

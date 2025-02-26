@@ -23,6 +23,9 @@ use Magento\Framework\DataObject;
  */
 class IsFacetOverride implements FieldHandlerInterface
 {
+    /**
+     * @return false
+     */
     public function handle(DataObject $item, string $fieldName)
     {
         return false;

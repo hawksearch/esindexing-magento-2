@@ -33,8 +33,7 @@ class ReviewRatingSummary implements CustomJoinInterface
         SummaryFactory $sumResourceFactory,
         StoreManagerInterface $storeManager,
         ProductMetadataInterface $productMetadata
-    )
-    {
+    ) {
         $this->sumResourceFactory = $sumResourceFactory;
         $this->storeManager = $storeManager;
         $this->productMetadata = $productMetadata;
@@ -42,6 +41,7 @@ class ReviewRatingSummary implements CustomJoinInterface
 
     /**
      * @param ProductCollection $collection
+     * @return bool
      * @throws LocalizedException
      */
     public function apply(AbstractDb $collection)
@@ -63,5 +63,7 @@ class ReviewRatingSummary implements CustomJoinInterface
                 \Magento\Review\Model\Review::ENTITY_PRODUCT_CODE
             );
         }
+
+        return true;
     }
 }

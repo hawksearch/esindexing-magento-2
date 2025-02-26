@@ -24,9 +24,12 @@ class UrlRewrites implements CustomJoinInterface
 
     /**
      * @param ProductCollection $collection
+     * @return bool
      */
     public function apply(AbstractDb $collection)
     {
         $collection->addUrlRewrite();
+
+        return true;
     }
 }

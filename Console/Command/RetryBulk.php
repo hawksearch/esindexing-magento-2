@@ -54,8 +54,7 @@ class RetryBulk extends Command
         BulkSummaryInterfaceFactory $bulkSummaryFactory,
         EntityManager $entityManager,
         string $name = null
-    )
-    {
+    ) {
         parent::__construct($name);
         $this->bulkManagement = $bulkManagement;
         $this->bulkStatus = $bulkStatus;
@@ -79,6 +78,9 @@ class RetryBulk extends Command
         parent::configure();
     }
 
+    /**
+     * @return int
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $bulkUuid = $input->getArgument(self::INPUT_BULK_UUID);

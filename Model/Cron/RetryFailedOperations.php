@@ -69,8 +69,7 @@ class RetryFailedOperations
         FailureRecoveryConfig $failureRecoveryConfig,
         int $errorCode = self::ERROR_CODE
 
-    )
-    {
+    ) {
         $this->bulkOperationManagement = $bulkOperationManagement;
         $this->messageEncoder = $messageEncoder;
         $this->messageValidator = $messageValidator;
@@ -90,7 +89,6 @@ class RetryFailedOperations
      * Automatically retry failed and not started operations.
      * When trials limit is reached then operation is rejected and can be recovered manually
      *
-     * @return void
      * @throws LocalizedException
      */
     public function execute(): void
@@ -211,7 +209,6 @@ class RetryFailedOperations
     }
 
     /**
-     * @return bool
      * @throws LocalizedException
      */
     protected function retryOperation(OperationInterface $operation): bool
@@ -243,8 +240,6 @@ class RetryFailedOperations
 
     /**
      * Get number of retry attempts for operation
-     *
-     * @return int
      */
     protected function getOperationTrials(QueueOperationDataInterface $operation): int
     {
@@ -255,8 +250,6 @@ class RetryFailedOperations
 
     /**
      * Increase number of retry attempts for operation
-     *
-     * @return QueueOperationDataInterface
      */
     protected function increaseOperationTrials(QueueOperationDataInterface $operationData): QueueOperationDataInterface
     {
@@ -272,10 +265,12 @@ class RetryFailedOperations
      * @param OperationInterface $operation
      * @param int|null $errorCode
      * @param string|null $message
-     * @return bool
      */
-    protected function rejectOperation(OperationInterface $operation, int $errorCode = null, string $message = null): bool
-    {
+    protected function rejectOperation(
+        OperationInterface $operation,
+        int $errorCode = null,
+        string $message = null
+    ): bool {
         $this->logger->critical(__('Message has been rejected: %1', $message));
 
         return $this->operationManagement->changeOperationStatus(

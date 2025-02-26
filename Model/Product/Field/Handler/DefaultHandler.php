@@ -33,12 +33,12 @@ class DefaultHandler implements FieldHandlerInterface
 
     public function __construct(
         ProductAttributesProvider $productAttributes = null
-    )
-    {
+    ) {
         $this->productAttributes = $productAttributes ?: ObjectManager::getInstance()->get(ProductAttributesProvider::class);
     }
 
     /**
+     * @return mixed
      * @throws LocalizedException
      */
     public function handle(DataObject $item, string $fieldName)

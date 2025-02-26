@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Ui\Component\Listing\Column;
 
 use HawkSearch\EsIndexing\Model\ResourceModel\AsynchronousOperations\Operation as OperationResource;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Locale\Bundle\DataBundle;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\Stdlib\BooleanUtils;
@@ -49,8 +50,7 @@ class StartTime extends Date
         array $data = [],
         ResolverInterface $localeResolver = null,
         DataBundle $dataBundle = null
-    )
-    {
+    ) {
         $this->operationResource = $operation;
         parent::__construct(
             $context,
@@ -64,6 +64,10 @@ class StartTime extends Date
         );
     }
 
+    /**
+     * @return void
+     * @throws LocalizedException
+     */
     public function prepare()
     {
         parent::prepare();

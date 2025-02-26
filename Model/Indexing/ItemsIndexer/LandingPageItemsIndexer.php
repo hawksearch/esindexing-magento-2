@@ -27,14 +27,14 @@ class LandingPageItemsIndexer implements ItemsIndexerInterface
 
     public function __construct(
         LandingPageManagementInterface $landingPageManagement
-    )
-    {
+    ) {
         $this->landingPageManagement = $landingPageManagement;
     }
 
     /**
      * @param LandingPageInterface[] $items
      * @param string $indexName
+     * @return void
      */
     public function add(array $items, string $indexName)
     {
@@ -46,6 +46,7 @@ class LandingPageItemsIndexer implements ItemsIndexerInterface
      *
      * @param LandingPageInterface[] $items
      * @param string $indexName
+     * @return void
      */
     public function update(array $items, string $indexName)
     {
@@ -54,6 +55,8 @@ class LandingPageItemsIndexer implements ItemsIndexerInterface
 
     /**
      * Uses hierarchy API to remove hierarchy items
+     *
+     * @return void
      */
     public function delete(array $items, string $indexName)
     {

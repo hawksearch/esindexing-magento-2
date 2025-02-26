@@ -19,12 +19,14 @@ use Magento\Framework\Api\AbstractSimpleObject;
 
 class LandingPage extends AbstractSimpleObject implements LandingPageInterface
 {
-
     public function getPageId(): ?int
     {
         return (int)$this->_get(self::FIELD_PAGE_ID);
     }
 
+    /**
+     * @return $this
+     */
     public function setPageId(?int $value)
     {
         return $this->setData(self::FIELD_PAGE_ID, $value);
@@ -35,6 +37,9 @@ class LandingPage extends AbstractSimpleObject implements LandingPageInterface
         return $this->_get(self::FIELD_SYNC_GUID);
     }
 
+    /**
+     * @return $this
+     */
     public function setSyncGuid(?string $value)
     {
         return $this->setData(self::FIELD_SYNC_GUID, $value);
@@ -45,6 +50,9 @@ class LandingPage extends AbstractSimpleObject implements LandingPageInterface
         return $this->_get(self::FIELD_NAME);
     }
 
+    /**
+     * @return $this
+     */
     public function setName(?string $value)
     {
         return $this->setData(self::FIELD_NAME, $value);
@@ -55,6 +63,9 @@ class LandingPage extends AbstractSimpleObject implements LandingPageInterface
         return $this->_get(self::FIELD_CUSTOM_URL);
     }
 
+    /**
+     * @return $this
+     */
     public function setCustomUrl(?string $value)
     {
         return $this->setData(self::FIELD_CUSTOM_URL, $value);
@@ -65,6 +76,9 @@ class LandingPage extends AbstractSimpleObject implements LandingPageInterface
         return $this->_get(self::FIELD_NARROW_XML);
     }
 
+    /**
+     * @return $this
+     */
     public function setNarrowXml(?string $value)
     {
         return $this->setData(self::FIELD_NARROW_XML, $value);
@@ -75,6 +89,9 @@ class LandingPage extends AbstractSimpleObject implements LandingPageInterface
         return (bool)$this->_get(self::FIELD_IS_FACET_OVERRIDE);
     }
 
+    /**
+     * @return $this
+     */
     public function setIsFacetOverride(bool $value)
     {
         return $this->setData(self::FIELD_IS_FACET_OVERRIDE, $value);
@@ -85,6 +102,9 @@ class LandingPage extends AbstractSimpleObject implements LandingPageInterface
         return (bool)$this->_get(self::FIELD_IS_INCLUDE_PRODUCTS);
     }
 
+    /**
+     * @return $this
+     */
     public function setIsIncludeProducts(bool $value)
     {
         return $this->setData(self::FIELD_IS_INCLUDE_PRODUCTS, $value);
@@ -95,6 +115,9 @@ class LandingPage extends AbstractSimpleObject implements LandingPageInterface
         return $this->_get(self::FIELD_SORT_FIELD_ID);
     }
 
+    /**
+     * @return $this
+     */
     public function setSortFieldId(?string $value)
     {
         return $this->setData(self::FIELD_SORT_FIELD_ID, $value);
@@ -105,6 +128,9 @@ class LandingPage extends AbstractSimpleObject implements LandingPageInterface
         return $this->_get(self::FIELD_SORT_DIRECTION);
     }
 
+    /**
+     * @return $this
+     */
     public function setSortDirection(?string $value)
     {
         return $this->setData(self::FIELD_SORT_DIRECTION, $value);
@@ -115,6 +141,9 @@ class LandingPage extends AbstractSimpleObject implements LandingPageInterface
         return (array)$this->_get(self::FIELD_SELECTED_FACETS);
     }
 
+    /**
+     * @return $this
+     */
     public function setSelectedFacets(array $value)
     {
         return $this->setData(self::FIELD_SELECTED_FACETS, $value);
@@ -125,6 +154,9 @@ class LandingPage extends AbstractSimpleObject implements LandingPageInterface
         return $this->_get(self::FIELD_PAGE_LAYOUT_ID);
     }
 
+    /**
+     * @return $this
+     */
     public function setPageLayoutId(?string $value)
     {
         return $this->setData(self::FIELD_PAGE_LAYOUT_ID, $value);
@@ -135,6 +167,9 @@ class LandingPage extends AbstractSimpleObject implements LandingPageInterface
         return (bool)$this->_get(self::FIELD_ENABLE_FACET_AUTO_ORDERING);
     }
 
+    /**
+     * @return $this
+     */
     public function setEnableFacetAutoOrdering(bool $value)
     {
         return $this->setData(self::FIELD_ENABLE_FACET_AUTO_ORDERING, $value);
@@ -145,6 +180,9 @@ class LandingPage extends AbstractSimpleObject implements LandingPageInterface
         return $this->_get(self::FIELD_CUSTOM);
     }
 
+    /**
+     * @return $this
+     */
     public function setCustom(?string $value)
     {
         return $this->setData(self::FIELD_CUSTOM, $value);
@@ -155,6 +193,9 @@ class LandingPage extends AbstractSimpleObject implements LandingPageInterface
         return $this->_get(self::FIELD_TAGS);
     }
 
+    /**
+     * @return $this
+     */
     public function setTags(?string $value)
     {
         return $this->setData(self::FIELD_TAGS, $value);
@@ -165,6 +206,9 @@ class LandingPage extends AbstractSimpleObject implements LandingPageInterface
         return $this->_get(self::FIELD_CANONICAL_URL);
     }
 
+    /**
+     * @return $this
+     */
     public function setCanonicalUrl(?string $value)
     {
         return $this->setData(self::FIELD_CANONICAL_URL, $value);
@@ -175,6 +219,9 @@ class LandingPage extends AbstractSimpleObject implements LandingPageInterface
         return $this->_get(self::FIELD_PAGE_TYPE);
     }
 
+    /**
+     * @return $this
+     */
     public function setPageType(?string $value)
     {
         return $this->setData(self::FIELD_PAGE_TYPE, $value);
@@ -185,6 +232,9 @@ class LandingPage extends AbstractSimpleObject implements LandingPageInterface
         return (array)$this->_get(self::FIELD_CONTENT_CONFIG_LIST);
     }
 
+    /**
+     * @return $this
+     */
     public function setContentConfigList(array $value)
     {
         return $this->setData(self::FIELD_CONTENT_CONFIG_LIST, $value);
@@ -195,6 +245,9 @@ class LandingPage extends AbstractSimpleObject implements LandingPageInterface
         return $this->_get(self::FIELD_PAGE_HEADING);
     }
 
+    /**
+     * @return $this
+     */
     public function setPageHeading(?string $value)
     {
         return $this->setData(self::FIELD_PAGE_HEADING, $value);
@@ -205,6 +258,9 @@ class LandingPage extends AbstractSimpleObject implements LandingPageInterface
         return $this->_get(self::FIELD_CUSTOM_HTML);
     }
 
+    /**
+     * @return $this
+     */
     public function setCustomHtml(?string $value)
     {
         return $this->setData(self::FIELD_CUSTOM_HTML, $value);
@@ -215,6 +271,9 @@ class LandingPage extends AbstractSimpleObject implements LandingPageInterface
         return $this->_get(self::FIELD_KEYWORDS);
     }
 
+    /**
+     * @return $this
+     */
     public function setKeywords(?string $value)
     {
         return $this->setData(self::FIELD_KEYWORDS, $value);
@@ -225,6 +284,9 @@ class LandingPage extends AbstractSimpleObject implements LandingPageInterface
         return $this->_get(self::FIELD_LIST_NAME);
     }
 
+    /**
+     * @return $this
+     */
     public function setListName(?string $value)
     {
         return $this->setData(self::FIELD_LIST_NAME, $value);
@@ -235,6 +297,9 @@ class LandingPage extends AbstractSimpleObject implements LandingPageInterface
         return $this->_get(self::FIELD_NOTES);
     }
 
+    /**
+     * @return $this
+     */
     public function setNotes(?string $value)
     {
         return $this->setData(self::FIELD_NOTES, $value);
@@ -245,6 +310,9 @@ class LandingPage extends AbstractSimpleObject implements LandingPageInterface
         return $this->_get(self::FIELD_CREATE_DATE);
     }
 
+    /**
+     * @return $this
+     */
     public function setCreateDate(?string $value)
     {
         return $this->setData(self::FIELD_CREATE_DATE, $value);
@@ -255,6 +323,9 @@ class LandingPage extends AbstractSimpleObject implements LandingPageInterface
         return $this->_get(self::FIELD_MODIFY_DATE);
     }
 
+    /**
+     * @return $this
+     */
     public function setModifyDate(?string $value)
     {
         return $this->setData(self::FIELD_MODIFY_DATE, $value);
@@ -265,6 +336,9 @@ class LandingPage extends AbstractSimpleObject implements LandingPageInterface
         return (bool)$this->_get(self::FIELD_IS_NO_INDEX);
     }
 
+    /**
+     * @return $this
+     */
     public function setIsNoIndex(bool $value)
     {
         return $this->setData(self::FIELD_IS_NO_INDEX, $value);
@@ -275,6 +349,9 @@ class LandingPage extends AbstractSimpleObject implements LandingPageInterface
         return (bool)$this->_get(self::FIELD_IS_NO_FOLLOW);
     }
 
+    /**
+     * @return $this
+     */
     public function setIsNoFollow(bool $value)
     {
         return $this->setData(self::FIELD_IS_NO_FOLLOW, $value);
@@ -285,6 +362,9 @@ class LandingPage extends AbstractSimpleObject implements LandingPageInterface
         return $this->_get(self::FIELD_CUSTOM_SORT_LIST);
     }
 
+    /**
+     * @return $this
+     */
     public function setCustomSortList(?string $value)
     {
         return $this->setData(self::FIELD_CUSTOM_SORT_LIST, $value);

@@ -26,6 +26,9 @@ class IndexList extends AbstractSimpleObject implements IndexListInterface
         return (array)$this->_get(self::FIELD_INDEX_NAMES);
     }
 
+    /**
+     * @return $this
+     */
     public function setIndexNames(array $value)
     {
         return $this->setData(self::FIELD_INDEX_NAMES, $value);

@@ -35,8 +35,7 @@ class PricingHelper extends AbstractHelper
         TaxHelper $taxHelper,
         CatalogHelper $catalogHelper,
         Context $context
-    )
-    {
+    ) {
         parent::__construct($context);
         $this->taxHelper = $taxHelper;
         $this->catalogHelper = $catalogHelper;
@@ -53,17 +52,13 @@ class PricingHelper extends AbstractHelper
     /**
      * @param string|int|Store $store
      * @param bool $force
-     * @return bool
      * @noinspection PhpMissingParamTypeInspection
      */
     public function isIncludeTax($store, bool $force = false): bool
     {
         return $force || $this->taxHelper->getPriceDisplayType($store) == TaxConfig::DISPLAY_TYPE_INCLUDING_TAX;
     }
-
-    /**
-     * @return float
-     */
+    
     public function handleTax(ProductModel $product, float $price, bool $forceIncludeTax = false): float
     {
         $store = $product->getStore();

@@ -25,9 +25,6 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 
 class Category implements IndexerActionInterface, MviewActionInterface
 {
-    /**
-     * Indexer ID in configuration
-     */
     const INDEXER_ID = 'hawksearch_categories';
 
     private Action $action;
@@ -36,8 +33,7 @@ class Category implements IndexerActionInterface, MviewActionInterface
     public function __construct(
         Action $action,
         ConsoleOutput $output
-    )
-    {
+    ) {
         $this->action = $action;
         $this->output = $output;
     }
@@ -45,6 +41,7 @@ class Category implements IndexerActionInterface, MviewActionInterface
     /**
      * This indexer is not designed to run full reindex
      *
+     * @return void
      * @see Entities
      */
     public function executeFull()
@@ -57,19 +54,26 @@ class Category implements IndexerActionInterface, MviewActionInterface
         $this->output->writeln('<comment>' . $phrase . '</comment>');
     }
 
+    /**
+     * @return void
+     */
     public function executeList(array $ids)
     {
         $this->execute($ids);
     }
 
+    /**
+     * @return void
+     */
     public function executeRow($id)
     {
         $this->execute([$id]);
     }
 
     /**
-     * @throws NoSuchEntityException
+     * @return void
      * @throws InputException
+     * @throws NoSuchEntityException
      */
     public function execute($ids)
     {

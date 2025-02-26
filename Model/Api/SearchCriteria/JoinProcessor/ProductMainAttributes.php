@@ -34,10 +34,13 @@ class ProductMainAttributes implements CustomJoinInterface
 
     /**
      * @param ProductCollection $collection
+     * @return bool
      */
     public function apply(AbstractDb $collection)
     {
         $collection->removeAttributeToSelect();
         $collection->addAttributeToSelect($this->attributes->getIndexedAttributes());
+
+        return true;
     }
 }

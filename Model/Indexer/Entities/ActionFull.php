@@ -33,8 +33,7 @@ class ActionFull extends ActionAbstract
         SchedulerInterface $entityScheduler,
         StoreManagerInterface $storeManager,
         IndexingConfig $indexingConfig
-    )
-    {
+    ) {
         parent::__construct(
             $eventManager,
             $messageManager,
@@ -49,6 +48,7 @@ class ActionFull extends ActionAbstract
      * Execute full reindex action
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @return $this
      * @throws LocalizedException
      */
     public function execute(?array $ids = null)

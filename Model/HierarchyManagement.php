@@ -36,14 +36,14 @@ class HierarchyManagement implements HierarchyManagementInterface
      */
     public function __construct(
         InstructionManagerPoolInterface $instructionManagerPool
-    )
-    {
+    ) {
         $this->instructionManagerPool = $instructionManagerPool;
     }
 
     /**
-     * @throws NotFoundException
+     * @return void
      * @throws InstructionException
+     * @throws NotFoundException
      */
     public function upsertHierarchy(array $items, string $indexName)
     {
@@ -61,8 +61,9 @@ class HierarchyManagement implements HierarchyManagementInterface
     }
 
     /**
-     * @throws NotFoundException
+     * @return void
      * @throws InstructionException
+     * @throws NotFoundException
      */
     public function rebuildHierarchy(string $indexName)
     {
@@ -74,6 +75,9 @@ class HierarchyManagement implements HierarchyManagementInterface
             ->get('hawksearch-esindexing')->executeByCode('rebuildHierarchy', $data)->get();
     }
 
+    /**
+     * @return void
+     */
     public function deleteHierarchyItems(array $ids, string $indexName)
     {
         if (!$ids) {

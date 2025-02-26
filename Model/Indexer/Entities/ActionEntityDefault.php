@@ -33,8 +33,7 @@ class ActionEntityDefault extends ActionAbstract
         SchedulerInterface $entityScheduler,
         StoreManagerInterface $storeManager,
         IndexingConfig $indexingConfig
-    )
-    {
+    ) {
         parent::__construct(
             $eventManager,
             $messageManager,
@@ -46,6 +45,7 @@ class ActionEntityDefault extends ActionAbstract
     }
 
     /**
+     * @return $this
      * @throws LocalizedException
      */
     public function execute(array $ids)

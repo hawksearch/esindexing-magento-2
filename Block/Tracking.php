@@ -49,8 +49,7 @@ class Tracking extends Template
         EventTrackingConfig $eventTrackingConfig,
         array $data = [],
         ?SerializerInterface $serializer = null
-    )
-    {
+    ) {
         $this->orderCollectionFactory = $orderCollectionFactory;
         $this->productEntityType = $productEntityType;
         $this->eventTrackingConfig = $eventTrackingConfig;
@@ -68,6 +67,9 @@ class Tracking extends Template
         return $this->eventTrackingConfig->isEnabled();
     }
 
+    /**
+     * @return string
+     */
     protected function _toHtml()
     {
         if (!$this->isAvailable()) {

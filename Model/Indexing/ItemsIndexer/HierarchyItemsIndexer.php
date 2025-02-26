@@ -26,11 +26,13 @@ class HierarchyItemsIndexer implements ItemsIndexerInterface
 
     public function __construct(
         HierarchyManagementInterface $hierarchyManagement
-    )
-    {
+    ) {
         $this->hierarchyManagement = $hierarchyManagement;
     }
 
+    /**
+     * @return void
+     */
     public function add(array $items, string $indexName)
     {
         $this->update($items, $indexName);
@@ -38,6 +40,8 @@ class HierarchyItemsIndexer implements ItemsIndexerInterface
 
     /**
      * Uses hierarchy API to upsert hierarchy items
+     *
+     * @return void
      */
     public function update(array $items, string $indexName)
     {
@@ -46,6 +50,8 @@ class HierarchyItemsIndexer implements ItemsIndexerInterface
 
     /**
      * Uses hierarchy API to remove hierarchy items
+     *
+     * @return void
      */
     public function delete(array $items, string $indexName)
     {

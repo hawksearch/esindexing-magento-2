@@ -23,14 +23,10 @@ class BulkAllOperationCompleteValidator implements OperationValidatorInterface
 
     public function __construct(
         BulkOperationManagement $bulkOperationManagement
-    )
-    {
+    ) {
         $this->bulkOperationManagement = $bulkOperationManagement;
     }
 
-    /**
-     * @return bool
-     */
     public function validate(OperationInterface $operation): bool
     {
         $allCount = $this->bulkOperationManagement->getOperationsByBulkUuid($operation->getBulkUuid())->getTotalCount();

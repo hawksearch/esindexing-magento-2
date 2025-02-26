@@ -44,8 +44,7 @@ class ImageUrl implements FieldHandlerInterface
         UrlHelper $urlHelper,
         AdvancedConfig $advancedConfig,
         StoreManagerInterface $storeManager
-    )
-    {
+    ) {
         $this->imageHelper = $imageHelper;
         $this->urlHelper = $urlHelper;
         $this->advancedConfig = $advancedConfig;
@@ -53,7 +52,7 @@ class ImageUrl implements FieldHandlerInterface
     }
 
     /**
-     * @throws NoSuchEntityException
+     * @return string
      */
     public function handle(DataObject $item, string $fieldName)
     {

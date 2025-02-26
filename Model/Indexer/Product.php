@@ -25,9 +25,6 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 
 class Product implements IndexerActionInterface, MviewActionInterface
 {
-    /**
-     * Indexer ID in configuration
-     */
     const INDEXER_ID = 'hawksearch_products';
 
     private ProductDataProvider $productDataProvider;
@@ -38,8 +35,7 @@ class Product implements IndexerActionInterface, MviewActionInterface
         ProductDataProvider $productDataProvider,
         Action $action,
         ConsoleOutput $output
-    )
-    {
+    ) {
         $this->productDataProvider = $productDataProvider;
         $this->action = $action;
         $this->output = $output;
@@ -48,6 +44,7 @@ class Product implements IndexerActionInterface, MviewActionInterface
     /**
      * This indexer is not designed to run full reindex
      *
+     * @return void
      * @see Entities
      */
     public function executeFull()
@@ -61,6 +58,7 @@ class Product implements IndexerActionInterface, MviewActionInterface
     }
 
     /**
+     * @return void
      * @throws LocalizedException
      */
     public function executeList(array $ids)
@@ -69,6 +67,7 @@ class Product implements IndexerActionInterface, MviewActionInterface
     }
 
     /**
+     * @return void
      * @throws LocalizedException
      */
     public function executeRow($id)
@@ -77,6 +76,7 @@ class Product implements IndexerActionInterface, MviewActionInterface
     }
 
     /**
+     * @return void
      * @throws LocalizedException
      */
     public function execute($ids)

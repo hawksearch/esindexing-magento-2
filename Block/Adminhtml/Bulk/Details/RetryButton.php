@@ -30,12 +30,14 @@ class RetryButton implements ButtonProviderInterface
     public function __construct(
         Details $details,
         RequestInterface $request
-    )
-    {
+    ) {
         $this->details = $details;
         $this->request = $request;
     }
 
+    /**
+     * @return array
+     */
     public function getButtonData()
     {
         $uuid = $this->request->getParam('uuid');

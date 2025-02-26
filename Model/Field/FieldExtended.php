@@ -24,11 +24,7 @@ class FieldExtended implements FieldExtendedInterface
     {
         $this->field = $field;
     }
-
-
-    /**
-     * @return bool
-     */
+    
     public function isSearchable(): bool
     {
         return $this->field->getIsQuery()

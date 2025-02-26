@@ -26,9 +26,11 @@ class CleanAttributes implements CustomJoinInterface
 {
     /**
      * @param AbstractCollection $collection
+     * @return bool
      */
     public function apply(AbstractDb $collection)
     {
         $collection->removeAttributeToSelect();
+        return true;
     }
 }

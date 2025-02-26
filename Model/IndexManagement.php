@@ -64,6 +64,9 @@ class IndexManagement implements IndexManagementInterface
         $this->storeManager = $storeManager;
     }
 
+    /**
+     * @return void
+     */
     public function initializeFullReindex()
     {
         $this->hawkLogger->info("--- initializeFullReindex STARTED ---");
@@ -82,6 +85,9 @@ class IndexManagement implements IndexManagementInterface
         $this->hawkLogger->info("--- initializeFullReindex FINISHED ---");
     }
 
+    /**
+     * @return string|null
+     */
     public function getIndexName(bool $useCurrent = false): ?string
     {
         $indices = $this->getIndices();
@@ -104,6 +110,7 @@ class IndexManagement implements IndexManagementInterface
     }
 
     /**
+     * @return void
      * @throws InstructionException
      * @throws NoSuchEntityException
      * @throws NotFoundException
@@ -137,9 +144,10 @@ class IndexManagement implements IndexManagementInterface
     }
 
     /**
-     * @throws InstructionException
+     * @return void
      * @throws NoSuchEntityException
      * @throws NotFoundException
+     * @throws InstructionException
      */
     public function switchIndices()
     {
@@ -158,8 +166,9 @@ class IndexManagement implements IndexManagementInterface
     }
 
     /**
-     * @throws NotFoundException
+     * @return void
      * @throws InstructionException
+     * @throws NotFoundException
      */
     public function indexItems(array $items, string $indexName)
     {
@@ -179,8 +188,9 @@ class IndexManagement implements IndexManagementInterface
     }
 
     /**
-     * @throws NotFoundException
+     * @return void
      * @throws InstructionException
+     * @throws NotFoundException
      */
     public function deleteItems(array $ids, string $indexName)
     {

@@ -35,11 +35,13 @@ class PriceManagement implements PriceManagementInterface
      */
     public function __construct(
         ProductTypePoolInterface $productTypePool
-    )
-    {
+    ) {
         $this->productTypePool = $productTypePool;
     }
 
+    /**
+     * @return void
+     */
     public function collectPrices(ProductInterface $product, array &$itemData)
     {
         $priceProvider = $this->productTypePool->get($product->getTypeId());

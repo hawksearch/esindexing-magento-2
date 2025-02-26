@@ -24,6 +24,7 @@ use Magento\Framework\DataObject;
 class CustomUrl implements FieldHandlerInterface
 {
     /**
+     * @return string
      * @todo implement handler which can get other attribute values or has access to the final entity
      */
     public function handle(DataObject $item, string $fieldName)

@@ -44,6 +44,7 @@ class DataStorage implements DataStorageInterface
     }
 
     /**
+     * @return void
      * @throws RuntimeException
      */
     public function set(mixed $value, bool $graceful = false)
@@ -58,6 +59,9 @@ class DataStorage implements DataStorageInterface
         $this->value = $value;
     }
 
+    /**
+     * @return void
+     */
     public function reset()
     {
         if (isset($this->value)) {
@@ -70,6 +74,9 @@ class DataStorage implements DataStorageInterface
         }
     }
 
+    /**
+     * @return mixed
+     */
     public function get(bool $reset = false)
     {
         $value = null;

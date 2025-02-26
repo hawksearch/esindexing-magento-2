@@ -24,9 +24,12 @@ class ProductPrices implements CustomJoinInterface
 
     /**
      * @param ProductCollection $collection
+     * @return bool
      */
     public function apply(AbstractDb $collection)
     {
         $collection->addPriceData();
+
+        return true;
     }
 }

@@ -45,8 +45,7 @@ abstract class DefaultType implements ProductTypeInterface
         GroupManagementInterface $groupManagement,
         ModuleManager $moduleManager,
         PricingHelper $pricingHelper
-    )
-    {
+    ) {
         $this->priceCurrency = $priceCurrency;
         $this->customerGroupSource = $customerGroupSource;
         $this->groupManagement = $groupManagement;
@@ -134,6 +133,7 @@ abstract class DefaultType implements ProductTypeInterface
      * @param string $priceName
      * @param array<array-key, float|null> $prices
      * @param PriceData $priceData
+     * @return void
      */
     protected function addPricesFromArray(string $priceName, array $prices, array &$priceData)
     {
@@ -148,6 +148,7 @@ abstract class DefaultType implements ProductTypeInterface
     /**
      * @param ProductModel $product
      * @param PriceData $priceData
+     * @return void
      */
     protected function addPricesIncludingTax(ProductInterface $product, array &$priceData)
     {
@@ -160,6 +161,7 @@ abstract class DefaultType implements ProductTypeInterface
 
     /**
      * @param PriceData $priceData
+     * @return void
      * @todo Review if we need to push prices rounded to the index
      */
     protected function roundPrices(array &$priceData)
@@ -172,6 +174,7 @@ abstract class DefaultType implements ProductTypeInterface
     /**
      * @param ProductModel $product
      * @param PriceData $priceData
+     * @return void
      */
     protected function addFormattedPrices(ProductInterface $product, array &$priceData)
     {
@@ -208,6 +211,7 @@ abstract class DefaultType implements ProductTypeInterface
      * @param string $suffix
      * @param float $price
      * @param PriceData $priceData
+     * @return void
      */
     protected function addSuffixedValue(string $priceName, string $suffix, float $price, array &$priceData)
     {
@@ -296,7 +300,7 @@ abstract class DefaultType implements ProductTypeInterface
 
     /**
      * @param ProductModel $product
-     * @return array
+     * @return array<int, ?float>
      * @throws LocalizedException
      */
     protected function getTierPrices(ProductInterface $product): array

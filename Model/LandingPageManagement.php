@@ -16,7 +16,10 @@ namespace HawkSearch\EsIndexing\Model;
 
 use HawkSearch\Connector\Gateway\Instruction\InstructionManagerInterface;
 use HawkSearch\Connector\Gateway\Instruction\InstructionManagerPoolInterface;
+use HawkSearch\Connector\Gateway\InstructionException;
+use HawkSearch\EsIndexing\Api\Data\LandingPageInterface;
 use HawkSearch\EsIndexing\Api\LandingPageManagementInterface;
+use Magento\Framework\Exception\NotFoundException;
 
 /**
  * @api
@@ -36,35 +39,53 @@ class LandingPageManagement implements LandingPageManagementInterface
      */
     public function __construct(
         InstructionManagerPoolInterface $instructionManagerPool
-    )
-    {
+    ) {
         $this->instructionManagerPool = $instructionManagerPool;
     }
 
+    /**
+     * @return LandingPageInterface[]
+     * @throws InstructionException
+     * @throws NotFoundException
+     */
     public function getLandingPages()
     {
         return $this->instructionManagerPool->get('hawksearch-esindexing')
             ->executeByCode('getLandingPages')->get();
     }
 
+    /**
+     * @return array<mixed>
+     * @throws InstructionException
+     * @throws NotFoundException
+     */
     public function getLandingPageUrls()
     {
         return $this->instructionManagerPool->get('hawksearch-esindexing')
             ->executeByCode('getLandingPageUrls')->get();
     }
 
+    /**
+     * @return void
+     */
     public function addLandingPages(array $landingPages)
     {
         $this->instructionManagerPool->get('hawksearch-esindexing')
             ->executeByCode('addLandingPagesBulk', $landingPages)->get();
     }
 
+    /**
+     * @return void
+     */
     public function updateLandingPages(array $landingPages)
     {
         $this->instructionManagerPool->get('hawksearch-esindexing')
             ->executeByCode('updateLandingPagesBulk', $landingPages)->get();
     }
 
+    /**
+     * @return void
+     */
     public function deleteLandingPages(array $landingPageIds, bool $safeDelete = false)
     {
         if (!$landingPageIds) {

@@ -23,6 +23,9 @@ use Magento\Framework\DataObject;
  */
 class Category implements FieldHandlerInterface
 {
+    /**
+     * @return list<int>
+     */
     public function handle(DataObject $item, string $fieldName)
     {
         return $item->getCategoryIds();

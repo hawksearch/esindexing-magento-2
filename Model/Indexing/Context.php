@@ -22,21 +22,33 @@ class Context implements ContextInterface
     private array $indexNameCache = [];
     private bool $isFullReindex = false;
 
+    /**
+     * @return void
+     */
     public function setIndexName(int $storeId, string $indexName)
     {
         $this->indexNameCache[$storeId] = $indexName;
     }
 
+    /**
+     * @return string
+     */
     public function getIndexName(int $storeId)
     {
         return $this->indexNameCache[$storeId] ?? '';
     }
 
+    /**
+     * @return void
+     */
     public function setIsFullReindex(bool $isFull)
     {
         $this->isFullReindex = $isFull;
     }
 
+    /**
+     * @return bool
+     */
     public function isFullReindex()
     {
         return $this->isFullReindex;
