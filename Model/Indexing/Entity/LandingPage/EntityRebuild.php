@@ -62,6 +62,7 @@ class EntityRebuild extends AbstractEntityRebuild
     private LandingPageManagementInterface $landingPageManagement;
     private LandingPageInterfaceFactory $landingPageFactory;
     private CustomUrl $customUrlHandler;
+    private StoreManagerInterface $storeManager;
 
     /**
      * @param EntityTypePoolInterface<string, EntityTypeInterface> $entityTypePool
@@ -102,6 +103,7 @@ class EntityRebuild extends AbstractEntityRebuild
         $this->landingPageManagement = $landingPageManagement;
         $this->landingPageFactory = $landingPageFactory;
         $this->customUrlHandler = $customUrlHandler;
+        $this->storeManager = $storeManager;
     }
 
     protected function isAllowedItem(DataObject $item): bool
@@ -253,11 +255,17 @@ class EntityRebuild extends AbstractEntityRebuild
         parent::deleteIndexItems($pageIds, $indexName);
     }
 
+    /**
+     * @return string
+     */
     protected function addTypePrefix(string $value)
     {
         return Custom::CUSTOM_FIELD_PREFIX . $value;
     }
 
+    /**
+     * @return mixed
+     */
     protected function castAttributeValue(mixed $value)
     {
         return $value;
