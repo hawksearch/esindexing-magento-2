@@ -41,7 +41,6 @@ class EntityRebuild extends AbstractEntityRebuild
     private Visibility $visibility;
     private Configuration $catalogInventoryConfiguration;
     private StockRegistryInterface $stockRegistry;
-    private Product $productDataProvider;
 
     /**
      * @param EntityTypePoolInterface<string, EntityTypeInterface> $entityTypePool
@@ -54,6 +53,8 @@ class EntityRebuild extends AbstractEntityRebuild
      * @param Configuration $catalogInventoryConfiguration
      * @param StockRegistryInterface $stockRegistry
      * @param Product $productDataProvider
+     * @todo remove $productAttributes argument
+     * @todo remove $productDataProvider argument
      */
     public function __construct(
         EntityTypePoolInterface $entityTypePool,
@@ -80,7 +81,6 @@ class EntityRebuild extends AbstractEntityRebuild
         $this->visibility = $visibility;
         $this->catalogInventoryConfiguration = $catalogInventoryConfiguration;
         $this->stockRegistry = $stockRegistry;
-        $this->productDataProvider = $productDataProvider;
     }
 
     /**

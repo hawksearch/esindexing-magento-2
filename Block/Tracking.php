@@ -90,9 +90,9 @@ class Tracking extends Template
     }
 
     /**
-     * Gete orders and items data as array
+     * Get orders and items data as array
      *
-     * @return array
+     * @return list<array<string, mixed>>
      * @throws NoSuchEntityException
      */
     public function getOrderData()

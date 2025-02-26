@@ -18,6 +18,7 @@ namespace HawkSearch\EsIndexing\Model\Product;
 use HawkSearch\EsIndexing\Model\Config\Products as ProductsConfig;
 use Magento\Catalog\Model\Product;
 use Magento\Eav\Model\Config;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Serialize\Serializer\Json;
 
 /**
@@ -46,8 +47,8 @@ class Attributes
     }
 
     /**
-     * @return array
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @return array<string, string>
+     * @throws LocalizedException
      */
     public function getAllAttributes()
     {
@@ -75,7 +76,7 @@ class Attributes
      * Returns list of product attributes which should be skipped by indexing processor.
      * Attributes from this list are excluded from any visual interfaces.
      *
-     * @return array
+     * @return list<string>
      */
     public function getExcludedAttributes()
     {
@@ -83,7 +84,7 @@ class Attributes
     }
 
     /**
-     * @return array
+     * @return list<string>
      */
     public function getMandatoryAttributes()
     {
@@ -91,7 +92,7 @@ class Attributes
     }
 
     /**
-     * @return array
+     * @return array<string, string>
      */
     public function getMandatoryFieldMap()
     {
@@ -111,7 +112,7 @@ class Attributes
     /**
      * Product data which is calculated
      *
-     * @return array
+     * @return list<string>
      */
     public function getExtraDataCodes()
     {
@@ -119,7 +120,7 @@ class Attributes
     }
 
     /**
-     * @return array
+     * @return list<string>
      */
     public function getIndexedAttributes()
     {
@@ -130,7 +131,7 @@ class Attributes
      * Return mapping hash.
      * Keys of the hash represent fields, values represent attributes.
      *
-     * @return array
+     * @return array<string, string>
      */
     public function getFieldToAttributeMap(): array
     {

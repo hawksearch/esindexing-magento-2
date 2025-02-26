@@ -38,6 +38,7 @@ class StagingSubscriptionPlugin
     }
 
     /**
+     * @return ?array{0: Trigger}
      * @throws \Zend_Db_Exception
      */
     public function beforeSaveTrigger(Subscription $subject, Trigger $trigger): ?array

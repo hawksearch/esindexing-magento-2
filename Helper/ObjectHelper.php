@@ -25,6 +25,13 @@ use Magento\Framework\Api\SortOrderFactory;
 /**
  * @api
  * @since 0.8.0
+ *
+ * @phpstan-type SearchCriteriaData array{
+ *     filter_groups?: array<mixed>,
+ *     sort_orders?: array<mixed>,
+ *     page_size?: ?int,
+ *     current_page?: ?int,
+ * }
  */
 class ObjectHelper
 {
@@ -46,16 +53,7 @@ class ObjectHelper
     }
 
     /**
-     * @phpstan-type keyFilterGroups SearchCriteria::FILTER_GROUPS
-     * @phpstan-type keySortOrders SearchCriteria::SORT_ORDERS
-     * @phpstan-type keyPageSize SearchCriteria::PAGE_SIZE
-     * @phpstan-type keyCurrentPage SearchCriteria::CURRENT_PAGE
-     * @param array{
-     *              keyFilterGroups: array<mixed>,
-     *              keySortOrders: array<mixed>,
-     *              keyPageSize: ?int,
-     *              keyCurrentPage: ?int,
-     *        } $data
+     * @param SearchCriteriaData $data
      * @return SearchCriteria
      */
     public function convertArrayToSearchCriteriaObject(array $data)

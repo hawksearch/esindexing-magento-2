@@ -99,7 +99,7 @@ class VueAdditionalParametersProcessor implements LayoutConfigProcessorInterface
             return null;
         }
 
-        /** @var Category $category */
+        /** @var ?Category $category */
         $category = $this->registry->registry('current_category');
         if (!$category) {
             return null;

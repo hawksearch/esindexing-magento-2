@@ -78,9 +78,6 @@ class RetryBulk extends Command
         parent::configure();
     }
 
-    /**
-     * @return int
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $bulkUuid = $input->getArgument(self::INPUT_BULK_UUID);

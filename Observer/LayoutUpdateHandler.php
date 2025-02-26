@@ -49,6 +49,9 @@ class LayoutUpdateHandler implements ObserverInterface
         $layout->getUpdate()->addHandle($handles);
     }
 
+    /**
+     * @return list<string>
+     */
     private function getResultsHandles(string $action): array
     {
         $allowedActions = [
@@ -77,7 +80,7 @@ class LayoutUpdateHandler implements ObserverInterface
 
         return $handles;
     }
-    
+
     private function isCategoriesEnabled(): bool
     {
         //@todo replace with \HawkSearch\EsIndexing\Registry\CurrentCategory::get()

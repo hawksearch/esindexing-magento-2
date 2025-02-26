@@ -35,78 +35,31 @@ interface FacetRangeModelInterface
     const ASSET_NAME = 'AssetName';
     const ASSET_URL = 'AssetUrl';
 
-    /**
-     * @return int
-     */
     public function getRangeId(): int;
 
-    /**
-     * @return $this
-     */
     public function setRangeId(int $value): self;
 
-    /**
-     * @return string
-     */
     public function getName(): string;
 
-    /**
-     * @param string|null $value
-     * @return $this
-     */
     public function setName(?string $value): self;
 
-    /**
-     * @return string
-     */
     public function getLBound(): string;
 
-    /**
-     * @param string|null $value
-     * @return $this
-     */
     public function setLBound(?string $value): self;
 
-    /**
-     * @return string
-     */
     public function getUBound(): string;
 
-    /**
-     * @param string|null $value
-     * @return $this
-     */
     public function setUBound(?string $value): self;
 
-    /**
-     * @return int
-     */
     public function getSortOrder(): int;
 
-    /**
-     * @return $this
-     */
     public function setSortOrder(int $value): self;
 
-    /**
-     * @return string
-     */
     public function getAssetName(): string;
 
-    /**
-     * @param string|null $value
-     * @return $this
-     */
     public function setAssetName(?string $value): self;
 
-    /**
-     * @return string
-     */
     public function getAssetUrl(): string;
 
-    /**
-     * @param string|null $value
-     * @return $this
-     */
     public function setAssetUrl(?string $value): self;
 }

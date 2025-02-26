@@ -25,7 +25,6 @@ class AdvancedCategory extends ConfigProvider
      * Returns a threshold for the amount of excepted Product URL rewrites
      *
      * @param null|int|string $store
-     * @return int
      * @noinspection PhpMissingParamTypeInspection
      */
     public function getProductUrlRewriteExceptionsThreshold($store = null): int

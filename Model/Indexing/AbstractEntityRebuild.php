@@ -135,7 +135,6 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
      * Check whether item is allowed to be indexed. Otherwise it should be removed.
      *
      * @param TItem $item
-     * @return bool
      */
     abstract protected function isAllowedItem(DataObject $item): bool;
 
@@ -144,7 +143,6 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
      * By default, it is considered that new and existing items are updated through the same indexing endpoint.
      *
      * @param TItem $item
-     * @return bool
      */
     protected function isItemNew(DataObject $item): bool
     {
@@ -154,6 +152,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     /**
      * @param TItem $entityItem
      * @return int
+     * @todo change type: ?int -> int
      */
     abstract protected function getEntityId(DataObject $entityItem): ?int;
 
@@ -436,12 +435,12 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
             $value = array_values($value);
         }
 
+        /** @phpstan-ignore function.impossibleType */
         return $value !== null && !is_array($value) ? [$value] : $value;
     }
 
     /**
      * @param TItem|null $item
-     * @return array
      * @deprecated 0.7.0 method will be removed.
      *      Using of 'code' and 'value' options is deprecated. Use @see FieldHandlerInterface to migrate fields with
      *     values.
@@ -517,6 +516,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
                 $proxyPosition = strlen(get_class($rebuilder)) - strlen('\Proxy');
                 if (strpos(get_class($rebuilder), '\Proxy', -$proxyPosition) === $proxyPosition) {
                     $parentClass = get_parent_class($rebuilder);
+                    /** @phpstan-ignore booleanOr.alwaysTrue */
                     if ($this instanceof $parentClass || is_subclass_of($this, $parentClass)) {
                         break;
                     }
@@ -545,7 +545,6 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
 
     /**
      * @param TItem $entityItem
-     * @return string
      * @throws NotFoundException
      */
     protected function getEntityUniqueId(DataObject $entityItem): string

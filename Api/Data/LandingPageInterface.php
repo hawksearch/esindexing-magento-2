@@ -54,64 +54,41 @@ interface LandingPageInterface
     public const FIELD_IS_NO_FOLLOW = "IsNoFollow";
     public const FIELD_CUSTOM_SORT_LIST = "CustomSortList";
 
-    /**
-     * @return int|null
-     */
     public function getPageId(): ?int;
 
     /**
-     * @param int|null $value
      * @return $this
      */
     public function setPageId(?int $value);
 
-    /**
-     * @return string|null
-     */
     public function getSyncGuid(): ?string;
 
     /**
-     * @param string|null $value
      * @return $this
      */
     public function setSyncGuid(?string $value);
 
-    /**
-     * @return string|null
-     */
     public function getName(): ?string;
 
     /**
-     * @param string|null $value
      * @return $this
      */
     public function setName(?string $value);
 
-    /**
-     * @return string|null
-     */
     public function getCustomUrl(): ?string;
 
     /**
-     * @param string|null $value
      * @return $this
      */
     public function setCustomUrl(?string $value);
 
-    /**
-     * @return string|null
-     */
     public function getNarrowXml(): ?string;
 
     /**
-     * @param string|null $value
      * @return $this
      */
     public function setNarrowXml(?string $value);
 
-    /**
-     * @return bool
-     */
     public function getIsFacetOverride(): bool;
 
     /**
@@ -119,9 +96,6 @@ interface LandingPageInterface
      */
     public function setIsFacetOverride(bool $value);
 
-    /**
-     * @return bool
-     */
     public function getIsIncludeProducts(): bool;
 
     /**
@@ -129,24 +103,16 @@ interface LandingPageInterface
      */
     public function setIsIncludeProducts(bool $value);
 
-    /**
-     * @return string|null
-     */
     public function getSortFieldId(): ?string;
 
     /**
-     * @param string|null $value
      * @return $this
      */
     public function setSortFieldId(?string $value);
 
-    /**
-     * @return string|null
-     */
     public function getSortDirection(): ?string;
 
     /**
-     * @param string|null $value
      * @return $this
      */
     public function setSortDirection(?string $value);
@@ -162,20 +128,13 @@ interface LandingPageInterface
      */
     public function setSelectedFacets(array $value);
 
-    /**
-     * @return string|null
-     */
     public function getPageLayoutId(): ?string;
 
     /**
-     * @param string|null $value
      * @return $this
      */
     public function setPageLayoutId(?string $value);
 
-    /**
-     * @return bool
-     */
     public function getEnableFacetAutoOrdering(): bool;
 
     /**
@@ -183,46 +142,30 @@ interface LandingPageInterface
      */
     public function setEnableFacetAutoOrdering(bool $value);
 
-    /**
-     * @return string|null
-     */
     public function getCustom(): ?string;
 
     /**
-     * @param string|null $value
      * @return $this
      */
     public function setCustom(?string $value);
 
-    /**
-     * @return string|null
-     */
     public function getTags(): ?string;
 
     /**
-     * @param string|null $value
      * @return $this
      */
     public function setTags(?string $value);
 
-    /**
-     * @return string|null
-     */
     public function getCanonicalUrl(): ?string;
 
     /**
-     * @param string|null $value
      * @return $this
      */
     public function setCanonicalUrl(?string $value);
 
-    /**
-     * @return string|null
-     */
     public function getPageType(): ?string;
 
     /**
-     * @param string|null $value
      * @return $this
      */
     public function setPageType(?string $value);
@@ -238,86 +181,55 @@ interface LandingPageInterface
      */
     public function setContentConfigList(array $value);
 
-    /**
-     * @return string|null
-     */
     public function getPageHeading(): ?string;
 
     /**
-     * @param string|null $value
      * @return $this
      */
     public function setPageHeading(?string $value);
 
-    /**
-     * @return string|null
-     */
     public function getCustomHtml(): ?string;
 
     /**
-     * @param string|null $value
      * @return $this
      */
     public function setCustomHtml(?string $value);
 
-    /**
-     * @return string|null
-     */
     public function getKeywords(): ?string;
 
     /**
-     * @param string|null $value
      * @return $this
      */
     public function setKeywords(?string $value);
 
-    /**
-     * @return string|null
-     */
     public function getListName(): ?string;
 
     /**
-     * @param string|null $value
      * @return $this
      */
     public function setListName(?string $value);
 
-    /**
-     * @return string|null
-     */
     public function getNotes(): ?string;
 
     /**
-     * @param string|null $value
      * @return $this
      */
     public function setNotes(?string $value);
 
-    /**
-     * @return string|null
-     */
     public function getCreateDate(): ?string;
 
     /**
-     * @param string|null $value
      * @return $this
      */
     public function setCreateDate(?string $value);
 
-    /**
-     * @return string|null
-     */
     public function getModifyDate(): ?string;
 
     /**
-     * @param string|null $value
      * @return $this
      */
     public function setModifyDate(?string $value);
 
-    /**
-     * @return bool
-     */
     public function getIsNoIndex(): bool;
 
     /**
@@ -325,9 +237,6 @@ interface LandingPageInterface
      */
     public function setIsNoIndex(bool $value);
 
-    /**
-     * @return bool
-     */
     public function getIsNoFollow(): bool;
 
     /**
@@ -335,13 +244,9 @@ interface LandingPageInterface
      */
     public function setIsNoFollow(bool $value);
 
-    /**
-     * @return string|null
-     */
     public function getCustomSortList(): ?string;
 
     /**
-     * @param string|null $value
      * @return $this
      */
     public function setCustomSortList(?string $value);

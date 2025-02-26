@@ -55,7 +55,7 @@ class LandingPageManagement implements LandingPageManagementInterface
     }
 
     /**
-     * @return array<mixed>
+     * @return list<string>
      * @throws InstructionException
      * @throws NotFoundException
      */

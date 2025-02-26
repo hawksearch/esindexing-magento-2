@@ -44,7 +44,6 @@ class StoreViewDisableIndexingPlugin
      * @param StoreResourceModel $subject
      * @param StoreResourceModel $result
      * @param Store $store
-     * @return StoreResourceModel
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */

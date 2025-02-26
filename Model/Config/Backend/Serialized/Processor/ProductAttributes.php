@@ -34,7 +34,7 @@ use Magento\Framework\Serialize\SerializerInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * @phpstan-type ValueItemRow array{'field': string, 'attribute': string, 'field_new'?: string}
+ * @phpstan-type ValueItemRow array<self::COLUMN_*, string>
  * @phpstan-type ValueItems array<string, ValueItemRow>
  * @implements ValueProcessorInterface<ValueItems, ValueItems>
  */
@@ -71,8 +71,7 @@ class ProductAttributes implements ValueProcessorInterface
         FacetManagementInterface $facetManagement,
         FieldExtendedInterfaceFactory $fieldExtendedFactory,
         ?SerializerInterface $serializer = null
-    )
-    {
+    ) {
         $this->attributeProvider = $attributeProvider;
         $this->attributeFacade = $attributeFacade;
         $this->message = $message;
@@ -85,6 +84,11 @@ class ProductAttributes implements ValueProcessorInterface
         $this->serializer = $serializer ?? ObjectManager::getInstance()->get(SerializerInterface::class);
     }
 
+    /**
+     * @param ValueItems $value
+     * @param ValueInterface $configValue
+     * @return ValueItems
+     */
     public function process(array $value, ValueInterface $configValue): array
     {
         $value = $resultSave = $this->filterValue($value);
@@ -201,7 +205,6 @@ class ProductAttributes implements ValueProcessorInterface
 
     /**
      * @param ValueItemRow $fieldData
-     * @return FieldInterface
      * @throws CouldNotSaveException
      */
     protected function addNewFiled(array $fieldData): FieldInterface
@@ -219,7 +222,6 @@ class ProductAttributes implements ValueProcessorInterface
 
     /**
      * @param ValueItemRow $fieldData
-     * @return FieldInterface
      * @throws NotFoundException|CouldNotSaveException
      */
     protected function updateFiled(array $fieldData): FieldInterface
@@ -247,9 +249,6 @@ class ProductAttributes implements ValueProcessorInterface
         return $this->fieldsCache;
     }
 
-    /**
-     * @return FieldInterface
-     */
     protected function getFieldByName(string $name): FieldInterface
     {
         foreach ($this->getFields() as $field) {
@@ -273,9 +272,6 @@ class ProductAttributes implements ValueProcessorInterface
         return $this->facetsCache;
     }
 
-    /**
-     * @return FacetInterface
-     */
     protected function getFacetByField(FieldExtendedInterface $field): FacetInterface
     {
         $result = $this->facetFactory->create();
@@ -299,7 +295,6 @@ class ProductAttributes implements ValueProcessorInterface
     }
 
     /**
-     * @return FacetInterface
      * @throws CouldNotSaveException
      */
     protected function updateFacet(FieldExtendedInterface $field): FacetInterface

@@ -10,6 +10,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+
 namespace HawkSearch\EsIndexing\Block\Adminhtml\Bulk\Details;
 
 use HawkSearch\EsIndexing\Block\Adminhtml\Form\GenericButton;
@@ -22,7 +23,7 @@ use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 class BackButton extends GenericButton implements ButtonProviderInterface
 {
     /**
-     * @return array
+     * @return array<string, string|\Stringable|int>
      */
     public function getButtonData()
     {

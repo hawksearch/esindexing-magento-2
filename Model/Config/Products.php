@@ -25,7 +25,6 @@ class Products extends ConfigProvider
      * Return product attributes configuration in JSON format
      *
      * @param null|int|string $store
-     * @return string
      * @noinspection PhpMissingParamTypeInspection
      */
     public function getAttributes($store = null): string

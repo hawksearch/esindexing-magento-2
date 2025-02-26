@@ -27,23 +27,11 @@ interface CoordinateInterface
     const FIELD_LATITUDE = 'Latitude';
     const FIELD_LONGITUDE = 'Longitude';
 
-    /**
-     * @return float
-     */
     public function getLatitude(): float;
 
-    /**
-     * @return $this
-     */
     public function setLatitude(float $value): self;
 
-    /**
-     * @return float
-     */
     public function getLongitude(): float;
 
-    /**
-     * @return $this
-     */
     public function setLongitude(float $value): self;
 }

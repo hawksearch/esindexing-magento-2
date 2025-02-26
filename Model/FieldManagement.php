@@ -40,8 +40,7 @@ class FieldManagement implements FieldManagementInterface
      */
     public function __construct(
         InstructionManagerPoolInterface $instructionManagerPool
-    )
-    {
+    ) {
         $this->instructionManagerPool = $instructionManagerPool;
     }
 
@@ -90,6 +89,9 @@ class FieldManagement implements FieldManagementInterface
         return $returnedField;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function collectFieldData(FieldInterface $field): array
     {
         if ($field instanceof AbstractSimpleObject) {

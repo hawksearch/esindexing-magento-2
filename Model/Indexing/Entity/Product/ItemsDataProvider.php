@@ -30,6 +30,7 @@ use Magento\Framework\App\ObjectManager;
 
 /**
  * @phpstan-type ItemType ProductModel
+ * @implements ItemsDataProviderInterface<ItemType>
  */
 class ItemsDataProvider implements ItemsDataProviderInterface
 {
@@ -69,7 +70,6 @@ class ItemsDataProvider implements ItemsDataProviderInterface
     }
 
     /**
-     * @return ItemType[]
      * @throws Exception
      */
     public function getItems(int $storeId, ?array $entityIds = null, int $currentPage = 1, int $pageSize = 0)
@@ -102,7 +102,7 @@ class ItemsDataProvider implements ItemsDataProviderInterface
     ): array {
         $this->searchCriteriaBuilder->addFilter('store_id', $storeId);
 
-        if ($productIds && count($productIds) > 0) {
+        if ($productIds) {
             $this->searchCriteriaBuilder->addFilter('entity_id', $productIds, 'in');
         }
 

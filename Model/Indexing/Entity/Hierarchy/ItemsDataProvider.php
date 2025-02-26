@@ -22,6 +22,9 @@ use Magento\Catalog\Model\CategoryFactory;
 use Magento\Catalog\Model\ResourceModel\Category as CategoryResource;
 use Magento\Store\Model\StoreManagerInterface;
 
+/**
+ * @implements ItemsDataProviderInterface<CategoryInterface>
+ */
 class ItemsDataProvider implements ItemsDataProviderInterface
 {
     private CategoryResource $categoryResource;
@@ -32,16 +35,12 @@ class ItemsDataProvider implements ItemsDataProviderInterface
         CategoryResource $categoryResource,
         StoreManagerInterface $storeManager,
         CategoryFactory $categoryFactory
-    )
-    {
+    ) {
         $this->categoryResource = $categoryResource;
         $this->storeManager = $storeManager;
         $this->categoryFactory = $categoryFactory;
     }
 
-    /**
-     * @return CategoryInterface[]
-     */
     public function getItems(int $storeId, ?array $entityIds = null, int $currentPage = 1, int $pageSize = 0)
     {
         return $this->getCategoryCollection($storeId, $entityIds, $currentPage, $pageSize);
@@ -54,8 +53,12 @@ class ItemsDataProvider implements ItemsDataProviderInterface
      * @param int $pageSize
      * @return CategoryInterface[]
      */
-    protected function getCategoryCollection(int $storeId, ?array $entityIds = null, int $currentPage = 1, int $pageSize = 0): array
-    {
+    protected function getCategoryCollection(
+        int $storeId,
+        ?array $entityIds = null,
+        int $currentPage = 1,
+        int $pageSize = 0
+    ): array {
         $storeParentCategoryId = $this->storeManager->getStore($storeId)->getRootCategoryId();
 
         /**
@@ -78,7 +81,7 @@ class ItemsDataProvider implements ItemsDataProviderInterface
         $categories->addPathFilter($pathFilterRegex)
             ->addAttributeToSelect('name');
 
-        if ($entityIds && count($entityIds) > 0) {
+        if ($entityIds) {
             $categories->addIdFilter($entityIds);
         }
         $categories->setCurPage($currentPage)

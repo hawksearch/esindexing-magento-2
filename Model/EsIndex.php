@@ -20,9 +20,6 @@ use Magento\Framework\Api\AbstractSimpleObject;
 
 class EsIndex extends AbstractSimpleObject implements EsIndexInterface
 {
-    /**
-     * @return string
-     */
     public function getIndexName(): string
     {
         return (string)$this->_get(self::INDEX_NAME);

@@ -21,7 +21,7 @@ class BulkDataProvider extends OperationDataProvider
 
     /**
      * @param array<string, mixed> $meta
-     * @return array
+     * @return array<string, mixed>
      */
     public function prepareMeta($meta)
     {

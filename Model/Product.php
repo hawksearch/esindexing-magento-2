@@ -43,21 +43,18 @@ class Product
     private ?array $productAllTypes = null;
     private ProductFactory $productFactory;
     private Type $productType;
-    private FulltextResource $fulltextResource;
     private ProductResource $productResource;
     private MetadataPool $metadataPool;
-    
+
     public function __construct(
         ProductFactory $productFactory,
         Type $productType,
-        FulltextResource $fulltextResource,
+        FulltextResource $fulltextResource, // @todo remove $fulltextResource argument
         ProductResource $productResource = null,
         MetadataPool $metadataPool = null
-    )
-    {
+    ) {
         $this->productFactory = $productFactory;
         $this->productType = $productType;
-        $this->fulltextResource = $fulltextResource;
         $this->productResource = $productResource ?: ObjectManager::getInstance()->get(ProductResource::class);
         $this->metadataPool = $metadataPool ?: ObjectManager::getInstance()->get(MetadataPool::class);
     }
@@ -96,7 +93,7 @@ class Product
 
     /**
      * @param int[] $ids
-     * @return array
+     * @return int[]
      * @throws Exception
      */
     public function getParentProductIds(array $ids): array
@@ -117,7 +114,7 @@ class Product
      * from the catalog_product_relation table.
      *
      * @param int[] $childIds
-     * @return array
+     * @return array<int, int[]>|array{}
      * @throws Exception
      */
     public function getParentsByChildMap(array $childIds): array
@@ -143,8 +140,8 @@ class Product
 
         $map = [];
         foreach ($rows as $row) {
-            $map[$row['child_id']] = $map[$row['child_id']] ?? [];
-            $map[$row['child_id']][] = $row['entity_id'];
+            $map[(int)$row['child_id']] = $map[$row['child_id']] ?? [];
+            $map[(int)$row['child_id']][] = (int)$row['entity_id'];
         }
 
         return $map;
@@ -157,7 +154,7 @@ class Product
      * from the catalog_product_relation table.
      *
      * @param int[] $parentIds
-     * @return array
+     * @return array<int, int[]>|array{}
      * @throws Exception
      */
     public function getChildrenByParentMap(array $parentIds): array
@@ -183,8 +180,8 @@ class Product
 
         $map = [];
         foreach ($rows as $row) {
-            $map[$row['entity_id']] = $map[$row['entity_id']] ?? [];
-            $map[$row['entity_id']][] = $row['child_id'];
+            $map[(int)$row['entity_id']] = $map[$row['entity_id']] ?? [];
+            $map[(int)$row['entity_id']][] = (int)$row['child_id'];
         }
 
         return $map;

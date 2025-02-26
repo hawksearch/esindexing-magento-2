@@ -36,7 +36,7 @@ class RetryButton implements ButtonProviderInterface
     }
 
     /**
-     * @return array
+     * @return array<string, string|\Stringable|array<mixed>>
      */
     public function getButtonData()
     {

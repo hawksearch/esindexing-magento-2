@@ -23,10 +23,14 @@ use Magento\Framework\Exception\RuntimeException;
 interface DataStorageInterface
 {
     /**
+     * @return void
      * @throws RuntimeException
      */
     public function set(mixed $value, bool $graceful = false);
 
+    /**
+     * @return void
+     */
     public function reset();
 
     /**

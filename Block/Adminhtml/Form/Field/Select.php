@@ -25,6 +25,7 @@ class Select extends HtmlSelect
      */
     public function setInputName(string $value)
     {
+        /** @var $this */
         return $this->setName($value);
     }
 

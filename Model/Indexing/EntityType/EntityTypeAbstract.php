@@ -39,6 +39,9 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
         ],
     ];
     private EntityRebuildInterface $rebuilder;
+    /**
+     * @var ItemsDataProviderInterface<object>
+     */
     private ItemsDataProviderInterface $itemsDataProvider;
     /**
      * @var FieldHandlerInterface<DataObject>
@@ -51,7 +54,7 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
 
     /**
      * @param EntityRebuildInterface $rebuilder
-     * @param ItemsDataProviderInterface $itemsDataProvider
+     * @param ItemsDataProviderInterface<object> $itemsDataProvider
      * @param FieldHandlerInterface<DataObject> $fieldHandler
      * @param ItemsIndexerInterface $itemsIndexer
      * @param AbstractConfigHelper $configHelper

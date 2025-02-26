@@ -83,7 +83,7 @@ class CustomAttributes extends AbstractFieldArray
     {
         $this->setHtmlId('_' . uniqid());
         $this->_addAfter = false;
-        $this->_addButtonLabel = __('Add New Mapping');
+        $this->_addButtonLabel = __('Add New Mapping')->render();
 
         $this->addColumn(
             ValueProcessorInterface::COLUMN_FIELD,
@@ -121,6 +121,7 @@ class CustomAttributes extends AbstractFieldArray
     {
         parent::addColumn($name, $params);
 
+        /** @phpstan-ignore nullCoalesce.expr (PhpDoc for $this->_getParam lies) */
         $options = $this->_getParam($params, 'options') ?? [];
 
         if (is_callable($options)) {
@@ -202,7 +203,6 @@ class CustomAttributes extends AbstractFieldArray
 
     /**
      * @param list<array<mixed>> $options
-     * @return Select
      * @throws LocalizedException
      */
     private function getRenderer(array $options): Select

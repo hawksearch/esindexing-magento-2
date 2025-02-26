@@ -21,6 +21,9 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Store\Model\Store;
 
+/**
+ * @implements ItemsDataProviderInterface<PageInterface>
+ */
 class ItemsDataProvider implements ItemsDataProviderInterface
 {
     private PageRepositoryInterface $pageRepository;
@@ -35,7 +38,6 @@ class ItemsDataProvider implements ItemsDataProviderInterface
     }
 
     /**
-     * @return PageInterface[]
      * @throws LocalizedException
      */
     public function getItems(int $storeId, ?array $entityIds = null, int $currentPage = 1, int $pageSize = 0)
@@ -51,15 +53,19 @@ class ItemsDataProvider implements ItemsDataProviderInterface
      * @return PageInterface[]
      * @throws LocalizedException
      */
-    protected function getPageCollection(int $storeId, ?array $entityIds = null, int $currentPage = 1, int $pageSize = 0)
-    {
+    protected function getPageCollection(
+        int $storeId,
+        ?array $entityIds = null,
+        int $currentPage = 1,
+        int $pageSize = 0
+    ) {
         $this->searchCriteriaBuilder->addFilter(
             'store_id',
             [$storeId, Store::DEFAULT_STORE_ID],
             'in'
         );
 
-        if ($entityIds && count($entityIds) > 0) {
+        if ($entityIds) {
             $this->searchCriteriaBuilder->addFilter('page_id', $entityIds, 'in');
         }
 

@@ -67,6 +67,7 @@ class DataStorage implements DataStorageInterface
         if (isset($this->value)) {
             if (is_object($this->value)
                 && method_exists($this->value, '__destruct')
+                /** @phpstan-ignore booleanAnd.rightAlwaysTrue */
                 && is_callable([$this->value, '__destruct'])) {
                 $this->value->__destruct();
             }

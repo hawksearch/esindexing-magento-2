@@ -30,7 +30,7 @@ class SpecificOptionsPlugin
      * @param callable $proceed
      * @param list<int>|string $ids
      * @param bool $withEmpty
-     * @return array
+     * @return list<array{label: string, value: ?string}>
      * @noinspection PhpMissingParamTypeInspection
      */
     public function aroundGetSpecificOptions(Table $subject, callable $proceed, $ids, bool $withEmpty = true): array
@@ -63,9 +63,9 @@ class SpecificOptionsPlugin
     }
 
     /**
-     * @param list<array{label: string, value: string}> $options
+     * @param list<array{label: string, value: ?string}> $options
      * @param array{label: '', value: ''} $emptyOption
-     * @return array
+     * @return list<array{label: string, value: ?string}>
      * @noinspection PhpMissingParamTypeInspection
      */
     private function addEmptyOption(array $options, array $emptyOption): array

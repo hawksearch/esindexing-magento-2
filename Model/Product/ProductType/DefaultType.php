@@ -90,7 +90,6 @@ abstract class DefaultType implements ProductTypeInterface
 
     /**
      * @param ProductModel $product
-     * @return float
      */
     protected function getPriceRegular(ProductInterface $product): float
     {
@@ -99,7 +98,6 @@ abstract class DefaultType implements ProductTypeInterface
 
     /**
      * @param ProductModel $product
-     * @return float
      */
     protected function getPriceFinal(ProductInterface $product): float
     {
@@ -108,7 +106,6 @@ abstract class DefaultType implements ProductTypeInterface
 
     /**
      * @param ProductModel $product
-     * @return float
      */
     protected function getPriceMin(ProductInterface $product): float
     {
@@ -117,7 +114,6 @@ abstract class DefaultType implements ProductTypeInterface
 
     /**
      * @param ProductModel $product
-     * @return float
      */
     protected function getPriceMax(ProductInterface $product): float
     {
@@ -230,7 +226,6 @@ abstract class DefaultType implements ProductTypeInterface
      * @param ProductModel $product
      * @param float $price
      * @param bool $forceIncludeTax
-     * @return float
      */
     protected function handleTax(ProductInterface $product, float $price, bool $forceIncludeTax = false): float
     {
@@ -289,7 +284,6 @@ abstract class DefaultType implements ProductTypeInterface
     }
 
     /**
-     * @return int|null
      * @throws LocalizedException
      */
     protected function getAllCustomerGroupsId(): ?int

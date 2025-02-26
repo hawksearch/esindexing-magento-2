@@ -30,24 +30,11 @@ interface FacetValueOrderInfoInterface
     const VALUE = 'Value';
     const SORT_ORDER = 'SortOrder';
 
-    /**
-     * @return string
-     */
     public function getValue(): string;
 
-    /**
-     * @param string|null $value
-     * @return $this
-     */
     public function setValue(?string $value): self;
 
-    /**
-     * @return int
-     */
     public function getSortOrder(): int;
 
-    /**
-     * @return $this
-     */
     public function setSortOrder(int $value): self;
 }
