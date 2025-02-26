@@ -17,6 +17,7 @@ namespace HawkSearch\EsIndexing\Model\MessageQueue;
 
 use HawkSearch\EsIndexing\Api\Data\QueueOperationDataInterface;
 use HawkSearch\EsIndexing\Helper\ObjectHelper;
+use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Data\ObjectFactory;
 use Magento\Framework\DataObject;
 use Magento\Framework\Serialize\SerializerInterface;
@@ -35,8 +36,7 @@ class Consumer
         SerializerInterface $serializer,
         ObjectFactory $objectFactory,
         ObjectHelper $objectHelper
-    )
-    {
+    ) {
         $this->serializer = $serializer;
         $this->objectFactory = $objectFactory;
         $this->objectHelper = $objectHelper;
@@ -67,9 +67,11 @@ class Consumer
     }
 
     /**
-     * @return array
+     * @return array{
+     *     searchCriteria: SearchCriteria
+     * }
      */
-    private function buildArguments(DataObject $data)
+    private function buildArguments(DataObject $data): array
     {
         $arguments = $data->getData('method_arguments') ?? [];
         foreach ($arguments as $paramName => $value) {

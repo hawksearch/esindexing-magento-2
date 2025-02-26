@@ -23,10 +23,7 @@ class AttributeFacade
 {
     private AttributeAdapter $attribute;
 
-    /**
-     * @return void
-     */
-    public function execute(FieldInterface $field, AttributeAdapter $attribute)
+    public function execute(FieldInterface $field, AttributeAdapter $attribute): void
     {
         $this->attribute = $attribute;
 
@@ -35,46 +32,31 @@ class AttributeFacade
             ->processSortable($field);
     }
 
-    /**
-     * @return $this
-     */
-    protected function processSearchable(FieldInterface $field): AttributeFacade
+    private function processSearchable(FieldInterface $field): self
     {
         $this->setFieldSearchable($field, $this->attribute->isSearchable());
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    protected function processFilterable(FieldInterface $field): AttributeFacade
+    private function processFilterable(FieldInterface $field): self
     {
         $this->setFieldFilterable($field, $this->attribute->isFilterable());
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    protected function processSortable(FieldInterface $field): AttributeFacade
+    private function processSortable(FieldInterface $field): self
     {
         $this->setFieldSortable($field, $this->attribute->isSortable());
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    protected function isFieldSearchable(FieldInterface $field): bool
+    private function isFieldSearchable(FieldInterface $field): bool
     {
         return $field->getIsQuery()
             && in_array($field->getFieldType(), ['keyword', 'facet', 'text']);
     }
 
-    /**
-     * @return void
-     */
-    protected function setFieldSearchable(FieldInterface $field, bool $value)
+    private function setFieldSearchable(FieldInterface $field, bool $value): void
     {
         switch ($value) {
             case true:
@@ -90,18 +72,12 @@ class AttributeFacade
 
     }
 
-    /**
-     * @return bool
-     */
-    protected function isFieldFilterable(FieldInterface $field): bool
+    private function isFieldFilterable(FieldInterface $field): bool
     {
         return $field->getFieldType() === FieldInterface::FIELD_TYPE_FACET;
     }
 
-    /**
-     * @return void
-     */
-    protected function setFieldFilterable(FieldInterface $field, bool $value)
+    private function setFieldFilterable(FieldInterface $field, bool $value): void
     {
         switch ($value) {
             case true:
@@ -114,18 +90,12 @@ class AttributeFacade
         }
     }
 
-    /**
-     * @return bool
-     */
-    protected function isFieldSortable(FieldInterface $field): bool
+    private function isFieldSortable(FieldInterface $field): bool
     {
         return $field->getIsSort();
     }
 
-    /**
-     * @return void
-     */
-    protected function setFieldSortable(FieldInterface $field, bool $value)
+    private function setFieldSortable(FieldInterface $field, bool $value): void
     {
         $field->setIsSort($value);
     }

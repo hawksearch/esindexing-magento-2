@@ -32,8 +32,7 @@ class StoreViewPlugin extends AbstractPlugin
     public function __construct(
         IndexerRegistry $indexerRegistry,
         IndexingConfig $indexingConfig
-    )
-    {
+    ) {
         $this->productIndexer = $indexerRegistry->get(ProductIndexer::INDEXER_ID);
         $this->categoryIndexer = $indexerRegistry->get(CategoryIndexer::INDEXER_ID);
         $this->indexingConfig = $indexingConfig;
@@ -46,8 +45,11 @@ class StoreViewPlugin extends AbstractPlugin
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterSave(StoreResourceModel $subject, StoreResourceModel $result, AbstractModel $store)
-    {
+    public function afterSave(
+        StoreResourceModel $subject,
+        StoreResourceModel $result,
+        AbstractModel $store
+    ): StoreResourceModel {
         if ($this->validate($store)) {
             $this->categoryIndexer->invalidate();
             $this->productIndexer->invalidate();
@@ -56,7 +58,7 @@ class StoreViewPlugin extends AbstractPlugin
         return $result;
     }
 
-    protected function validate(AbstractModel $model)
+    protected function validate(AbstractModel $model): bool
     {
         /** @var StoreModel $model */
         return !$model->isObjectNew()

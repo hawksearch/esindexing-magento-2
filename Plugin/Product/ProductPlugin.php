@@ -29,8 +29,7 @@ class ProductPlugin extends AbstractPlugin
     public function __construct(
         IndexerRegistry $indexerRegistry,
         ProductDataProvider $productDataProvider
-    )
-    {
+    ) {
         parent::__construct($indexerRegistry);
         $this->categoryIndexer = $indexerRegistry->get(CategoryIndexer::INDEXER_ID);
         $this->productDataProvider = $productDataProvider;
@@ -39,22 +38,26 @@ class ProductPlugin extends AbstractPlugin
     /**
      * Reindex on product save.
      *
-     * @return ProductResource
      * @throws \Exception
      */
-    public function aroundSave(ProductResource $productResource, \Closure $proceed, AbstractModel $object)
-    {
+    public function aroundSave(
+        ProductResource $productResource,
+        \Closure $proceed,
+        AbstractModel $object
+    ): ProductResource {
         return $this->addCommitCallback($productResource, $proceed, $object);
     }
 
     /**
      * Reindex on product delete
      *
-     * @return ProductResource
      * @throws \Exception
      */
-    public function aroundDelete(ProductResource $productResource, \Closure $proceed, AbstractModel $object)
-    {
+    public function aroundDelete(
+        ProductResource $productResource,
+        \Closure $proceed,
+        AbstractModel $object
+    ): ProductResource {
         $object->setAffectedCategoryIds($object->getCategoryIds());
         $object->setAffectedParentProductIds($this->productDataProvider->getParentProductIds([$object->getId()]));
         return $this->addCommitCallback($productResource, $proceed, $object);
@@ -63,11 +66,13 @@ class ProductPlugin extends AbstractPlugin
     /**
      * Reindex catalog search.
      *
-     * @return ProductResource
      * @throws \Exception
      */
-    private function addCommitCallback(ProductResource $productResource, \Closure $proceed, AbstractModel $object)
-    {
+    private function addCommitCallback(
+        ProductResource $productResource,
+        \Closure $proceed,
+        AbstractModel $object
+    ): ProductResource {
         try {
             $productResource->beginTransaction();
             $result = $proceed($object);
@@ -93,9 +98,8 @@ class ProductPlugin extends AbstractPlugin
      * Reindex categories if indexer is not scheduled
      *
      * @param int[] $categoryIds
-     * @return void
      */
-    protected function reindexCategoryList(array $categoryIds)
+    private function reindexCategoryList(array $categoryIds): void
     {
         if (!$this->categoryIndexer->isScheduled()) {
             $this->categoryIndexer->reindexList($categoryIds);

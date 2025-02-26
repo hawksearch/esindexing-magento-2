@@ -20,8 +20,6 @@ abstract class AbstractPlugin
 {
     /**
      * Validate changes for invalidating indexer
-     *
-     * @return bool
      */
-    abstract protected function validate(AbstractModel $model);
+    abstract protected function validate(AbstractModel $model): bool;
 }

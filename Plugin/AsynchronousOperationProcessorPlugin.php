@@ -75,10 +75,10 @@ class AsynchronousOperationProcessorPlugin
     }
 
     /**
-     * @return ?array
+     * @return ?list<string>
      * @throws LocalizedException
      */
-    public function beforeProcess(OperationProcessor $subject, string $encodedMessage)
+    public function beforeProcess(OperationProcessor $subject, string $encodedMessage): ?array
     {
         /** @todo Mark operation as started */
         /** @var OperationInterface $operation */
@@ -100,12 +100,11 @@ class AsynchronousOperationProcessorPlugin
      * @param OperationProcessor $subject
      * @param null $result
      * @param string $encodedMessage
-     * @return void
      * @throws LocalizedException
      * @noinspection PhpMissingParamTypeInspection
      * @phpstan-ignore missingType.parameter
      */
-    public function afterProcess(OperationProcessor $subject, $result, string $encodedMessage)
+    public function afterProcess(OperationProcessor $subject, $result, string $encodedMessage): void
     {
         /** @var OperationInterface $operation */
         $operation = $this->messageEncoder->decode(AsyncConfig::SYSTEM_TOPIC_NAME, $encodedMessage);
@@ -128,10 +127,9 @@ class AsynchronousOperationProcessorPlugin
     /**
      * Finalize full reindexing process: rebuild hierarchy, set current index
      *
-     * @return void
      * @throws NoSuchEntityException|InvalidBulkOperationException
      */
-    private function finalizeFullReindexing(OperationInterface $operation)
+    private function finalizeFullReindexing(OperationInterface $operation): void
     {
         if (!$this->indexingContext->isFullReindex()) {
             return;
@@ -167,9 +165,6 @@ class AsynchronousOperationProcessorPlugin
         }
     }
 
-    /**
-     * @return bool
-     */
     private function isAllowed(OperationInterface $operation): bool
     {
         $isAllowed = true;
@@ -184,10 +179,8 @@ class AsynchronousOperationProcessorPlugin
 
     /**
      * Update operation status from magento_operation table
-     *
-     * @return void
      */
-    private function updateOperationStatus(OperationInterface $operation)
+    private function updateOperationStatus(OperationInterface $operation): void
     {
         try {
             $loadedOperation = $this->bulkOperationManagement->getOperationByBulkAndKey(

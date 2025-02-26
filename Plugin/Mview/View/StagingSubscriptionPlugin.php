@@ -33,16 +33,14 @@ class StagingSubscriptionPlugin
 
     public function __construct(
         TriggerFactory $triggerFactory
-    )
-    {
+    ) {
         $this->triggerFactory = $triggerFactory;
     }
 
     /**
-     * @return array|null
      * @throws \Zend_Db_Exception
      */
-    public function beforeSaveTrigger(Subscription $subject, Trigger $trigger)
+    public function beforeSaveTrigger(Subscription $subject, Trigger $trigger): ?array
     {
         if (!array_key_exists($subject->getView()->getId(), $this->allowedViewTables)) {
             return null;

@@ -26,8 +26,8 @@ class InitCurrentCategoryObserver implements ObserverInterface
     {
         $this->currentCategory = $currentCategory;
     }
-
-    public function execute(Observer $observer)
+    
+    public function execute(Observer $observer): void
     {
         /** @var CategoryInterface $category */
         $category = $observer->getEvent()->getData('category');

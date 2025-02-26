@@ -31,7 +31,7 @@ class ValueProcessor implements ValueProcessorInterface
         'status'
     ];
 
-    public function process(Attribute $attribute, array $value, array $relatedValues = [])
+    public function process(Attribute $attribute, array $value, array $relatedValues = []): array
     {
         if ($this->isRollUpAttributeStrategy($attribute)) {
             $value = array_merge($value, $relatedValues);
@@ -43,21 +43,15 @@ class ValueProcessor implements ValueProcessorInterface
 
         return $value;
     }
-
-    /**
-     * @return bool
-     */
-    protected function isRollUpAttributeStrategy(Attribute $attribute)
+    
+    private function isRollUpAttributeStrategy(Attribute $attribute): bool
     {
         $isStatic = $attribute->getBackendType() === 'static';
         $isSystemAttribute = in_array($attribute->getAttributeCode(), self::SYSTEM_ATTRIBUTES);
         return !$isStatic && !$isSystemAttribute;
     }
 
-    /**
-     * @return bool
-     */
-    protected function isUniqueValueStrategy(Attribute $attribute)
+    private function isUniqueValueStrategy(Attribute $attribute): bool
     {
         return true;
     }

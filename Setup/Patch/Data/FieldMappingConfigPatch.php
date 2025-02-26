@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Setup\Patch\Data;
 
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
@@ -29,26 +28,28 @@ class FieldMappingConfigPatch implements DataPatchInterface
     public function __construct(
         ModuleDataSetupInterface $moduleDataSetup,
         Json $json
-    )
-    {
+    ) {
         $this->moduleDataSetup = $moduleDataSetup;
         $this->json = $json;
     }
 
-    public static function getDependencies()
-    {
-        return [];
-    }
-
-    public function getAliases()
+    /**
+     * @return string[]
+     */
+    public static function getDependencies(): array
     {
         return [];
     }
 
     /**
-     * @throws LocalizedException
+     * @return string[]
      */
-    public function apply()
+    public function getAliases(): array
+    {
+        return [];
+    }
+
+    public function apply(): self
     {
         $configTable = $this->moduleDataSetup->getTable('core_config_data');
         $select = $this->moduleDataSetup->getConnection()->select()
@@ -71,5 +72,7 @@ class FieldMappingConfigPatch implements DataPatchInterface
                 ['path = ?' => self::CONFIG_PATH_ATTRIBUTES]
             );
         }
+
+        return $this;
     }
 }

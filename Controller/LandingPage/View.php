@@ -19,10 +19,8 @@ use HawkSearch\EsIndexing\Api\LandingPageManagementInterface;
 use Magento\Catalog\Model\CategoryFactory;
 use Magento\Catalog\Model\Session;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Registry;
-use Magento\Framework\View\Result\Page;
 use Magento\Framework\View\Result\PageFactory;
 
 class View extends \Magento\Framework\App\Action\Action
@@ -42,8 +40,7 @@ class View extends \Magento\Framework\App\Action\Action
         PageFactory $resultPageFactory,
         LandingPageManagementInterface $landingPageManagement,
         LandingPageInterfaceFactory $landingPageInterfaceFactory
-    )
-    {
+    ) {
         parent::__construct($context);
         $this->resultPageFactory = $resultPageFactory;
         $this->session = $session;
@@ -54,11 +51,10 @@ class View extends \Magento\Framework\App\Action\Action
     }
 
     /**
-     * @return ResponseInterface|ResultInterface|Page
+     * @return ResultInterface
      */
-    public function execute()
+    public function execute(): ResultInterface
     {
-
         $category = $this->categoryFactory->create();
 
         //@TODO refactor this

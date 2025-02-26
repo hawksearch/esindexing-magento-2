@@ -35,8 +35,7 @@ class OnCartAddTrackingEventPlugin
         DataStorageInterface $cartItemsToAddDataStorage,
         EventTrackingConfig $eventTrackingConfig,
         DataObjectFactory $dataObjectFactory
-    )
-    {
+    ) {
         $this->cartItemsToAddDataStorage = $cartItemsToAddDataStorage;
         $this->eventTrackingConfig = $eventTrackingConfig;
         $this->dataObjectFactory = $dataObjectFactory;
@@ -47,23 +46,19 @@ class OnCartAddTrackingEventPlugin
      *
      * @param Quote $subject
      * @param int $itemId
-     * @return null
      * @noinspection PhpMissingParamTypeInspection
      */
-    public function beforeUpdateItem(Quote $subject, $itemId)
+    public function beforeUpdateItem(Quote $subject, $itemId): void
     {
         $item = $subject->getItemById($itemId);
         $this->qty = $item ? $item->getQty() : 0;
         $this->isSkipAddNewItem = true;
-
-        return null;
     }
 
     /**
-     * @return QuoteItem
      * @throws RuntimeException
      */
-    public function afterUpdateItem(Quote $subject, QuoteItem $result)
+    public function afterUpdateItem(Quote $subject, QuoteItem $result): QuoteItem
     {
         $this->isSkipAddNewItem = false;
         if ($this->qty > $result->getQty()) {
@@ -81,17 +76,12 @@ class OnCartAddTrackingEventPlugin
      * @param Quote $subject
      * @param Product $product
      * @param float|DataObject|null $request
-     * @return null
      * @noinspection PhpMissingParamTypeInspection
      */
-    public function beforeAddProduct(
-        Quote $subject,
-        Product $product,
-        $request = null
-    )
+    public function beforeAddProduct(Quote $subject, Product $product, $request = null): void
     {
         if ($this->isSkipAddNewItem) {
-            return null;
+            return;
         }
 
         if ($request === null) {
@@ -101,12 +91,10 @@ class OnCartAddTrackingEventPlugin
             $request = $this->dataObjectFactory->create(['qty' => $request]);
         }
         if (!$request instanceof \Magento\Framework\DataObject) {
-            return null;
+            return;
         }
 
         $this->qty = (float)$request->getData('qty') ?: 0;
-
-        return null;
     }
 
     /**
@@ -115,11 +103,9 @@ class OnCartAddTrackingEventPlugin
      * @return QuoteItem|string
      * @throws RuntimeException
      * @noinspection PhpMissingParamTypeInspection
+     * @noinspection PhpMissingReturnTypeInspection
      */
-    public function afterAddProduct(
-        Quote $subject,
-        $result
-    )
+    public function afterAddProduct(Quote $subject, $result)
     {
         if ($this->isSkipAddNewItem) {
             return $result;
@@ -147,10 +133,9 @@ class OnCartAddTrackingEventPlugin
     }
 
     /**
-     * @return void
      * @throws RuntimeException
      */
-    private function addItemToTriggerList(QuoteItem $item)
+    private function addItemToTriggerList(QuoteItem $item): void
     {
         if ($this->eventTrackingConfig->isEnabled()) {
             $this->cartItemsToAddDataStorage->reset();

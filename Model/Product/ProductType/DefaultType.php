@@ -221,7 +221,7 @@ abstract class DefaultType implements ProductTypeInterface
     /**
      * @return array<string, float>
      */
-    private function getSuffixedPrice(string $priceName, string $suffix, float $price)
+    private function getSuffixedPrice(string $priceName, string $suffix, float $price): array
     {
         return [$priceName . '_' . $suffix => $price];
     }

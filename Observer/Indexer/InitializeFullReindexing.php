@@ -27,15 +27,14 @@ class InitializeFullReindexing implements ObserverInterface
 
     public function __construct(
         IndexManagementInterface $indexManagement
-    )
-    {
+    ) {
         $this->indexManagement = $indexManagement;
     }
 
     /**
      * Perform actions related to full reindexing initialization
      */
-    public function execute(Observer $observer)
+    public function execute(Observer $observer): void
     {
         /** @var MessageManagerInterface $messageManager */
         $messageManager = $observer->getData('message_manager');

@@ -86,9 +86,9 @@ class Composite extends FieldHandler\Composite
     /**
      * Safely apply values of array type.
      *
-     * @return array
+     * @return list<mixed>
      */
-    private function formatValue(mixed $value)
+    private function formatValue(mixed $value): array
     {
         $result = [];
         if (is_array($value)) {

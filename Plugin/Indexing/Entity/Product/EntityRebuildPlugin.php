@@ -22,17 +22,14 @@ class EntityRebuildPlugin
 
     public function __construct(
         StockRegistryStorage $stockRegistryStorage
-    )
-    {
+    ) {
         $this->stockRegistryStorage = $stockRegistryStorage;
     }
 
     /**
      * Clean shared objects data
-     *
-     * @return void
      */
-    public function afterRebuild()
+    public function afterRebuild(): void
     {
         $this->stockRegistryStorage->clean();
     }

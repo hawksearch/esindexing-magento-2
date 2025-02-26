@@ -23,21 +23,19 @@ use Magento\Framework\Model\AbstractModel;
 class PagePlugin
 {
     private IndexerInterface $pageIndexer;
-    
+
     public function __construct(
         IndexerRegistry $indexerRegistry
-    )
-    {
+    ) {
         $this->pageIndexer = $indexerRegistry->get(ContentPageIndexer::INDEXER_ID);
     }
 
     /**
      * Reindex on page save.
      *
-     * @return PageResource
      * @throws \Exception
      */
-    public function aroundSave(PageResource $pageResource, \Closure $proceed, AbstractModel $object)
+    public function aroundSave(PageResource $pageResource, \Closure $proceed, AbstractModel $object): PageResource
     {
         return $this->addCommitCallback($pageResource, $proceed, $object);
     }
@@ -45,10 +43,9 @@ class PagePlugin
     /**
      * Reindex on product delete
      *
-     * @return PageResource
      * @throws \Exception
      */
-    public function aroundDelete(PageResource $pageResource, \Closure $proceed, AbstractModel $object)
+    public function aroundDelete(PageResource $pageResource, \Closure $proceed, AbstractModel $object): PageResource
     {
         return $this->addCommitCallback($pageResource, $proceed, $object);
     }
@@ -56,11 +53,13 @@ class PagePlugin
     /**
      * Reindex catalog search.
      *
-     * @return PageResource
      * @throws \Exception
      */
-    private function addCommitCallback(PageResource $pageResource, \Closure $proceed, AbstractModel $object)
-    {
+    private function addCommitCallback(
+        PageResource $pageResource,
+        \Closure $proceed,
+        AbstractModel $object
+    ): PageResource {
         try {
             $pageResource->beginTransaction();
             $result = $proceed($object);
@@ -78,10 +77,8 @@ class PagePlugin
 
     /**
      * Reindex page if indexer is not scheduled
-     *
-     * @return void
      */
-    private function reindexRow(int $pageId)
+    private function reindexRow(int $pageId): void
     {
         if (!$this->pageIndexer->isScheduled()) {
             $this->pageIndexer->reindexRow($pageId);

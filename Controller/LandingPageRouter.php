@@ -15,6 +15,7 @@ namespace HawkSearch\EsIndexing\Controller;
 
 use Magento\Framework\App\Action\Forward;
 use Magento\Framework\App\ActionFactory;
+use Magento\Framework\App\ActionInterface;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\RouterInterface;
 
@@ -24,15 +25,14 @@ class LandingPageRouter implements RouterInterface
 
     public function __construct(
         ActionFactory $actionFactory
-    )
-    {
+    ) {
         $this->actionFactory = $actionFactory;
     }
 
     /**
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function match(RequestInterface $request)
+    public function match(RequestInterface $request): ActionInterface
     {
         /*if (!$this->proxyConfigProvider->isLandingPageRouteEnabled()) {
             return false;

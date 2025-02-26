@@ -67,10 +67,9 @@ class ImageUrl implements FieldHandlerInterface
     /**
      * @param ItemType $product
      * @param string $imageId
-     * @return string
      * @throws NoSuchEntityException
      */
-    private function getImageIdUrl(ProductModel $product, string $imageId)
+    private function getImageIdUrl(ProductModel $product, string $imageId): string
     {
         $imageUrl = $this->imageHelper->init($product, $imageId)->getUrl();
         $uri = $this->urlHelper->getUriInstance($imageUrl);

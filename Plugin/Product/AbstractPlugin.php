@@ -21,20 +21,17 @@ use Magento\Framework\Indexer\IndexerRegistry;
 abstract class AbstractPlugin
 {
     private IndexerInterface $productIndexer;
-    
+
     public function __construct(
         IndexerRegistry $indexerRegistry
-    )
-    {
+    ) {
         $this->productIndexer = $indexerRegistry->get(ProductIndexer::INDEXER_ID);
     }
 
     /**
      * Reindex product if indexer is not scheduled
-     *
-     * @return void
      */
-    protected function reindexRow(int $productId)
+    protected function reindexRow(int $productId): void
     {
         if (!$this->productIndexer->isScheduled()) {
             $this->productIndexer->reindexRow($productId);
@@ -45,9 +42,8 @@ abstract class AbstractPlugin
      * Reindex product if indexer is not scheduled
      *
      * @param int[] $productIds
-     * @return void
      */
-    protected function reindexList(array $productIds)
+    protected function reindexList(array $productIds): void
     {
         if (!$this->productIndexer->isScheduled()) {
             $this->productIndexer->reindexList($productIds);

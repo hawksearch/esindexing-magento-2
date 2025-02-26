@@ -375,7 +375,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
 
     /**
      * @param TItem $item
-     * @return array
+     * @return array<string, mixed>
      * @throws NotFoundException
      */
     private function processFields(DataObject $item): array
@@ -395,7 +395,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
      * Temporary method to overcome deprecation of getIndexedAttributes() method
      *
      * @param TItem $item
-     * @return array
+     * @return array<mixed>
      * @throws NotFoundException
      */
     private function processDeprecatedAttributes(DataObject $item): array
@@ -455,10 +455,9 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     /**
      * @param TItem $item
      * @param string $fieldName
-     * @return mixed
      * @throws NotFoundException
      */
-    private function getFieldValue(DataObject $item, string $fieldName)
+    private function getFieldValue(DataObject $item, string $fieldName): mixed
     {
         $entityType = $this->getEntityType();
         if (method_exists($entityType, 'getFieldHandler')) {
@@ -473,10 +472,9 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
      *
      * @param TItem $item
      * @param string $attribute
-     * @return mixed
      * @throws NotFoundException
      */
-    private function getAttributeValueDeprecatedWrapper(DataObject $item, string $attribute)
+    private function getAttributeValueDeprecatedWrapper(DataObject $item, string $attribute): mixed
     {
         if ($this->isMethodOverwritten('getAttributeValue')) {
             $this->triggerDerivedMethodDeprecationMessage('getAttributeValue');
@@ -535,17 +533,11 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
         return $this->entityType;
     }
 
-    /**
-     * @return string
-     */
     private function getEntityIdField(): string
     {
         return '__uid';
     }
 
-    /**
-     * @return string
-     */
     private function getEntityTypeField(): string
     {
         return '__type';
