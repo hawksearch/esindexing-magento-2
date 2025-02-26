@@ -1,5 +1,7 @@
 # UPGRADE FROM 0.x to 1.0
 
+## Steps to action
+
 - Protected property `Block\Adminhtml\System\Config\Product\CustomAttributes::columnRendererCache` visibility has been changed to `private`.
 - Protected property `Model\Indexer\Entities\ActionAbstract::eventManager` visibility has been changed to `private`. Set via constructor injection.
 - Protected property `Model\Indexer\Entities\ActionAbstract::messageManager` visibility has been changed to `private`. Set via constructor injection.
