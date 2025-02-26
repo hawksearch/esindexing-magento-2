@@ -32,8 +32,7 @@ class VueAdditionalParametersProcessor implements LayoutConfigProcessorInterface
         Registry $registry,
         RequestInterface $request,
         UrlFinderInterface $urlFinder
-    )
-    {
+    ) {
         $this->registry = $registry;
         $this->request = $request;
         $this->urlFinder = $urlFinder;
@@ -50,9 +49,7 @@ class VueAdditionalParametersProcessor implements LayoutConfigProcessorInterface
             $queryParam[] = 'visibility_search:true';
         }
 
-        if ($queryParam) {
-            $params['Query'] = implode(' AND ', $queryParam);
-        }
+        $params['Query'] = implode(' AND ', $queryParam);
 
         $jsConfig['additionalParameters'] = $params;
 

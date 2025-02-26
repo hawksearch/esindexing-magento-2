@@ -26,11 +26,10 @@ use Magento\Catalog\Api\Data\CategoryInterfaceFactory;
 class CurrentCategory
 {
     private CategoryInterface $category;
-    private CategoryInterfaceFactory $categoryFactory;
 
     public function __construct(CategoryInterfaceFactory $categoryFactory)
     {
-        $this->categoryFactory = $categoryFactory;
+        $this->category = $categoryFactory->create();
     }
 
     /**
@@ -38,7 +37,7 @@ class CurrentCategory
      */
     public function get(): CategoryInterface
     {
-        return $this->category ?? $this->categoryFactory->create();
+        return $this->category;
     }
 
     public function set(CategoryInterface $category)
