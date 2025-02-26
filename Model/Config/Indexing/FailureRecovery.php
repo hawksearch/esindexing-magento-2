@@ -21,11 +21,6 @@ class FailureRecovery extends ConfigProvider
     private const CONFIG_ENABLE = 'enable';
     private const CONFIG_MAXIMUM_RETRIES = 'maximum_retries';
     private const CONFIG_MAXIMUM_OPEN_DELAY = 'maximum_open_delay';
-    private const CONFIG_CRON_EXPR = 'cron_expr';
-
-    /**
-     * Default maximum retry attempts.
-     */
     private const MAXIMUM_RETRIES_DEFAULT = 3;
 
     /**
@@ -54,7 +49,7 @@ class FailureRecovery extends ConfigProvider
      */
     public function getMaximumRetries($store = null): int
     {
-        return (int)$this->getConfig(self::CONFIG_MAXIMUM_RETRIES, $store) ?: static::MAXIMUM_RETRIES_DEFAULT;
+        return (int)$this->getConfig(self::CONFIG_MAXIMUM_RETRIES, $store) ?: self::MAXIMUM_RETRIES_DEFAULT;
     }
 
     /**
@@ -66,6 +61,6 @@ class FailureRecovery extends ConfigProvider
      */
     public function getMaximumOpenDelay($store = null): int
     {
-        return (int)$this->getConfig(self::CONFIG_MAXIMUM_OPEN_DELAY, $store) ?: static::MAXIMUM_OPEN_DELAY_DEFAULT;
+        return (int)$this->getConfig(self::CONFIG_MAXIMUM_OPEN_DELAY, $store) ?: self::MAXIMUM_OPEN_DELAY_DEFAULT;
     }
 }
