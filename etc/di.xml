@@ -902,7 +902,7 @@
             <argument name="fieldHandler" shared="false" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\Composite</argument>
             <!--<argument name="fieldHandler" shared="false" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Field\Handler\Composite</argument>-->
             <argument name="configHelper" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Product\ConfigHelper</argument>
-            <argument name="itemsIndexer" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ItemsIndexer\SearchedItemsIndexer</argument>
+            <argument name="itemsIndexer" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Product\ItemsIndexer</argument>
             <argument name="typeName" xsi:type="const">HawkSearch\EsIndexing\Model\Indexing\EntityType\ProductEntityType::ENTITY_TYPE_NAME</argument>
             <argument name="fieldNameProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Product\FieldNameProvider</argument>
         </arguments>

@@ -14,8 +14,26 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexing\Entity\Product;
 
+use HawkSearch\EsIndexing\Model\Config\Indexing as IndexingConfig;
 use HawkSearch\EsIndexing\Model\Indexing\AbstractConfigHelper;
 
 class ConfigHelper extends AbstractConfigHelper
 {
+    private IndexingConfig $indexingConfig;
+
+    public function __construct(
+        IndexingConfig $indexingConfig
+    ) {
+        $this->indexingConfig = $indexingConfig;
+        parent::__construct($indexingConfig);
+    }
+
+    /**
+     * @param null|int|string $store
+     */
+    public function getBatchSize($store = null): int
+    {
+        return $this->indexingConfig->getItemsBatchSize($store);
+    }
+
 }
