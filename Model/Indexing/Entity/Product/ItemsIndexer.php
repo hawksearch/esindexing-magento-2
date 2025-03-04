@@ -14,8 +14,12 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexing\Entity\Product;
 
+use Exception;
 use HawkSearch\Connector\Gateway\Http\Converter\ArrayToJson as ArrayToJsonConverter;
 use HawkSearch\EsIndexing\Model\Indexing\ItemsIndexerInterface;
+use HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisherInterface;
+use HawkSearch\EsIndexing\Model\MessageQueue\MessageManagerInterface;
+use HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicResolverInterface;
 use HawkSearch\EsIndexing\Model\ResourceModel\DataPreloadIndex;
 
 /**
@@ -27,13 +31,22 @@ class ItemsIndexer implements ItemsIndexerInterface
     private string $indexName;
     private ArrayToJsonConverter $converter;
     private DataPreloadIndex $dataPreloadIndexResource;
+    private MessageManagerInterface $messageManager;
+    private MessageTopicResolverInterface $messageTopicResolver;
+    private BulkPublisherInterface $publisher;
 
     public function __construct(
         ArrayToJsonConverter $converter,
-        DataPreloadIndex $dataPreloadIndexResource
+        DataPreloadIndex $dataPreloadIndexResource,
+        MessageManagerInterface $messageManager,
+        MessageTopicResolverInterface $messageTopicResolver,
+        BulkPublisherInterface $publisher
     ) {
         $this->converter = $converter;
         $this->dataPreloadIndexResource = $dataPreloadIndexResource;
+        $this->messageManager = $messageManager;
+        $this->messageTopicResolver = $messageTopicResolver;
+        $this->publisher = $publisher;
     }
 
     public function add(array $items, string $indexName): void
@@ -74,9 +87,7 @@ class ItemsIndexer implements ItemsIndexerInterface
         $itemsChunks = array_chunk($items, $itemsBatchSize);
         $itemsBatches = count($itemsChunks);
 
-        $insertBathesLimit = 100;
         $insertData = [];
-
         for ($page = 1; $page <= $itemsBatches; $page++) {
             $insertData[] = [
                 'method' => $method,
@@ -85,23 +96,51 @@ class ItemsIndexer implements ItemsIndexerInterface
                     $dataFieldsMap[$method] => $itemsChunks[$page - 1]
                 ])
             ];
-            if ($page / $insertBathesLimit >= 1) {
-                $this->saveMultipleRows($insertData);
-                $insertData = [];
-            }
         }
 
-        if ($insertData) {
-            $this->saveMultipleRows($insertData);
-        }
+        $this->saveMultipleRows($insertData);
     }
 
     /**
      * @param list<array<string, mixed>> $data
-     * @return void
+     * @throws Exception
      */
     private function saveMultipleRows(array $data): void
     {
-        $this->dataPreloadIndexResource->getConnection()->insertMultiple($this->dataPreloadIndexResource->getMainTable(), $data);
+        $dataIds = [];
+        try {
+            $this->dataPreloadIndexResource->getConnection()->beginTransaction();
+
+            foreach ($data as $row) {
+                $this->dataPreloadIndexResource->addCommitCallback(function () use ($row, &$dataIds) {
+                    $this->dataPreloadIndexResource->getConnection()->insert(
+                        $this->dataPreloadIndexResource->getMainTable(),
+                        $row
+                    );
+                    $dataIds[] = $this->dataPreloadIndexResource->getConnection()->lastInsertId(
+                        $this->dataPreloadIndexResource->getMainTable()
+                    );
+                });
+            }
+
+            $this->dataPreloadIndexResource->getConnection()->commit();
+        } catch (\Exception $e) {
+            $this->dataPreloadIndexResource->getConnection()->rollBack();
+            throw $e;
+        }
+
+        foreach ($dataIds as $id) {
+            $this->messageManager->addMessage(
+                $this->messageTopicResolver->resolve($this),
+                [
+                    'class' => \HawkSearch\EsIndexing\Model\Indexing\Entity\Product\DataPushProcessor::class,
+                    'method' => 'execute',
+                    'method_arguments' => [
+                        'dataId' => $id,
+                    ],
+                ]
+            );
+        }
+
     }
 }

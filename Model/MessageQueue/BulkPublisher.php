@@ -95,6 +95,10 @@ class BulkPublisher extends AbstractSimpleObject implements BulkPublisherInterfa
         $bulkDescription = $this->bulkDescription;
         $userId = $this->userContext->getUserId();
 
+        if (!$this->messageManager->getMessages()) {
+            return;
+        }
+
         /** create new bulk without operations */
         if (!$this->bulkManagement->scheduleBulk($bulkUuid, [], $bulkDescription, $userId)) {
             throw new LocalizedException(

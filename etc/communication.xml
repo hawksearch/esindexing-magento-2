@@ -31,4 +31,7 @@
     <topic name="hawksearch.indexing.landing_page.reindex"
            request="HawkSearch\EsIndexing\Api\Data\QueueOperationDataInterface[]">
     </topic>
+    <topic name="hawksearch.indexing.catalog.api_push"
+           request="HawkSearch\EsIndexing\Api\Data\QueueOperationDataInterface[]">
+    </topic>
 </config>

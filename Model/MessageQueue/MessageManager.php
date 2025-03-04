@@ -67,7 +67,7 @@ class MessageManager extends AbstractSimpleObject implements MessageManagerInter
      */
     public function addMessage(string $topicName, array $data)
     {
-        $messages = $this->_get(self::DATA_MESSAGES);
+        $messages = (array)$this->_get(self::DATA_MESSAGES);
         $messages[] = [
             'topic' => $topicName,
             'data' => $this->updateApplicationHeaders($data),
@@ -90,7 +90,7 @@ class MessageManager extends AbstractSimpleObject implements MessageManagerInter
      */
     public function getMessages()
     {
-        return array_values($this->_get(self::DATA_MESSAGES));
+        return array_values((array)$this->_get(self::DATA_MESSAGES));
     }
 
     /**
@@ -104,10 +104,19 @@ class MessageManager extends AbstractSimpleObject implements MessageManagerInter
      */
     private function updateApplicationHeaders(array $messageData): array
     {
+        $messageData['application_headers'] = $messageData['application_headers'] ?? [];
+
         try {
-            $storeId = $this->storeManager->getStore()->getId();
-            $isFullReindex = $messageData['full_reindex'] ?? false;
-            $indexName = $this->indexManagement->getIndexName(!$isFullReindex);
+            $messageData['application_headers']['store_id'] = $this->storeManager->getStore()->getId();
+            if (isset($messageData['index'])) {
+                $messageData['application_headers']['index'] = $messageData['index'];
+                unset($messageData['index']);
+            } else {
+                $isFullReindex = $messageData['full_reindex'] ?? false;
+                $messageData['application_headers']['index'] = $this->indexManagement->getIndexName(!$isFullReindex);
+                $messageData['application_headers']['full_reindex'] = $isFullReindex;
+            }
+
         } catch (NoSuchEntityException $e) {
             $errorMessage = sprintf(
                 "Can't get current storeId and inject to the message queue. Error %s.",
@@ -116,11 +125,6 @@ class MessageManager extends AbstractSimpleObject implements MessageManagerInter
             $this->logger->error($errorMessage);
             throw new \LogicException($errorMessage);
         }
-
-        $messageData['application_headers'] = $messageData['application_headers'] ?? [];
-        $messageData['application_headers']['store_id'] = $storeId;
-        $messageData['application_headers']['index'] = $indexName;
-        $messageData['application_headers']['full_reindex'] = $isFullReindex;
 
         return $messageData;
     }

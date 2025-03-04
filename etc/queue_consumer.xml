@@ -19,4 +19,10 @@
               maxMessages="5000"
               consumerInstance="Magento\AsynchronousOperations\Model\MassConsumer"
               handler="HawkSearch\EsIndexing\Model\MessageQueue\Consumer::process" />
+    <consumer name="hawksearch.indexing.api_push"
+              queue="hawksearch.indexing.api_push"
+              connection="db"
+              maxMessages="5000"
+              consumerInstance="Magento\AsynchronousOperations\Model\MassConsumer"
+              handler="HawkSearch\EsIndexing\Model\MessageQueue\Consumer::process" />
 </config>
