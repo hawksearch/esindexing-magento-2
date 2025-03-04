@@ -69,7 +69,7 @@ class CategoryPlugin
         CategoryModel $category
     ): CategoryResource {
         try {
-            $categoryResource->beginTransaction();
+            $categoryResource->getConnection()->beginTransaction();
             $result = $proceed($category);
             $categoryResource->addCommitCallback(function () use ($category) {
                 $affectedProducts = $category->getAffectedProductIds();
@@ -78,9 +78,9 @@ class CategoryPlugin
                 }
                 $this->reindexCategoryRow((int)$category->getId());
             });
-            $categoryResource->commit();
+            $categoryResource->getConnection()->commit();
         } catch (\Exception $e) {
-            $categoryResource->rollBack();
+            $categoryResource->getConnection()->rollBack();
             throw $e;
         }
 

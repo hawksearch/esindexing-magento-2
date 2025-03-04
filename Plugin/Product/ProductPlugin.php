@@ -74,7 +74,7 @@ class ProductPlugin extends AbstractPlugin
         AbstractModel $object
     ): ProductResource {
         try {
-            $productResource->beginTransaction();
+            $productResource->getConnection()->beginTransaction();
             $result = $proceed($object);
             $productResource->addCommitCallback(function () use ($object) {
                 $affectedCategories = $object->getAffectedCategoryIds();
@@ -85,9 +85,9 @@ class ProductPlugin extends AbstractPlugin
                 $ids = array_merge([$object->getId()], $affectedProductIds);
                 $this->reindexList($ids);
             });
-            $productResource->commit();
+            $productResource->getConnection()->commit();
         } catch (\Exception $e) {
-            $productResource->rollBack();
+            $productResource->getConnection()->rollBack();
             throw $e;
         }
 
