@@ -10,6 +10,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Observer;
 
@@ -26,7 +27,7 @@ class InitCurrentCategoryObserver implements ObserverInterface
     {
         $this->currentCategory = $currentCategory;
     }
-    
+
     public function execute(Observer $observer): void
     {
         /** @var CategoryInterface $category */
