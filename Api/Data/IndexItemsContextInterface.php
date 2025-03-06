@@ -38,7 +38,7 @@ interface IndexItemsContextInterface
     public function setIndexName(?string $value): self;
 
     /**
-     * @return IndexItemInterface[]
+     * @return \HawkSearch\EsIndexing\Api\Data\IndexItemInterface[]
      */
     public function getItems(): array;
 
