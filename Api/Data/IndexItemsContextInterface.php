@@ -27,8 +27,14 @@ interface IndexItemsContextInterface
     public const FIELD_INDEX_NAME = 'IndexName';
     public const FIELD_ITEMS = 'Items';
 
+    /**
+     * @return string
+     */
     public function getIndexName(): string;
 
+    /**
+     * @return $this
+     */
     public function setIndexName(?string $value): self;
 
     /**
@@ -38,6 +44,7 @@ interface IndexItemsContextInterface
 
     /**
      * @param IndexItemInterface[]|null $value
+     * @return $this
      */
     public function setItems(?array $value): self;
 }

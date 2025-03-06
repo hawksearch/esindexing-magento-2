@@ -25,23 +25,53 @@ interface VariantOptionsInterface
     public const FIELD_SORT_CODE = 'SortCode';
     public const FIELD_SORT_BY = 'SortBy';
 
+    /**
+     * @return bool
+     */
     public function getCountFacetHitOnChild(): bool;
 
+    /**
+     * @return $this
+     */
     public function setCountFacetHitOnChild(bool $value): self;
 
+    /**
+     * @return int
+     */
     public function getPageNo(): int;
 
+    /**
+     * @return $this
+     */
     public function setPageNo(int $value): self;
 
+    /**
+     * @return int
+     */
     public function getMaxPerPage(): int;
 
+    /**
+     * @return $this
+     */
     public function setMaxPerPage(int $value): self;
 
+    /**
+     * @return string
+     */
     public function getSortCode(): string;
 
+    /**
+     * @return $this
+     */
     public function setSortCode(?string $value): self;
 
+    /**
+     * @return string
+     */
     public function getSortBy(): string;
 
+    /**
+     * @return $this
+     */
     public function setSortBy(?string $value): self;
 }
