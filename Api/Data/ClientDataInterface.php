@@ -98,7 +98,7 @@ interface ClientDataInterface
     public function setSource(?string $value): self;
 
     /**
-     * @return CoordinateInterface
+     * @return \HawkSearch\EsIndexing\Api\Data\CoordinateInterface
      */
     public function getOrigin(): CoordinateInterface;
 

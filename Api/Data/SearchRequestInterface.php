@@ -77,7 +77,7 @@ interface SearchRequestInterface
 
 
     /**
-     * @return VariantOptionsInterface
+     * @return \HawkSearch\EsIndexing\Api\Data\VariantOptionsInterface
      */
     public function getVariant(): VariantOptionsInterface;
 
@@ -88,7 +88,7 @@ interface SearchRequestInterface
     public function setVariant(?VariantOptionsInterface $value): self;
 
     /**
-     * @return BoostQueryInterface[]
+     * @return \HawkSearch\EsIndexing\Api\Data\BoostQueryInterface[]
      */
     public function getBoostQueries(): array;
 
@@ -312,7 +312,7 @@ interface SearchRequestInterface
     public function setFieldOverride(?array $value): self;
 
     /**
-     * @return SmartBarInterface
+     * @return \HawkSearch\EsIndexing\Api\Data\SmartBarInterface
      */
     public function getSmartBar(): SmartBarInterface;
 
@@ -322,7 +322,7 @@ interface SearchRequestInterface
     public function setSmartBar(?SmartBarInterface $value): self;
 
     /**
-     * @return ClientDataInterface
+     * @return \HawkSearch\EsIndexing\Api\Data\ClientDataInterface
      */
     public function getClientData(): ClientDataInterface;
 

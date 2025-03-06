@@ -433,7 +433,7 @@ interface FacetInterface
     public function setShowFacetImageCount(bool $value): self;
 
     /**
-     * @return FacetRangeModelInterface[]
+     * @return \HawkSearch\EsIndexing\Api\Data\FacetRangeModelInterface[]
      */
     public function getFacetRanges(): array;
 
@@ -474,7 +474,7 @@ interface FacetInterface
     public function setModifyDate(?string $value): self;
 
     /**
-     * @return FacetBoostBuryInterface
+     * @return \HawkSearch\EsIndexing\Api\Data\FacetBoostBuryInterface
      */
     public function getBoostBury(): FacetBoostBuryInterface;
 

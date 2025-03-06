@@ -76,7 +76,7 @@ class CategoryPlugin
                 if (is_array($affectedProducts)) {
                     $this->reindexProductList($affectedProducts);
                 }
-                $this->reindexCategoryRow($category->getId());
+                $this->reindexCategoryRow((int)$category->getId());
             });
             $categoryResource->commit();
         } catch (\Exception $e) {

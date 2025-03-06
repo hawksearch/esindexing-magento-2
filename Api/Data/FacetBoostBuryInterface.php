@@ -31,7 +31,7 @@ interface FacetBoostBuryInterface
     const BURY_VALUES = 'BuryValues';
 
     /**
-     * @return FacetValueOrderInfoInterface[]
+     * @return \HawkSearch\EsIndexing\Api\Data\FacetValueOrderInfoInterface[]
      */
     public function getBoostValues(): array;
 
@@ -42,7 +42,7 @@ interface FacetBoostBuryInterface
     public function setBoostValues(?array $value): self;
 
     /**
-     * @return FacetValueOrderInfoInterface[]
+     * @return \HawkSearch\EsIndexing\Api\Data\FacetValueOrderInfoInterface[]
      */
     public function getBuryValues(): array;
 
