@@ -22,11 +22,23 @@ interface BoostQueryInterface
     public const FIELD_QUERY = 'Query';
     public const FIELD_BOOST = 'Boost';
 
+    /**
+     * @return string
+     */
     public function getQuery(): string;
 
+    /**
+     * @return $this
+     */
     public function setQuery(?string $value): self;
 
+    /**
+     * @return float
+     */
     public function getBoost(): float;
-    
+
+    /**
+     * @return $this
+     */
     public function setBoost(float $value): self;
 }

@@ -30,44 +30,104 @@ interface SmartBarInterface
     public const FIELD_KEYWORD_REPLACEMENT = 'KeywordReplacement';
     public const FIELD_PREVIEW_DATE = 'PreviewDate';
 
+    /**
+     * @return bool
+     */
     public function getBoostAndBury(): bool;
 
+    /**
+     * @return $this
+     */
     public function setBoostAndBury(bool $value): self;
 
+    /**
+     * @return bool
+     */
     public function getVisibilityRules(): bool;
 
+    /**
+     * @return $this
+     */
     public function setVisibilityRules(bool $value): self;
 
+    /**
+     * @return bool
+     */
     public function getPersonalizedBoost(): bool;
 
+    /**
+     * @return $this
+     */
     public function setPersonalizedBoost(bool $value): self;
 
+    /**
+     * @return bool
+     */
     public function getPopularityBoost(): bool;
 
+    /**
+     * @return $this
+     */
     public function setPopularityBoost(bool $value): self;
 
+    /**
+     * @return bool
+     */
     public function getItemPin(): bool;
 
+    /**
+     * @return $this
+     */
     public function setItemPin(bool $value): self;
 
+    /**
+     * @return bool
+     */
     public function getPopularitySalesBoost(): bool;
 
+    /**
+     * @return $this
+     */
     public function setPopularitySalesBoost(bool $value): self;
 
+    /**
+     * @return bool
+     */
     public function getPopularityAdd2CartBoost(): bool;
 
+    /**
+     * @return $this
+     */
     public function setPopularityAdd2CartBoost(bool $value): self;
 
+    /**
+     * @return bool
+     */
     public function getPopularityLandingPageBoost(): bool;
 
+    /**
+     * @return $this
+     */
     public function setPopularityLandingPageBoost(bool $value): self;
 
+    /**
+     * @return bool
+     */
     public function getKeywordReplacement(): bool;
 
+    /**
+     * @return $this
+     */
     public function setKeywordReplacement(bool $value): self;
 
+    /**
+     * @return string
+     */
     public function getPreviewDate(): string;
-    
+
+    /**
+     * @return $this
+     */
     public function setPreviewDate(?string $value): self;
 
 }

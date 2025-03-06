@@ -37,6 +37,7 @@ interface FacetBoostBuryInterface
 
     /**
      * @param FacetValueOrderInfoInterface[]|null $value
+     * @return $this
      */
     public function setBoostValues(?array $value): self;
 
@@ -47,6 +48,7 @@ interface FacetBoostBuryInterface
 
     /**
      * @param FacetValueOrderInfoInterface[]|null $value
+     * @return $this
      */
     public function setBuryValues(?array $value): self;
 }

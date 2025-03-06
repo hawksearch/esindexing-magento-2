@@ -33,6 +33,9 @@ interface HierarchyInterface
     public const FIELD_SORTORDER = "SortOrder";
     public const FIELD_CUSTOM = "Custom";
 
+    /**
+     * @return string
+     */
     public function getHierarchyId(): string;
 
     /**
@@ -40,6 +43,9 @@ interface HierarchyInterface
      */
     public function setHierarchyId(string $value);
 
+    /**
+     * @return string
+     */
     public function getName(): string;
 
     /**
@@ -47,6 +53,9 @@ interface HierarchyInterface
      */
     public function setName(string $value);
 
+    /**
+     * @return string
+     */
     public function getParentHierarchyId(): string;
 
     /**
@@ -54,6 +63,9 @@ interface HierarchyInterface
      */
     public function setParentHierarchyId(string $value);
 
+    /**
+     * @return bool
+     */
     public function getIsActive(): bool;
 
     /**
@@ -61,6 +73,9 @@ interface HierarchyInterface
      */
     public function setIsActive(bool $value);
 
+    /**
+     * @return int
+     */
     public function getSortOrder(): int;
 
     /**
@@ -68,6 +83,9 @@ interface HierarchyInterface
      */
     public function setSortOrder(int $value);
 
+    /**
+     * @return string
+     */
     public function getCustom(): string;
 
     /**
