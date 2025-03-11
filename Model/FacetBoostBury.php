@@ -21,44 +21,52 @@ use Magento\Framework\Api\AbstractSimpleObject;
 
 class FacetBoostBury extends AbstractSimpleObject implements FacetBoostBuryInterface
 {
+    /**
+     * @param array<self::*, mixed> $data
+     */
+    public function __construct(array $data = [])
+    {
+        //apply defaults
+        $data = $data + [
+                self::BOOST_VALUES => [],
+                self::BURY_VALUES => []
+            ];
+        parent::__construct($data);
+
+        //Validate and reset data for array of objects
+        $this->setBoostValues($data[self::BOOST_VALUES]);
+        $this->setBuryValues($data[self::BURY_VALUES]);
+    }
+
+    public function getBoostValues(): array
+    {
+        return $this->_get(self::BOOST_VALUES);
+    }
 
     /**
      * @throws \InvalidArgumentException
      */
-    public function getBoostValues(): array
-    {
-        $value = (array)($this->_get(self::BOOST_VALUES) ?? []);
-        array_walk(
-            $value,
-            [ObjectHelper::class, 'validateObjectValue'],
-            FacetValueOrderInfoInterface::class
-        );
-
-        return $value;
-    }
-
     public function setBoostValues(?array $value): FacetBoostBuryInterface
     {
+        $value = $value ?? [];
+        ObjectHelper::validateListOfObjects($value, FacetValueOrderInfoInterface::class);
+
         return $this->setData(self::BOOST_VALUES, $value);
     }
 
+    public function getBuryValues(): array
+    {
+        return $this->_get(self::BURY_VALUES);
+    }
+
     /**
      * @throws \InvalidArgumentException
      */
-    public function getBuryValues(): array
-    {
-        $value = (array)($this->_get(self::BURY_VALUES) ?? []);
-        array_walk(
-            $value,
-            [ObjectHelper::class, 'validateObjectValue'],
-            FacetValueOrderInfoInterface::class
-        );
-
-        return $value;
-    }
-
     public function setBuryValues(?array $value): FacetBoostBuryInterface
     {
+        $value = $value ?? [];
+        ObjectHelper::validateListOfObjects($value, FacetValueOrderInfoInterface::class);
+
         return $this->setData(self::BURY_VALUES, $value);
     }
 }

@@ -134,7 +134,7 @@ class ObjectHelper
      *
      * @return void
      * @throws \InvalidArgumentException
-     * @todo remove $key argument, use a closure for array_walk explicitely and use this method implicitely in the
+     * @todo remove $key argument, use a closure for array_walk explicitly and use this method implicitly in the
      *     closure
      */
     public static function validateObjectValue(object $item, int $key, string $className)
@@ -142,6 +142,30 @@ class ObjectHelper
         if (!$item instanceof $className) {
             throw new \InvalidArgumentException(
                 __('Array element value with key %1 is not an instance of %2 interface', $key, $className)->render()
+            );
+        }
+    }
+
+    /**
+     * @param list<object> $list
+     * @param string $className
+     */
+    public static function validateListOfObjects(array $list, string $className): void
+    {
+        $invalidKeys = [];
+        foreach ($list as $key => $object) {
+            if (!is_object($object) || !($object instanceof $className)) {
+                $invalidKeys[] = $key;
+            }
+        }
+
+        if (count($invalidKeys)) {
+            throw new \InvalidArgumentException(
+                __(
+                    'Array keys %1 are not an instance of %2',
+                    implode(',', $invalidKeys),
+                    $className
+                )->render()
             );
         }
     }
