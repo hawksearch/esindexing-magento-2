@@ -33,7 +33,7 @@ class LandingPageRouter implements RouterInterface
     /**
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function match(RequestInterface $request): ActionInterface
+    public function match(RequestInterface $request): ?ActionInterface
     {
         /*if (!$this->proxyConfigProvider->isLandingPageRouteEnabled()) {
             return false;
@@ -47,7 +47,7 @@ class LandingPageRouter implements RouterInterface
         $path = $request->getOriginalPathInfo();
 
         if ($path != "/testlp.html") {
-            return false;
+            return null;
         }
         $request->setModuleName('hawksearch')->setControllerName('landingPage')->setActionName('view');
 
