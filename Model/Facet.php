@@ -31,32 +31,40 @@ class Facet extends AbstractSimpleObject implements FacetInterface
      */
     public function __construct(
         FacetBoostBuryInterfaceFactory $facetBoostBuryFactory,
-        array $data = [
-            self::NAME => "", // should be specified during facet creation
-            self::FIELD => "",  // should be specified during facet creation
-            self::FACET_TYPE => "checkbox",
-            self::FIELD_TYPE => "string",
-            self::MAX_COUNT => 0,
-            self::MIN_HIT_COUNT => 0,
-            self::DISPLAY_TYPE => "default",
-            self::SCROLL_HEIGHT => 0,
-            self::SCROLL_THRESHOLD => 0,
-            self::TRUNCATE_THRESHOLD => 0,
-            self::SEARCH_THRESHOLD => 0,
-            self::SORT_ORDER => 0,
-            self::EXPAND_SELECTION => false,
-            self::IS_CURRENCY => false,
-            self::IS_NUMERIC => false,
-            self::IS_SEARCH => false,
-            self::IS_VISIBLE => false,
-            self::IS_COLLAPSIBLE => false,
-            self::IS_COLLAPSED_DEFAULT => false,
-            self::SHOW_SLIDER_INPUTS => false
-        ]
-    )
-    {
-        parent::__construct($data);
+        array $data = []
+    ) {
         $this->facetBoostBuryFactory = $facetBoostBuryFactory;
+
+        //apply defaults
+        $data = $data + [
+                self::NAME => "", // should be specified during facet creation
+                self::FIELD => "",  // should be specified during facet creation
+                self::FACET_TYPE => "checkbox",
+                self::FIELD_TYPE => "string",
+                self::MAX_COUNT => 0,
+                self::MIN_HIT_COUNT => 0,
+                self::DISPLAY_TYPE => "default",
+                self::SCROLL_HEIGHT => 0,
+                self::SCROLL_THRESHOLD => 0,
+                self::TRUNCATE_THRESHOLD => 0,
+                self::SEARCH_THRESHOLD => 0,
+                self::SORT_ORDER => 0,
+                self::EXPAND_SELECTION => false,
+                self::IS_CURRENCY => false,
+                self::IS_NUMERIC => false,
+                self::IS_SEARCH => false,
+                self::IS_VISIBLE => false,
+                self::IS_COLLAPSIBLE => false,
+                self::IS_COLLAPSED_DEFAULT => false,
+                self::SHOW_SLIDER_INPUTS => false,
+                self::BOOST_BURY => $facetBoostBuryFactory->create(),
+                self::FACET_RANGES => [],
+            ];
+        parent::__construct($data);
+
+        //Validate and reset data for objects and array of objects
+        $this->setBoostBury($data[self::BOOST_BURY]);
+        $this->setFacetRanges($data[self::FACET_RANGES]);
     }
 
     public function getSyncGuid(): string
@@ -419,23 +427,19 @@ class Facet extends AbstractSimpleObject implements FacetInterface
         return $this->setData(self::SHOW_FACET_IMAGE_COUNT, $value);
     }
 
+    public function getFacetRanges(): array
+    {
+        return $this->_get(self::FACET_RANGES);
+    }
+
     /**
      * @throws \InvalidArgumentException
      */
-    public function getFacetRanges(): array
-    {
-        $value = (array)($this->_get(self::FACET_RANGES) ?? []);
-        array_walk(
-            $value,
-            [ObjectHelper::class, 'validateObjectValue'],
-            FacetRangeModelInterface::class
-        );
-
-        return $value;
-    }
-
     public function setFacetRanges(?array $value): FacetInterface
     {
+        $value = $value ?? [];
+        ObjectHelper::validateListOfObjects($value, FacetRangeModelInterface::class);
+
         return $this->setData(self::FACET_RANGES, $value);
     }
 
@@ -471,11 +475,12 @@ class Facet extends AbstractSimpleObject implements FacetInterface
 
     public function getBoostBury(): FacetBoostBuryInterface
     {
-        return $this->_get(self::BOOST_BURY) ?? $this->facetBoostBuryFactory->create();
+        return $this->_get(self::BOOST_BURY);
     }
 
     public function setBoostBury(?FacetBoostBuryInterface $value): FacetInterface
     {
+        $value = $value ?? $this->facetBoostBuryFactory->create();
         return $this->setData(self::BOOST_BURY, $value);
     }
 

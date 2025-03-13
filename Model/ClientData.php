@@ -30,10 +30,17 @@ class ClientData extends AbstractSimpleObject implements ClientDataInterface
     public function __construct(
         CoordinateInterfaceFactory $coordinate,
         array $data = []
-    )
-    {
-        parent::__construct($data);
+    ) {
         $this->coordinateFactory = $coordinate;
+
+        //apply defaults
+        $data = $data + [
+                self::FIELD_ORIGIN => $this->coordinateFactory->create()
+            ];
+        parent::__construct($data);
+
+        //Validate and reset data for objects and array of objects
+        $this->setOrigin($data[self::FIELD_ORIGIN]);
     }
 
     public function getVisitorId(): string
@@ -98,11 +105,12 @@ class ClientData extends AbstractSimpleObject implements ClientDataInterface
 
     public function getOrigin(): CoordinateInterface
     {
-        return $this->_get(self::FIELD_ORIGIN) ?? $this->coordinateFactory->create();
+        return $this->_get(self::FIELD_ORIGIN);
     }
 
     public function setOrigin(?CoordinateInterface $value): ClientDataInterface
     {
+        $value = $value ?? $this->coordinateFactory->create();
         return $this->setData(self::FIELD_ORIGIN, $value);
     }
 

@@ -22,6 +22,21 @@ use Magento\Framework\Api\AbstractSimpleObject;
 
 class IndexItemsContext extends AbstractSimpleObject implements IndexItemsContextInterface
 {
+    /**
+     * @param array<self::FIELD_*, mixed> $data
+     */
+    public function __construct(array $data = [])
+    {
+        //apply defaults
+        $data = $data + [
+                self::FIELD_ITEMS => []
+            ];
+        parent::__construct($data);
+
+        //Validate and reset data for array of objects
+        $this->setItems($data[self::FIELD_ITEMS]);
+    }
+
     public function getIndexName(): string
     {
         return (string)$this->_get(self::FIELD_INDEX_NAME);
@@ -34,18 +49,17 @@ class IndexItemsContext extends AbstractSimpleObject implements IndexItemsContex
 
     public function getItems(): array
     {
-        $value = (array)($this->_get(self::FIELD_ITEMS) ?? []);
-        array_walk(
-            $value,
-            [ObjectHelper::class, 'validateObjectValue'],
-            IndexItemInterface::class
-        );
-
-        return $value;
+        return $this->_get(self::FIELD_ITEMS);
     }
 
+    /**
+     * @throws \InvalidArgumentException
+     */
     public function setItems(?array $value): IndexItemsContextInterface
     {
+        $value = $value ?? [];
+        ObjectHelper::validateListOfObjects($value, IndexItemInterface::class);
+
         return $this->setData(self::FIELD_ITEMS, $value);
     }
 }

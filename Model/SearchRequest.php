@@ -43,12 +43,25 @@ class SearchRequest extends AbstractSimpleObject implements SearchRequestInterfa
         VariantOptionsInterfaceFactory $variantOptionsFactory,
         SmartBarInterfaceFactory $smartBarFactory,
         array $data = []
-    )
-    {
-        parent::__construct($data);
+    ) {
         $this->clientDataFactory = $clientDataFactory;
         $this->variantOptionsFactory = $variantOptionsFactory;
         $this->smartBarFactory = $smartBarFactory;
+
+        //apply defaults
+        $data = $data + [
+                self::FIELD_VARIANT => $this->variantOptionsFactory->create(),
+                self::FIELD_SMART_BAR => $this->smartBarFactory->create(),
+                self::FIELD_CLIENT_DATA => $this->clientDataFactory->create(),
+                self::FIELD_BOOST_QUERIES => []
+            ];
+        parent::__construct($data);
+
+        //Validate and reset data for objects and array of objects
+        $this->setVariant($data[self::FIELD_VARIANT]);
+        $this->setSmartBar($data[self::FIELD_SMART_BAR]);
+        $this->setClientData($data[self::FIELD_CLIENT_DATA]);
+        $this->setBoostQueries($data[self::FIELD_BOOST_QUERIES]);
     }
 
     public function getIndexName(): string
@@ -73,28 +86,28 @@ class SearchRequest extends AbstractSimpleObject implements SearchRequestInterfa
 
     public function getVariant(): VariantOptionsInterface
     {
-        return $this->_get(self::FIELD_VARIANT) ?? $this->variantOptionsFactory->create();
+        return $this->_get(self::FIELD_VARIANT);
     }
 
     public function setVariant(?VariantOptionsInterface $value): SearchRequestInterface
     {
+        $value = $value ?? $this->variantOptionsFactory->create();
         return $this->setData(self::FIELD_VARIANT, $value);
     }
 
     public function getBoostQueries(): array
     {
-        $value = (array)($this->_get(self::FIELD_BOOST_QUERIES) ?? []);
-        array_walk(
-            $value,
-            [ObjectHelper::class, 'validateObjectValue'],
-            BoostQueryInterface::class
-        );
-
-        return $value;
+        return $this->_get(self::FIELD_BOOST_QUERIES);
     }
 
+    /**
+     * @throws \InvalidArgumentException
+     */
     public function setBoostQueries(?array $value): SearchRequestInterface
     {
+        $value = $value ?? [];
+        ObjectHelper::validateListOfObjects($value, BoostQueryInterface::class);
+
         return $this->setData(self::FIELD_BOOST_QUERIES, $value);
     }
 
@@ -310,21 +323,23 @@ class SearchRequest extends AbstractSimpleObject implements SearchRequestInterfa
 
     public function getSmartBar(): SmartBarInterface
     {
-        return $this->_get(self::FIELD_SMART_BAR) ?? $this->smartBarFactory->create();
+        return $this->_get(self::FIELD_SMART_BAR);
     }
 
     public function setSmartBar(?SmartBarInterface $value): SearchRequestInterface
     {
+        $value = $value ?? $this->smartBarFactory->create();
         return $this->setData(self::FIELD_SMART_BAR, $value);
     }
 
     public function getClientData(): ClientDataInterface
     {
-        return $this->_get(self::FIELD_CLIENT_DATA) ?? $this->clientDataFactory->create();
+        return $this->_get(self::FIELD_CLIENT_DATA);
     }
 
     public function setClientData(?ClientDataInterface $value): SearchRequestInterface
     {
+        $value = $value ?? $this->clientDataFactory->create();
         return $this->setData(self::FIELD_CLIENT_DATA, $value);
     }
 
