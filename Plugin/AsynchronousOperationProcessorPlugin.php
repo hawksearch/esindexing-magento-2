@@ -17,9 +17,13 @@ namespace HawkSearch\EsIndexing\Plugin;
 use HawkSearch\EsIndexing\Api\HierarchyManagementInterface;
 use HawkSearch\EsIndexing\Api\IndexManagementInterface;
 use HawkSearch\EsIndexing\Model\BulkOperation\BulkOperationManagement;
+use HawkSearch\EsIndexing\Model\DataIndex;
 use HawkSearch\EsIndexing\Model\Indexing;
 use HawkSearch\EsIndexing\Model\MessageQueue\Exception\InvalidBulkOperationException;
 use HawkSearch\EsIndexing\Model\MessageQueue\Validator\OperationValidatorInterface;
+use HawkSearch\EsIndexing\Model\ResourceModel\DataIndex as DataIndexResource;
+use HawkSearch\EsIndexing\Model\ResourceModel\DataIndex\Collection as DataIndexCollection;
+use HawkSearch\EsIndexing\Model\ResourceModel\DataIndex\CollectionFactory as DataIndexCollectionFactory;
 use Magento\AsynchronousOperations\Api\Data\OperationInterface;
 use Magento\AsynchronousOperations\Model\ConfigInterface as AsyncConfig;
 use Magento\AsynchronousOperations\Model\OperationProcessor;
@@ -31,13 +35,16 @@ use Magento\Framework\MessageQueue\MessageValidator;
 use Magento\Store\Model\App\Emulation;
 use Magento\Store\Model\StoreManagerInterface;
 
+
 class AsynchronousOperationProcessorPlugin
 {
+    private $loadedIndexCache = [];
     private MessageEncoder $messageEncoder;
     private OperationManagementInterface $operationManagement;
     private OperationValidatorInterface $bulkAllOperationCompleteValidator;
     private OperationValidatorInterface $operationTopicValidator;
     private OperationValidatorInterface $operationOpenStatusValidator;
+    private OperationValidatorInterface $operationStage2Validator;
     private HierarchyManagementInterface $hierarchyManagement;
     private IndexManagementInterface $indexManagement;
     private MessageValidator $messageValidator;
@@ -45,6 +52,8 @@ class AsynchronousOperationProcessorPlugin
     private Indexing\Context $indexingContext;
     private Emulation $emulation;
     private BulkOperationManagement $bulkOperationManagement;
+    private DataIndexCollectionFactory $dataIndexCollectionFactory;
+    private DataIndexResource $dataIndexResource;
 
     public function __construct(
         MessageEncoder $messageEncoder,
@@ -52,19 +61,23 @@ class AsynchronousOperationProcessorPlugin
         OperationValidatorInterface $bulkAllOperationCompleteValidator,
         OperationValidatorInterface $operationTopicValidator,
         OperationValidatorInterface $operationOpenStatusValidator,
+        OperationValidatorInterface $operationStage2Validator,
         HierarchyManagementInterface $hierarchyManagement,
         IndexManagementInterface $indexManagement,
         MessageValidator $messageValidator,
         StoreManagerInterface $storeManager,
         Indexing\Context $indexingContext,
         Emulation $emulation,
-        BulkOperationManagement $bulkOperationManagement
+        BulkOperationManagement $bulkOperationManagement,
+        DataIndexCollectionFactory $dataIndexCollectionFactory,
+        DataIndexResource $dataIndexResource
     ) {
         $this->messageEncoder = $messageEncoder;
         $this->operationManagement = $operationManagement;
         $this->bulkAllOperationCompleteValidator = $bulkAllOperationCompleteValidator;
         $this->operationTopicValidator = $operationTopicValidator;
         $this->operationOpenStatusValidator = $operationOpenStatusValidator;
+        $this->operationStage2Validator = $operationStage2Validator;
         $this->hierarchyManagement = $hierarchyManagement;
         $this->indexManagement = $indexManagement;
         $this->messageValidator = $messageValidator;
@@ -72,6 +85,8 @@ class AsynchronousOperationProcessorPlugin
         $this->indexingContext = $indexingContext;
         $this->emulation = $emulation;
         $this->bulkOperationManagement = $bulkOperationManagement;
+        $this->dataIndexCollectionFactory = $dataIndexCollectionFactory;
+        $this->dataIndexResource = $dataIndexResource;
     }
 
     /**
@@ -135,13 +150,16 @@ class AsynchronousOperationProcessorPlugin
             return;
         }
 
-        if (!$this->bulkAllOperationCompleteValidator->validate($operation)) {
+        $this->processStage1OperationCompletion($operation);
+        $this->processStage2OperationCompletion($operation);
+
+        if (!$this->validateAllStagesComplete()) {
             return;
         }
 
         try {
             $this->hierarchyManagement->rebuildHierarchy(
-                $this->indexingContext->getIndexName((int)$this->storeManager->getStore()->getId())
+                $this->indexingContext->getIndexName($this->getStoreId())
             );
             $this->indexManagement->switchIndices();
         } catch (\Exception $e) {
@@ -163,6 +181,51 @@ class AsynchronousOperationProcessorPlugin
             //re-throw exception
             throw $e;
         }
+    }
+
+    private function processStage1OperationCompletion(OperationInterface $operation): void
+    {
+        if ($this->operationStage2Validator->validate($operation)) {
+            return;
+        }
+
+        if (!$this->bulkAllOperationCompleteValidator->validate($operation)) {
+            return;
+        }
+
+        $dataIndex = $this->loadDataIndexByName($this->indexingContext->getIndexName($this->getStoreId()));
+        if (!$indexId = $dataIndex->getId()) {
+            //@todo throw an exception here just not to make it silent
+            return;
+        }
+
+        $dataIndex->setIsStage1Complete(true);
+        $this->dataIndexResource->save($dataIndex);
+    }
+
+    private function processStage2OperationCompletion(OperationInterface $operation): void
+    {
+        if (!$this->operationStage2Validator->validate($operation)) {
+            return;
+        }
+
+        $dataIndex = $this->loadDataIndexByName($this->indexingContext->getIndexName($this->getStoreId()));
+        if (!$indexId = $dataIndex->getId()) {
+            //@todo throw an exception here just not to make it silent
+            return;
+        }
+
+        $dataIndex->setStage2Completed($dataIndex->getStage2Completed() + 1);
+        $this->dataIndexResource->save($dataIndex);
+    }
+
+    private function validateAllStagesComplete(): bool
+    {
+        $dataIndex = $this->loadDataIndexByName($this->indexingContext->getIndexName($this->getStoreId()));
+
+        return $dataIndex->getIsStage1Complete()
+            && $dataIndex->getStage2Scheduled() > 0
+            && $dataIndex->getStage2Scheduled() == $dataIndex->getStage2Completed();
     }
 
     private function isAllowed(OperationInterface $operation): bool
@@ -191,5 +254,25 @@ class AsynchronousOperationProcessorPlugin
         } catch (NoSuchEntityException $e) {
             //operation is not created in the bulk yet
         }
+    }
+
+    private function loadDataIndexByName(string $indexName): DataIndex
+    {
+        if (!isset($this->loadedIndexCache[$indexName][$this->getStoreId()])) {
+            /** @var DataIndexCollection $collection */
+            $collection = $this->dataIndexCollectionFactory->create()
+                ->addFieldToFilter('engine_index_name', $indexName)
+                ->addFieldToFilter('store_id', $this->getStoreId());
+
+            $this->loadedIndexCache[$indexName][$this->getStoreId()] = $collection->getFirstItem();
+        }
+
+        /** @var DataIndex */
+        return $this->loadedIndexCache[$indexName][$this->getStoreId()];
+    }
+
+    private function getStoreId(): int
+    {
+        return (int)$this->storeManager->getStore()->getId();
     }
 }

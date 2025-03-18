@@ -61,14 +61,14 @@ class PagePlugin
         AbstractModel $object
     ): PageResource {
         try {
-            $pageResource->beginTransaction();
+            $pageResource->getConnection()->beginTransaction();
             $result = $proceed($object);
             $pageResource->addCommitCallback(function () use ($object) {
                 $this->reindexRow((int)$object->getId());
             });
-            $pageResource->commit();
+            $pageResource->getConnection()->commit();
         } catch (\Exception $e) {
-            $pageResource->rollBack();
+            $pageResource->getConnection()->rollBack();
             throw $e;
         }
 

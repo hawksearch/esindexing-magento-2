@@ -38,5 +38,9 @@
                  topic="hawksearch.indexing.landing_page.reindex"
                  destinationType="queue"
                  destination="hawksearch.indexing"/>
+        <binding id="HawksearchIndexingApiPushCatalogBinding"
+                 topic="hawksearch.indexing.catalog.api_push"
+                 destinationType="queue"
+                 destination="hawksearch.indexing.api_push"/>
     </exchange>
 </config>

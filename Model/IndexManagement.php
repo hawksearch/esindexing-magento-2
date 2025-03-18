@@ -22,6 +22,9 @@ use HawkSearch\Connector\Logger\LoggerFactoryInterface;
 use HawkSearch\EsIndexing\Api\Data\EsIndexInterface;
 use HawkSearch\EsIndexing\Api\Data\IndexListInterface;
 use HawkSearch\EsIndexing\Api\IndexManagementInterface;
+use HawkSearch\EsIndexing\Model\ResourceModel\DataIndex\Collection as DataIndexCollection;
+use HawkSearch\EsIndexing\Model\ResourceModel\DataIndex\CollectionFactory as DataIndexCollectionFactory;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\NotFoundException;
 use Magento\Store\Model\StoreManagerInterface;
@@ -48,20 +51,24 @@ class IndexManagement implements IndexManagementInterface
     private InstructionManagerPoolInterface $instructionManagerPool;
     private LoggerInterface $hawkLogger;
     private StoreManagerInterface $storeManager;
+    private DataIndexCollectionFactory $dataIndexCollectionFactory;
 
     /**
      * @param InstructionManagerPoolInterface<string, InstructionManagerInterface> $instructionManagerPool
      * @param LoggerFactoryInterface $loggerFactory
      * @param StoreManagerInterface $storeManager
+     * @param DataIndexCollectionFactory|null $dataIndexCollectionFactory
      */
     public function __construct(
         InstructionManagerPoolInterface $instructionManagerPool,
         LoggerFactoryInterface $loggerFactory,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        DataIndexCollectionFactory $dataIndexCollectionFactory = null
     ) {
         $this->instructionManagerPool = $instructionManagerPool;
         $this->hawkLogger = $loggerFactory->create();
         $this->storeManager = $storeManager;
+        $this->dataIndexCollectionFactory = $dataIndexCollectionFactory ?: ObjectManager::getInstance()->get(DataIndexCollectionFactory::class);
     }
 
     /**
@@ -290,6 +297,16 @@ class IndexManagement implements IndexManagementInterface
         if ($isCurrent) {
             $this->currentIndexCache[$storeId] = $index;
         }
+
+        $dataIndex = $this->loadDataIndexByName($index);
+
+        $dataIndex->setEngineIndexName($index)
+            ->setIsCurrent($isCurrent)
+            ->setIsValid(true)
+            ->setStoreId($storeId);
+
+        $this->dataIndexCollectionFactory->create()
+            ->getResource()->save($dataIndex);
     }
 
     /**
@@ -303,6 +320,14 @@ class IndexManagement implements IndexManagementInterface
         unset($this->indicesListCache[$storeId][$index]);
         if (isset($this->currentIndexCache[$storeId]) && $this->currentIndexCache[$storeId] === $index) {
             $this->currentIndexCache[$storeId] = null;
+        }
+
+        $dataIndex = $this->loadDataIndexByName($index);
+
+        if ($dataIndex->getId()) {
+            $dataIndex->setIsValid(false);
+            $this->dataIndexCollectionFactory->create()
+                ->getResource()->save($dataIndex);
         }
     }
 
@@ -328,5 +353,16 @@ class IndexManagement implements IndexManagementInterface
     private function getStoreId(): int
     {
         return (int)$this->storeManager->getStore()->getId();
+    }
+
+    private function loadDataIndexByName(string $indexName): DataIndex
+    {
+        /** @var DataIndexCollection $collection */
+        $collection = $this->dataIndexCollectionFactory->create()
+            ->addFieldToFilter('engine_index_name', $indexName)
+            ->addFieldToFilter('store_id', $this->getStoreId());
+
+        /** @var DataIndex */
+        return $collection->getFirstItem();
     }
 }

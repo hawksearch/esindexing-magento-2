@@ -26,8 +26,7 @@ abstract class AbstractConfigHelper
 
     public function __construct(
         IndexingConfig $indexingConfig
-    )
-    {
+    ) {
         $this->indexingConfig = $indexingConfig;
     }
 
@@ -48,6 +47,7 @@ abstract class AbstractConfigHelper
      */
     public function getBatchSize($store = null)
     {
-        return $this->indexingConfig->getItemsBatchSize($store);
+        //there is a limitation of 125 items max in Indexing API
+        return 125;
     }
 }

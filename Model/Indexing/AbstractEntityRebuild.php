@@ -18,8 +18,11 @@ use HawkSearch\Connector\Compatibility\PublicMethodDeprecationTrait;
 use HawkSearch\Connector\Compatibility\PublicPropertyDeprecationTrait;
 use HawkSearch\Connector\Logger\LoggerFactoryInterface;
 use HawkSearch\EsIndexing\Helper\ObjectHelper;
+use HawkSearch\EsIndexing\Model\Indexing\EntityType\ProductEntityType;
 use HawkSearch\EsIndexing\Model\Indexing\Field\NameProviderInterface as FieldNameProviderInterface;
+use HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisherInterface;
 use Magento\Framework\Api\SearchCriteriaInterface;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
 use Magento\Framework\Exception\LocalizedException;
@@ -104,6 +107,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
      */
     private ContextInterface $indexingContext;
     private ObjectHelper $objectHelper;
+    private BulkPublisherInterface $publisher;
 
     /**
      * AbstractEntityRebuild constructor.
@@ -114,6 +118,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
      * @param StoreManagerInterface $storeManager
      * @param ContextInterface $indexingContext
      * @param ObjectHelper $objectHelper
+     * @param BulkPublisherInterface|null $publisher
      */
     public function __construct(
         EntityTypePoolInterface $entityTypePool,
@@ -121,7 +126,8 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
         LoggerFactoryInterface $loggerFactory,
         StoreManagerInterface $storeManager,
         ContextInterface $indexingContext,
-        ObjectHelper $objectHelper
+        ObjectHelper $objectHelper,
+        BulkPublisherInterface $publisher = null
     ) {
         $this->entityTypePool = $entityTypePool;
         $this->eventManager = $eventManager;
@@ -129,6 +135,8 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
         $this->storeManager = $storeManager;
         $this->indexingContext = $indexingContext;
         $this->objectHelper = $objectHelper;
+        $this->publisher = $publisher ?: ObjectManager::getInstance()->get(BulkPublisherInterface::class);
+
     }
 
     /**
@@ -180,6 +188,8 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
         } else {
             $this->rebuildBatch($searchCriteria, $ids);
         }
+
+        $this->afterRebuild();
     }
 
     /**
@@ -442,7 +452,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
     /**
      * @param TItem|null $item
      * @deprecated 0.7.0 method will be removed.
-     *      Using of 'code' and 'value' options is deprecated. Use @see FieldHandlerInterface to migrate fields with
+     *      Using of 'code' and 'value' options is deprecated. Use {@see FieldHandlerInterface} to migrate fields with
      *     values.
      * @see FieldNameProviderInterface
      */
@@ -616,5 +626,15 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
         }
 
         $this->getEntityType()->getItemsIndexer()->delete($ids, $indexName);
+    }
+
+    private function afterRebuild(): void
+    {
+        /**
+         * @experimental
+         */
+        if ($this->getEntityType()->getTypeName() == ProductEntityType::ENTITY_TYPE_NAME) {
+            $this->publisher->publish();
+        }
     }
 }

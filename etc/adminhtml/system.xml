@@ -39,7 +39,7 @@
                 </field>
                 <field id="items_batch_size" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Maximum number of items per iteration</label>
-                    <comment>Default value is 125.</comment>
+                    <comment>The optimal number is a multiplier of 125, i.e 12500 (100 x 125), 6250 (50 x 125), 125000 (1000 x 125), etc.</comment>
                 </field>
                 <field id="products_include_categories_hierarchy" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Include all parent categories for products</label>

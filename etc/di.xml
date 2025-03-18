@@ -152,7 +152,9 @@
                 <item name="deleteIndex" xsi:type="string">HawkSearchEsIndexingDeleteIndexInstruction</item>
                 <!-- Indexing items -->
                 <item name="indexItems" xsi:type="string">HawkSearchEsIndexingIndexItemsInstruction</item>
+                <item name="indexItemsPush" xsi:type="string">HawkSearchEsIndexingIndexItemsPushInstruction</item>
                 <item name="deleteItems" xsi:type="string">HawkSearchEsIndexingDeleteItemsInstruction</item>
+                <item name="deleteItemsPush" xsi:type="string">HawkSearchEsIndexingDeleteItemsPushInstruction</item>
                 <!-- Hierarchy -->
                 <item name="upsertHierarchy" xsi:type="string">HawkSearchEsIndexingUpsertHierarchyInstruction</item>
                 <item name="rebuildHierarchy" xsi:type="string">HawkSearchEsIndexingRebuildHierarchyInstruction</item>
@@ -374,6 +376,20 @@
     </virtualType>
     <!-- END indexItems Instruction  -->
 
+    <!-- indexItemsPush Instruction  -->
+    <virtualType name="HawkSearchEsIndexingIndexItemsPushInstruction"
+                 type="HawkSearchEsIndexingIndexItemsInstruction">
+        <arguments>
+            <argument name="client" xsi:type="object">HawkSearchEsIndexingIndexItemsPushClient</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearchEsIndexingIndexItemsPushClient" type="HawkSearch\Connector\Gateway\Http\Client">
+        <arguments>
+            <argument name="requestConverter" xsi:type="object">HawkSearch\EsIndexing\Gateway\Http\Converter\ExtractRawJsonFromArray</argument>
+        </arguments>
+    </virtualType>
+    <!-- END indexItemsPush Instruction  -->
+
     <!-- deleteItems Instruction  -->
     <virtualType name="HawkSearchEsIndexingDeleteItemsInstruction"
                  type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
@@ -411,6 +427,15 @@
         </arguments>
     </virtualType>
     <!-- END deleteItems Instruction  -->
+
+    <!-- deleteItemsPush Instruction  -->
+    <virtualType name="HawkSearchEsIndexingDeleteItemsPushInstruction"
+                 type="HawkSearchEsIndexingDeleteItemsInstruction">
+        <arguments>
+            <argument name="client" xsi:type="object">HawkSearchEsIndexingIndexItemsPushClient</argument>
+        </arguments>
+    </virtualType>
+    <!-- END deleteItemsPush Instruction  -->
 
     <!-- hierarchyUpsert Instruction  -->
     <virtualType name="HawkSearchEsIndexingUpsertHierarchyInstruction"
@@ -902,7 +927,7 @@
             <argument name="fieldHandler" shared="false" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Attribute\Handler\Composite</argument>
             <!--<argument name="fieldHandler" shared="false" xsi:type="object">HawkSearch\EsIndexing\Model\Product\Field\Handler\Composite</argument>-->
             <argument name="configHelper" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Product\ConfigHelper</argument>
-            <argument name="itemsIndexer" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\ItemsIndexer\SearchedItemsIndexer</argument>
+            <argument name="itemsIndexer" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Product\ItemsIndexer</argument>
             <argument name="typeName" xsi:type="const">HawkSearch\EsIndexing\Model\Indexing\EntityType\ProductEntityType::ENTITY_TYPE_NAME</argument>
             <argument name="fieldNameProvider" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\Entity\Product\FieldNameProvider</argument>
         </arguments>
@@ -1176,6 +1201,15 @@
             </argument>
         </arguments>
     </virtualType>
+    <virtualType name="HawkSearch\EsIndexing\Model\MessageQueue\ApiPushMessageTopicResolver"
+                 type="HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicResolverComposite">
+        <arguments>
+            <argument name="resolvers" xsi:type="array">
+                <item name="product" xsi:type="object">HawkSearch\EsIndexing\Model\Indexing\EntityType\ProductApiPushMessageTopicResolver</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
     <virtualType name="HawkSearch\EsIndexing\Model\Indexing\EntityType\ContentPageMessageTopicResolver"
                  type="HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicByObjectResolver">
         <arguments>
@@ -1195,6 +1229,13 @@
         <arguments>
             <argument name="topic" xsi:type="string">hawksearch.indexing.catalog.reindex</argument>
             <argument name="resolverClass" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\EntityType\ProductEntityType</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearch\EsIndexing\Model\Indexing\EntityType\ProductApiPushMessageTopicResolver"
+                 type="HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicByObjectResolver">
+        <arguments>
+            <argument name="topic" xsi:type="string">hawksearch.indexing.catalog.api_push</argument>
+            <argument name="resolverClass" xsi:type="string">HawkSearch\EsIndexing\Model\Indexing\Entity\Product\ItemsIndexer</argument>
         </arguments>
     </virtualType>
     <virtualType name="HawkSearch\EsIndexing\Model\Indexing\EntityType\LandingPageMessageTopicResolver"
@@ -1462,6 +1503,7 @@
             <argument name="bulkAllOperationCompleteValidator" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\Validator\BulkAllOperationCompleteValidator</argument>
             <argument name="operationTopicValidator" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\Validator\OperationTopicValidator</argument>
             <argument name="operationOpenStatusValidator" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\Validator\OperationOpenStatusValidator</argument>
+            <argument name="operationStage2Validator" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\Validator\IsStage2OperationValidator</argument>
         </arguments>
     </type>
 
@@ -1519,6 +1561,11 @@
     <type name="Magento\Eav\Model\Entity\Attribute\Source\Table">
         <plugin name="hawksearchSpecificOptions"
                 type="HawkSearch\EsIndexing\Plugin\Eav\Entity\Attribute\Source\Table\SpecificOptionsPlugin"/>
+    </type>
+    <type name="HawkSearch\EsIndexing\Model\Indexing\Entity\Product\ItemsIndexer">
+        <arguments>
+            <argument name="messageTopicResolver" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\ApiPushMessageTopicResolver</argument>
+        </arguments>
     </type>
     <!-- END Types and Plugins -->
 </config>
