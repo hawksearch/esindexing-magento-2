@@ -152,7 +152,9 @@
                 <item name="deleteIndex" xsi:type="string">HawkSearchEsIndexingDeleteIndexInstruction</item>
                 <!-- Indexing items -->
                 <item name="indexItems" xsi:type="string">HawkSearchEsIndexingIndexItemsInstruction</item>
+                <item name="indexItemsPush" xsi:type="string">HawkSearchEsIndexingIndexItemsPushInstruction</item>
                 <item name="deleteItems" xsi:type="string">HawkSearchEsIndexingDeleteItemsInstruction</item>
+                <item name="deleteItemsPush" xsi:type="string">HawkSearchEsIndexingDeleteItemsPushInstruction</item>
                 <!-- Hierarchy -->
                 <item name="upsertHierarchy" xsi:type="string">HawkSearchEsIndexingUpsertHierarchyInstruction</item>
                 <item name="rebuildHierarchy" xsi:type="string">HawkSearchEsIndexingRebuildHierarchyInstruction</item>
@@ -374,6 +376,20 @@
     </virtualType>
     <!-- END indexItems Instruction  -->
 
+    <!-- indexItemsPush Instruction  -->
+    <virtualType name="HawkSearchEsIndexingIndexItemsPushInstruction"
+                 type="HawkSearchEsIndexingIndexItemsInstruction">
+        <arguments>
+            <argument name="client" xsi:type="object">HawkSearchEsIndexingIndexItemsPushClient</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="HawkSearchEsIndexingIndexItemsPushClient" type="HawkSearch\Connector\Gateway\Http\Client">
+        <arguments>
+            <argument name="requestConverter" xsi:type="object">HawkSearch\EsIndexing\Gateway\Http\Converter\ExtractRawJsonFromArray</argument>
+        </arguments>
+    </virtualType>
+    <!-- END indexItemsPush Instruction  -->
+
     <!-- deleteItems Instruction  -->
     <virtualType name="HawkSearchEsIndexingDeleteItemsInstruction"
                  type="HawkSearch\Connector\Gateway\Instruction\GatewayInstruction">
@@ -411,6 +427,15 @@
         </arguments>
     </virtualType>
     <!-- END deleteItems Instruction  -->
+
+    <!-- deleteItemsPush Instruction  -->
+    <virtualType name="HawkSearchEsIndexingDeleteItemsPushInstruction"
+                 type="HawkSearchEsIndexingDeleteItemsInstruction">
+        <arguments>
+            <argument name="client" xsi:type="object">HawkSearchEsIndexingIndexItemsPushClient</argument>
+        </arguments>
+    </virtualType>
+    <!-- END deleteItemsPush Instruction  -->
 
     <!-- hierarchyUpsert Instruction  -->
     <virtualType name="HawkSearchEsIndexingUpsertHierarchyInstruction"
@@ -1478,6 +1503,7 @@
             <argument name="bulkAllOperationCompleteValidator" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\Validator\BulkAllOperationCompleteValidator</argument>
             <argument name="operationTopicValidator" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\Validator\OperationTopicValidator</argument>
             <argument name="operationOpenStatusValidator" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\Validator\OperationOpenStatusValidator</argument>
+            <argument name="operationStage2Validator" xsi:type="object">HawkSearch\EsIndexing\Model\MessageQueue\Validator\IsStage2OperationValidator</argument>
         </arguments>
     </type>
 

@@ -1,0 +1,63 @@
+<!--
+  /**
+   * Copyright (c) 2025 Hawksearch (www.hawksearch.com) - All Rights Reserved
+   *
+   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+   * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+   * IN THE SOFTWARE.
+   */
+  -->
+
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="hawksearch_data_index" resource="default" engine="innodb" comment="HawkSearch indexes storage">
+        <column xsi:type="int" name="id" unsigned="true" nullable="false" identity="true" comment="Row ID"/>
+        <column xsi:type="smallint" name="store_id"  unsigned="true" nullable="false" default="0" comment="Store ID"/>
+        <column xsi:type="varchar" name="engine_index_name" length="255" nullable="true" comment="Index name from HawkSearch Engine"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated At"/>
+        <column xsi:type="tinyint" name="is_valid" unsigned="true" nullable="false" default="0" comment="Flag if index is valid"/>
+        <column xsi:type="tinyint" name="is_current" unsigned="true" nullable="false" default="0" comment="Flag if it is a current index"/>
+        <column xsi:type="tinyint" name="is_stage_1_complete" unsigned="true" nullable="false" default="0" comment="Flag if Stage 1 operations complete"/>
+        <column xsi:type="int" name="stage_2_scheduled" unsigned="true" nullable="false" default="0" comment="Number of scheduled rows in Stage 2"/>
+        <column xsi:type="int" name="stage_2_completed" unsigned="true" nullable="false" default="0" comment="Number of completed rows in Stage 2"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="HAWKSEARCH_DATA_INDEX_ENGINE_INDEX_NAME_STORE_ID">
+            <column name="store_id"/>
+            <column name="engine_index_name"/>
+        </constraint>
+        <constraint xsi:type="foreign"
+                    referenceId="HAWKSEARCH_DATA_INDEX_STORE_ID_STORE_STORE_ID"
+                    table="hawksearch_data_index"
+                    column="store_id"
+                    referenceTable="store"
+                    referenceColumn="store_id"
+                    onDelete="CASCADE"/>
+    </table>
+
+    <table name="hawksearch_data_preload_items" resource="default" engine="innodb" comment="Middleware table for API payload requests">
+        <column xsi:type="bigint" name="id" unsigned="true" nullable="false" identity="true" comment="Row ID"/>
+        <column xsi:type="int" name="index_id" unsigned="true" nullable="false" comment="Index ID"/>
+        <column xsi:type="varchar" name="method" length="255" nullable="true" comment="API action name"/>
+        <column xsi:type="tinyint" name="status" default="0" comment="Preload item status (OPEN | COMPLETE | FAILED | REJECTED)"/>
+        <column xsi:type="text" name="request" nullable="false" comment="API Request payload"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <index referenceId="HAWKSEARCH_DATA_PRELOAD_ITEMS_INDEX_ID" indexType="btree">
+            <column name="index_id"/>
+        </index>
+        <constraint xsi:type="foreign"
+                    referenceId="HAWKSEARCH_DATA_PRELOAD_ITEMS_INDEX_ID_HAWKSEARCH_DATA_INDEX_ID"
+                    table="hawksearch_data_preload_items"
+                    column="index_id"
+                    referenceTable="hawksearch_data_index"
+                    referenceColumn="id"
+                    onDelete="CASCADE"/>
+    </table>
+</schema>

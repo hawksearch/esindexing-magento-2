@@ -32,6 +32,10 @@ use Magento\Framework\Exception\NoSuchEntityException;
 class BulkOperationManagement
 {
     public const OPERATION_TOPIC_PREFIX = 'hawksearch.indexing.';
+    /**
+     * @experimental
+     */
+    public const OPERATION_TOPIC_STAGE2_TOPIC = '.api_push';
 
     private SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory;
     private OperationRepositoryInterface $operationRepository;
@@ -43,8 +47,7 @@ class BulkOperationManagement
         OperationRepositoryInterface $operationRepository,
         OperationCollectionFactory $operationCollectionFactory,
         BulkCollectionFactory $bulkCollectionFactory
-    )
-    {
+    ) {
         $this->searchCriteriaBuilderFactory = $searchCriteriaBuilderFactory;
         $this->operationRepository = $operationRepository;
         $this->operationCollectionFactory = $operationCollectionFactory;

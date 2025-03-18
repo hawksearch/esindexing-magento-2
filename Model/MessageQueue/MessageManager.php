@@ -115,6 +115,7 @@ class MessageManager extends AbstractSimpleObject implements MessageManagerInter
                 $isFullReindex = $messageData['full_reindex'] ?? false;
                 $messageData['application_headers']['index'] = $this->indexManagement->getIndexName(!$isFullReindex);
                 $messageData['application_headers']['full_reindex'] = $isFullReindex;
+                unset($messageData['full_reindex']);
             }
 
         } catch (NoSuchEntityException $e) {

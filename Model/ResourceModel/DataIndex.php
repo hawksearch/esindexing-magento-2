@@ -14,10 +14,13 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\ResourceModel;
 
-class DataPreloadIndex extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
+class DataIndex extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
 {
-    protected function _construct()
+    public const TABLE_NAME = "hawksearch_data_index";
+    public const TABLE_PRIMARY_KEY = "id";
+
+    protected function _construct(): void
     {
-        $this->_init('hawksearch_data_preload_index', 'data_id');
+        $this->_init(self::TABLE_NAME, self::TABLE_PRIMARY_KEY);
     }
 }
