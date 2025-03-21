@@ -1527,10 +1527,6 @@
         <plugin name="hawksearchAsynchronousOperationProcessor"
                 type="HawkSearch\EsIndexing\Plugin\AsynchronousOperationProcessorPlugin"/>
     </type>
-    <type name="HawkSearch\EsIndexing\Model\MessageQueue\Consumer">
-        <plugin name="hawksearchConsumerProcessor"
-                type="HawkSearch\EsIndexing\Plugin\ConsumerProcessorPlugin"/>
-    </type>
     <type name="Magento\Store\Model\ResourceModel\Store">
         <plugin name="hawksearchStoreView"
                 type="HawkSearch\EsIndexing\Plugin\Store\StoreViewPlugin"/>

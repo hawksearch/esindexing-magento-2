@@ -174,6 +174,7 @@ class ItemsIndexer implements ItemsIndexerInterface
                         'dataId' => $id,
                     ],
                     'full_reindex' => $this->indexingContext->isFullReindex(),
+                    'index' => $this->indexName
                 ]
             );
         }

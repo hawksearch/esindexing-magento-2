@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Plugin;
 
+use HawkSearch\EsIndexing\Api\Data\QueueOperationDataInterface;
 use HawkSearch\EsIndexing\Api\HierarchyManagementInterface;
 use HawkSearch\EsIndexing\Api\IndexManagementInterface;
 use HawkSearch\EsIndexing\Model\BulkOperation\BulkOperationManagement;
@@ -27,18 +28,23 @@ use HawkSearch\EsIndexing\Model\ResourceModel\DataIndex\CollectionFactory as Dat
 use Magento\AsynchronousOperations\Api\Data\OperationInterface;
 use Magento\AsynchronousOperations\Model\ConfigInterface as AsyncConfig;
 use Magento\AsynchronousOperations\Model\OperationProcessor;
+use Magento\Framework\App\Area;
 use Magento\Framework\Bulk\OperationManagementInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\MessageQueue\MessageEncoder;
 use Magento\Framework\MessageQueue\MessageValidator;
+use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Store\Model\App\Emulation;
 use Magento\Store\Model\StoreManagerInterface;
 
 
 class AsynchronousOperationProcessorPlugin
 {
-    private $loadedIndexCache = [];
+    /**
+     * @var array<string, array<int, DataIndex>>
+     */
+    private array $loadedIndexCache = [];
     private MessageEncoder $messageEncoder;
     private OperationManagementInterface $operationManagement;
     private OperationValidatorInterface $bulkAllOperationCompleteValidator;
@@ -54,6 +60,7 @@ class AsynchronousOperationProcessorPlugin
     private BulkOperationManagement $bulkOperationManagement;
     private DataIndexCollectionFactory $dataIndexCollectionFactory;
     private DataIndexResource $dataIndexResource;
+    private SerializerInterface $serializer;
 
     public function __construct(
         MessageEncoder $messageEncoder,
@@ -70,7 +77,8 @@ class AsynchronousOperationProcessorPlugin
         Emulation $emulation,
         BulkOperationManagement $bulkOperationManagement,
         DataIndexCollectionFactory $dataIndexCollectionFactory,
-        DataIndexResource $dataIndexResource
+        DataIndexResource $dataIndexResource,
+        SerializerInterface $serializer
     ) {
         $this->messageEncoder = $messageEncoder;
         $this->operationManagement = $operationManagement;
@@ -87,6 +95,7 @@ class AsynchronousOperationProcessorPlugin
         $this->bulkOperationManagement = $bulkOperationManagement;
         $this->dataIndexCollectionFactory = $dataIndexCollectionFactory;
         $this->dataIndexResource = $dataIndexResource;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -104,11 +113,44 @@ class AsynchronousOperationProcessorPlugin
             return null;
         }
 
+        $this->loadedIndexCache = [];
+
         $this->updateOperationStatus($operation);
         // do not change operation status if operation status is not open
         $this->operationOpenStatusValidator->validate($operation);
 
+        $this->startIndexing($operation);
+
         return [$this->messageEncoder->encode(AsyncConfig::SYSTEM_TOPIC_NAME, $operation)];
+    }
+
+    private function startIndexing(OperationInterface $operation): void
+    {
+        $operationDataModel = $this->getOperationDataModel($operation);
+        $data = $this->serializer->unserialize($operationDataModel->getData());
+
+        $applicationHeaders = $data['application_headers'] ?? [];
+
+        if (isset($applicationHeaders['store_id'])) {
+            $this->emulation->startEnvironmentEmulation($applicationHeaders['store_id'], Area::AREA_FRONTEND, true);
+        }
+
+        if (!empty($applicationHeaders['index'])) {
+            $this->indexingContext->setIndexName(
+                (int)$this->storeManager->getStore()->getId(),
+                $applicationHeaders['index']
+            );
+        }
+
+        $isFullReindex = $applicationHeaders['full_reindex'] ?? false;
+        $this->indexingContext->setIsFullReindex($isFullReindex);
+    }
+
+    private function getOperationDataModel(OperationInterface $operation): QueueOperationDataInterface
+    {
+        $data = $this->serializer->unserialize($operation->getSerializedData());
+        $entityParams = $this->messageEncoder->decode($operation->getTopicName(), $data['meta_information']);
+        return current($entityParams);
     }
 
     /**
