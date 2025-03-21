@@ -33,6 +33,7 @@ use Psr\Log\LoggerInterface;
 /**
  * @api
  * @since 0.8.0
+ * @todo implement index caching using {@see \HawkSearch\EsIndexing\Model\DataIndex}
  */
 class IndexManagement implements IndexManagementInterface
 {
@@ -274,7 +275,6 @@ class IndexManagement implements IndexManagementInterface
      * Reset cached values
      *
      * @throws NoSuchEntityException
-     * @TODO Replace with \Psr\Cache\CacheItemPoolInterface implementation
      */
     private function resetIndexCache(): void
     {
@@ -285,7 +285,6 @@ class IndexManagement implements IndexManagementInterface
 
     /**
      * @throws NoSuchEntityException
-     * @TODO Replace with {@see \Psr\Cache\CacheItemPoolInterface} implementation
      */
     private function addIndexToCache(string $index, bool $isCurrent = false): void
     {
@@ -311,7 +310,6 @@ class IndexManagement implements IndexManagementInterface
 
     /**
      * @throws NoSuchEntityException
-     * @TODO Replace with \Psr\Cache\CacheItemPoolInterface implementation
      */
     private function removeIndexFromCache(string $index): void
     {
@@ -334,7 +332,6 @@ class IndexManagement implements IndexManagementInterface
     /**
      * @return list<string>
      * @throws NoSuchEntityException
-     * @TODO Replace with \Psr\Cache\CacheItemPoolInterface implementation
      */
     private function getIndicesFromCache(bool $isCurrent = false): array
     {

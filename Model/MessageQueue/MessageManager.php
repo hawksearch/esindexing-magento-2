@@ -27,6 +27,8 @@ use Psr\Log\LoggerInterface;
  *      'method'?: callable-string,
  *      'method_arguments'?: array<array-key, mixed>,
  *      'full_reindex'?: bool,
+ *      'store_id'?: int|string,
+ *      'index'?: string,
  *      'application_headers'?: array{
  *          'store_id'?: int|string,
  *          'index'?: string,
@@ -107,17 +109,15 @@ class MessageManager extends AbstractSimpleObject implements MessageManagerInter
         $messageData['application_headers'] = $messageData['application_headers'] ?? [];
 
         try {
-            $messageData['application_headers']['store_id'] = $this->storeManager->getStore()->getId();
-            if (isset($messageData['index'])) {
-                $messageData['application_headers']['index'] = $messageData['index'];
-                unset($messageData['index']);
-            } else {
-                $isFullReindex = $messageData['full_reindex'] ?? false;
-                $messageData['application_headers']['index'] = $this->indexManagement->getIndexName(!$isFullReindex);
-                $messageData['application_headers']['full_reindex'] = $isFullReindex;
-                unset($messageData['full_reindex']);
-            }
+            $messageData['application_headers']['store_id'] = $messageData['store_id'] ?? $this->storeManager->getStore()->getId();
+            unset($messageData['store_id']);
 
+            $messageData['application_headers']['full_reindex'] = $messageData['full_reindex'] ?? false;
+            unset($messageData['full_reindex']);
+
+            $isFullReindex = $messageData['application_headers']['full_reindex'];
+            $messageData['application_headers']['index'] = $messageData['index'] ?? $this->indexManagement->getIndexName(!$isFullReindex);
+            unset($messageData['index']);
         } catch (NoSuchEntityException $e) {
             $errorMessage = sprintf(
                 "Can't get current storeId and inject to the message queue. Error %s.",
