@@ -32,6 +32,11 @@ class Attributes
      * @var array<string, string>
      */
     private array $attributes;
+    /**
+     * @var array<string, string>
+     */
+    private array $fieldToAttributeMapCache;
+
     private Config $eavConfig;
     private Json $jsonSerializer;
     private ProductsConfig $attributesConfigProvider;
@@ -135,17 +140,21 @@ class Attributes
      */
     public function getFieldToAttributeMap(): array
     {
-        $currentAttributesConfig = $this->jsonSerializer->unserialize(
-            $this->attributesConfigProvider->getAttributes()
-        );
+        if (!isset($this->fieldToAttributeMapCache)) {
+            $currentAttributesConfig = $this->jsonSerializer->unserialize(
+                $this->attributesConfigProvider->getAttributes()
+            );
 
-        $map = [];
-        foreach ($currentAttributesConfig as $configItem) {
-            if (isset($configItem['field'])) {
-                $map[$configItem['field']] = $configItem['attribute'] ?? '';
+            $map = [];
+            foreach ($currentAttributesConfig as $configItem) {
+                if (isset($configItem['field'])) {
+                    $map[$configItem['field']] = $configItem['attribute'] ?? '';
+                }
             }
+
+            $this->fieldToAttributeMapCache = array_merge($map, $this->getMandatoryFieldMap());
         }
 
-        return array_merge($map, $this->getMandatoryFieldMap());
+        return $this->fieldToAttributeMapCache;
     }
 }
