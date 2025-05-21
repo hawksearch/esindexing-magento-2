@@ -39,5 +39,10 @@
                 <enable>1</enable>
             </general>
         </hawksearch_event_tracking_settings>
+        <hawksearch_product_settings>
+            <products>
+                <index_prices>1</index_prices>
+            </products>
+        </hawksearch_product_settings>
     </default>
 </config>

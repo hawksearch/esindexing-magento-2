@@ -20,16 +20,33 @@ use HawkSearch\Connector\Model\ConfigProvider;
 class Products extends ConfigProvider
 {
     public const CONFIG_CUSTOM_ATTRIBUTES = 'custom_attributes';
+    public const CONFIG_INDEX_PRICES = 'index_prices';
+    public const CONFIG_INDEX_CUSTOMER_GROUP_PRICES = 'index_customer_group_prices';
 
     /**
      * Return product attributes configuration in JSON format
      *
      * @param null|int|string $store
-     * @noinspection PhpMissingParamTypeInspection
      */
     public function getAttributes($store = null): string
     {
         return $this->getConfig(self::CONFIG_CUSTOM_ATTRIBUTES, $store) ?: "{}";
     }
 
+
+    /**
+     * @param null|int|string $store
+     */
+    public function isIndexPrices($store = null): bool
+    {
+        return !!$this->getConfig(self::CONFIG_INDEX_PRICES, $store);
+    }
+
+    /**
+     * @param null|int|string $store
+     */
+    public function isIndexCustomerGroupPrices($store = null): bool
+    {
+        return $this->isIndexPrices($store) && $this->getConfig(self::CONFIG_INDEX_CUSTOMER_GROUP_PRICES, $store);
+    }
 }

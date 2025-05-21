@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Product;
 
+use HawkSearch\EsIndexing\Model\Config\Products as ProductsConfig;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product as ProductModel;
 use Magento\Framework\DataObject;
@@ -23,11 +24,14 @@ use Magento\Framework\Event\ObserverInterface;
 class EntityPriceObserver implements ObserverInterface
 {
     private PriceManagementInterface $priceManagement;
+    private ProductsConfig $productsConfig;
 
     public function __construct(
-        PriceManagementInterface $priceManagement
+        PriceManagementInterface $priceManagement,
+        ProductsConfig $productsConfig
     ) {
         $this->priceManagement = $priceManagement;
+        $this->productsConfig = $productsConfig;
     }
 
     /**
@@ -35,6 +39,10 @@ class EntityPriceObserver implements ObserverInterface
      */
     public function execute(Observer $observer): void
     {
+        if (!$this->productsConfig->isIndexPrices()) {
+            return;
+        }
+        
         /** @var DataObject $itemData */
         $itemData = $observer->getData('item_data');
         /** @var ProductInterface|ProductModel $product */
