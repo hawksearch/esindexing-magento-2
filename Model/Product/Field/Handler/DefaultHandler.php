@@ -48,8 +48,10 @@ class DefaultHandler implements FieldHandlerInterface
         /** @var ProductResource $productResource */
         $productResource = $item->getResource();
 
+        $attributesByCode = $productResource->getAttributesByCode();
         /** @var AttributeResource $attributeResource */
-        $attributeResource = $productResource->getAttribute($attributeCode);
+        $attributeResource = $attributesByCode[$attributeCode] ?? $productResource->getAttribute($attributeCode);
+
         // @phpstan-ignore-next-line
         if ($attributeResource) {
             $value = $this->getProductAttributeText($item, $attributeResource);
@@ -78,7 +80,7 @@ class DefaultHandler implements FieldHandlerInterface
             if ($value === null && in_array($attribute->getFrontendInput(), ['select', 'multiselect'])) {
                 $valueText = $value;
             } elseif ($attribute->getFrontendInput() == 'multiselect') {
-                $valueText = $product->getAttributeText($attribute->getAttributeCode());
+                $valueText = $attribute->getSource()->getOptionText($value);
             } elseif ($attribute->usesSource()) {
                 $valueText = $attribute->getFrontend()->getValue($product);
                 if ($valueText === false) {
