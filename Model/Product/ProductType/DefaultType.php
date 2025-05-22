@@ -15,12 +15,14 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Product\ProductType;
 
 use HawkSearch\EsIndexing\Helper\PricingHelper;
+use HawkSearch\EsIndexing\Model\Config\Products as ProductsConfig;
 use HawkSearch\EsIndexing\Model\Product\PriceManagementInterface;
 use HawkSearch\EsIndexing\Model\Product\ProductTypeInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product as ProductModel;
 use Magento\Customer\Api\GroupManagementInterface;
 use Magento\Customer\Model\Customer\Source\GroupSourceInterface;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Module\Manager as ModuleManager;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
@@ -38,19 +40,22 @@ abstract class DefaultType implements ProductTypeInterface
     private GroupManagementInterface $groupManagement;
     private ModuleManager $moduleManager;
     private PricingHelper $pricingHelper;
+    private ProductsConfig $productsConfig;
 
     public function __construct(
         PriceCurrencyInterface $priceCurrency,
         GroupSourceInterface $customerGroupSource,
         GroupManagementInterface $groupManagement,
         ModuleManager $moduleManager,
-        PricingHelper $pricingHelper
+        PricingHelper $pricingHelper,
+        ProductsConfig $productsConfig = null
     ) {
         $this->priceCurrency = $priceCurrency;
         $this->customerGroupSource = $customerGroupSource;
         $this->groupManagement = $groupManagement;
         $this->moduleManager = $moduleManager;
         $this->pricingHelper = $pricingHelper;
+        $this->productsConfig = $productsConfig ?? ObjectManager::getInstance()->get(ProductsConfig::class);
     }
 
     /**
@@ -63,7 +68,9 @@ abstract class DefaultType implements ProductTypeInterface
         $priceData['price_final'] = $this->getPriceFinal($product);
 
         // Add customer group prices
-        $this->addPricesFromArray('price_group', $this->getCustomerGroupPrices($product), $priceData);
+        if ($this->productsConfig->isIndexCustomerGroupPrices()) {
+            $this->addPricesFromArray('price_group', $this->getCustomerGroupPrices($product), $priceData);
+        }
 
         //@todo tier price
 

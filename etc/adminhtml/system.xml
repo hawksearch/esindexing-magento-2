@@ -131,10 +131,20 @@
                     </comment>
                 </field>
                 <!--<field id="add_reviews_data" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Add reviews data</label>
+                    <label>Add reviews data?</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>-->
-
+                <field id="index_prices" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Index Prices?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="index_customer_group_prices" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Index Customer Group Prices?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="index_prices">1</field>
+                    </depends>
+                </field>
             </group>
         </section>
 
