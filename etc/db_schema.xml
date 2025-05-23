@@ -45,7 +45,7 @@
         <column xsi:type="int" name="index_id" unsigned="true" nullable="false" comment="Index ID"/>
         <column xsi:type="varchar" name="method" length="255" nullable="true" comment="API action name"/>
         <column xsi:type="tinyint" name="status" default="0" comment="Preload item status (OPEN | COMPLETE | FAILED | REJECTED)"/>
-        <column xsi:type="text" name="request" nullable="false" comment="API Request payload"/>
+        <column xsi:type="mediumtext" name="request" nullable="false" comment="API Request payload"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="id"/>
         </constraint>
