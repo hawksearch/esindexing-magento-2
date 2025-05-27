@@ -21,6 +21,7 @@ use HawkSearch\EsIndexing\Helper\ObjectHelper;
 use HawkSearch\EsIndexing\Model\Indexing\AbstractEntityRebuild;
 use HawkSearch\EsIndexing\Model\Indexing\ContextInterface;
 use HawkSearch\EsIndexing\Model\Indexing\EntityTypePoolInterface;
+use HawkSearch\EsIndexing\Model\MessageQueue\BulkPublisherInterface;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
 use Magento\Store\Model\StoreManagerInterface;
@@ -32,12 +33,13 @@ class AbstractEntityRebuildTest extends TestCase
 {
     use LegacyBaseTrait;
 
-    private MockObject|EntityTypePoolInterface $entityTypePoolMock;
+    private EntityTypePoolInterface|MockObject $entityTypePoolMock;
     private EventManagerInterface|MockObject $eventManagerMock;
-    private MockObject|LoggerFactoryInterface $loggerFactoryMock;
-    private MockObject|StoreManagerInterface $storeManagerMock;
-    private MockObject|ContextInterface $indexingContextMock;
+    private LoggerFactoryInterface|MockObject $loggerFactoryMock;
+    private StoreManagerInterface|MockObject $storeManagerMock;
+    private ContextInterface|MockObject $indexingContextMock;
     private ObjectHelper|MockObject $objectHelperMock;
+    private BulkPublisherInterface|MockObject $publisherMock;
 
     protected function setUp(): void
     {
@@ -62,13 +64,16 @@ class AbstractEntityRebuildTest extends TestCase
         $this->objectHelperMock = $this->getMockBuilder(ObjectHelper::class)
             ->disableOriginalConstructor()
             ->getMock();
+        $this->publisherMock = $this->getMockBuilder(BulkPublisherInterface::class)
+            ->disableOriginalConstructor()
+            ->getMockForAbstractClass();
 
         $this->loggerFactoryMock->expects($this->any())->method('create')
             ->willReturn($this->getMockBuilder(LoggerInterface::class)
                 ->disableOriginalConstructor()
                 ->getMockForAbstractClass()
             );
-        $this->setUpBeforeClass();
+
     }
 
     protected function tearDown(): void
@@ -83,15 +88,19 @@ class AbstractEntityRebuildTest extends TestCase
      * @dataProvider provideLegacyPropertiesPhp81
      */
     #[RequiresPhp('<8.2.0')]
-    public function testAccessingDeprecatedPropertiesPhp81(string $property, mixed $newPropertyValue, array $deprecationsTriggered): void
-    {
+    public function testAccessingDeprecatedPropertiesPhp81(
+        string $property,
+        mixed $newPropertyValue,
+        array $deprecationsTriggered
+    ): void {
         $model = new TestFixtureSubAbstractEntityRebuildLegacy(
             $this->entityTypePoolMock,
             $this->eventManagerMock,
             $this->loggerFactoryMock,
             $this->storeManagerMock,
             $this->indexingContextMock,
-            $this->objectHelperMock
+            $this->objectHelperMock,
+            $this->publisherMock
         );
 
         $newPropertyValue = $newPropertyValue instanceof \Closure ? $newPropertyValue->bindTo($this)() : $newPropertyValue;
@@ -181,15 +190,19 @@ class AbstractEntityRebuildTest extends TestCase
      * @dataProvider provideLegacyPropertiesPhp82
      */
     #[RequiresPhp('>=8.2.0')]
-    public function testAccessingDeprecatedPropertiesPhp82(string $property, mixed $newPropertyValue, array $deprecationsTriggered): void
-    {
+    public function testAccessingDeprecatedPropertiesPhp82(
+        string $property,
+        mixed $newPropertyValue,
+        array $deprecationsTriggered
+    ): void {
         $model = new TestFixtureSubAbstractEntityRebuildLegacy(
             $this->entityTypePoolMock,
             $this->eventManagerMock,
             $this->loggerFactoryMock,
             $this->storeManagerMock,
             $this->indexingContextMock,
-            $this->objectHelperMock
+            $this->objectHelperMock,
+            $this->publisherMock
         );
 
         $newPropertyValue = $newPropertyValue instanceof \Closure ? $newPropertyValue->bindTo($this)() : $newPropertyValue;
