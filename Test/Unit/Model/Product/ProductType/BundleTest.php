@@ -17,6 +17,7 @@ namespace HawkSearch\EsIndexing\Test\Unit\Model\Product\ProductType;
 use HawkSearch\Connector\Test\Unit\Compatibility\Fixtures\AccessClassPropertyFixtureTrait;
 use HawkSearch\Connector\Test\Unit\Compatibility\LegacyBaseTrait;
 use HawkSearch\EsIndexing\Helper\PricingHelper;
+use HawkSearch\EsIndexing\Model\Config\Products as ProductsConfig;
 use HawkSearch\EsIndexing\Model\Product\ProductType\Bundle;
 use Magento\Customer\Api\GroupManagementInterface;
 use Magento\Customer\Model\Customer\Source\GroupSourceInterface;
@@ -30,10 +31,11 @@ class BundleTest extends TestCase
     use LegacyBaseTrait;
 
     private PriceCurrencyInterface|MockObject $priceCurrencyMock;
-    private MockObject|GroupSourceInterface $customerGroupSourceMock;
+    private GroupSourceInterface|MockObject $customerGroupSourceMock;
     private GroupManagementInterface|MockObject $groupManagementMock;
     private ModuleManager|MockObject $moduleManagerMock;
-    private MockObject|PricingHelper $pricingHelperMock;
+    private PricingHelper|MockObject $pricingHelperMock;
+    private ProductsConfig|MockObject $productsConfigMock;
 
     protected function setUp(): void
     {
@@ -55,6 +57,10 @@ class BundleTest extends TestCase
         $this->pricingHelperMock = $this->getMockBuilder(PricingHelper::class)
             ->disableOriginalConstructor()
             ->getMock();
+        $this->productsConfigMock = $this->getMockBuilder(ProductsConfig::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
 
     }
 
@@ -70,14 +76,18 @@ class BundleTest extends TestCase
      * @dataProvider provideLegacyPropertiesPhp81
      */
     #[RequiresPhp('<8.2.0')]
-    public function testAccessingDeprecatedPropertiesPhp81(string $property, mixed $newPropertyValue, array $deprecationsTriggered): void
-    {
+    public function testAccessingDeprecatedPropertiesPhp81(
+        string $property,
+        mixed $newPropertyValue,
+        array $deprecationsTriggered
+    ): void {
         $model = new TestFixtureSubBundleLegacy(
             $this->priceCurrencyMock,
             $this->customerGroupSourceMock,
             $this->groupManagementMock,
             $this->moduleManagerMock,
-            $this->pricingHelperMock
+            $this->pricingHelperMock,
+            $this->productsConfigMock
         );
 
         $newPropertyValue = $newPropertyValue instanceof \Closure ? $newPropertyValue->bindTo($this)() : $newPropertyValue;
@@ -109,14 +119,18 @@ class BundleTest extends TestCase
      * @dataProvider provideLegacyPropertiesPhp82
      */
     #[RequiresPhp('>=8.2.0')]
-    public function testAccessingDeprecatedPropertiesPhp82(string $property, mixed $newPropertyValue, array $deprecationsTriggered): void
-    {
+    public function testAccessingDeprecatedPropertiesPhp82(
+        string $property,
+        mixed $newPropertyValue,
+        array $deprecationsTriggered
+    ): void {
         $model = new TestFixtureSubBundleLegacy(
             $this->priceCurrencyMock,
             $this->customerGroupSourceMock,
             $this->groupManagementMock,
             $this->moduleManagerMock,
-            $this->pricingHelperMock
+            $this->pricingHelperMock,
+            $this->productsConfigMock
         );
 
         $newPropertyValue = $newPropertyValue instanceof \Closure ? $newPropertyValue->bindTo($this)() : $newPropertyValue;
