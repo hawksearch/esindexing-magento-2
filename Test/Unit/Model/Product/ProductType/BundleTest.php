@@ -17,7 +17,7 @@ namespace HawkSearch\EsIndexing\Test\Unit\Model\Product\ProductType;
 use HawkSearch\Connector\Test\Unit\Compatibility\Fixtures\AccessClassPropertyFixtureTrait;
 use HawkSearch\Connector\Test\Unit\Compatibility\LegacyBaseTrait;
 use HawkSearch\EsIndexing\Helper\PricingHelper;
-use HawkSearch\EsIndexing\Model\Config\Products as ProductsConfig;
+use HawkSearch\EsIndexing\Model\Config\Products\PriceConfig;
 use HawkSearch\EsIndexing\Model\Product\ProductType\Bundle;
 use Magento\Customer\Api\GroupManagementInterface;
 use Magento\Customer\Model\Customer\Source\GroupSourceInterface;
@@ -35,7 +35,7 @@ class BundleTest extends TestCase
     private GroupManagementInterface|MockObject $groupManagementMock;
     private ModuleManager|MockObject $moduleManagerMock;
     private PricingHelper|MockObject $pricingHelperMock;
-    private ProductsConfig|MockObject $productsConfigMock;
+    private PriceConfig|MockObject $priceConfigMock;
 
     protected function setUp(): void
     {
@@ -57,7 +57,7 @@ class BundleTest extends TestCase
         $this->pricingHelperMock = $this->getMockBuilder(PricingHelper::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->productsConfigMock = $this->getMockBuilder(ProductsConfig::class)
+        $this->priceConfigMock = $this->getMockBuilder(PriceConfig::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -87,7 +87,7 @@ class BundleTest extends TestCase
             $this->groupManagementMock,
             $this->moduleManagerMock,
             $this->pricingHelperMock,
-            $this->productsConfigMock
+            $this->priceConfigMock
         );
 
         $newPropertyValue = $newPropertyValue instanceof \Closure ? $newPropertyValue->bindTo($this)() : $newPropertyValue;
@@ -130,7 +130,7 @@ class BundleTest extends TestCase
             $this->groupManagementMock,
             $this->moduleManagerMock,
             $this->pricingHelperMock,
-            $this->productsConfigMock
+            $this->priceConfigMock
         );
 
         $newPropertyValue = $newPropertyValue instanceof \Closure ? $newPropertyValue->bindTo($this)() : $newPropertyValue;

@@ -15,7 +15,7 @@ declare(strict_types=1);
 namespace HawkSearch\EsIndexing\Model\Product\ProductType;
 
 use HawkSearch\EsIndexing\Helper\PricingHelper;
-use HawkSearch\EsIndexing\Model\Config\Products as ProductsConfig;
+use HawkSearch\EsIndexing\Model\Config\Products\PriceConfig as PriceConfig;
 use HawkSearch\EsIndexing\Model\Product\PriceManagementInterface;
 use HawkSearch\EsIndexing\Model\Product\ProductTypeInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
@@ -40,7 +40,7 @@ abstract class DefaultType implements ProductTypeInterface
     private GroupManagementInterface $groupManagement;
     private ModuleManager $moduleManager;
     private PricingHelper $pricingHelper;
-    private ProductsConfig $productsConfig;
+    private PriceConfig $priceConfig;
 
     public function __construct(
         PriceCurrencyInterface $priceCurrency,
@@ -48,14 +48,14 @@ abstract class DefaultType implements ProductTypeInterface
         GroupManagementInterface $groupManagement,
         ModuleManager $moduleManager,
         PricingHelper $pricingHelper,
-        ProductsConfig $productsConfig = null
+        PriceConfig $priceConfig = null
     ) {
         $this->priceCurrency = $priceCurrency;
         $this->customerGroupSource = $customerGroupSource;
         $this->groupManagement = $groupManagement;
         $this->moduleManager = $moduleManager;
         $this->pricingHelper = $pricingHelper;
-        $this->productsConfig = $productsConfig ?? ObjectManager::getInstance()->get(ProductsConfig::class);
+        $this->priceConfig = $priceConfig ?? ObjectManager::getInstance()->get(PriceConfig::class);
     }
 
     /**
@@ -68,7 +68,7 @@ abstract class DefaultType implements ProductTypeInterface
         $priceData['price_final'] = $this->getPriceFinal($product);
 
         // Add customer group prices
-        if ($this->productsConfig->isIndexCustomerGroupPrices()) {
+        if ($this->priceConfig->isIndexCustomerGroupPrices()) {
             $this->addPricesFromArray('price_group', $this->getCustomerGroupPrices($product), $priceData);
         }
 

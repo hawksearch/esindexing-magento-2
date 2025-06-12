@@ -1,0 +1,66 @@
+<?php
+/**
+ * Copyright (c) 2025 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ */
+declare(strict_types=1);
+
+namespace HawkSearch\EsIndexing\Test\Unit\Model\Config\Products;
+
+use HawkSearch\EsIndexing\Model\Config\Products\PriceConfig;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+
+class PriceConfigTest extends TestCase
+{
+    private ScopeConfigInterface|MockObject $scopeConfigMock;
+    private PriceConfig $model;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->scopeConfigMock = $this->getMockForAbstractClass(ScopeConfigInterface::class);
+
+        $this->model = new PriceConfig($this->scopeConfigMock);
+    }
+
+    public function testIsIndexPrices(): void
+    {
+        $this->scopeConfigMock->expects($this->exactly(1))->method('getValue')
+            ->willReturnMap([
+                [PriceConfig::XML_PATH_INDEX_PRICES, ScopeInterface::SCOPE_STORES, null, 1]
+            ]);
+
+        $this->assertTrue($this->model->isIndexPrices());
+    }
+
+    public function testIsIndexCustomerGroupPrices(): void
+    {
+        $this->scopeConfigMock->expects($this->exactly(2))->method('getValue')
+            ->willReturnMap([
+                [PriceConfig::XML_PATH_INDEX_PRICES, ScopeInterface::SCOPE_STORES, null, 1],
+                [PriceConfig::XML_PATH_INDEX_CUSTOMER_GROUP_PRICES, ScopeInterface::SCOPE_STORES, null, 1],
+            ]);
+
+        $this->assertTrue($this->model->isIndexCustomerGroupPrices());
+    }
+
+    public function testIsIndexCustomerGroupPricesFalse(): void
+    {
+        $this->scopeConfigMock->expects($this->exactly(1))->method('getValue')
+            ->willReturnMap([
+                [PriceConfig::XML_PATH_INDEX_PRICES, ScopeInterface::SCOPE_STORES, null, 0]
+            ]);
+
+        $this->assertFalse($this->model->isIndexCustomerGroupPrices());
+    }
+}
