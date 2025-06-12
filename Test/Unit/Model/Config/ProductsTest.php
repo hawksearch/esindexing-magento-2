@@ -16,7 +16,6 @@ namespace HawkSearch\EsIndexing\Test\Unit\Model\Config;
 
 use HawkSearch\EsIndexing\Model\Config\Products;
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Store\Model\ScopeInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -45,26 +44,5 @@ class ProductsTest extends TestCase
         $this->scopeConfigMock->expects($this->once())->method('getValue')->willReturn('attributes value');
 
         $this->assertEquals('attributes value', $this->model->getAttributes());
-    }
-
-    public function testIsIndexCustomerGroupPrices(): void
-    {
-        $this->scopeConfigMock->expects($this->exactly(2))->method('getValue')
-            ->willReturnMap([
-                [$this->model->getPath(Products::CONFIG_INDEX_PRICES), ScopeInterface::SCOPE_STORES, null, 1],
-                [$this->model->getPath(Products::CONFIG_INDEX_CUSTOMER_GROUP_PRICES), ScopeInterface::SCOPE_STORES, null, 1],
-            ]);
-
-        $this->assertTrue($this->model->isIndexCustomerGroupPrices());
-    }
-
-    public function testIsIndexCustomerGroupPricesFalse(): void
-    {
-        $this->scopeConfigMock->expects($this->exactly(1))->method('getValue')
-            ->willReturnMap([
-                [$this->model->getPath(Products::CONFIG_INDEX_PRICES), ScopeInterface::SCOPE_STORES, null, 0]
-            ]);
-
-        $this->assertFalse($this->model->isIndexCustomerGroupPrices());
     }
 }

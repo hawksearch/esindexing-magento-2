@@ -32,21 +32,4 @@ class Products extends ConfigProvider
     {
         return $this->getConfig(self::CONFIG_CUSTOM_ATTRIBUTES, $store) ?: "{}";
     }
-
-
-    /**
-     * @param null|int|string $store
-     */
-    public function isIndexPrices($store = null): bool
-    {
-        return !!$this->getConfig(self::CONFIG_INDEX_PRICES, $store);
-    }
-
-    /**
-     * @param null|int|string $store
-     */
-    public function isIndexCustomerGroupPrices($store = null): bool
-    {
-        return $this->isIndexPrices($store) && $this->getConfig(self::CONFIG_INDEX_CUSTOMER_GROUP_PRICES, $store);
-    }
 }
