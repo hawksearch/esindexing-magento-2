@@ -94,11 +94,9 @@ abstract class CompositeType extends DefaultType
 
     public function getPriceData(ProductInterface $product): array
     {
-        $result = parent::getPriceData($product);
-        $result['price_min'] = $this->handleTax($product, $this->getPriceMin($product));
-        $result['price_max'] = $this->handleTax($product, $this->getPriceMax($product));
+        $priceData = parent::getPriceData($product);
 
-        return $result;
+        return $priceData;
     }
 
     protected function getPriceRegular(ProductInterface $product): float
