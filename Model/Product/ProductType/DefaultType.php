@@ -67,6 +67,8 @@ abstract class DefaultType implements ProductTypeInterface
      *    children options
      * 'price_max' - maximum available price. Mainly used by complex products and is calculated based on prices of
      *     children options
+     * 'price_filtered' - an aggregated single field optimal for filtering and sorting results. Can be calculated based
+     *     on different price fields depending on the product type. It is used to create Price Facet and Sorting Option.
      *
      * @param ProductModel $product
      */
@@ -83,6 +85,7 @@ abstract class DefaultType implements ProductTypeInterface
          * regular price - 6$
          * special price - 4$
          * Display price: 4$ (Regular: 6$)
+         * Hawk Facet Price: 4
          *
          * $priceData['price_regular'] = 6;
          * $priceData['price_final'] = 4; // MIN(regular, special, tier)
@@ -98,6 +101,7 @@ abstract class DefaultType implements ProductTypeInterface
          *   - link1 - 3$
          *   - link2 - 7$
          * Display price: 5$ (Regular: 6$)
+         * Hawk Facet Price: 5
          *
          * $priceData['price_regular'] = 6;
          * $priceData['price_final'] = 5; // MIN(regular, special, tier)
@@ -109,6 +113,7 @@ abstract class DefaultType implements ProductTypeInterface
          *
          * amount - 50$
          * Display price: 50$
+         * Hawk Facet Price: 50
          *
          * $priceData['price_regular'] = null;
          * $priceData['price_final'] = 50;
@@ -122,6 +127,7 @@ abstract class DefaultType implements ProductTypeInterface
          * open amount from - 25$
          * open amount to - 50$
          * Display price: From 25$
+         * Hawk Facet Price: 25
          *
          * $priceData['price_regular'] = null;
          * $priceData['price_final'] = 25;
@@ -144,6 +150,7 @@ abstract class DefaultType implements ProductTypeInterface
          *   - Option4:
          *      - value1 (fixed) - 5$
          * Display price: From 104.4$ (Regular: 116$) To 149.4$ (Regular: 166$)
+         * Hawk Facet Price: 104.4
          *
          * $priceData['price_regular'] = 100;
          * $priceData['price_final'] = 90;
@@ -169,6 +176,7 @@ abstract class DefaultType implements ProductTypeInterface
          *   - Option4:
          *     - Product3 - 19$
          * Display price: From 58$ (Regular: 61$) To 72$ (Regular: 77$)
+         * Hawk Facet Price: 58
          *
          * $priceData['price_regular'] = 0;
          * $priceData['price_final'] = 0;
@@ -183,6 +191,7 @@ abstract class DefaultType implements ProductTypeInterface
          *   - Product2 - 14$ (special_price - 10$)
          *   - Product3 - 21$ (special_price - 15$)
          * Display price: Starting At 10$
+         * Hawk Facet Price: 10
          *
          * $priceData['price_regular'] = null;
          * $priceData['price_final'] = null; // based on discount
@@ -197,6 +206,7 @@ abstract class DefaultType implements ProductTypeInterface
          *   - Product2 - 69$
          *   - Product3 - 70$ (special_price - 60$)
          * Display price: As low as 60$
+         * Hawk Facet Price: 60
          *
          * $priceData['price_regular'] = 0; // any price is possible, no relation to children
          * $priceData['price_final'] = 0; // any price is possible, no relation to children MIN(regular, special, tier)
@@ -211,6 +221,7 @@ abstract class DefaultType implements ProductTypeInterface
          *   - Product2 - 70$
          *   - Product3 - 70$
          * Display price: 70$
+         * Hawk Facet Price: 70
          *
          * $priceData['price_regular'] = 70; // any price is possible, no relation to children
          * $priceData['price_final'] = 70; // any price is possible, no relation to children MIN(regular, special, tier)
@@ -223,6 +234,7 @@ abstract class DefaultType implements ProductTypeInterface
         $priceData['price_final'] = $this->getPriceFinal($product);
         $priceData['price_min'] = $this->getPriceMin($product);
         $priceData['price_max'] = $this->getPriceMax($product);
+        $priceData['price_filtered'] = $priceData['price_final'];
 
         // Add customer group prices
         if ($this->priceConfig->isIndexCustomerGroupPrices()) {
