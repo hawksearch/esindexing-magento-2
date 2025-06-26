@@ -95,6 +95,7 @@ abstract class CompositeType extends DefaultType
     public function getPriceData(ProductInterface $product): array
     {
         $priceData = parent::getPriceData($product);
+        $priceData['price_filtered'] = $priceData['price_min'];
 
         return $priceData;
     }
