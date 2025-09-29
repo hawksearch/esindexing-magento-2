@@ -19,6 +19,7 @@ use HawkSearch\Connector\Test\Unit\Compatibility\LegacyBaseTrait;
 use HawkSearch\EsIndexing\Helper\PricingHelper;
 use HawkSearch\EsIndexing\Model\Config\Products\PriceConfig;
 use HawkSearch\EsIndexing\Model\Product\ProductType\Bundle;
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Customer\Api\GroupManagementInterface;
 use Magento\Customer\Model\Customer\Source\GroupSourceInterface;
 use Magento\Framework\Module\Manager as ModuleManager;
@@ -156,9 +157,53 @@ class BundleTest extends TestCase
             ],
         ];
     }
+
+    /**
+     * @group legacy
+     */
+    public function testAccessingDeprecatedMethods(): void
+    {
+        $this->setUpLegacy($this);
+
+        $model = new TestFixtureSubBundleLegacy(
+            $this->priceCurrencyMock,
+            $this->customerGroupSourceMock,
+            $this->groupManagementMock,
+            $this->moduleManagerMock,
+            $this->pricingHelperMock,
+            $this->priceConfigMock
+        );
+
+        $model->callDeprecatedProtectedMethods($this);
+
+        $this::assertSame(
+            [
+                "Since 0.8.0: Method HawkSearch\EsIndexing\Model\Product\ProductType\Bundle::getMinMaxPrice() has been deprecated and it's public/protected usage will be discontinued. We get min and max prices right from price index. Method will be removed.",
+                "Since 0.8.0: Method HawkSearch\EsIndexing\Model\Product\ProductType\Bundle::getMinMaxPrice() has been deprecated and it's public/protected usage will be discontinued. We get min and max prices right from price index. Method will be removed.",
+            ],
+            $this->deprecations
+        );
+
+    }
 }
 
 class TestFixtureSubBundleLegacy extends Bundle
 {
     use AccessClassPropertyFixtureTrait;
+
+    public function callDeprecatedProtectedMethods(BundleTest $test): void
+    {
+        $this->callGetMinMaxPrice($test);
+    }
+
+    private function callGetMinMaxPrice(BundleTest $test): void
+    {
+        $productMock = $test->getMockBuilder(ProductInterface::class)
+            ->disableOriginalConstructor()
+            ->getMockForAbstractClass();
+        $method = 'getMinMaxPrice';
+
+        $ret = $this->$method($productMock);
+        $ret = parent::$method($productMock);
+    }
 }

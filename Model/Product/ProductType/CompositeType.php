@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Product\ProductType;
 
+use HawkSearch\Connector\Compatibility\PublicMethodDeprecationTrait;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product as ProductModel;
 
@@ -23,6 +24,15 @@ use Magento\Catalog\Model\Product as ProductModel;
  */
 abstract class CompositeType extends DefaultType
 {
+    use PublicMethodDeprecationTrait;
+
+    private array $deprecatedMethods = [
+        'getMinMaxPrice' => [
+            'since' => '0.8.0',
+            'description' => 'We get min and max prices right from price index. Method will be removed.'
+        ],
+    ];
+
     /**
      * @param ProductModel $product
      */
@@ -36,28 +46,11 @@ abstract class CompositeType extends DefaultType
      *
      * @param ProductModel $product
      * @return non-empty-list{0: float, 1: float} 0-key min value, 1-key max value
+     * @deprecated 0.8.0 We get min and max prices right from price index. Method will be removed
      */
-    protected function getMinMaxPrice(ProductInterface $product): array
+    private function getMinMaxPrice(ProductInterface $product): array
     {
-        $min = PHP_INT_MAX;
-        $max = 0;
-
-        if ($this->getChildProducts($product)) {
-            foreach ($this->getChildProducts($product) as $subProduct) {
-                if ($subProduct->isDisabled()) {
-                    continue;
-                }
-                $price = $this->handleTax($product, (float)$subProduct->getFinalPrice());
-                $min = min($min, $price);
-                $max = max($max, $price);
-            }
-        }
-
-        if ($min === PHP_INT_MAX) {
-            $min = $max;
-        }
-
-        return [(float)$min, (float)$max];
+        return [0, 0];
     }
 
     /**
