@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Product\ProductType;
 
+use HawkSearch\Connector\Compatibility\PublicMethodDeprecationTrait;
 use HawkSearch\EsIndexing\Helper\PricingHelper;
 use HawkSearch\EsIndexing\Model\Config\Products\PriceConfig as PriceConfig;
 use HawkSearch\EsIndexing\Model\Product\PriceManagementInterface;
@@ -35,6 +36,15 @@ use Magento\Framework\Pricing\PriceCurrencyInterface;
  */
 abstract class DefaultType implements ProductTypeInterface
 {
+    use PublicMethodDeprecationTrait;
+
+    private array $deprecatedMethods = [
+        'addPricesIncludingTax' => [
+            'since' => '0.8.0',
+            'description' => 'Method will be removed. Handle taxes in UI.'
+        ],
+    ];
+
     private PriceCurrencyInterface $priceCurrency;
     private GroupSourceInterface $customerGroupSource;
     private GroupManagementInterface $groupManagement;
@@ -241,11 +251,6 @@ abstract class DefaultType implements ProductTypeInterface
             $this->addPricesFromArray('price_group', $this->getCustomerGroupPrices($product), $priceData);
         }
 
-        //@todo tier price
-
-        //add prices including tax
-        $this->addPricesIncludingTax($product, $priceData);
-
         $this->roundPrices($priceData);
 
         //add formatted prices (this step should be the last one)
@@ -321,14 +326,11 @@ abstract class DefaultType implements ProductTypeInterface
      * @param ProductModel $product
      * @param PriceData $priceData
      * @return void
+     * @deprecated 0.8.0 Method will be removed. Handle taxes in UI
      */
-    protected function addPricesIncludingTax(ProductInterface $product, array &$priceData)
+    private function addPricesIncludingTax(ProductInterface $product, array &$priceData)
     {
-        $priceDataCopy = $priceData;
-        foreach ($priceDataCopy as $key => $price) {
-            $price = $this->handleTax($product, $price, true);
-            $this->addSuffixedValue($key, 'include_tax', $price, $priceData);
-        }
+        return;
     }
 
     /**
