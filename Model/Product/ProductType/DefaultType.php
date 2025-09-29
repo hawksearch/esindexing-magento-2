@@ -43,6 +43,10 @@ abstract class DefaultType implements ProductTypeInterface
             'since' => '0.8.0',
             'description' => 'Method will be removed. Handle taxes in UI.'
         ],
+        'addFormattedPrices' => [
+            'since' => '0.8.0',
+            'description' => 'We do not send formatted prices to the index anymore. Handle price formatting in UI.'
+        ],
     ];
 
     private PriceCurrencyInterface $priceCurrency;
@@ -253,9 +257,6 @@ abstract class DefaultType implements ProductTypeInterface
 
         $this->roundPrices($priceData);
 
-        //add formatted prices (this step should be the last one)
-        $this->addFormattedPrices($product, $priceData);
-
         //$currencyList = $store->getAvailableCurrencyCodes();
         /*foreach ($currencyList as $currencyCode) {
             $priceData[$currencyCode] = [];
@@ -349,35 +350,11 @@ abstract class DefaultType implements ProductTypeInterface
      * @param ProductModel $product
      * @param PriceData $priceData
      * @return void
+     * @deprecated 0.8.0 We do not send formatted prices to the index anymore. Handle price formatting in UI.
      */
-    protected function addFormattedPrices(ProductInterface $product, array &$priceData)
+    private function addFormattedPrices(ProductInterface $product, array &$priceData)
     {
-        $priceData = array_merge($priceData, $this->getFormattedPrices($product, $priceData));
-    }
-
-    /**
-     * @param ProductModel $product
-     * @param array<string, float> $prices
-     * @return array<string, string>
-     */
-    private function getFormattedPrices(ProductInterface $product, array $prices): array
-    {
-        $store = $product->getStore();
-        $resultPrices = [];
-        foreach ($prices as $key => $price) {
-            $this->addSuffixedValue($key, 'formatted', $price, $resultPrices);
-        }
-
-        foreach ($resultPrices as &$price) {
-            $price = $this->priceCurrency->format(
-                $price,
-                false,
-                PriceCurrencyInterface::DEFAULT_PRECISION,
-                $store
-            );
-        }
-
-        return $resultPrices;
+        return;
     }
 
     /**

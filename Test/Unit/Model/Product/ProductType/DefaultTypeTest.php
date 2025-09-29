@@ -87,6 +87,8 @@ class DefaultTypeTest extends TestCase
             [
                 "Since 0.8.0: Method HawkSearch\EsIndexing\Model\Product\ProductType\DefaultType::addPricesIncludingTax() has been deprecated and it's public/protected usage will be discontinued. Method will be removed. Handle taxes in UI.",
                 "Since 0.8.0: Method HawkSearch\EsIndexing\Model\Product\ProductType\DefaultType::addPricesIncludingTax() has been deprecated and it's public/protected usage will be discontinued. Method will be removed. Handle taxes in UI.",
+                "Since 0.8.0: Method HawkSearch\EsIndexing\Model\Product\ProductType\DefaultType::addFormattedPrices() has been deprecated and it's public/protected usage will be discontinued. We do not send formatted prices to the index anymore. Handle price formatting in UI.",
+                "Since 0.8.0: Method HawkSearch\EsIndexing\Model\Product\ProductType\DefaultType::addFormattedPrices() has been deprecated and it's public/protected usage will be discontinued. We do not send formatted prices to the index anymore. Handle price formatting in UI.",
             ],
             $this->deprecations
         );
@@ -98,17 +100,33 @@ class TestFixtureSubDefaultTypeLegacy extends DefaultType
     public function callDeprecatedProtectedMethods(DefaultTypeTest $test): void
     {
         $this->callAddPricesIncludingTax($test);
+        $this->callAddFormattedPrices($test);
     }
 
     private function callAddPricesIncludingTax(DefaultTypeTest $test): void
     {
-        $productMock = $test->getMockBuilder(ProductInterface::class)
+        $productMock = $this->createProductMock($test);
+        $priceData = [];
+        $this->callMethod('addPricesIncludingTax', $productMock, $priceData);
+    }
+
+    private function callAddFormattedPrices(DefaultTypeTest $test): void
+    {
+        $productMock = $this->createProductMock($test);
+        $priceData = [];
+        $this->callMethod('addFormattedPrices', $productMock, $priceData);
+    }
+
+    private function createProductMock(DefaultTypeTest $test): ProductInterface
+    {
+        return $test->getMockBuilder(ProductInterface::class)
             ->disableOriginalConstructor()
             ->getMockForAbstractClass();
-        $method = 'addPricesIncludingTax';
-        $priceData = [];
+    }
 
-        $ret = $this->$method($productMock, $priceData);
-        $ret = parent::$method($productMock, $priceData);
+    private function callMethod($method, ...$params): void
+    {
+        $ret = $this->$method(...$params);
+        $ret = parent::$method(...$params);
     }
 }
