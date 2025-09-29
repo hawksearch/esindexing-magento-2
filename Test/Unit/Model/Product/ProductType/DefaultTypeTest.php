@@ -89,6 +89,8 @@ class DefaultTypeTest extends TestCase
                 "Since 0.8.0: Method HawkSearch\EsIndexing\Model\Product\ProductType\DefaultType::addPricesIncludingTax() has been deprecated and it's public/protected usage will be discontinued. Method will be removed. Handle taxes in UI.",
                 "Since 0.8.0: Method HawkSearch\EsIndexing\Model\Product\ProductType\DefaultType::addFormattedPrices() has been deprecated and it's public/protected usage will be discontinued. We do not send formatted prices to the index anymore. Handle price formatting in UI.",
                 "Since 0.8.0: Method HawkSearch\EsIndexing\Model\Product\ProductType\DefaultType::addFormattedPrices() has been deprecated and it's public/protected usage will be discontinued. We do not send formatted prices to the index anymore. Handle price formatting in UI.",
+                "Since 0.8.0: Method HawkSearch\EsIndexing\Model\Product\ProductType\DefaultType::handleTax() has been deprecated and it's public/protected usage will be discontinued. Method will be removed. Handle taxes in UI.",
+                "Since 0.8.0: Method HawkSearch\EsIndexing\Model\Product\ProductType\DefaultType::handleTax() has been deprecated and it's public/protected usage will be discontinued. Method will be removed. Handle taxes in UI.",
             ],
             $this->deprecations
         );
@@ -101,6 +103,7 @@ class TestFixtureSubDefaultTypeLegacy extends DefaultType
     {
         $this->callAddPricesIncludingTax($test);
         $this->callAddFormattedPrices($test);
+        $this->callHandleTax($test);
     }
 
     private function callAddPricesIncludingTax(DefaultTypeTest $test): void
@@ -115,6 +118,13 @@ class TestFixtureSubDefaultTypeLegacy extends DefaultType
         $productMock = $this->createProductMock($test);
         $priceData = [];
         $this->callMethod('addFormattedPrices', $productMock, $priceData);
+    }
+
+    private function callHandleTax(DefaultTypeTest $test): void
+    {
+        $productMock = $this->createProductMock($test);
+        $price = 0;
+        $this->callMethod('handleTax', $productMock, $price);
     }
 
     private function createProductMock(DefaultTypeTest $test): ProductInterface

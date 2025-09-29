@@ -47,6 +47,11 @@ abstract class DefaultType implements ProductTypeInterface
             'since' => '0.8.0',
             'description' => 'We do not send formatted prices to the index anymore. Handle price formatting in UI.'
         ],
+        'handleTax' => [
+            'since' => '0.8.0',
+            'description' => 'Method will be removed. Handle taxes in UI.'
+        ],
+
     ];
 
     private PriceCurrencyInterface $priceCurrency;
@@ -381,10 +386,11 @@ abstract class DefaultType implements ProductTypeInterface
      * @param ProductModel $product
      * @param float $price
      * @param bool $forceIncludeTax
+     * @deprecated 0.8.0 Method will be removed. Handle taxes in UI
      */
-    protected function handleTax(ProductInterface $product, float $price, bool $forceIncludeTax = false): float
+    private function handleTax(ProductInterface $product, float $price, bool $forceIncludeTax = false): float
     {
-        return $this->pricingHelper->handleTax($product, $price, $forceIncludeTax);
+        return $price;
     }
 
     /**
@@ -433,8 +439,6 @@ abstract class DefaultType implements ProductTypeInterface
             $productCopy->unsetData('calculated_final_price');
 
             $groupPrices[$groupId] = $this->getPriceFinal($productCopy);
-
-            //$groupPrices[$groupId] = $this->handleTax($product, $finalPrice);
         }
         unset($productCopy);
 
