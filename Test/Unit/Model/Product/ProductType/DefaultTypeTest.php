@@ -93,6 +93,10 @@ class DefaultTypeTest extends TestCase
                 "Since 0.8.0: Method HawkSearch\EsIndexing\Model\Product\ProductType\DefaultType::handleTax() has been deprecated and it's public/protected usage will be discontinued. Method will be removed. Handle taxes in UI.",
                 "Since 0.8.0: Method HawkSearch\EsIndexing\Model\Product\ProductType\DefaultType::addSuffixedValue() has been deprecated and it's public/protected usage will be discontinued. Method will be removed.",
                 "Since 0.8.0: Method HawkSearch\EsIndexing\Model\Product\ProductType\DefaultType::addSuffixedValue() has been deprecated and it's public/protected usage will be discontinued. Method will be removed.",
+                "Since 0.8.0: Method HawkSearch\EsIndexing\Model\Product\ProductType\DefaultType::getTierPrices() has been deprecated and it's public/protected usage will be discontinued. Method will be removed.",
+                "Since 0.8.0: Method HawkSearch\EsIndexing\Model\Product\ProductType\DefaultType::getTierPrices() has been deprecated and it's public/protected usage will be discontinued. Method will be removed.",
+                "Since 0.8.0: Method HawkSearch\EsIndexing\Model\Product\ProductType\DefaultType::getAllCustomerGroupsId() has been deprecated and it's public/protected usage will be discontinued. Method will be removed.",
+                "Since 0.8.0: Method HawkSearch\EsIndexing\Model\Product\ProductType\DefaultType::getAllCustomerGroupsId() has been deprecated and it's public/protected usage will be discontinued. Method will be removed.",
             ],
             $this->deprecations
         );
@@ -107,6 +111,8 @@ class TestFixtureSubDefaultTypeLegacy extends DefaultType
         $this->callAddFormattedPrices($test);
         $this->callHandleTax($test);
         $this->callAddSuffixedValue($test);
+        $this->callGetTierPrices($test);
+        $this->callGetAllCustomerGroupsId($test);
     }
 
     private function callAddPricesIncludingTax(DefaultTypeTest $test): void
@@ -132,12 +138,22 @@ class TestFixtureSubDefaultTypeLegacy extends DefaultType
 
     private function callAddSuffixedValue(DefaultTypeTest $test): void
     {
-        $productMock = $this->createProductMock($test);
         $priceName = 'test_price';
         $suffix = 'test_suffix';
         $price = 100.0;
         $priceData = [];
         $this->callMethod('addSuffixedValue', $priceName, $suffix, $price, $priceData);
+    }
+
+    private function callGetTierPrices(DefaultTypeTest $test): void
+    {
+        $productMock = $this->createProductMock($test);
+        $this->callMethod('getTierPrices', $productMock);
+    }
+
+    private function callGetAllCustomerGroupsId(DefaultTypeTest $test): void
+    {
+        $this->callMethod('getAllCustomerGroupsId');
     }
 
     private function createProductMock(DefaultTypeTest $test): ProductInterface
