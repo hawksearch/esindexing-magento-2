@@ -91,6 +91,8 @@ class DefaultTypeTest extends TestCase
                 "Since 0.8.0: Method HawkSearch\EsIndexing\Model\Product\ProductType\DefaultType::addFormattedPrices() has been deprecated and it's public/protected usage will be discontinued. We do not send formatted prices to the index anymore. Handle price formatting in UI.",
                 "Since 0.8.0: Method HawkSearch\EsIndexing\Model\Product\ProductType\DefaultType::handleTax() has been deprecated and it's public/protected usage will be discontinued. Method will be removed. Handle taxes in UI.",
                 "Since 0.8.0: Method HawkSearch\EsIndexing\Model\Product\ProductType\DefaultType::handleTax() has been deprecated and it's public/protected usage will be discontinued. Method will be removed. Handle taxes in UI.",
+                "Since 0.8.0: Method HawkSearch\EsIndexing\Model\Product\ProductType\DefaultType::addSuffixedValue() has been deprecated and it's public/protected usage will be discontinued. Method will be removed.",
+                "Since 0.8.0: Method HawkSearch\EsIndexing\Model\Product\ProductType\DefaultType::addSuffixedValue() has been deprecated and it's public/protected usage will be discontinued. Method will be removed.",
             ],
             $this->deprecations
         );
@@ -104,6 +106,7 @@ class TestFixtureSubDefaultTypeLegacy extends DefaultType
         $this->callAddPricesIncludingTax($test);
         $this->callAddFormattedPrices($test);
         $this->callHandleTax($test);
+        $this->callAddSuffixedValue($test);
     }
 
     private function callAddPricesIncludingTax(DefaultTypeTest $test): void
@@ -127,6 +130,16 @@ class TestFixtureSubDefaultTypeLegacy extends DefaultType
         $this->callMethod('handleTax', $productMock, $price);
     }
 
+    private function callAddSuffixedValue(DefaultTypeTest $test): void
+    {
+        $productMock = $this->createProductMock($test);
+        $priceName = 'test_price';
+        $suffix = 'test_suffix';
+        $price = 100.0;
+        $priceData = [];
+        $this->callMethod('addSuffixedValue', $priceName, $suffix, $price, $priceData);
+    }
+
     private function createProductMock(DefaultTypeTest $test): ProductInterface
     {
         return $test->getMockBuilder(ProductInterface::class)
@@ -134,7 +147,7 @@ class TestFixtureSubDefaultTypeLegacy extends DefaultType
             ->getMockForAbstractClass();
     }
 
-    private function callMethod($method, ...$params): void
+    private function callMethod(string $method, mixed ...$params): void
     {
         $ret = $this->$method(...$params);
         $ret = parent::$method(...$params);
