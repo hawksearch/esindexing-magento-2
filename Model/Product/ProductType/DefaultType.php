@@ -55,7 +55,14 @@ abstract class DefaultType implements ProductTypeInterface
             'since' => '0.8.0',
             'description' => 'Method will be removed.'
         ],
-
+        'getTierPrices' => [
+            'since' => '0.8.0',
+            'description' => 'Method will be removed.'
+        ],
+        'getAllCustomerGroupsId' => [
+            'since' => '0.8.0',
+            'description' => 'Method will be removed.'
+        ],
     ];
 
     private PriceCurrencyInterface $priceCurrency;
@@ -457,49 +464,22 @@ abstract class DefaultType implements ProductTypeInterface
 
     /**
      * @throws LocalizedException
+     * @deprecated 0.8.0 Method will be removed.
      */
-    protected function getAllCustomerGroupsId(): ?int
+    private function getAllCustomerGroupsId(): ?int
     {
         // ex: 32000
-        return $this->groupManagement->getAllCustomersGroup()->getId();
+        return 3200;
     }
 
     /**
      * @param ProductModel $product
      * @return array<int, float>
      * @throws LocalizedException
+     * @deprecated 0.8.0 Method will be removed.
      */
-    protected function getTierPrices(ProductInterface $product): array
+    private function getTierPrices(ProductInterface $product): array
     {
-        $originalTierPrice = $product->getData('tier_price');
-        $product->unsetData('tier_price');
-
-        $pricesByGroup = [];
-        $productTierPrices = $product->getTierPrices();
-        if (!is_null($productTierPrices)) {
-            foreach ($productTierPrices as $productTierPrice) {
-                $pricesByGroup[(int)$productTierPrice->getCustomerGroupId()][] = (float)$productTierPrice->getValue();
-            }
-        }
-
-        foreach ($pricesByGroup as $groupId => $prices) {
-            $pricesByGroup[$groupId] = min($prices);
-        }
-
-        $allGroupsId = $this->getAllCustomerGroupsId();
-        $groupTierPrices = [];
-        $allGroupsPrice = $pricesByGroup[$allGroupsId] ?? null;
-        foreach ($this->getCustomerGroups() as $group) {
-            $groupId = $group['value'];
-            $groupPrice = $pricesByGroup[$groupId] ?? $allGroupsPrice;
-
-            if ($groupPrice !== null) {
-                $groupTierPrices[$groupId] = $this->handleTax($product, $groupPrice);
-            }
-        }
-
-        $product->setData('tier_price', $originalTierPrice);
-
-        return $groupTierPrices;
+        return [];
     }
 }
