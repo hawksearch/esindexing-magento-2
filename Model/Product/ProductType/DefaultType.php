@@ -353,12 +353,11 @@ abstract class DefaultType implements ProductTypeInterface
     /**
      * @param PriceData $priceData
      * @return void
-     * @todo Review if we need to push prices rounded to the index
      */
     protected function roundPrices(array &$priceData)
     {
         foreach ($priceData as $key => $price) {
-            $priceData[$key] = $this->priceCurrency->round($price);
+            $priceData[$key] = $this->priceCurrency->roundPrice($price, 4);
         }
     }
 
