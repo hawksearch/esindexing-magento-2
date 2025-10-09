@@ -51,6 +51,10 @@ abstract class DefaultType implements ProductTypeInterface
             'since' => '0.8.0',
             'description' => 'Method will be removed. Handle taxes in UI.'
         ],
+        'addSuffixedValue' => [
+            'since' => '0.8.0',
+            'description' => 'Method will be removed.'
+        ],
 
     ];
 
@@ -324,7 +328,7 @@ abstract class DefaultType implements ProductTypeInterface
             if (null === $price) {
                 continue;
             }
-            $this->addSuffixedValue($priceName, (string)$key, $price, $priceData);
+            $this->updatePriceArray($this->getSuffixedPrice($priceName, (string)$key, $price), $priceData);
         }
     }
 
@@ -368,10 +372,16 @@ abstract class DefaultType implements ProductTypeInterface
      * @param float $price
      * @param PriceData $priceData
      * @return void
+     * @deprecated 0.8.0 Method will be removed.
      */
-    protected function addSuffixedValue(string $priceName, string $suffix, float $price, array &$priceData)
+    private function addSuffixedValue(string $priceName, string $suffix, float $price, array &$priceData)
     {
-        $priceData = array_merge($priceData, $this->getSuffixedPrice($priceName, $suffix, $price));
+        return;
+    }
+
+    private function updatePriceArray(array $addition, array &$result): void
+    {
+        $result = array_merge($result, $addition);
     }
 
     /**
