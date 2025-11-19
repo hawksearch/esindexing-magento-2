@@ -16,9 +16,10 @@ define([
     'mage/utils/template',
     'priceUtils',
     'hawksearchVueEvents',
+    'HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price',
     'hawksearchVueSDK',
     'mage/adminhtml/tools'
-], function ($, _, mageTemplate, priceUtils, Events) {
+], function ($, _, mageTemplate, priceUtils, Events, ProductPriceComponent) {
     window.hawksearch = {
         /**
          * Find Vue app widget in registered widget instances
@@ -233,21 +234,38 @@ define([
      * Initialize Vue widgets based on configs placed in DOM components
      */
     function initVueWidget() {
-        const components = $('[data-vue-hawksearch-component]');
+        const widgetElements = $('[data-vue-hawksearch-component]');
 
-        $.each(components, function (index, component) {
+        // Create custom components object
+        const customComponents = {
+            ProductPrice: ProductPriceComponent,
+        };
+
+        // Globally register all custom components
+        if (window.Vue && customComponents) {
+            Object.keys(customComponents).forEach(function(name) {
+                window.Vue.component(name, customComponents[name]);
+            });
+        }
+
+        $.each(widgetElements, function (index, widgetElement) {
             try {
-                const configId = $(component).data('vueHawksearchConfig');
-                const config = JSON.parse($('#' + configId).html());
+              const configId = $(widgetElement).data("vueHawksearchConfig");
+              const config = JSON.parse($("#" + configId).html());
 
-                Events.trigger('createWidget:before', {
-                    component: component,
-                    config: config
-                });
-                widget = HawksearchVue.createWidget(component, {config, dataLayer: configId});
-                Events.trigger('createWidget:after', {
-                    vueWidget: widget
-                });
+              Events.trigger("createWidget:before", {
+                component: widgetElement,
+                config: config,
+              });
+              widget = HawksearchVue.createWidget(widgetElement, {
+                config,
+                dataLayer: configId,
+                components: customComponents
+              });
+
+              Events.trigger("createWidget:after", {
+                vueWidget: widget,
+              });
             } catch (e) {
                 console.error(e);
             }

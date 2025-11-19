@@ -3,10 +3,11 @@
     <li @click="onClick">
         <div class="item product product-item">
             <template v-if="getThumb('thumbnail_url')">
-                <img class="hawk-sqItemImage-thumb" :src="getThumb('thumbnail_url')" />
+                <img class="hawk-sqItemImage-thumb" :src="getThumb('thumbnail_url')"/>
             </template>
             <span class="p-name">{{ htmlEntityDecode(getTitle()) }}</span>
             <span v-html="hawksearch.formatItemPrice(item.Results.Document || {})"/>
+            <product-price></product-price>
         </div>
     </li>
 </script>

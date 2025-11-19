@@ -18,7 +18,7 @@
             <a :href="link" @click="onClick" class="product photo product-item-photo">
                 <span class="product-image-container" style="width:215px;">
                     <span class="product-image-wrapper" style="padding-bottom: 125%;">
-                        <img class="product-image-photo" v-bind:src="getField('image_url')" />
+                        <img class="product-image-photo" v-bind:src="getField('image_url')"/>
                     </span>
                 </span>
             </a>
@@ -31,6 +31,7 @@
                         {{ getField('name') }}</a>
                 </span>
                 <span v-html="hawksearch.formatItemPrice(result.Document || {})"/>
+                <product-price></product-price>
                 <div class="product-item-inner">
                     <div class="product actions product-item-actions">
                         <div class="actions-primary">
