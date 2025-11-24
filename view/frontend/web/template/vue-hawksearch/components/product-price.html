@@ -1,175 +1,431 @@
-<template v-if="priceData">
-    <!-- Simple/Virtual/Downloadable: Discount -->
-    <div v-if="['simple','virtual','downloadable'].includes(priceData.type) && priceData.template === 'discount'" class="price-box price-final_price" :data-product-id="priceData.uid">
-        <span class="special-price">
+    <template v-if="priceData">
+        <!-- Simple/Virtual/Downloadable: Discount -->
+        <div v-if="['simple','virtual','downloadable'].includes(priceData.type) && priceData.template === 'discount'" class="price-box price-final_price" :data-product-id="priceData.uid">
+            <span class="special-price">
+                <span class="price-container price-final_price tax weee">
+                    <span class="price-label">Special Price</span>
+                    <span :id="'product-price-' + priceData.uid" :data-price-amount="priceData.price_final" data-price-type="finalPrice" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_final_formatted }}</span>
+                    </span>
+                </span>
+            </span>
+            <span class="old-price">
+                <span class="price-container price-final_price tax weee">
+                    <span class="price-label">Regular Price</span>
+                    <span :id="'old-price-' + priceData.uid" :data-price-amount="priceData.price_regular" data-price-type="oldPrice" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_regular_formatted }}</span>
+                    </span>
+                </span>
+            </span>
+        </div>
+        <!-- Simple/Virtual/Downloadable: Discount (Incl. Tax) -->
+        <div v-else-if="['simple','virtual','downloadable'].includes(priceData.type) && priceData.template === 'discount_incl'" class="price-box price-final_price" :data-product-id="priceData.uid">
+            <span class="special-price">
+                <span class="price-container price-final_price tax weee">
+                    <span class="price-label">Special Price (Incl. Tax)</span>
+                    <span :id="'product-price-incl-' + priceData.uid" :data-price-amount="priceData.price_final" data-price-type="finalPrice" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_final_formatted }}</span>
+                    </span>
+                </span>
+            </span>
+            <span class="old-price">
+                <span class="price-container price-final_price tax weee">
+                    <span class="price-label">Regular Price (Incl. Tax)</span>
+                    <span :id="'old-price-incl-' + priceData.uid" :data-price-amount="priceData.price_regular" data-price-type="oldPrice" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_regular_formatted }}</span>
+                    </span>
+                </span>
+            </span>
+        </div>
+        <!-- Simple/Virtual/Downloadable: Discount (Both Taxes) -->
+        <div v-else-if="['simple','virtual','downloadable'].includes(priceData.type) && priceData.template === 'discount_both'" class="price-box price-final_price" :data-product-id="priceData.uid">
+            <span class="special-price">
+                <span class="price-container price-final_price tax weee">
+                    <span class="price-label">Special Price</span>
+                    <span :id="'product-price-excl-' + priceData.uid" :data-price-amount="priceData.price_excl" data-price-type="finalPrice" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_excl_formatted }}</span>
+                    </span>
+                    <span class="price-label">Incl. Tax</span>
+                    <span :id="'product-price-incl-' + priceData.uid" :data-price-amount="priceData.price_incl" data-price-type="finalPriceIncl" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_incl_formatted }}</span>
+                    </span>
+                </span>
+            </span>
+            <span class="old-price">
+                <span class="price-container price-final_price tax weee">
+                    <span class="price-label">Regular Price</span>
+                    <span :id="'old-price-excl-' + priceData.uid" :data-price-amount="priceData.price_regular" data-price-type="oldPrice" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_regular_formatted }}</span>
+                    </span>
+                    <span class="price-label">Incl. Tax</span>
+                    <span :id="'old-price-incl-' + priceData.uid" :data-price-amount="priceData.price_regular_incl_formatted" data-price-type="oldPriceIncl" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_regular_incl_formatted }}</span>
+                    </span>
+                </span>
+            </span>
+        </div>
+        <!-- Simple/Virtual/Downloadable: Regular (Incl. Tax) -->
+        <div v-else-if="['simple','virtual','downloadable'].includes(priceData.type) && priceData.template === 'regular_incl'" class="price-box price-final_price" :data-product-id="priceData.uid">
             <span class="price-container price-final_price tax weee">
-                <span class="price-label">Special Price</span>
-                <span :id="'product-price-' + priceData.uid" :data-price-amount="priceData.price_final" data-price-type="finalPrice" class="price-wrapper ">
+                <span :id="'product-price-incl-' + priceData.uid" :data-price-amount="priceData.price_final" data-price-type="finalPriceIncl" class="price-wrapper ">
                     <span class="price">{{ priceData.price_final_formatted }}</span>
                 </span>
             </span>
-        </span>
-        <span class="old-price">
-            <span class="price-container price-final_price tax weee">
-                <span class="price-label">Regular Price</span>
-                <span :id="'old-price-' + priceData.uid" :data-price-amount="priceData.price_regular" data-price-type="oldPrice" class="price-wrapper ">
-                    <span class="price">{{ priceData.price_regular_formatted }}</span>
-                </span>
-            </span>
-        </span>
-    </div>
-
-    <!-- Simple/Virtual/Downloadable: Regular -->
-    <div v-else-if="['simple','virtual','downloadable'].includes(priceData.type) && priceData.template === 'regular'" class="price-box price-final_price" :data-product-id="priceData.uid">
-        <span class="price-container price-final_price tax weee">
-            <span :id="'product-price-' + priceData.uid" :data-price-amount="priceData.price_final" data-price-type="finalPrice" class="price-wrapper ">
-                <span class="price">{{ priceData.price_final_formatted }}</span>
-            </span>
-        </span>
-    </div>
-
-    <!-- Giftcard -->
-    <div v-else-if="priceData.type === 'giftcard' && priceData.template === 'giftcard'" class="price-box price-final_price" :data-product-id="priceData.uid">
-        <div class="price-box">
-            <span class="price-label">From</span>
-            <span class="price" :id="'min-product-price-' + priceData.uid">{{ priceData.price_min_formatted }}</span>
         </div>
-    </div>
-
-    <!-- Bundle: Discount -->
-    <div v-else-if="priceData.type === 'bundle' && priceData.template === 'bundle_discount'" class="price-box price-final_price" :data-product-id="priceData.uid">
-        <p class="price-from">
+        <!-- Simple/Virtual/Downloadable: Regular (Both Taxes) -->
+        <div v-else-if="['simple','virtual','downloadable'].includes(priceData.type) && priceData.template === 'regular_both'" class="price-box price-final_price" :data-product-id="priceData.uid">
             <span class="price-container price-final_price tax weee">
-                <span class="price-label">From</span>
-                <span :id="'from-' + priceData.uid" :data-price-amount="priceData.price_min" data-price-type="minPrice" class="price-wrapper ">
-                    <span class="price">{{ priceData.price_min_formatted }}</span>
+                <span class="price-label">Excl. Tax</span>
+                <span :id="'product-price-excl-' + priceData.uid" :data-price-amount="priceData.price_excl" data-price-type="finalPrice" class="price-wrapper ">
+                    <span class="price">{{ priceData.price_excl_formatted }}</span>
+                </span>
+                <span class="price-label">Incl. Tax</span>
+                <span :id="'product-price-incl-' + priceData.uid" :data-price-amount="priceData.price_incl" data-price-type="finalPriceIncl" class="price-wrapper ">
+                    <span class="price">{{ priceData.price_incl_formatted }}</span>
                 </span>
             </span>
-            <span class="old-price">
+        </div>
+        <!-- Giftcard: Incl. Tax -->
+        <div v-else-if="priceData.type === 'giftcard' && priceData.template === 'giftcard_incl'" class="price-box price-final_price" :data-product-id="priceData.uid">
+            <div class="price-box">
+                <span class="price-label">From (Incl. Tax)</span>
+                <span class="price" :id="'min-product-price-incl-' + priceData.uid">{{ priceData.price_min_formatted }}</span>
+            </div>
+        </div>
+        <!-- Giftcard: Both Taxes -->
+        <div v-else-if="priceData.type === 'giftcard' && priceData.template === 'giftcard_both'" class="price-box price-final_price" :data-product-id="priceData.uid">
+            <div class="price-box">
+                <span class="price-label">From Excl. Tax</span>
+                <span class="price" :id="'min-product-price-excl-' + priceData.uid">{{ priceData.price_excl_formatted }}</span>
+                <span class="price-label">Incl. Tax</span>
+                <span class="price" :id="'min-product-price-incl-' + priceData.uid">{{ priceData.price_incl_formatted }}</span>
+            </div>
+        </div>
+        <!-- Bundle: Discount (Incl. Tax) -->
+        <div v-else-if="priceData.type === 'bundle' && priceData.template === 'bundle_discount_incl'" class="price-box price-final_price" :data-product-id="priceData.uid">
+            <p class="price-from">
                 <span class="price-container price-final_price tax weee">
-                    <span class="price-label">Regular Price</span>
-                    <span :id="'old-price-' + priceData.uid" :data-price-amount="priceData.price_min_regular" class="price-wrapper ">
-                        <span class="price">{{ priceData.price_min_regular_formatted }}</span>
-                    </span>
-                </span>
-            </span>
-        </p>
-        <p class="price-to">
-            <span class="price-container price-final_price tax weee">
-                <span class="price-label">To</span>
-                <span :id="'to-' + priceData.uid" :data-price-amount="priceData.price_max" data-price-type="maxPrice" class="price-wrapper ">
-                    <span class="price">{{ priceData.price_max_formatted }}</span>
-                </span>
-            </span>
-            <span class="old-price">
-                <span class="price-container price-final_price tax weee">
-                    <span class="price-label">Regular Price</span>
-                    <span :id="'old-price-' + priceData.uid" :data-price-amount="priceData.price_max_regular" class="price-wrapper ">
-                        <span class="price">{{ priceData.price_max_regular_formatted }}</span>
-                    </span>
-                </span>
-            </span>
-        </p>
-    </div>
-
-    <!-- Bundle: Fallback -->
-    <div v-else-if="priceData.type === 'bundle' && priceData.template === 'bundle'" class="price-box price-final_price" :data-product-id="priceData.uid">
-        <p class="price-from">
-            <span class="price-container price-final_price tax weee">
-                <span class="price-label">From</span>
-                <span :id="'from-' + priceData.uid" :data-price-amount="priceData.price_min" data-price-type="minPrice" class="price-wrapper ">
-                    <span class="price">{{ priceData.price_min_formatted }}</span>
-                </span>
-            </span>
-        </p>
-        <p class="price-to">
-            <span class="price-container price-final_price tax weee">
-                <span class="price-label">To</span>
-                <span :id="'to-' + priceData.uid" :data-price-amount="priceData.price_max" data-price-type="maxPrice" class="price-wrapper ">
-                    <span class="price">{{ priceData.price_max_formatted }}</span>
-                </span>
-            </span>
-        </p>
-    </div>
-
-    <!-- Grouped -->
-    <div v-else-if="priceData.type === 'grouped' && priceData.template === 'grouped'" class="price-box price-final_price" :data-product-id="priceData.uid">
-        <div class="price-box">
-            <p class="minimal-price">
-                <span class="price-label">Starting at</span>
-                <span class="price-container tax weee">
-                    <span :data-price-amount="priceData.price_min" class="price-wrapper ">
+                    <span class="price-label">From (Incl. Tax)</span>
+                    <span :id="'from-incl-' + priceData.uid" :data-price-amount="priceData.price_min" data-price-type="minPriceIncl" class="price-wrapper ">
                         <span class="price">{{ priceData.price_min_formatted }}</span>
+                    </span>
+                </span>
+                <span class="old-price">
+                    <span class="price-container price-final_price tax weee">
+                        <span class="price-label">Regular Price (Incl. Tax)</span>
+                        <span :id="'old-price-incl-' + priceData.uid" :data-price-amount="priceData.price_min_regular" class="price-wrapper ">
+                            <span class="price">{{ priceData.price_min_regular_formatted }}</span>
+                        </span>
+                    </span>
+                </span>
+            </p>
+            <p class="price-to">
+                <span class="price-container price-final_price tax weee">
+                    <span class="price-label">To (Incl. Tax)</span>
+                    <span :id="'to-incl-' + priceData.uid" :data-price-amount="priceData.price_max" data-price-type="maxPriceIncl" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_max_formatted }}</span>
+                    </span>
+                </span>
+                <span class="old-price">
+                    <span class="price-container price-final_price tax weee">
+                        <span class="price-label">Regular Price (Incl. Tax)</span>
+                        <span :id="'old-price-incl-' + priceData.uid" :data-price-amount="priceData.price_max_regular" class="price-wrapper ">
+                            <span class="price">{{ priceData.price_max_regular_formatted }}</span>
+                        </span>
                     </span>
                 </span>
             </p>
         </div>
-    </div>
-
-    <!-- Configurable: Discount, Same Price -->
-    <div v-else-if="priceData.type === 'configurable' && priceData.template === 'configurable_same_discount'" class="price-box price-final_price" :data-product-id="priceData.uid">
-        <span class="normal-price">
-            <span class="price-container price-final_price tax weee">
-                <span :id="'product-price-' + priceData.uid" :data-price-amount="priceData.price_min" data-price-type="finalPrice" class="price-wrapper ">
-                    <span class="price">{{ priceData.price_min_formatted }}</span>
+        <!-- Bundle: Discount (Both Taxes) -->
+        <div v-else-if="priceData.type === 'bundle' && priceData.template === 'bundle_discount_both'" class="price-box price-final_price" :data-product-id="priceData.uid">
+            <p class="price-from">
+                <span class="price-container price-final_price tax weee">
+                    <span class="price-label">From Excl. Tax</span>
+                    <span :id="'from-excl-' + priceData.uid" :data-price-amount="priceData.price_excl" data-price-type="minPrice" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_excl_formatted }}</span>
+                    </span>
+                    <span class="price-label">Incl. Tax</span>
+                    <span :id="'from-incl-' + priceData.uid" :data-price-amount="priceData.price_incl" data-price-type="minPriceIncl" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_incl_formatted }}</span>
+                    </span>
                 </span>
                 <span class="old-price">
-                    <span class="price-label">Regular Price</span>
-                    <span :id="'old-price-' + priceData.uid" :data-price-amount="priceData.price_min_regular" class="price-wrapper ">
-                        <span class="price">{{ priceData.price_min_regular_formatted }}</span>
+                    <span class="price-container price-final_price tax weee">
+                        <span class="price-label">Regular Price Excl. Tax</span>
+                        <span :id="'old-price-excl-' + priceData.uid" :data-price-amount="priceData.price_min_regular" class="price-wrapper ">
+                            <span class="price">{{ priceData.price_min_regular_formatted }}</span>
+                        </span>
+                        <span class="price-label">Incl. Tax</span>
+                        <span :id="'old-price-incl-' + priceData.uid" :data-price-amount="priceData.price_min_regular" class="price-wrapper ">
+                            <span class="price">{{ priceData.price_min_regular_incl_formatted }}</span>
+                        </span>
+                    </span>
+                </span>
+            </p>
+            <p class="price-to">
+                <span class="price-container price-final_price tax weee">
+                    <span class="price-label">To Excl. Tax</span>
+                    <span :id="'to-excl-' + priceData.uid" :data-price-amount="priceData.price_max" data-price-type="maxPrice" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_max_formatted }}</span>
+                    </span>
+                    <span class="price-label">Incl. Tax</span>
+                    <span :id="'to-incl-' + priceData.uid" :data-price-amount="priceData.price_max" data-price-type="maxPriceIncl" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_max_both.price_incl_formatted }}</span>
+                    </span>
+                </span>
+                <span class="old-price">
+                    <span class="price-container price-final_price tax weee">
+                        <span class="price-label">Regular Price Excl. Tax</span>
+                        <span :id="'old-price-excl-' + priceData.uid" :data-price-amount="priceData.price_max_regular" class="price-wrapper ">
+                            <span class="price">{{ priceData.price_max_regular_formatted }}</span>
+                        </span>
+                        <span class="price-label">Incl. Tax</span>
+                        <span :id="'old-price-incl-' + priceData.uid" :data-price-amount="priceData.price_max_regular" class="price-wrapper ">
+                            <span class="price">{{ priceData.price_max_regular_incl_formatted }}</span>
+                        </span>
+                    </span>
+                </span>
+            </p>
+        </div>
+        <!-- Bundle: Incl. Tax -->
+        <div v-else-if="priceData.type === 'bundle' && priceData.template === 'bundle_incl'" class="price-box price-final_price" :data-product-id="priceData.uid">
+            <p class="price-from">
+                <span class="price-container price-final_price tax weee">
+                    <span class="price-label">From (Incl. Tax)</span>
+                    <span :id="'from-incl-' + priceData.uid" :data-price-amount="priceData.price_min" data-price-type="minPriceIncl" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_min_formatted }}</span>
+                    </span>
+                </span>
+            </p>
+            <p class="price-to">
+                <span class="price-container price-final_price tax weee">
+                    <span class="price-label">To (Incl. Tax)</span>
+                    <span :id="'to-incl-' + priceData.uid" :data-price-amount="priceData.price_max" data-price-type="maxPriceIncl" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_max_formatted }}</span>
+                    </span>
+                </span>
+            </p>
+        </div>
+        <!-- Bundle: Both Taxes -->
+        <div v-else-if="priceData.type === 'bundle' && priceData.template === 'bundle_both'" class="price-box price-final_price" :data-product-id="priceData.uid">
+            <p class="price-from">
+                <span class="price-container price-final_price tax weee">
+                    <span class="price-label">From Excl. Tax</span>
+                    <span :id="'from-excl-' + priceData.uid" :data-price-amount="priceData.price_excl" data-price-type="minPrice" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_excl_formatted }}</span>
+                    </span>
+                    <span class="price-label">Incl. Tax</span>
+                    <span :id="'from-incl-' + priceData.uid" :data-price-amount="priceData.price_incl" data-price-type="minPriceIncl" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_incl_formatted }}</span>
+                    </span>
+                </span>
+            </p>
+            <p class="price-to">
+                <span class="price-container price-final_price tax weee">
+                    <span class="price-label">To Excl. Tax</span>
+                    <span :id="'to-excl-' + priceData.uid" :data-price-amount="priceData.price_max" data-price-type="maxPrice" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_max_both.price_excl_formatted }}</span>
+                    </span>
+                    <span class="price-label">Incl. Tax</span>
+                    <span :id="'to-incl-' + priceData.uid" :data-price-amount="priceData.price_max" data-price-type="maxPriceIncl" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_max_both.price_incl_formatted }}</span>
+                    </span>
+                </span>
+            </p>
+        </div>
+        <!-- Grouped: Incl. Tax -->
+        <div v-else-if="priceData.type === 'grouped' && priceData.template === 'grouped_incl'" class="price-box price-final_price" :data-product-id="priceData.uid">
+            <div class="price-box">
+                <p class="minimal-price">
+                    <span class="price-label">Starting at (Incl. Tax)</span>
+                    <span class="price-container tax weee">
+                        <span :data-price-amount="priceData.price_min" class="price-wrapper ">
+                            <span class="price">{{ priceData.price_min_formatted }}</span>
+                        </span>
+                    </span>
+                </p>
+            </div>
+        </div>
+        <!-- Grouped: Both Taxes -->
+        <div v-else-if="priceData.type === 'grouped' && priceData.template === 'grouped_both'" class="price-box price-final_price" :data-product-id="priceData.uid">
+            <div class="price-box">
+                <p class="minimal-price">
+                    <span class="price-label">Starting at Excl. Tax</span>
+                    <span class="price-container tax weee">
+                        <span :data-price-amount="priceData.price_excl" class="price-wrapper ">
+                            <span class="price">{{ priceData.price_excl_formatted }}</span>
+                        </span>
+                    </span>
+                    <span class="price-label">Incl. Tax</span>
+                    <span class="price-container tax weee">
+                        <span :data-price-amount="priceData.price_incl" class="price-wrapper ">
+                            <span class="price">{{ priceData.price_incl_formatted }}</span>
+                        </span>
+                    </span>
+                </p>
+            </div>
+        </div>
+        <!-- Configurable: Discount, Same Price (Incl. Tax) -->
+        <div v-else-if="priceData.type === 'configurable' && priceData.template === 'configurable_same_discount_incl'" class="price-box price-final_price" :data-product-id="priceData.uid">
+            <span class="normal-price">
+                <span class="price-container price-final_price tax weee">
+                    <span :id="'product-price-incl-' + priceData.uid" :data-price-amount="priceData.price_min" data-price-type="finalPriceIncl" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_min_formatted }}</span>
+                    </span>
+                    <span class="old-price">
+                        <span class="price-label">Regular Price (Incl. Tax)</span>
+                        <span :id="'old-price-incl-' + priceData.uid" :data-price-amount="priceData.price_min_regular" class="price-wrapper ">
+                            <span class="price">{{ priceData.price_min_regular_formatted }}</span>
+                        </span>
                     </span>
                 </span>
             </span>
-        </span>
-    </div>
-
-    <!-- Configurable: Discount, Range -->
-    <div v-else-if="priceData.type === 'configurable' && priceData.template === 'configurable_range_discount'" class="price-box price-final_price" :data-product-id="priceData.uid">
-        <span class="normal-price">
-            <span class="price-container price-final_price tax weee">
-                <span class="price-label">As low as</span>
-                <span :id="'product-price-' + priceData.uid" :data-price-amount="priceData.price_min" data-price-type="finalPrice" class="price-wrapper ">
-                    <span class="price">{{ priceData.price_min_formatted }}</span>
-                </span>
-                <span class="old-price">
-                    <span class="price-label">Regular Price</span>
-                    <span :id="'old-price-' + priceData.uid" :data-price-amount="priceData.price_min_regular" class="price-wrapper ">
-                        <span class="price">{{ priceData.price_min_regular_formatted }}</span>
+        </div>
+        <!-- Configurable: Discount, Range (Incl. Tax) -->
+        <div v-else-if="priceData.type === 'configurable' && priceData.template === 'configurable_range_discount_incl'" class="price-box price-final_price" :data-product-id="priceData.uid">
+            <span class="normal-price">
+                <span class="price-container price-final_price tax weee">
+                    <span class="price-label">As low as (Incl. Tax)</span>
+                    <span :id="'product-price-incl-' + priceData.uid" :data-price-amount="priceData.price_min" data-price-type="finalPriceIncl" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_min_formatted }}</span>
+                    </span>
+                    <span class="old-price">
+                        <span class="price-label">Regular Price (Incl. Tax)</span>
+                        <span :id="'old-price-incl-' + priceData.uid" :data-price-amount="priceData.price_min_regular" class="price-wrapper ">
+                            <span class="price">{{ priceData.price_min_regular_formatted }}</span>
+                        </span>
                     </span>
                 </span>
             </span>
-        </span>
-    </div>
-
-    <!-- Configurable: Same Price -->
-    <div v-else-if="priceData.type === 'configurable' && priceData.template === 'configurable_same'" class="price-box price-final_price" :data-product-id="priceData.uid">
-        <span class="normal-price">
-            <span class="price-container price-final_price tax weee">
-                <span :id="'product-price-' + priceData.uid" :data-price-amount="priceData.price_min" data-price-type="finalPrice" class="price-wrapper ">
-                    <span class="price">{{ priceData.price_min_formatted }}</span>
+        </div>
+        <!-- Configurable: Discount, Same Price (Both Taxes) -->
+        <div v-else-if="priceData.type === 'configurable' && priceData.template === 'configurable_same_discount_both'" class="price-box price-final_price" :data-product-id="priceData.uid">
+            <span class="normal-price">
+                <span class="price-container price-final_price tax weee">
+                    <span class="price-label">Excl. Tax</span>
+                    <span :id="'product-price-excl-' + priceData.uid" :data-price-amount="priceData.price_excl" data-price-type="finalPrice" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_excl_formatted }}</span>
+                    </span>
+                    <span class="price-label">Incl. Tax</span>
+                    <span :id="'product-price-incl-' + priceData.uid" :data-price-amount="priceData.price_incl" data-price-type="finalPriceIncl" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_incl_formatted }}</span>
+                    </span>
+                    <span class="old-price">
+                        <span class="price-label">Regular Price Excl. Tax</span>
+                        <span :id="'old-price-excl-' + priceData.uid" :data-price-amount="priceData.price_min_regular" class="price-wrapper ">
+                            <span class="price">{{ priceData.price_min_regular_formatted }}</span>
+                        </span>
+                        <span class="price-label">Incl. Tax</span>
+                        <span :id="'old-price-incl-' + priceData.uid" :data-price-amount="priceData.price_min_regular" class="price-wrapper ">
+                            <span class="price">{{ priceData.price_min_regular_incl_formatted }}</span>
+                        </span>
+                    </span>
                 </span>
             </span>
-        </span>
-    </div>
-
-    <!-- Configurable: Range -->
-    <div v-else-if="priceData.type === 'configurable' && priceData.template === 'configurable_range'" class="price-box price-final_price" :data-product-id="priceData.uid">
-        <span class="normal-price">
-            <span class="price-container price-final_price tax weee">
-                <span class="price-label">As low as</span>
-                <span :id="'product-price-' + priceData.uid" :data-price-amount="priceData.price_min" data-price-type="finalPrice" class="price-wrapper ">
-                    <span class="price">{{ priceData.price_min_formatted }}</span>
+        </div>
+        <!-- Configurable: Discount, Range (Both Taxes) -->
+        <div v-else-if="priceData.type === 'configurable' && priceData.template === 'configurable_range_discount_both'" class="price-box price-final_price" :data-product-id="priceData.uid">
+            <span class="normal-price">
+                <span class="price-container price-final_price tax weee">
+                    <span class="price-label">As low as Excl. Tax</span>
+                    <span :id="'product-price-excl-' + priceData.uid" :data-price-amount="priceData.price_excl" data-price-type="finalPrice" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_excl_formatted }}</span>
+                    </span>
+                    <span class="price-label">Incl. Tax</span>
+                    <span :id="'product-price-incl-' + priceData.uid" :data-price-amount="priceData.price_incl" data-price-type="finalPriceIncl" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_incl_formatted }}</span>
+                    </span>
+                    <span class="old-price">
+                        <span class="price-label">Regular Price Excl. Tax</span>
+                        <span :id="'old-price-excl-' + priceData.uid" :data-price-amount="priceData.price_min_regular" class="price-wrapper ">
+                            <span class="price">{{ priceData.price_min_regular_formatted }}</span>
+                        </span>
+                        <span class="price-label">Incl. Tax</span>
+                        <span :id="'old-price-incl-' + priceData.uid" :data-price-amount="priceData.price_min_regular" class="price-wrapper ">
+                            <span class="price">{{ priceData.price_min_regular_incl_formatted }}</span>
+                        </span>
+                    </span>
                 </span>
             </span>
-        </span>
-    </div>
-
-    <!-- Fallback -->
-    <div v-else-if="priceData.template === 'fallback'" class="price-box price-final_price" :data-product-id="priceData.uid">
-        <span class="price-container price-final_price tax weee">
-            <span :id="'product-price-' + priceData.uid" :data-price-amount="priceData.price_final" data-price-type="finalPrice" class="price-wrapper ">
-                <span class="price">{{ priceData.price_final_formatted }}</span>
+        </div>
+        <!-- Configurable: Same Price (Incl. Tax) -->
+        <div v-else-if="priceData.type === 'configurable' && priceData.template === 'configurable_same_incl'" class="price-box price-final_price" :data-product-id="priceData.uid">
+            <span class="normal-price">
+                <span class="price-container price-final_price tax weee">
+                    <span :id="'product-price-incl-' + priceData.uid" :data-price-amount="priceData.price_min" data-price-type="finalPriceIncl" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_min_formatted }}</span>
+                    </span>
+                </span>
             </span>
-        </span>
-    </div>
-</template>
+        </div>
+        <!-- Configurable: Range (Incl. Tax) -->
+        <div v-else-if="priceData.type === 'configurable' && priceData.template === 'configurable_range_incl'" class="price-box price-final_price" :data-product-id="priceData.uid">
+            <span class="normal-price">
+                <span class="price-container price-final_price tax weee">
+                    <span class="price-label">As low as (Incl. Tax)</span>
+                    <span :id="'product-price-incl-' + priceData.uid" :data-price-amount="priceData.price_min" data-price-type="finalPriceIncl" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_min_formatted }}</span>
+                    </span>
+                </span>
+            </span>
+        </div>
+        <!-- Configurable: Same Price (Both Taxes) -->
+        <div v-else-if="priceData.type === 'configurable' && priceData.template === 'configurable_same_both'" class="price-box price-final_price" :data-product-id="priceData.uid">
+            <span class="normal-price">
+                <span class="price-container price-final_price tax weee">
+                    <span class="price-label">Excl. Tax</span>
+                    <span :id="'product-price-excl-' + priceData.uid" :data-price-amount="priceData.price_excl" data-price-type="finalPrice" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_excl_formatted }}</span>
+                    </span>
+                    <span class="price-label">Incl. Tax</span>
+                    <span :id="'product-price-incl-' + priceData.uid" :data-price-amount="priceData.price_incl" data-price-type="finalPriceIncl" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_incl_formatted }}</span>
+                    </span>
+                </span>
+            </span>
+        </div>
+        <!-- Configurable: Range (Both Taxes) -->
+        <div v-else-if="priceData.type === 'configurable' && priceData.template === 'configurable_range_both'" class="price-box price-final_price" :data-product-id="priceData.uid">
+            <span class="normal-price">
+                <span class="price-container price-final_price tax weee">
+                    <span class="price-label">As low as Excl. Tax</span>
+                    <span :id="'product-price-excl-' + priceData.uid" :data-price-amount="priceData.price_excl" data-price-type="finalPrice" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_excl_formatted }}</span>
+                    </span>
+                    <span class="price-label">Incl. Tax</span>
+                    <span :id="'product-price-incl-' + priceData.uid" :data-price-amount="priceData.price_incl" data-price-type="finalPriceIncl" class="price-wrapper ">
+                        <span class="price">{{ priceData.price_incl_formatted }}</span>
+                    </span>
+                </span>
+            </span>
+        </div>
+        <!-- Fallback: Incl. Tax -->
+        <div v-else-if="priceData.template === 'fallback_incl'" class="price-box price-final_price" :data-product-id="priceData.uid">
+            <span class="price-container price-final_price tax weee">
+                <span :id="'product-price-incl-' + priceData.uid" :data-price-amount="priceData.price_final" data-price-type="finalPriceIncl" class="price-wrapper ">
+                    <span class="price">{{ priceData.price_final_formatted }}</span>
+                </span>
+            </span>
+        </div>
+        <!-- Fallback: Both Taxes -->
+        <div v-else-if="priceData.template === 'fallback_both'" class="price-box price-final_price" :data-product-id="priceData.uid">
+            <span class="price-container price-final_price tax weee">
+                <span class="price-label">Excl. Tax</span>
+                <span :id="'product-price-excl-' + priceData.uid" :data-price-amount="priceData.price_excl" data-price-type="finalPrice" class="price-wrapper ">
+                    <span class="price">{{ priceData.price_excl_formatted }}</span>
+                </span>
+                <span class="price-label">Incl. Tax</span>
+                <span :id="'product-price-incl-' + priceData.uid" :data-price-amount="priceData.price_incl" data-price-type="finalPriceIncl" class="price-wrapper ">
+                    <span class="price">{{ priceData.price_incl_formatted }}</span>
+                </span>
+            </span>
+        </div>
+        <!-- Fallback -->
+        <div v-else-if="priceData.template === 'fallback'" class="price-box price-final_price" :data-product-id="priceData.uid">
+            <span class="price-container price-final_price tax weee">
+                <span :id="'product-price-' + priceData.uid" :data-price-amount="priceData.price_final" data-price-type="finalPrice" class="price-wrapper ">
+                    <span class="price">{{ priceData.price_final_formatted }}</span>
+                </span>
+            </span>
+        </div>
+    </template>

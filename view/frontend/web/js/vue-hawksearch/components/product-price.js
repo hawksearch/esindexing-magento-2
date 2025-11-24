@@ -16,9 +16,14 @@ define([
 ], function (HawksearchVue, template) {
     'use strict';
 
+    // Mock tax calculation logic
+    function calculateTaxInclusive(price, taxRate) {
+        if (price == null || isNaN(price)) return null;
+        return Number(price) * (1 + taxRate);
+    }
+
     function formatPrice(value, priceFormat) {
         if (value == null || isNaN(value)) return '';
-        // Simple formatting, can be replaced with priceUtils if available
         return new Intl.NumberFormat(priceFormat?.locale || 'en-US', {
             style: 'currency',
             currency: priceFormat?.currency || 'USD',
@@ -53,93 +58,231 @@ define([
                 const priceFormat = this.pricingConfig.priceFormat || { currency: 'USD', locale: 'en-US' };
                 const taxDisplayMode = this.pricingConfig.taxDisplayMode || 'excluding_tax';
                 const uid = doc.uid || doc.__uid || '';
-
+                // Configurable mock tax rate (can be replaced with real service)
+                const mockTaxRate = this.pricingConfig.mockTaxRate ?? 0.2; // 20% default
                 // Helper for formatted price
                 const fmt = v => formatPrice(v, priceFormat);
+                const fmtTax = v => formatPrice(calculateTaxInclusive(v, mockTaxRate), priceFormat);
+                // Helper for both prices
+                function bothPrices(excl, incl, labelExcl, labelIncl) {
+                    return {
+                        price_excl: excl,
+                        price_excl_formatted: fmt(excl),
+                        price_incl: calculateTaxInclusive(excl, mockTaxRate),
+                        price_incl_formatted: fmtTax(excl),
+                        label_excl: labelExcl,
+                        label_incl: labelIncl
+                    };
+                }
 
                 // Simple/Virtual/Downloadable
                 if (["simple", "virtual", "downloadable"].includes(typeId)) {
                     if (price_regular && price_final && price_regular !== price_final) {
                         // Discounted
-                        return {
-                            type: typeId,
-                            template: 'discount',
-                            uid,
-                            price_final,
-                            price_regular,
-                            price_final_formatted: fmt(price_final),
-                            price_regular_formatted: fmt(price_regular)
-                        };
+                        if (taxDisplayMode === 'including_tax') {
+                            return {
+                                type: typeId,
+                                template: 'discount_incl',
+                                uid,
+                                price_final,
+                                price_final_formatted: fmtTax(price_final),
+                                price_regular,
+                                price_regular_formatted: fmtTax(price_regular)
+                            };
+                        } else if (taxDisplayMode === 'both_taxes') {
+                            return {
+                                type: typeId,
+                                template: 'discount_both',
+                                uid,
+                                ...bothPrices(price_final, null, 'Excl. Tax', 'Incl. Tax'),
+                                price_regular,
+                                price_regular_formatted: fmt(price_regular),
+                                price_regular_incl_formatted: fmtTax(price_regular)
+                            };
+                        } else {
+                            // Excluding tax
+                            return {
+                                type: typeId,
+                                template: 'discount',
+                                uid,
+                                price_final,
+                                price_final_formatted: fmt(price_final),
+                                price_regular,
+                                price_regular_formatted: fmt(price_regular)
+                            };
+                        }
                     } else {
                         // No discount
-                        return {
-                            type: typeId,
-                            template: 'regular',
-                            uid,
-                            price_final,
-                            price_final_formatted: fmt(price_final)
-                        };
+                        if (taxDisplayMode === 'including_tax') {
+                            return {
+                                type: typeId,
+                                template: 'regular_incl',
+                                uid,
+                                price_final,
+                                price_final_formatted: fmtTax(price_final)
+                            };
+                        } else if (taxDisplayMode === 'both_taxes') {
+                            return {
+                                type: typeId,
+                                template: 'regular_both',
+                                uid,
+                                ...bothPrices(price_final, null, 'Excl. Tax', 'Incl. Tax')
+                            };
+                        } else {
+                            return {
+                                type: typeId,
+                                template: 'regular',
+                                uid,
+                                price_final,
+                                price_final_formatted: fmt(price_final)
+                            };
+                        }
                     }
                 }
 
                 // Giftcard
                 if (typeId === 'giftcard') {
                     if (price_final !== null && price_min !== null && price_max == null) {
-                        // Heuristic: always show 'From'
-                        return {
-                            type: typeId,
-                            template: 'giftcard',
-                            uid,
-                            price_min,
-                            price_min_formatted: fmt(price_min)
-                        };
+                        if (taxDisplayMode === 'including_tax') {
+                            return {
+                                type: typeId,
+                                template: 'giftcard_incl',
+                                uid,
+                                price_min,
+                                price_min_formatted: fmtTax(price_min)
+                            };
+                        } else if (taxDisplayMode === 'both_taxes') {
+                            return {
+                                type: typeId,
+                                template: 'giftcard_both',
+                                uid,
+                                ...bothPrices(price_min, null, 'Excl. Tax', 'Incl. Tax')
+                            };
+                        } else {
+                            return {
+                                type: typeId,
+                                template: 'giftcard',
+                                uid,
+                                price_min,
+                                price_min_formatted: fmt(price_min)
+                            };
+                        }
                     }
                 }
 
                 // Bundle
                 if (typeId === 'bundle') {
-                    // Discount logic
                     if (price_regular > 0 && price_final > 0 && price_regular !== price_final && price_min > 0 && price_max > 0) {
                         const discount_multiplier = price_final / price_regular;
                         const price_min_regular = (price_min / discount_multiplier).toFixed(2);
                         const price_max_regular = (price_max / discount_multiplier).toFixed(2);
-                        return {
-                            type: typeId,
-                            template: 'bundle_discount',
-                            uid,
-                            price_min,
-                            price_max,
-                            price_min_formatted: fmt(price_min),
-                            price_max_formatted: fmt(price_max),
-                            price_min_regular,
-                            price_max_regular,
-                            price_min_regular_formatted: fmt(price_min_regular),
-                            price_max_regular_formatted: fmt(price_max_regular)
-                        };
+                        if (taxDisplayMode === 'including_tax') {
+                            return {
+                                type: typeId,
+                                template: 'bundle_discount_incl',
+                                uid,
+                                price_min,
+                                price_max,
+                                price_min_formatted: fmtTax(price_min),
+                                price_max_formatted: fmtTax(price_max),
+                                price_min_regular,
+                                price_max_regular,
+                                price_min_regular_formatted: fmtTax(price_min_regular),
+                                price_max_regular_formatted: fmtTax(price_max_regular)
+                            };
+                        } else if (taxDisplayMode === 'both_taxes') {
+                            return {
+                                type: typeId,
+                                template: 'bundle_discount_both',
+                                uid,
+                                price_min,
+                                price_max,
+                                ...bothPrices(price_min, null, 'Excl. Tax', 'Incl. Tax'),
+                                price_max_both: bothPrices(price_max, null, 'Excl. Tax', 'Incl. Tax'),
+                                price_min_regular,
+                                price_max_regular,
+                                price_min_regular_formatted: fmt(price_min_regular),
+                                price_max_regular_formatted: fmt(price_max_regular),
+                                price_min_regular_incl_formatted: fmtTax(price_min_regular),
+                                price_max_regular_incl_formatted: fmtTax(price_max_regular)
+                            };
+                        } else {
+                            return {
+                                type: typeId,
+                                template: 'bundle_discount',
+                                uid,
+                                price_min,
+                                price_max,
+                                price_min_formatted: fmt(price_min),
+                                price_max_formatted: fmt(price_max),
+                                price_min_regular,
+                                price_max_regular,
+                                price_min_regular_formatted: fmt(price_min_regular),
+                                price_max_regular_formatted: fmt(price_max_regular)
+                            };
+                        }
                     } else if (price_min > 0 && price_max > 0) {
-                        // Fallback: just show min/max
-                        return {
-                            type: typeId,
-                            template: 'bundle',
-                            uid,
-                            price_min,
-                            price_max,
-                            price_min_formatted: fmt(price_min),
-                            price_max_formatted: fmt(price_max)
-                        };
+                        if (taxDisplayMode === 'including_tax') {
+                            return {
+                                type: typeId,
+                                template: 'bundle_incl',
+                                uid,
+                                price_min,
+                                price_max,
+                                price_min_formatted: fmtTax(price_min),
+                                price_max_formatted: fmtTax(price_max)
+                            };
+                        } else if (taxDisplayMode === 'both_taxes') {
+                            return {
+                                type: typeId,
+                                template: 'bundle_both',
+                                uid,
+                                price_min,
+                                price_max,
+                                ...bothPrices(price_min, null, 'Excl. Tax', 'Incl. Tax'),
+                                price_max_both: bothPrices(price_max, null, 'Excl. Tax', 'Incl. Tax')
+                            };
+                        } else {
+                            return {
+                                type: typeId,
+                                template: 'bundle',
+                                uid,
+                                price_min,
+                                price_max,
+                                price_min_formatted: fmt(price_min),
+                                price_max_formatted: fmt(price_max)
+                            };
+                        }
                     }
                 }
 
                 // Grouped
                 if (typeId === 'grouped') {
                     if (price_min > 0) {
-                        return {
-                            type: typeId,
-                            template: 'grouped',
-                            uid,
-                            price_min,
-                            price_min_formatted: fmt(price_min)
-                        };
+                        if (taxDisplayMode === 'including_tax') {
+                            return {
+                                type: typeId,
+                                template: 'grouped_incl',
+                                uid,
+                                price_min,
+                                price_min_formatted: fmtTax(price_min)
+                            };
+                        } else if (taxDisplayMode === 'both_taxes') {
+                            return {
+                                type: typeId,
+                                template: 'grouped_both',
+                                uid,
+                                ...bothPrices(price_min, null, 'Excl. Tax', 'Incl. Tax')
+                            };
+                        } else {
+                            return {
+                                type: typeId,
+                                template: 'grouped',
+                                uid,
+                                price_min,
+                                price_min_formatted: fmt(price_min)
+                            };
+                        }
                     }
                 }
 
@@ -149,35 +292,91 @@ define([
                     if (price_regular > 0 && price_final > 0 && price_regular !== price_final && price_min > 0) {
                         const discount_multiplier = price_final / price_regular;
                         const price_min_regular = (price_min / discount_multiplier).toFixed(2);
-                        return {
-                            type: typeId,
-                            template: samePriceForAll ? 'configurable_same_discount' : 'configurable_range_discount',
-                            uid,
-                            price_min,
-                            price_min_formatted: fmt(price_min),
-                            price_min_regular,
-                            price_min_regular_formatted: fmt(price_min_regular)
-                        };
+                        if (taxDisplayMode === 'including_tax') {
+                            return {
+                                type: typeId,
+                                template: samePriceForAll ? 'configurable_same_discount_incl' : 'configurable_range_discount_incl',
+                                uid,
+                                price_min,
+                                price_min_formatted: fmtTax(price_min),
+                                price_min_regular,
+                                price_min_regular_formatted: fmtTax(price_min_regular)
+                            };
+                        } else if (taxDisplayMode === 'both_taxes') {
+                            return {
+                                type: typeId,
+                                template: samePriceForAll ? 'configurable_same_discount_both' : 'configurable_range_discount_both',
+                                uid,
+                                ...bothPrices(price_min, null, 'Excl. Tax', 'Incl. Tax'),
+                                price_min_regular,
+                                price_min_regular_formatted: fmt(price_min_regular),
+                                price_min_regular_incl_formatted: fmtTax(price_min_regular)
+                            };
+                        } else {
+                            return {
+                                type: typeId,
+                                template: samePriceForAll ? 'configurable_same_discount' : 'configurable_range_discount',
+                                uid,
+                                price_min,
+                                price_min_formatted: fmt(price_min),
+                                price_min_regular,
+                                price_min_regular_formatted: fmt(price_min_regular)
+                            };
+                        }
                     } else if (price_min > 0) {
-                        return {
-                            type: typeId,
-                            template: samePriceForAll ? 'configurable_same' : 'configurable_range',
-                            uid,
-                            price_min,
-                            price_min_formatted: fmt(price_min)
-                        };
+                        if (taxDisplayMode === 'including_tax') {
+                            return {
+                                type: typeId,
+                                template: samePriceForAll ? 'configurable_same_incl' : 'configurable_range_incl',
+                                uid,
+                                price_min,
+                                price_min_formatted: fmtTax(price_min)
+                            };
+                        } else if (taxDisplayMode === 'both_taxes') {
+                            return {
+                                type: typeId,
+                                template: samePriceForAll ? 'configurable_same_both' : 'configurable_range_both',
+                                uid,
+                                ...bothPrices(price_min, null, 'Excl. Tax', 'Incl. Tax')
+                            };
+                        } else {
+                            return {
+                                type: typeId,
+                                template: samePriceForAll ? 'configurable_same' : 'configurable_range',
+                                uid,
+                                price_min,
+                                price_min_formatted: fmt(price_min)
+                            };
+                        }
                     }
                 }
 
                 // Fallback: just show price_final
                 if (price_final) {
-                    return {
-                        type: typeId,
-                        template: 'fallback',
-                        uid,
-                        price_final,
-                        price_final_formatted: fmt(price_final)
-                    };
+                    if (taxDisplayMode === 'including_tax') {
+                        return {
+                            type: typeId,
+                            template: 'fallback_incl',
+                            uid,
+                            price_final,
+                            price_final_formatted: fmtTax(price_final)
+                        };
+                    } else if (taxDisplayMode === 'both_taxes') {
+                        return {
+                            type: typeId,
+                            template: 'fallback_both',
+                            uid,
+                            ...bothPrices(price_final, null, 'Excl. Tax', 'Incl. Tax')
+                        };
+                    } else {
+                        return {
+                            type: typeId,
+                            template: 'fallback',
+                            uid,
+                            price_final,
+                            price_final_formatted: fmt(price_final)
+                        };
+                    }
                 }
                 return null;
             }
