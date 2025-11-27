@@ -24,7 +24,6 @@ use HawkSearch\EsIndexing\Model\MessageQueue\Exception\InvalidBulkOperationExcep
 use HawkSearch\EsIndexing\Model\MessageQueue\Validator\OperationValidatorInterface;
 use HawkSearch\EsIndexing\Model\ResourceModel\DataIndex as DataIndexResource;
 use HawkSearch\EsIndexing\Model\ResourceModel\DataIndex\Collection as DataIndexCollection;
-use HawkSearch\EsIndexing\Model\ResourceModel\DataIndex\CollectionFactory as DataIndexCollectionFactory;
 use Magento\AsynchronousOperations\Api\Data\OperationInterface;
 use Magento\AsynchronousOperations\Model\ConfigInterface as AsyncConfig;
 use Magento\AsynchronousOperations\Model\OperationProcessor;
@@ -41,10 +40,6 @@ use Magento\Store\Model\StoreManagerInterface;
 
 class AsynchronousOperationProcessorPlugin
 {
-    /**
-     * @var array<string, array<int, DataIndex>>
-     */
-    private array $loadedIndexCache = [];
     private MessageEncoder $messageEncoder;
     private OperationManagementInterface $operationManagement;
     private OperationValidatorInterface $bulkAllOperationCompleteValidator;
@@ -58,8 +53,8 @@ class AsynchronousOperationProcessorPlugin
     private Indexing\Context $indexingContext;
     private Emulation $emulation;
     private BulkOperationManagement $bulkOperationManagement;
-    private DataIndexCollectionFactory $dataIndexCollectionFactory;
     private DataIndexResource $dataIndexResource;
+    private DataIndexCollection $dataIndexCollection;
     private SerializerInterface $serializer;
 
     public function __construct(
@@ -76,8 +71,8 @@ class AsynchronousOperationProcessorPlugin
         Indexing\Context $indexingContext,
         Emulation $emulation,
         BulkOperationManagement $bulkOperationManagement,
-        DataIndexCollectionFactory $dataIndexCollectionFactory,
         DataIndexResource $dataIndexResource,
+        DataIndexCollection $dataIndexCollection,
         SerializerInterface $serializer
     ) {
         $this->messageEncoder = $messageEncoder;
@@ -93,8 +88,8 @@ class AsynchronousOperationProcessorPlugin
         $this->indexingContext = $indexingContext;
         $this->emulation = $emulation;
         $this->bulkOperationManagement = $bulkOperationManagement;
-        $this->dataIndexCollectionFactory = $dataIndexCollectionFactory;
         $this->dataIndexResource = $dataIndexResource;
+        $this->dataIndexCollection = $dataIndexCollection;
         $this->serializer = $serializer;
     }
 
@@ -112,8 +107,6 @@ class AsynchronousOperationProcessorPlugin
         if (!$this->isAllowed($operation)) {
             return null;
         }
-
-        $this->loadedIndexCache = [];
 
         $this->updateOperationStatus($operation);
         // do not change operation status if operation status is not open
@@ -192,10 +185,11 @@ class AsynchronousOperationProcessorPlugin
             return;
         }
 
-        $this->processStage1OperationCompletion($operation);
-        $this->processStage2OperationCompletion($operation);
+        $dataIndex = $this->loadDataIndexByName();
+        $this->processStage1OperationCompletion($operation, $dataIndex);
+        $this->processStage2OperationCompletion($operation, $dataIndex);
 
-        if (!$this->validateAllStagesComplete()) {
+        if (!$this->validateAllStagesComplete($dataIndex)) {
             return;
         }
 
@@ -225,9 +219,14 @@ class AsynchronousOperationProcessorPlugin
         }
     }
 
-    private function processStage1OperationCompletion(OperationInterface $operation): void
+    private function processStage1OperationCompletion(OperationInterface $operation, DataIndex $dataIndex): void
     {
         if ($this->operationStage2Validator->validate($operation)) {
+            return;
+        }
+
+        if (!$indexId = $dataIndex->getId()) {
+            //@todo throw an exception here just not to make it silent
             return;
         }
 
@@ -235,36 +234,28 @@ class AsynchronousOperationProcessorPlugin
             return;
         }
 
-        $dataIndex = $this->loadDataIndexByName($this->indexingContext->getIndexName($this->getStoreId()));
-        if (!$indexId = $dataIndex->getId()) {
-            //@todo throw an exception here just not to make it silent
-            return;
-        }
-
         $dataIndex->setIsStage1Complete(true);
         $this->dataIndexResource->save($dataIndex);
+        $this->dataIndexResource->load($dataIndex, $dataIndex->getId());
     }
 
-    private function processStage2OperationCompletion(OperationInterface $operation): void
+    private function processStage2OperationCompletion(OperationInterface $operation, DataIndex $dataIndex): void
     {
         if (!$this->operationStage2Validator->validate($operation)) {
             return;
         }
 
-        $dataIndex = $this->loadDataIndexByName($this->indexingContext->getIndexName($this->getStoreId()));
         if (!$indexId = $dataIndex->getId()) {
             //@todo throw an exception here just not to make it silent
             return;
         }
 
-        $dataIndex->setStage2Completed($dataIndex->getStage2Completed() + 1);
-        $this->dataIndexResource->save($dataIndex);
+        $this->dataIndexResource->incrementStage2Completed($dataIndex);
+        $this->dataIndexResource->load($dataIndex, $dataIndex->getId());
     }
 
-    private function validateAllStagesComplete(): bool
+    private function validateAllStagesComplete(DataIndex $dataIndex): bool
     {
-        $dataIndex = $this->loadDataIndexByName($this->indexingContext->getIndexName($this->getStoreId()));
-
         return $dataIndex->getIsStage1Complete()
             && $dataIndex->getStage2Scheduled() > 0
             && $dataIndex->getStage2Scheduled() == $dataIndex->getStage2Completed();
@@ -298,19 +289,15 @@ class AsynchronousOperationProcessorPlugin
         }
     }
 
-    private function loadDataIndexByName(string $indexName): DataIndex
+    private function loadDataIndexByName(): DataIndex
     {
-        if (!isset($this->loadedIndexCache[$indexName][$this->getStoreId()])) {
-            /** @var DataIndexCollection $collection */
-            $collection = $this->dataIndexCollectionFactory->create()
-                ->addFieldToFilter('engine_index_name', $indexName)
-                ->addFieldToFilter('store_id', $this->getStoreId());
-
-            $this->loadedIndexCache[$indexName][$this->getStoreId()] = $collection->getFirstItem();
-        }
+        $this->dataIndexCollection->_resetState();
 
         /** @var DataIndex */
-        return $this->loadedIndexCache[$indexName][$this->getStoreId()];
+        return $this->dataIndexCollection
+            ->addFieldToFilter('engine_index_name', $this->indexingContext->getIndexName($this->getStoreId()))
+            ->addFieldToFilter('store_id', (string)$this->getStoreId())
+            ->getFirstItem()->afterLoad();
     }
 
     private function getStoreId(): int

@@ -29,4 +29,34 @@ class Collection extends AbstractCollection
         $this->setMainTable(DataPreloadItemsResource::TABLE_NAME);
         $this->_setIdFieldName(DataPreloadItemsResource::TABLE_PRIMARY_KEY);
     }
+
+    /**
+     * @return array<int, DataPreloadItems>
+     */
+    public function saveAllNew(): array
+    {
+        $oldIsLoaded = $this->isLoaded();
+        $this->_setIsLoaded(true);
+
+        $newItems = [];
+        $connection = $this->getConnection();
+        try {
+            $connection->beginTransaction();
+            /** @var DataPreloadItems $item */
+            foreach ($this->getItems() as $item) {
+                if ($item->getId()) {
+                    continue;
+                }
+                $this->getResource()->save($item);
+                $newItems[(int)$item->getId()] = $item;
+            }
+            $connection->commit();
+        } catch (\Exception $e) {
+            $connection->rollBack();
+            throw $e;
+        }
+        $this->_setIsLoaded($oldIsLoaded);
+
+        return $newItems;
+    }
 }

@@ -14,18 +14,19 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Indexing\Entity\Product;
 
-use Exception;
 use HawkSearch\Connector\Gateway\Http\Converter\ArrayToJson as ArrayToJsonConverter;
 use HawkSearch\EsIndexing\Model\DataIndex;
 use HawkSearch\EsIndexing\Model\DataPreloadItems as DataPreloadItemsModel;
+use HawkSearch\EsIndexing\Model\DataPreloadItemsFactory;
 use HawkSearch\EsIndexing\Model\Indexing\ContextInterface as IndexingContextInterface;
 use HawkSearch\EsIndexing\Model\Indexing\ItemsIndexerInterface;
 use HawkSearch\EsIndexing\Model\MessageQueue\MessageManagerInterface;
 use HawkSearch\EsIndexing\Model\MessageQueue\MessageTopicResolverInterface;
 use HawkSearch\EsIndexing\Model\ResourceModel\DataIndex as DataIndexResource;
 use HawkSearch\EsIndexing\Model\ResourceModel\DataIndex\Collection as DataIndexCollection;
-use HawkSearch\EsIndexing\Model\ResourceModel\DataIndex\CollectionFactory as DataIndexCollectionFactory;
 use HawkSearch\EsIndexing\Model\ResourceModel\DataPreloadItems as DataPreloadItemsResource;
+use HawkSearch\EsIndexing\Model\ResourceModel\DataPreloadItems\Collection as DataPreloadItemsCollection;
+use Magento\Framework\Exception\InputException;
 use Magento\Store\Model\StoreManagerInterface;
 
 
@@ -35,33 +36,37 @@ use Magento\Store\Model\StoreManagerInterface;
  */
 class ItemsIndexer implements ItemsIndexerInterface
 {
-    private $loadedIndexCache = [];
-    private string $indexName;
     private ArrayToJsonConverter $converter;
     private DataPreloadItemsResource $dataPreloadItemsResource;
+    private DataPreloadItemsFactory $dataPreloadItemsFactory;
+    private DataPreloadItemsCollection $dataPreloadItemsCollection;
     private DataIndexResource $dataIndexResource;
+    private DataIndexCollection $dataIndexCollection;
     private MessageManagerInterface $messageManager;
     private MessageTopicResolverInterface $messageTopicResolver;
-    private DataIndexCollectionFactory $dataIndexCollectionFactory;
     private StoreManagerInterface $storeManager;
     private IndexingContextInterface $indexingContext;
 
     public function __construct(
         ArrayToJsonConverter $converter,
         DataPreloadItemsResource $dataPreloadItemsResource,
+        DataPreloadItemsFactory $dataPreloadItemsFactory,
+        DataPreloadItemsCollection $dataPreloadItemsCollection,
         DataIndexResource $dataIndexResource,
+        DataIndexCollection $dataIndexCollection,
         MessageManagerInterface $messageManager,
         MessageTopicResolverInterface $messageTopicResolver,
-        DataIndexCollectionFactory $dataIndexCollectionFactory,
         StoreManagerInterface $storeManager,
         IndexingContextInterface $indexingContext
     ) {
         $this->converter = $converter;
         $this->dataPreloadItemsResource = $dataPreloadItemsResource;
+        $this->dataPreloadItemsFactory = $dataPreloadItemsFactory;
+        $this->dataPreloadItemsCollection = $dataPreloadItemsCollection;
         $this->dataIndexResource = $dataIndexResource;
+        $this->dataIndexCollection = $dataIndexCollection;
         $this->messageManager = $messageManager;
         $this->messageTopicResolver = $messageTopicResolver;
-        $this->dataIndexCollectionFactory = $dataIndexCollectionFactory;
         $this->storeManager = $storeManager;
         $this->indexingContext = $indexingContext;
     }
@@ -73,21 +78,19 @@ class ItemsIndexer implements ItemsIndexerInterface
 
     public function update(array $items, string $indexName): void
     {
-        $this->indexName = $indexName;
-        $this->processItems($items, 'index');
+        $this->processItems($items, 'index', $indexName);
     }
 
     public function delete(array $items, string $indexName): void
     {
-        $this->indexName = $indexName;
-        $this->processItems($items, 'delete');
+        $this->processItems($items, 'delete', $indexName);
     }
 
     /**
      * @param array<mixed> $items
      * @param string $method
      */
-    private function processItems(array $items, string $method): void
+    private function processItems(array $items, string $method, string $indexName): void
     {
         $items = array_values($items);
 
@@ -95,12 +98,13 @@ class ItemsIndexer implements ItemsIndexerInterface
             return;
         }
 
-        if (!$indexId = $this->loadDataIndexByName($this->indexName)->getId()) {
+        if ($indexName != $this->indexingContext->getIndexName($this->getStoreId())) {
             //@todo throw an exception here just not to make it silent
             return;
         }
 
-        if ($this->indexName != $this->indexingContext->getIndexName($this->getStoreId())) {
+        $dataIndex = $this->loadDataIndexByName($indexName);
+        if (!$dataIndex->getId()) {
             //@todo throw an exception here just not to make it silent
             return;
         }
@@ -114,54 +118,33 @@ class ItemsIndexer implements ItemsIndexerInterface
         $itemsChunks = array_chunk($items, $itemsBatchSize);
         $itemsBatches = count($itemsChunks);
 
-        $insertData = [];
         for ($page = 1; $page <= $itemsBatches; $page++) {
-            $insertData[] = [
-                'index_id' => $indexId,
-                'method' => $method,
-                'status' => DataPreloadItemsModel::STATUS_TYPE_OPEN,
-                'request' => $this->converter->convert([
-                    'IndexName' => $this->indexName,
+            /** @var DataPreloadItemsModel $newItem */
+            $newItem = $this->dataPreloadItemsFactory->create();
+            $newItem->setIndexId($dataIndex->getId())
+                ->setMethod($method)
+                ->setStatus(DataPreloadItemsModel::STATUS_TYPE_OPEN)
+                ->setRequest($this->converter->convert([
+                    'IndexName' => $indexName,
                     $dataFieldsMap[$method] => $itemsChunks[$page - 1]
-                ])
-            ];
+                ]));
+            $this->dataPreloadItemsCollection->addItem($newItem);
         }
 
-        $this->saveMultipleRows($insertData);
+        $this->saveMultipleItems($dataIndex);
     }
 
     /**
-     * @param list<array<string, mixed>> $data
-     * @throws Exception
+     * @throws InputException
      */
-    private function saveMultipleRows(array $data): void
+    private function saveMultipleItems(DataIndex $dataIndex): void
     {
-        $dataIds = [];
-        try {
-            $this->dataPreloadItemsResource->getConnection()->beginTransaction();
-
-            foreach ($data as $row) {
-                $this->dataPreloadItemsResource->addCommitCallback(function () use ($row, &$dataIds) {
-                    $this->dataPreloadItemsResource->getConnection()->insert(
-                        $this->dataPreloadItemsResource->getMainTable(),
-                        $row
-                    );
-                    $dataIds[] = (int)$this->dataPreloadItemsResource->getConnection()->lastInsertId(
-                        $this->dataPreloadItemsResource->getMainTable()
-                    );
-                });
-            }
-
-            $this->dataPreloadItemsResource->getConnection()->commit();
-        } catch (\Exception $e) {
-            $this->dataPreloadItemsResource->getConnection()->rollBack();
-            throw $e;
-        }
+        $savedItems = $this->dataPreloadItemsCollection->saveAllNew();
+        $dataIds = array_keys($savedItems);
 
         if (count($dataIds)) {
-            $dataIndex = $this->loadDataIndexByName($this->indexName);
-            $dataIndex->setStage2Scheduled($dataIndex->getStage2Scheduled() + count($dataIds));
-            $this->dataIndexResource->save($dataIndex);
+            $this->dataIndexResource->incrementStage2Scheduled($dataIndex, count($dataIds));
+            $this->dataIndexResource->load($dataIndex, $dataIndex->getId());
         }
 
         foreach ($dataIds as $id) {
@@ -174,7 +157,7 @@ class ItemsIndexer implements ItemsIndexerInterface
                         'dataId' => $id,
                     ],
                     'full_reindex' => $this->indexingContext->isFullReindex(),
-                    'index' => $this->indexName
+                    'index' => $dataIndex->getEngineIndexName()
                 ]
             );
         }
@@ -183,17 +166,12 @@ class ItemsIndexer implements ItemsIndexerInterface
 
     private function loadDataIndexByName(string $indexName): DataIndex
     {
-        if (!isset($this->loadedIndexCache[$indexName][$this->getStoreId()])) {
-            /** @var DataIndexCollection $collection */
-            $collection = $this->dataIndexCollectionFactory->create()
-                ->addFieldToFilter('engine_index_name', $indexName)
-                ->addFieldToFilter('store_id', $this->getStoreId());
-
-            $this->loadedIndexCache[$indexName][$this->getStoreId()] = $collection->getFirstItem();
-        }
+        $this->dataIndexCollection->_resetState();
 
         /** @var DataIndex */
-        return $this->loadedIndexCache[$indexName][$this->getStoreId()];
+        return $this->dataIndexCollection->addFieldToFilter('engine_index_name', $indexName)
+            ->addFieldToFilter('store_id', (string)$this->getStoreId())
+            ->getFirstItem()->afterLoad();
     }
 
     private function getStoreId(): int

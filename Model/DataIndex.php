@@ -42,14 +42,4 @@ class DataIndex extends AbstractModel
     {
         $this->_init(ResourceModel\DataIndex::class);
     }
-
-    public function beforeSave(): self
-    {
-        if ($this->hasDataChanges()) {
-            $this->setUpdatedAt(null);
-        }
-        return parent::beforeSave();
-    }
-
-
 }

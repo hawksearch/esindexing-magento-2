@@ -357,9 +357,9 @@ class IndexManagement implements IndexManagementInterface
         /** @var DataIndexCollection $collection */
         $collection = $this->dataIndexCollectionFactory->create()
             ->addFieldToFilter('engine_index_name', $indexName)
-            ->addFieldToFilter('store_id', $this->getStoreId());
+            ->addFieldToFilter('store_id', (string)$this->getStoreId());
 
         /** @var DataIndex */
-        return $collection->getFirstItem();
+        return $collection->getFirstItem()->afterLoad();
     }
 }
