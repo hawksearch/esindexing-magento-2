@@ -20,6 +20,7 @@ use HawkSearch\EsIndexing\Model\DataPreloadItems;
 use HawkSearch\EsIndexing\Model\DataPreloadItemsFactory;
 use HawkSearch\EsIndexing\Model\Indexing\EntityType\ProductEntityType;
 use HawkSearch\EsIndexing\Model\ResourceModel\DataPreloadItems as DataPreloadItemsResource;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Psr\Log\LoggerInterface;
 
 class DataPushProcessor
@@ -49,6 +50,11 @@ class DataPushProcessor
         $this->logInfoStep(0, [$dataId]);
 
         $item = $this->loadData($dataId);
+        if (!$item->getId()) {
+            $this->logInfoStep(2, [$dataId]);
+            throw new NoSuchEntityException(__('The Data Item with ID "%1" doesn\'t exist.', $dataId));
+        }
+
         $this->instructionManagerPool
             ->get('hawksearch-esindexing')->executeByCode(
                 $this->getInstructionCodeByMethod($item->getMethod()),
@@ -81,8 +87,9 @@ class DataPushProcessor
         $className = str_replace(__NAMESPACE__ . '\\', '', static::class);
         $steps = [
             // steps start from 0
-            "$className - Start push - Entity: $type, dataId: %s",
-            "$className - End push - Entity: $type, dataId: %s",
+            "$className - Start push - Entity: $type, Data Item Id: %s",
+            "$className - End push - Entity: $type, Data Item Id: %s",
+            "$className - Push Error - Entity: $type, Data Item Id: %s - is not found",
         ];
 
         if (!isset($steps[$step])) {
