@@ -17,7 +17,13 @@ namespace HawkSearch\EsIndexing\Model;
 use Magento\Framework\Model\AbstractModel;
 
 /**
+ * @method $this setIndexId(int $value)
+ * @method int getIndexId()
+ * @method $this setMethod(string $value)
  * @method string getMethod()
+ * @method $this setStatus(int $value)
+ * @method int getStatus()
+ * @method $this setRequest(string $value)
  * @method string getRequest()
  */
 class DataPreloadItems extends AbstractModel

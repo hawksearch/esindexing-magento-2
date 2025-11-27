@@ -14,6 +14,8 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\ResourceModel;
 
+use Magento\Framework\Model\AbstractModel;
+
 class DataIndex extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
 {
     public const TABLE_NAME = "hawksearch_data_index";
@@ -22,5 +24,40 @@ class DataIndex extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
     protected function _construct(): void
     {
         $this->_init(self::TABLE_NAME, self::TABLE_PRIMARY_KEY);
+    }
+
+    public function incrementStage2Scheduled(AbstractModel $object, int $increment = 1): void
+    {
+        try {
+            $this->getConnection()->beginTransaction();
+            $this->incrementColumnValue((int)$object->getId(), 'stage_2_scheduled', $increment);
+            $this->getConnection()->commit();
+        } catch (\Exception $e) {
+            $this->getConnection()->rollBack();
+            throw $e;
+        }
+    }
+
+    public function incrementStage2Completed(AbstractModel $object, int $increment = 1): void
+    {
+        try {
+            $this->getConnection()->beginTransaction();
+            $this->incrementColumnValue((int)$object->getId(), 'stage_2_completed', $increment);
+            $this->getConnection()->commit();
+        } catch (\Exception $e) {
+            $this->getConnection()->rollBack();
+            throw $e;
+        }
+    }
+
+    private function incrementColumnValue(int $rowId, string $columnName, int $increment = 1): void
+    {
+        $condition = $this->getConnection()->quoteInto($this->getIdFieldName() . '=?', $rowId);
+        $expr = sprintf('%s + %d', $this->getConnection()->quoteIdentifier($columnName), $increment);
+        $bind = [
+            $columnName => new \Zend_Db_Expr($expr)
+        ];
+
+        $this->getConnection()->update($this->getMainTable(), $bind, $condition);
     }
 }
