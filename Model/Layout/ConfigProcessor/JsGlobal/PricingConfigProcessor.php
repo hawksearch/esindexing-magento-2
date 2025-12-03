@@ -16,6 +16,29 @@ namespace HawkSearch\EsIndexing\Model\Layout\ConfigProcessor\JsGlobal;
 
 use HawkSearch\EsIndexing\Helper\PricingHelper;
 use HawkSearch\EsIndexing\Model\Layout\LayoutConfigProcessorInterface;
+use Magento\Framework\Locale\Format as LocaleFormat;
+use Magento\Store\Model\StoreManagerInterface;
+
+/**
+ * Render product pricing related Javascript configurations
+ * @deprecated Backend price template generation is deprecated. All price rendering is now handled by the frontend Vue component. Only raw price data and config are provided.
+ */
+class PricingConfigProcessor implements LayoutConfigProcessorInterface
+{
+    private LocaleFormat $localeFormat;
+    private StoreManagerInterface $storeManager;
+    private PricingHelper $pricingHelper;
+
+    public function __construct(
+        LocaleFormat $localeFormat,
+        StoreManagerInterface $storeManager,
+        PricingHelper $pricingHelper
+    ) {
+        $this->localeFormat = $localeFormat;
+        $this->storeManager = $storeManager;
+        $this->pricingHelper = $pricingHelper;
+    }
+
     /**
      * @deprecated Backend price template generation is deprecated. All price rendering is now handled by the frontend Vue component. Only raw price data and config are provided.
      */
@@ -29,34 +52,6 @@ use HawkSearch\EsIndexing\Model\Layout\LayoutConfigProcessorInterface;
             'currencyFormat' => $this->storeManager->getStore()->getCurrentCurrency()->getOutputFormat(),
             // No patterns or priceTemplates provided anymore
         ];
-        return $jsConfig;
-    }
-                        $fakeExcludingTaxPriceAmountPattern,
-                        $fakeIncludingTaxPriceAmountPattern,
-                    ],
-                    $template
-                );
-            }
-        }
-
-        $jsConfig['pricing'] = [
-            'currencyCode' => $this->storeManager->getStore()->getCurrentCurrencyCode(),
-            'priceFormat' => $this->localeFormat->getPriceFormat(),
-            'currencyFormat' => $this->storeManager->getStore()->getCurrentCurrency()->getOutputFormat(),
-            'patterns' => [
-                'uid' => $fakeUidPattern,
-                'excludingTaxPriceRegularAmount' => $fakeExcludingTaxPriceRegularAmountPattern,
-                'includingTaxPriceRegularAmount' => $fakeIncludingTaxPriceRegularAmountPattern,
-                'excludingTaxPriceAmount' => $fakeExcludingTaxPriceAmountPattern,
-                'includingTaxPriceAmount' => $fakeIncludingTaxPriceAmountPattern,
-                'excludingTaxPriceRegularFormattedAmount' => $fakeExcludingTaxPriceRegularAmountFormattedPattern,
-                'includingTaxPriceRegularFormattedAmount' => $fakeIncludingTaxPriceRegularAmountFormattedPattern,
-                'excludingTaxPriceAmountFormatted' => $fakeExcludingTaxPriceAmountFormattedPattern,
-                'includingTaxPriceAmountFormatted' => $fakeIncludingTaxPriceAmountFormattedPattern,
-            ],
-            'priceTemplates' => $priceTemplates
-        ];
-
         return $jsConfig;
     }
 }
