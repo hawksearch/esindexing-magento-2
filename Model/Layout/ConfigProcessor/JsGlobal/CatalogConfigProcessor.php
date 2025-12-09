@@ -129,7 +129,6 @@ class CatalogConfigProcessor implements LayoutConfigProcessorInterface
             }
             $allRewrites[$rewrite->getEntityId()] = $rewrite->getRequestPath();
         }
-        $noUrlRewriteProducts = array_diff($categoryProductIds, array_keys($allRewrites));
 
         if (count($urlRewriteExceptions) > $this->advancedCategoryConfig->getProductUrlRewriteExceptionsThreshold()) {
             return [];
@@ -137,7 +136,7 @@ class CatalogConfigProcessor implements LayoutConfigProcessorInterface
 
         return [
             'productUrlRewriteExceptions' => $urlRewriteExceptions,
-            'noUrlRewriteProducts' => $noUrlRewriteProducts
+            'noUrlRewriteProducts' => array_values(array_diff($categoryProductIds, array_keys($allRewrites)))
         ];
     }
 
