@@ -18,6 +18,7 @@
             <indexing>
                 <enable_indexing>0</enable_indexing>
                 <items_batch_size>125</items_batch_size>
+                <stale_indices_lifetime>7</stale_indices_lifetime>
             </indexing>
             <failure_recovery>
                 <enable>1</enable>
