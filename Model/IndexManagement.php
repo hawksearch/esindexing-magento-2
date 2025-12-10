@@ -33,19 +33,11 @@ use Psr\Log\LoggerInterface;
 /**
  * @api
  * @since 0.8.0
- * @todo implement index caching using {@see \HawkSearch\EsIndexing\Model\DataIndex}
  */
 class IndexManagement implements IndexManagementInterface
 {
-    /**
-     * @var array<int, ?array<string, string>>
-     */
-    private array $indicesListCache = [];
-    /**
-     * @var array<int, ?string>
-     */
-    private array $currentIndexCache = [];
-
+    private const MAX_VALID_COUNT = 2;
+    private const MAX_CURRENT_COUNT = 1;
     /**
      * @var InstructionManagerPoolInterface<string, InstructionManagerInterface>
      */
@@ -53,6 +45,7 @@ class IndexManagement implements IndexManagementInterface
     private LoggerInterface $hawkLogger;
     private StoreManagerInterface $storeManager;
     private DataIndexCollectionFactory $dataIndexCollectionFactory;
+    private DataIndexCollection $storeDataIndexCollection;
 
     /**
      * @param InstructionManagerPoolInterface<string, InstructionManagerInterface> $instructionManagerPool
@@ -95,23 +88,25 @@ class IndexManagement implements IndexManagementInterface
 
     public function getIndexName(bool $useCurrent = false): ?string
     {
-        $indices = $this->getIndices();
-        $currentIndex = $indices ? $this->getCurrentIndex() : '';
+        if (!$this->getStoreDataIndexCollection()->isLoaded()) {
+            $this->synchronizeIndices();
+        }
+
+        $currentIndex = null;
+        $nonCurrentIndex = null;
+        foreach ($this->getStoreDataIndices() as $index) {
+            if ($index->getIsCurrent() && !$currentIndex) {
+                $currentIndex = $index->getEngineIndexName();
+            } elseif (!$index->getIsCurrent() && !$nonCurrentIndex) {
+                $nonCurrentIndex = $index->getEngineIndexName();
+            }
+        }
 
         if ($useCurrent) {
             return $currentIndex;
+        } else {
+            return $nonCurrentIndex;
         }
-
-        $selectedIndex = '';
-        foreach ($indices as $indexName) {
-            if ($indexName === $currentIndex) {
-                continue;
-            }
-            $selectedIndex = $indexName;
-            break;
-        }
-
-        return $selectedIndex;
     }
 
     /**
@@ -127,8 +122,7 @@ class IndexManagement implements IndexManagementInterface
         ];
         $this->instructionManagerPool->get('hawksearch-esindexing')
             ->executeByCode('deleteIndex', $data);
-
-        $this->removeIndexFromCache($indexName);
+        $this->synchronizeIndices();
     }
 
     /**
@@ -142,9 +136,7 @@ class IndexManagement implements IndexManagementInterface
         /** @var EsIndexInterface $result */
         $result = $this->instructionManagerPool->get('hawksearch-esindexing')
             ->executeByCode('createIndex')->get();
-
-        $this->addIndexToCache($result->getIndexName());
-
+        $this->synchronizeIndices();
         return $result;
     }
 
@@ -160,11 +152,11 @@ class IndexManagement implements IndexManagementInterface
 
         $indexName = $this->getIndexName();
         if ($indexName) {
-            $this->hawkLogger->info(sprintf("Non current index selected: %s", $indexName));
+            $this->hawkLogger->info(sprintf("Non-current index is selected: %s", $indexName));
             $this->setCurrentIndex($indexName);
-            $this->resetIndexCache();
+            $this->synchronizeIndices();
         } else {
-            $this->hawkLogger->info(sprintf("There is no temporary index in HawkSearch engine yet."));
+            $this->hawkLogger->info("There is no temporary index in HawkSearch engine yet.");
         }
 
         $this->hawkLogger->info("--- switchIndices FINISHED ---");
@@ -213,7 +205,7 @@ class IndexManagement implements IndexManagementInterface
     }
 
     /**
-     * Get current index used for searching
+     * Get current index used for searching from external API
      *
      * @throws InstructionException
      * @throws NotFoundException
@@ -221,38 +213,126 @@ class IndexManagement implements IndexManagementInterface
      */
     private function getCurrentIndex(): ?string
     {
-        $indexFromCache = current($this->getIndicesFromCache(true));
-        if ($indexFromCache === false) {
-            /** @var EsIndexInterface $result */
-            $result = $this->instructionManagerPool->get('hawksearch-esindexing')
-                ->executeByCode('getCurrentIndex')->get();
+        /** @var EsIndexInterface $result */
+        $result = $this->instructionManagerPool->get('hawksearch-esindexing')
+            ->executeByCode('getCurrentIndex')->get();
+        return $result->getIndexName();
+    }
 
-            $indexFromCache = $result->getIndexName();
-            $this->addIndexToCache($indexFromCache, true);
-        }
-
-        return $indexFromCache;
+    private function getAvailableIndices(): IndexListInterface
+    {
+        return $this->instructionManagerPool->get('hawksearch-esindexing')
+            ->executeByCode('getIndexList')->get();
     }
 
     /**
-     * @return list<string>
+     * Synchronize table cache with external service and return valid index names
+     *
      * @throws InstructionException
-     * @throws NotFoundException
      * @throws NoSuchEntityException
+     * @throws NotFoundException
+     * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
-    private function getIndices(): array
+    private function synchronizeIndices(): void
     {
-        if (empty($this->getIndicesFromCache())) {
-            /** @var IndexListInterface $indexList */
-            $indexList = $this->instructionManagerPool->get('hawksearch-esindexing')
-                ->executeByCode('getIndexList')->get();
+        $storeId = $this->getStoreId();
 
-            foreach ($indexList->getIndexNames() as $indexName) {
-                $this->addIndexToCache($indexName);
+        // 1. Fetch from external service
+        $externalIndices = $this->getAvailableIndices()->getIndexNames();
+        $externalCurrent = $this->getCurrentIndex();
+
+        // 2. Load all DB rows for this store
+        $storeDataIndexCollection = $this->getStoreDataIndexCollection(true);
+        $storeDataIndexNames = [];
+
+        $validCount = 0;
+        $currentCount = 0;
+
+        $connection = $storeDataIndexCollection->getConnection();
+        try {
+            $connection->beginTransaction();
+
+            // 3. Update existing collection rows to match external state
+            /** @var DataIndex $dataIndex */
+            foreach ($storeDataIndexCollection as $dataIndex) {
+                $dataIndex->afterLoad();
+                $name = $dataIndex->getEngineIndexName();
+                $wasValid = (bool)$dataIndex->getIsValid();
+                $wasCurrent = (bool)$dataIndex->getIsCurrent();
+                $isValid = in_array($name, $externalIndices, true);
+                $isCurrent = ($name === $externalCurrent && $isValid);
+
+                $logChanges = false;
+                if ($wasValid !== $isValid) {
+                    $dataIndex->setIsValid($isValid);
+                    $logChanges = true;
+                }
+                if ($wasCurrent !== $isCurrent) {
+                    $dataIndex->setIsCurrent($isCurrent);
+                    $logChanges = true;
+                }
+                if ($logChanges) {
+                    $this->hawkLogger->info(sprintf(
+                        "Sync indices: Updating DB index '%s' for store %d: is_valid %d→%d, is_current %d→%d",
+                        $name, $storeId, (int)$wasValid, (int)$isValid, (int)$wasCurrent, (int)$isCurrent
+                    ));
+                }
+
+                if ($isValid) {
+                    $validCount++;
+                }
+                if ($isCurrent) {
+                    $currentCount++;
+                }
+                $storeDataIndexNames[$name] = $dataIndex;
             }
+
+            // 4. Insert missing external indices into collection
+            foreach ($externalIndices as $name) {
+                if (isset($storeDataIndexNames[$name])) {
+                    continue;
+                }
+
+                $this->hawkLogger->info(sprintf(
+                    "Sync indices: Inserting missing external index '%s' for store %d (is_current=%d)",
+                    $name, $storeId, ($name === $externalCurrent ? 1 : 0)
+                ));
+
+                $dataIndex = $storeDataIndexCollection->getNewEmptyItem();
+                $dataIndex->setEngineIndexName($name)
+                    ->setStoreId($storeId)
+                    ->setIsValid(true)
+                    ->setIsCurrent($name === $externalCurrent);
+                $storeDataIndexCollection->addItem($dataIndex);
+                if ($name === $externalCurrent) {
+                    $currentCount++;
+                }
+                $validCount++;
+            }
+
+            // 5. Save collection state to the DB and reset collection
+            $storeDataIndexCollection->save();
+            $this->getStoreDataIndexCollection(true);
+
+            $connection->commit();
+        } catch (\Exception $e) {
+            $connection->rollBack();
+            throw $e;
         }
 
-        return array_values($this->getIndicesFromCache());
+
+        // 6. Enforce max valid and current
+        // (If more than allowed, log warning)
+        if ($validCount > self::MAX_VALID_COUNT) {
+            $this->hawkLogger->warning(sprintf(
+                "More than %d valid indices detected for store %d", self::MAX_VALID_COUNT, $storeId
+            ));
+        }
+        if ($currentCount > self::MAX_CURRENT_COUNT) {
+            $this->hawkLogger->warning(sprintf(
+                "More than %d current indices detected for store %d", self::MAX_CURRENT_COUNT, $storeId
+            ));
+        }
     }
 
     /**
@@ -267,81 +347,6 @@ class IndexManagement implements IndexManagementInterface
         ];
         $this->instructionManagerPool->get('hawksearch-esindexing')
             ->executeByCode('setCurrentIndex', $data)->get();
-
-        $this->addIndexToCache($indexName, true);
-    }
-
-    /**
-     * Reset cached values
-     *
-     * @throws NoSuchEntityException
-     */
-    private function resetIndexCache(): void
-    {
-        $storeId = $this->getStoreId();
-        $this->indicesListCache[$storeId] = null;
-        $this->currentIndexCache[$storeId] = null;
-    }
-
-    /**
-     * @throws NoSuchEntityException
-     */
-    private function addIndexToCache(string $index, bool $isCurrent = false): void
-    {
-        $storeId = $this->getStoreId();
-
-        $this->indicesListCache[$storeId] = $this->indicesListCache[$storeId] ?? [];
-        $this->indicesListCache[$storeId][$index] = $index;
-
-        if ($isCurrent) {
-            $this->currentIndexCache[$storeId] = $index;
-        }
-
-        $dataIndex = $this->loadDataIndexByName($index);
-
-        $dataIndex->setEngineIndexName($index)
-            ->setIsCurrent($isCurrent)
-            ->setIsValid(true)
-            ->setStoreId($storeId);
-
-        $this->dataIndexCollectionFactory->create()
-            ->getResource()->save($dataIndex);
-    }
-
-    /**
-     * @throws NoSuchEntityException
-     */
-    private function removeIndexFromCache(string $index): void
-    {
-        $storeId = $this->getStoreId();
-
-        unset($this->indicesListCache[$storeId][$index]);
-        if (isset($this->currentIndexCache[$storeId]) && $this->currentIndexCache[$storeId] === $index) {
-            $this->currentIndexCache[$storeId] = null;
-        }
-
-        $dataIndex = $this->loadDataIndexByName($index);
-
-        if ($dataIndex->getId()) {
-            $dataIndex->setIsValid(false);
-            $this->dataIndexCollectionFactory->create()
-                ->getResource()->save($dataIndex);
-        }
-    }
-
-    /**
-     * @return list<string>
-     * @throws NoSuchEntityException
-     */
-    private function getIndicesFromCache(bool $isCurrent = false): array
-    {
-        $storeId = $this->getStoreId();
-
-        return array_values(
-            $isCurrent
-                ? (array)($this->currentIndexCache[$storeId] ?? null)
-                : ($this->indicesListCache[$storeId] ?? [])
-        );
     }
 
     /**
@@ -352,14 +357,24 @@ class IndexManagement implements IndexManagementInterface
         return (int)$this->storeManager->getStore()->getId();
     }
 
-    private function loadDataIndexByName(string $indexName): DataIndex
+    /**
+     * @return DataIndex[]
+     */
+    private function getStoreDataIndices(): array
     {
-        /** @var DataIndexCollection $collection */
-        $collection = $this->dataIndexCollectionFactory->create()
-            ->addFieldToFilter('engine_index_name', $indexName)
-            ->addFieldToFilter('store_id', (string)$this->getStoreId());
+        /** @var DataIndex[] */
+        return $this->getStoreDataIndexCollection()
+            ->addFieldToFilter('is_valid', ['eq' => 1])
+            ->getItems();
+    }
 
-        /** @var DataIndex */
-        return $collection->getFirstItem()->afterLoad();
+    private function getStoreDataIndexCollection(bool $reset = false): DataIndexCollection
+    {
+        if (!isset($this->storeDataIndexCollection) || $reset) {
+            $this->storeDataIndexCollection = $this->dataIndexCollectionFactory->create();
+            $this->storeDataIndexCollection->addFieldToFilter('store_id', ['eq' => $this->getStoreId()]);
+        }
+
+        return $this->storeDataIndexCollection;
     }
 }
