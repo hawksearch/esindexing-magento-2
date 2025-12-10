@@ -51,6 +51,16 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>If any indexing operation has been failed </comment>
                 </field>
+                <field id="stale_indices_lifetime" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" >
+                    <label>Stale indices lifetime</label>
+                    <comment>
+                        Defines the duration (in days) for which outdated or stale indices request data can be retained
+                        in the system before they are automatically removed.
+                        Set an appropriate gmtDateTime frame based on your website's data update frequency and usage patterns.
+                        Leave empty to disable automatic cleanup.
+                    </comment>
+                </field>
+
             </group>
             <group id="failure_recovery" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Failure Recovery</label>

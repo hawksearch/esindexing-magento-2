@@ -17,5 +17,8 @@
         <job name="hawksearch_retry_failed_operations" instance="HawkSearch\EsIndexing\Model\Cron\RetryFailedOperations" method="execute">
             <config_path>hawksearch_indexing_settings/failure_recovery/cron_expr</config_path>
         </job>
+        <job name="hawksearch_data_index_cleanup" instance="HawkSearch\EsIndexing\Model\Cron\DataIndexCleanup" method="execute">
+            <schedule>30 6,15 * * *</schedule>
+        </job>
     </group>
 </config>

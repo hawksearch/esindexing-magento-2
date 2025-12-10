@@ -22,6 +22,7 @@ class Indexing extends ConfigProvider
     public const CONFIG_ITEMS_BATCH_SIZE = 'items_batch_size';
     public const CONFIG_ENABLE_INDEXING = 'enable_indexing';
     public const CONFIG_PRODUCTS_INCLUDE_CATEGORIES_HIERARCHY = 'products_include_categories_hierarchy';
+    public const CONFIG_STALE_INDICES_LIFETIME = 'stale_indices_lifetime';
 
     public const ENABLE_INDEXING_DEFAULT = 0;
 
@@ -56,5 +57,14 @@ class Indexing extends ConfigProvider
     public function isProductsIncludeCategoriesHierarchy($store = null): bool
     {
         return (bool)$this->getConfig(self::CONFIG_PRODUCTS_INCLUDE_CATEGORIES_HIERARCHY, $store);
+    }
+
+    /**
+     * @param null|int|string $store
+     * @return int
+     */
+    public function getStaleIndicesLifetime($store = null): int
+    {
+        return (int)$this->getConfig(self::CONFIG_STALE_INDICES_LIFETIME, $store);
     }
 }
