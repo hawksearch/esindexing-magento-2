@@ -15,18 +15,18 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Api\SearchCriteria\JoinProcessor;
 
-use HawkSearch\EsIndexing\Model\Config\Products as ProductsConfig;
+use HawkSearch\EsIndexing\Model\Config\Products\PriceConfig;
 use Magento\Catalog\Model\ResourceModel\Product\Collection as ProductCollection;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessor\JoinProcessor\CustomJoinInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 
 class ProductPrices implements CustomJoinInterface
 {
-    private ProductsConfig $productsConfig;
+    private PriceConfig $priceConfig;
 
-    public function __construct(ProductsConfig $productsConfig)
+    public function __construct(PriceConfig $priceConfig)
     {
-        $this->productsConfig = $productsConfig;
+        $this->priceConfig = $priceConfig;
     }
 
     /**
@@ -35,7 +35,7 @@ class ProductPrices implements CustomJoinInterface
      */
     public function apply(AbstractDb $collection)
     {
-        if ($this->productsConfig->isIndexPrices()) {
+        if ($this->priceConfig->isIndexPrices()) {
             $collection->addPriceData();
         }
 
