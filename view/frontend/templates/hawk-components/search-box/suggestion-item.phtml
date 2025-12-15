@@ -6,7 +6,6 @@
                 <img class="hawk-sqItemImage-thumb" :src="getThumb('thumbnail_url')"/>
             </template>
             <span class="p-name">{{ htmlEntityDecode(getTitle()) }}</span>
-            <span v-html="hawksearch.formatItemPrice(item.Results.Document || {})"/>
             <product-price></product-price>
         </div>
     </li>
