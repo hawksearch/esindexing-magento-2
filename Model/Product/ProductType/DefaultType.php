@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Product\ProductType;
 
+use HawkSearch\Connector\Compatibility\PublicMethodDeprecationTrait;
 use HawkSearch\EsIndexing\Helper\PricingHelper;
 use HawkSearch\EsIndexing\Model\Config\Products\PriceConfig as PriceConfig;
 use HawkSearch\EsIndexing\Model\Product\PriceManagementInterface;
@@ -35,6 +36,35 @@ use Magento\Framework\Pricing\PriceCurrencyInterface;
  */
 abstract class DefaultType implements ProductTypeInterface
 {
+    use PublicMethodDeprecationTrait;
+
+    private array $deprecatedMethods = [
+        'addPricesIncludingTax' => [
+            'since' => '0.8.0',
+            'description' => 'Method will be removed. Handle taxes in UI.'
+        ],
+        'addFormattedPrices' => [
+            'since' => '0.8.0',
+            'description' => 'We do not send formatted prices to the index anymore. Handle price formatting in UI.'
+        ],
+        'handleTax' => [
+            'since' => '0.8.0',
+            'description' => 'Method will be removed. Handle taxes in UI.'
+        ],
+        'addSuffixedValue' => [
+            'since' => '0.8.0',
+            'description' => 'Method will be removed.'
+        ],
+        'getTierPrices' => [
+            'since' => '0.8.0',
+            'description' => 'Method will be removed.'
+        ],
+        'getAllCustomerGroupsId' => [
+            'since' => '0.8.0',
+            'description' => 'Method will be removed.'
+        ],
+    ];
+
     private PriceCurrencyInterface $priceCurrency;
     private GroupSourceInterface $customerGroupSource;
     private GroupManagementInterface $groupManagement;
@@ -59,28 +89,189 @@ abstract class DefaultType implements ProductTypeInterface
     }
 
     /**
+     * Provide pricing data based on Magento "Product Price" index
+     *
+     * 'price_regular' - regular product price entered in admin panel
+     * 'price_final' - minimum price from regular price, special price and tier price
+     * 'price_min' - minimum available price. Mainly used by complex products and is calculated based on prices of
+     *    children options
+     * 'price_max' - maximum available price. Mainly used by complex products and is calculated based on prices of
+     *     children options
+     * 'price_filtered' - an aggregated single field optimal for filtering and sorting results. Can be calculated based
+     *     on different price fields depending on the product type. It is used to create Price Facet and Sorting Option.
+     *
      * @param ProductModel $product
      */
     public function getPriceData(ProductInterface $product): array
     {
+        /**
+         * ************
+         * * EXAMPLES *
+         * ************
+         *
+         * [Simple Setup]
+         * [Virtual Setup]
+         *
+         * regular price - 6$
+         * special price - 4$
+         * Display price: 4$ (Regular: 6$)
+         * Hawk Facet Price: 4
+         *
+         * $priceData['price_regular'] = 6;
+         * $priceData['price_final'] = 4; // MIN(regular, special, tier)
+         * $priceData['price_min'] = 4; // always = price_final
+         * $priceData['price_max'] = 4; // always = price_final
+         * **************************************************************
+         *
+         * [Downloadable Setup]
+         *
+         * regular price - 6$
+         * special price - 5$
+         * Downloadable links:
+         *   - link1 - 3$
+         *   - link2 - 7$
+         * Display price: 5$ (Regular: 6$)
+         * Hawk Facet Price: 5
+         *
+         * $priceData['price_regular'] = 6;
+         * $priceData['price_final'] = 5; // MIN(regular, special, tier)
+         * $priceData['price_min'] = 8; // price_final + MIN(link price) =  5 + 3
+         * $priceData['price_max'] = 15; // price_final + SUM(links prices) = 5 + (3 + 7)
+         * **************************************************************
+         *
+         * [Gift Card Setup] (fixed amount)
+         *
+         * amount - 50$
+         * Display price: 50$
+         * Hawk Facet Price: 50
+         *
+         * $priceData['price_regular'] = null;
+         * $priceData['price_final'] = 50;
+         * $priceData['price_min'] = 50;
+         * $priceData['price_max'] = null;
+         * **************************************************************
+         *
+         * [Gift Card Setup] (open amount)
+         *
+         * amount  - 100$
+         * open amount from - 25$
+         * open amount to - 50$
+         * Display price: From 25$
+         * Hawk Facet Price: 25
+         *
+         * $priceData['price_regular'] = null;
+         * $priceData['price_final'] = 25;
+         * $priceData['price_min'] = 25;
+         * $priceData['price_max'] = null;
+         * *************************************************************
+         *
+         * [Bundle Setup] (Fixed Price)
+         *
+         * regular price - 100$
+         * special price - 90$ (10%)
+         * Options:
+         *   - Option1:
+         *      - value1 (fixed) - 0$
+         *      - value2 (percent) - 50%
+         *   - Option2:
+         *      - value1 (fixed) - 10$
+         *   - Option3:
+         *      - value1 (fixed) - 1$
+         *   - Option4:
+         *      - value1 (fixed) - 5$
+         * Display price: From 104.4$ (Regular: 116$) To 149.4$ (Regular: 166$)
+         * Hawk Facet Price: 104.4
+         *
+         * $priceData['price_regular'] = 100;
+         * $priceData['price_final'] = 90;
+         * $priceData['price_min'] = 104.4; // price_final + ( (MIN(Option1) + ... + MIN(Option4)) - 10% ) =
+         * // = 90 + ((0 + 10 + 1 + 5) - 10%) = 90 + (16 - 10%) = 104.4
+         * $priceData['price_max'] = 149.4; // price_final + ( (MAX(Option1) + ... + MAX(Option4)) - 10% ) =
+         * // = 90 + (((100 - 50%) + 10 + 1 + 5) - 10%) = 90 + ((50 + 10 + 1 + 5) - 10%) = 90 + (66 - 10%) = 149.4
+         * ************************************************************
+         *
+         * [Bundle Setup] (Dynamic Price)
+         *
+         * Options:
+         *   - Option1:
+         *     - Product1 - 23$
+         *     - Product2 - 27$
+         *     - Product3 - 32$ (special_price - 20$)
+         *   - Option2:
+         *     - value1 - 5$
+         *   - Option1:
+         *     - Product1 - 14$
+         *     - Product2 - 17$
+         *     - Product3 - 21$
+         *   - Option4:
+         *     - Product3 - 19$
+         * Display price: From 58$ (Regular: 61$) To 72$ (Regular: 77$)
+         * Hawk Facet Price: 58
+         *
+         * $priceData['price_regular'] = 0;
+         * $priceData['price_final'] = 0;
+         * $priceData['price_min'] = 58; // (MIN(Option1) + ... + MIN(Option4) = 20 + 5 + 14 + 19 = 58
+         * $priceData['price_max'] = 72; // (MAX(Option1) + ... + MAX(Option4) = 27 + 5 + 21 + 19 = 72
+         * ***********************************************************
+         *
+         * [Grouped Setup]
+         *
+         * Grouped products:
+         *   - Product1 - 17$
+         *   - Product2 - 14$ (special_price - 10$)
+         *   - Product3 - 21$ (special_price - 15$)
+         * Display price: Starting At 10$
+         * Hawk Facet Price: 10
+         *
+         * $priceData['price_regular'] = null;
+         * $priceData['price_final'] = null; // based on discount
+         * $priceData['price_min'] = 10; // MIN(Grouped products)
+         * $priceData['price_max'] = 17; // MAX(Grouped products)
+         * **********************************************************
+         *
+         * [Configurable Setup 1]
+         *
+         * Configurations:
+         *   - Product1 - 70$
+         *   - Product2 - 69$
+         *   - Product3 - 70$ (special_price - 60$)
+         * Display price: As low as 60$
+         * Hawk Facet Price: 60
+         *
+         * $priceData['price_regular'] = 0; // any price is possible, no relation to children
+         * $priceData['price_final'] = 0; // any price is possible, no relation to children MIN(regular, special, tier)
+         * $priceData['price_min'] = 60; // MIN(Configurations)
+         * $priceData['price_max'] = 70; // MAX(Configurations)
+         * *********************************************************
+         *
+         * [Configurable Setup 2]
+         *
+         * Configurations:
+         *   - Product1 - 70$
+         *   - Product2 - 70$
+         *   - Product3 - 70$
+         * Display price: 70$
+         * Hawk Facet Price: 70
+         *
+         * $priceData['price_regular'] = 70; // any price is possible, no relation to children
+         * $priceData['price_final'] = 70; // any price is possible, no relation to children MIN(regular, special, tier)
+         * $priceData['price_min'] = 70; // MIN(Configurations)
+         * $priceData['price_max'] = 70; // MAX(Configurations)
+         */
+
         $priceData = [];
         $priceData['price_regular'] = $this->getPriceRegular($product);
         $priceData['price_final'] = $this->getPriceFinal($product);
+        $priceData['price_min'] = $this->getPriceMin($product);
+        $priceData['price_max'] = $this->getPriceMax($product);
+        $priceData['price_filtered'] = $priceData['price_final'];
 
         // Add customer group prices
         if ($this->priceConfig->isIndexCustomerGroupPrices()) {
             $this->addPricesFromArray('price_group', $this->getCustomerGroupPrices($product), $priceData);
         }
 
-        //@todo tier price
-
-        //add prices including tax
-        $this->addPricesIncludingTax($product, $priceData);
-
         $this->roundPrices($priceData);
-
-        //add formatted prices (this step should be the last one)
-        $this->addFormattedPrices($product, $priceData);
 
         //$currencyList = $store->getAvailableCurrencyCodes();
         /*foreach ($currencyList as $currencyCode) {
@@ -100,7 +291,7 @@ abstract class DefaultType implements ProductTypeInterface
      */
     protected function getPriceRegular(ProductInterface $product): float
     {
-        return (float)$product->getPrice();
+        return (float)$product->getData(ProductInterface::PRICE);
     }
 
     /**
@@ -108,7 +299,7 @@ abstract class DefaultType implements ProductTypeInterface
      */
     protected function getPriceFinal(ProductInterface $product): float
     {
-        return (float)$product->getFinalPrice();
+        return (float)$product->getData('final_price');
     }
 
     /**
@@ -124,7 +315,7 @@ abstract class DefaultType implements ProductTypeInterface
      */
     protected function getPriceMax(ProductInterface $product): float
     {
-        return max((float)$product->getMaxPrice(), $this->getPriceMin($product));
+        return max((float)$product->getData('max_price'), $this->getPriceMin($product));
     }
 
     public function getChildProducts(ProductInterface $product): array
@@ -144,7 +335,7 @@ abstract class DefaultType implements ProductTypeInterface
             if (null === $price) {
                 continue;
             }
-            $this->addSuffixedValue($priceName, (string)$key, $price, $priceData);
+            $this->updatePriceArray($this->getSuffixedPrice($priceName, (string)$key, $price), $priceData);
         }
     }
 
@@ -152,25 +343,21 @@ abstract class DefaultType implements ProductTypeInterface
      * @param ProductModel $product
      * @param PriceData $priceData
      * @return void
+     * @deprecated 0.8.0 Method will be removed. Handle taxes in UI
      */
-    protected function addPricesIncludingTax(ProductInterface $product, array &$priceData)
+    private function addPricesIncludingTax(ProductInterface $product, array &$priceData)
     {
-        $priceDataCopy = $priceData;
-        foreach ($priceDataCopy as $key => $price) {
-            $price = $this->handleTax($product, $price, true);
-            $this->addSuffixedValue($key, 'include_tax', $price, $priceData);
-        }
+        return;
     }
 
     /**
      * @param PriceData $priceData
      * @return void
-     * @todo Review if we need to push prices rounded to the index
      */
     protected function roundPrices(array &$priceData)
     {
         foreach ($priceData as $key => $price) {
-            $priceData[$key] = $this->priceCurrency->round($price);
+            $priceData[$key] = $this->priceCurrency->roundPrice($price, 4);
         }
     }
 
@@ -178,35 +365,11 @@ abstract class DefaultType implements ProductTypeInterface
      * @param ProductModel $product
      * @param PriceData $priceData
      * @return void
+     * @deprecated 0.8.0 We do not send formatted prices to the index anymore. Handle price formatting in UI.
      */
-    protected function addFormattedPrices(ProductInterface $product, array &$priceData)
+    private function addFormattedPrices(ProductInterface $product, array &$priceData)
     {
-        $priceData = array_merge($priceData, $this->getFormattedPrices($product, $priceData));
-    }
-
-    /**
-     * @param ProductModel $product
-     * @param array<string, float> $prices
-     * @return array<string, string>
-     */
-    private function getFormattedPrices(ProductInterface $product, array $prices): array
-    {
-        $store = $product->getStore();
-        $resultPrices = [];
-        foreach ($prices as $key => $price) {
-            $this->addSuffixedValue($key, 'formatted', $price, $resultPrices);
-        }
-
-        foreach ($resultPrices as &$price) {
-            $price = $this->priceCurrency->format(
-                $price,
-                false,
-                PriceCurrencyInterface::DEFAULT_PRECISION,
-                $store
-            );
-        }
-
-        return $resultPrices;
+        return;
     }
 
     /**
@@ -215,10 +378,16 @@ abstract class DefaultType implements ProductTypeInterface
      * @param float $price
      * @param PriceData $priceData
      * @return void
+     * @deprecated 0.8.0 Method will be removed.
      */
-    protected function addSuffixedValue(string $priceName, string $suffix, float $price, array &$priceData)
+    private function addSuffixedValue(string $priceName, string $suffix, float $price, array &$priceData)
     {
-        $priceData = array_merge($priceData, $this->getSuffixedPrice($priceName, $suffix, $price));
+        return;
+    }
+
+    private function updatePriceArray(array $addition, array &$result): void
+    {
+        $result = array_merge($result, $addition);
     }
 
     /**
@@ -233,10 +402,11 @@ abstract class DefaultType implements ProductTypeInterface
      * @param ProductModel $product
      * @param float $price
      * @param bool $forceIncludeTax
+     * @deprecated 0.8.0 Method will be removed. Handle taxes in UI
      */
-    protected function handleTax(ProductInterface $product, float $price, bool $forceIncludeTax = false): float
+    private function handleTax(ProductInterface $product, float $price, bool $forceIncludeTax = false): float
     {
-        return $this->pricingHelper->handleTax($product, $price, $forceIncludeTax);
+        return $price;
     }
 
     /**
@@ -285,8 +455,6 @@ abstract class DefaultType implements ProductTypeInterface
             $productCopy->unsetData('calculated_final_price');
 
             $groupPrices[$groupId] = $this->getPriceFinal($productCopy);
-
-            //$groupPrices[$groupId] = $this->handleTax($product, $finalPrice);
         }
         unset($productCopy);
 
@@ -295,49 +463,22 @@ abstract class DefaultType implements ProductTypeInterface
 
     /**
      * @throws LocalizedException
+     * @deprecated 0.8.0 Method will be removed.
      */
-    protected function getAllCustomerGroupsId(): ?int
+    private function getAllCustomerGroupsId(): ?int
     {
         // ex: 32000
-        return $this->groupManagement->getAllCustomersGroup()->getId();
+        return 3200;
     }
 
     /**
      * @param ProductModel $product
      * @return array<int, float>
      * @throws LocalizedException
+     * @deprecated 0.8.0 Method will be removed.
      */
-    protected function getTierPrices(ProductInterface $product): array
+    private function getTierPrices(ProductInterface $product): array
     {
-        $originalTierPrice = $product->getData('tier_price');
-        $product->unsetData('tier_price');
-
-        $pricesByGroup = [];
-        $productTierPrices = $product->getTierPrices();
-        if (!is_null($productTierPrices)) {
-            foreach ($productTierPrices as $productTierPrice) {
-                $pricesByGroup[(int)$productTierPrice->getCustomerGroupId()][] = (float)$productTierPrice->getValue();
-            }
-        }
-
-        foreach ($pricesByGroup as $groupId => $prices) {
-            $pricesByGroup[$groupId] = min($prices);
-        }
-
-        $allGroupsId = $this->getAllCustomerGroupsId();
-        $groupTierPrices = [];
-        $allGroupsPrice = $pricesByGroup[$allGroupsId] ?? null;
-        foreach ($this->getCustomerGroups() as $group) {
-            $groupId = $group['value'];
-            $groupPrice = $pricesByGroup[$groupId] ?? $allGroupsPrice;
-
-            if ($groupPrice !== null) {
-                $groupTierPrices[$groupId] = $this->handleTax($product, $groupPrice);
-            }
-        }
-
-        $product->setData('tier_price', $originalTierPrice);
-
-        return $groupTierPrices;
+        return [];
     }
 }

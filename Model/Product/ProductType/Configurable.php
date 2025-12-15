@@ -14,18 +14,6 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Product\ProductType;
 
-use Magento\Catalog\Api\Data\ProductInterface;
-
 class Configurable extends CompositeType
 {
-    /**
-     * Avoid returning final price including tax
-     * Force to load min_price from price index
-     *
-     * @see \Magento\ConfigurableProduct\Model\Product\Type\Configurable\Price::getFinalPrice
-     */
-    public function getPriceFinal(ProductInterface $product): float
-    {
-        return max($this->getPriceMin($product), 0);
-    }
 }

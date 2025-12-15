@@ -14,13 +14,14 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Product\ProductType;
 
+use HawkSearch\Connector\Compatibility\PublicMethodDeprecationTrait;
 use HawkSearch\Connector\Compatibility\PublicPropertyDeprecationTrait;
-use Magento\Bundle\Model\Product\Price;
 use Magento\Catalog\Api\Data\ProductInterface;
 
 class Bundle extends CompositeType
 {
     use PublicPropertyDeprecationTrait;
+    use PublicMethodDeprecationTrait;
 
     private array $deprecatedPublicProperties = [
         'keySelectionsCollection' => [
@@ -29,18 +30,24 @@ class Bundle extends CompositeType
         ],
     ];
 
+    private array $deprecatedMethods = [
+        'getMinMaxPrice' => [
+            'since' => '0.8.0',
+            'description' => 'We get min and max prices right from price index. Method will be removed.'
+        ],
+    ];
+
     /**
      * @private since 0.7.0 will be removed
      */
     private string $keySelectionsCollection = '_cache_instance_selections_collection_hawksearch';
 
-    protected function getMinMaxPrice(ProductInterface $product): array
+    /**
+     * @deprecated 0.8.0 We get min and max prices right from price index. Method will be removed
+     */
+    private function getMinMaxPrice(ProductInterface $product): array
     {
-        /** @var Price $priceModel */
-        $priceModel = $product->getPriceModel();
-        [$min, $max] = $priceModel->getTotalPrices($product, null, true, true);
-
-        return [(float)$min, (float)$max];
+        return [0, 0];
     }
 
 }

@@ -1,0 +1,114 @@
+<?php
+/**
+ * Copyright (c) 2025 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ */
+declare(strict_types=1);
+
+namespace HawkSearch\EsIndexing\Test\Unit\Model\Product\ProductType;
+
+use HawkSearch\Connector\Test\Unit\Compatibility\LegacyBaseTrait;
+use HawkSearch\EsIndexing\Helper\PricingHelper;
+use HawkSearch\EsIndexing\Model\Config\Products\PriceConfig;
+use HawkSearch\EsIndexing\Model\Product\ProductType\CompositeType;
+use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Customer\Api\GroupManagementInterface;
+use Magento\Customer\Model\Customer\Source\GroupSourceInterface;
+use Magento\Framework\Module\Manager as ModuleManager;
+use Magento\Framework\Pricing\PriceCurrencyInterface;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+
+class CompositeTypeTest extends TestCase
+{
+    use LegacyBaseTrait;
+
+    private PriceCurrencyInterface|MockObject $priceCurrencyMock;
+    private GroupSourceInterface|MockObject $customerGroupSourceMock;
+    private GroupManagementInterface|MockObject $groupManagementMock;
+    private ModuleManager|MockObject $moduleManagerMock;
+    private PricingHelper|MockObject $pricingHelperMock;
+    private PriceConfig|MockObject $priceConfigMock;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->setUpLegacy($this);
+
+        $this->priceCurrencyMock = $this->getMockBuilder(PriceCurrencyInterface::class)
+            ->disableOriginalConstructor()
+            ->getMockForAbstractClass();
+        $this->customerGroupSourceMock = $this->getMockBuilder(GroupSourceInterface::class)
+            ->disableOriginalConstructor()
+            ->getMockForAbstractClass();
+        $this->groupManagementMock = $this->getMockBuilder(GroupManagementInterface::class)
+            ->disableOriginalConstructor()
+            ->getMockForAbstractClass();
+        $this->moduleManagerMock = $this->getMockBuilder(ModuleManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->pricingHelperMock = $this->getMockBuilder(PricingHelper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->priceConfigMock = $this->getMockBuilder(PriceConfig::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+    }
+
+    protected function tearDown(): void
+    {
+        $this->tearDownLegacy($this);
+        parent::tearDown();
+    }
+
+    public function testAccessingDeprecatedMethods(): void
+    {
+        $this->setUpLegacy($this);
+
+        $model = new TestFixtureSubCompositeTypeLegacy(
+            $this->priceCurrencyMock,
+            $this->customerGroupSourceMock,
+            $this->groupManagementMock,
+            $this->moduleManagerMock,
+            $this->pricingHelperMock,
+            $this->priceConfigMock
+        );
+
+        $model->callDeprecatedProtectedMethods($this);
+
+        $this::assertSame(
+            [
+                "Since 0.8.0: Method HawkSearch\EsIndexing\Model\Product\ProductType\CompositeType::getMinMaxPrice() has been deprecated and it's public/protected usage will be discontinued. We get min and max prices right from price index. Method will be removed.",
+                "Since 0.8.0: Method HawkSearch\EsIndexing\Model\Product\ProductType\CompositeType::getMinMaxPrice() has been deprecated and it's public/protected usage will be discontinued. We get min and max prices right from price index. Method will be removed.",
+            ],
+            $this->deprecations
+        );
+
+    }
+}
+
+class TestFixtureSubCompositeTypeLegacy extends CompositeType
+{
+    public function callDeprecatedProtectedMethods(CompositeTypeTest $test): void
+    {
+        $this->callGetMinMaxPrice($test);
+    }
+
+    private function callGetMinMaxPrice(CompositeTypeTest $test): void
+    {
+        $productMock = $test->getMockBuilder(ProductInterface::class)
+            ->disableOriginalConstructor()
+            ->getMockForAbstractClass();
+        $method = 'getMinMaxPrice';
+
+        $ret = $this->$method($productMock);
+        $ret = parent::$method($productMock);
+    }
+}
