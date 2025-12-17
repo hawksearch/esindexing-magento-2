@@ -18,12 +18,18 @@ define([
 
     // Mock tax calculation logic
     function calculateTaxInclusive(price, taxRate) {
-        if (price == null || isNaN(price)) return null;
+        if (price == null || isNaN(price)) {
+            return null;
+        }
+
         return Number(price) * (1 + taxRate);
     }
 
     function formatPrice(value, priceFormat) {
-        if (value == null || isNaN(value)) return '';
+        if (value == null || isNaN(value)) {
+            return '';
+        }
+
         return new Intl.NumberFormat(priceFormat?.locale || 'en-US', {
             style: 'currency',
             currency: priceFormat?.currency || 'USD',
@@ -50,14 +56,14 @@ define([
             priceData() {
                 // Extract fields from document
                 const doc = this.document || {};
-                const typeId = doc.type_id || '';
-                const price_regular = doc.price_regular ?? null;
-                const price_final = doc.price_final ?? null;
-                const price_min = doc.price_min ?? null;
-                const price_max = doc.price_max ?? null;
+                const typeId = window.hawksearch.getDocumentField(doc, 'type_id') || '';
+                const price_regular = window.hawksearch.getDocumentField(doc, 'price_regular');
+                const price_final = window.hawksearch.getDocumentField(doc, 'price_final');
+                const price_min = window.hawksearch.getDocumentField(doc, 'price_min');
+                const price_max = window.hawksearch.getDocumentField(doc, 'price_max');
                 const priceFormat = this.pricingConfig.priceFormat || { currency: 'USD', locale: 'en-US' };
                 const taxDisplayMode = this.pricingConfig.taxDisplayMode || 'excluding_tax';
-                const uid = doc.uid || doc.__uid || '';
+                const uid = window.hawksearch.extractId(doc);
                 // Configurable mock tax rate (can be replaced with real service)
                 const mockTaxRate = this.pricingConfig.mockTaxRate ?? 0.2; // 20% default
                 // Helper for formatted price
