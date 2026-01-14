@@ -82,8 +82,8 @@ class ItemsDataProvider implements ItemsDataProviderInterface
         Visibility $visibility,
         Indexing $indexingConfig,
         CategoryCollectionFactory $categoryCollectionFactory,
-        ExcludeNotVisibleProductsFlagInterface $excludeNotVisibleProductsFlag = null,
-        ProductDataProvider $productDataProvider = null
+        ?ExcludeNotVisibleProductsFlagInterface $excludeNotVisibleProductsFlag = null,
+        ?ProductDataProvider $productDataProvider = null
     ) {
         $this->productRepository = $productRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;

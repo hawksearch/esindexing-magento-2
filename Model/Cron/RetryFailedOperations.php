@@ -287,7 +287,7 @@ class RetryFailedOperations
     {
         try {
             $this->messageValidator->validate(AsyncConfig::SYSTEM_TOPIC_NAME, $operation);
-        } catch (LocalizedException | \InvalidArgumentException $exception) {
+        } catch (LocalizedException|\InvalidArgumentException $exception) {
             $this->rejectOperation($operation, $exception->getCode(), $exception->getMessage());
             return false;
         }
@@ -332,7 +332,7 @@ class RetryFailedOperations
     protected function increaseOperationTrials(QueueOperationDataInterface $operationData): QueueOperationDataInterface
     {
         $data = $this->serializer->unserialize($operationData->getData());
-        $data['number_of_trials'] =  ($data['number_of_trials'] ?? 0) + 1;
+        $data['number_of_trials'] = ($data['number_of_trials'] ?? 0) + 1;
 
         return $this->operationDataFactory->create(['data' => $this->serializer->serialize($data)]);
     }
@@ -345,8 +345,11 @@ class RetryFailedOperations
      * @param string|null $message
      * @return bool
      */
-    protected function rejectOperation(OperationInterface  $operation, int $errorCode = null, string $message = null): bool
-    {
+    protected function rejectOperation(
+        OperationInterface $operation,
+        ?int $errorCode = null,
+        ?string $message = null
+    ): bool {
         $this->logger->critical(__('Message has been rejected: %1', $message));
 
         return $this->operationManagement->changeOperationStatus(
