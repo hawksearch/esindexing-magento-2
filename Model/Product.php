@@ -76,8 +76,8 @@ class Product
         ProductFactory $productFactory,
         Type $productType,
         FulltextResource $fulltextResource,
-        ProductResource $productResource = null,
-        MetadataPool $metadataPool = null
+        ?ProductResource $productResource = null,
+        ?MetadataPool $metadataPool = null
 
     ) {
         $this->productFactory = $productFactory;

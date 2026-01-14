@@ -32,7 +32,7 @@ class DataStorage implements DataStorageInterface
      * @param string|null $name
      * @throws RuntimeException
      */
-    public function __construct(string $name = null)
+    public function __construct(?string $name = null)
     {
         if ($name === null) {
             throw new RuntimeException(
