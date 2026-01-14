@@ -1251,7 +1251,7 @@
 
     <type name="HawkSearch\EsIndexing\Gateway\Http\IndexingApiTransferFactory">
         <arguments>
-            <argument name="headersBuilder" xsi:type="object">HawkSearchApiHeaders</argument>
+            <argument name="builderInterfaceFactory" xsi:type="object">headersBuilderFactoryVirtual</argument>
             <argument name="apiConfig" xsi:type="object">HawkSearch\Connector\Gateway\Config\IndexingApiConfig</argument>
         </arguments>
     </type>
