@@ -69,15 +69,15 @@ abstract class EntityTypeAbstract implements EntityTypeInterface
         ItemsIndexerInterface $itemsIndexer,
         AbstractConfigHelper $configHelper,
         //@todo deprecate $typeName default value
-        string $typeName = null,
-        FieldNameProviderInterface $fieldNameProvider = null,
+        ?string $typeName = null,
+        ?FieldNameProviderInterface $fieldNameProvider = null,
         /**
          * @deprecated 0.7.0 in favour of a new Field Handlers logic.
          * @see $fieldHandler
          * Update dependencies in di.xml file.
          * @phpstan-ignore-next-line
          */
-        FieldHandlerInterface $attributeHandler = null
+        ?FieldHandlerInterface $attributeHandler = null
     ) {
         $this->rebuilder = $rebuilder;
         $this->itemsDataProvider = $itemsDataProvider;

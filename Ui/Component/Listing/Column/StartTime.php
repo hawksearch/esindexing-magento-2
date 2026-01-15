@@ -48,8 +48,8 @@ class StartTime extends Date
         OperationResource $operation,
         array $components = [],
         array $data = [],
-        ResolverInterface $localeResolver = null,
-        DataBundle $dataBundle = null
+        ?ResolverInterface $localeResolver = null,
+        ?DataBundle $dataBundle = null
     ) {
         $this->operationResource = $operation;
         parent::__construct(

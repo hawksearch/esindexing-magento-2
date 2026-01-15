@@ -30,7 +30,7 @@ class DataStorage implements DataStorageInterface
      * @throws RuntimeException
      * @todo $name: remove default value 'null'
      */
-    public function __construct(string $name = null)
+    public function __construct(?string $name = null)
     {
         if ($name === null) {
             throw new RuntimeException(

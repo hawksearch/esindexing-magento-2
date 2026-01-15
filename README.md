@@ -20,8 +20,9 @@ Check out our [Getting Started](https://developerdocs.hawksearch.com/docs/magent
 
 ## Platform Version Support
 
-* Magento Open Source: **2.4.4 - 2.4.7**
-* Adobe Commerce: **2.4.4 - 2.4.7**
+* Magento Open Source: **2.4.4 - 2.4.8**
+* Adobe Commerce: **2.4.4 - 2.4.8**
+* PHP: **8.1 - 8.4**
 
 ## Installation Instructions
 
