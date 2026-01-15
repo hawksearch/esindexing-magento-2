@@ -421,7 +421,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
      *      Using of 'code' and 'value' options is deprecated. Use @see FieldHandlerInterface to migrate fields with values.
      * @see FieldNameProviderInterface
      */
-    protected function getIndexedAttributes(DataObject $item = null): array
+    protected function getIndexedAttributes(?DataObject $item = null): array
     {
         return [];
     }

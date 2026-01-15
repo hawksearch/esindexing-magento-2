@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 See tasks currently in development on [Unreleased] changes page.
 
+## [0.7.5] - 2026-01-15
+### FIXES
+* **fix(gateway): prevent access denied API error because of missed headers**  - [#135](https://github.com/hawksearch/esindexing-magento-2/pull/135)
+* **fix: add php 8.4 compatibility** - [#134](https://github.com/hawksearch/esindexing-magento-2/pull/134)
+
 ## [0.7.4] - 2024-11-19
 ### FIXES
 * **fix: image and thumbnail attributes not indexing** ([#81](https://github.com/hawksearch/esindexing-magento-2/pull/81))
@@ -488,7 +493,8 @@ __fix: minimal compatible version of connector package is 2.8.0__ ([#45](https:/
 ## 0.1.0
 Initial stable release
 
-[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.7.4...HEAD
+[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.7.5...HEAD
+[0.7.5]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.7.4...v0.7.5
 [0.7.4]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.7.3...v0.7.4
 [0.7.3]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.7.2...v0.7.3
 [0.7.2]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.7.1...v0.7.2

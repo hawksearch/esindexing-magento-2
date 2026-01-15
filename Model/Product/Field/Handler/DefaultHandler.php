@@ -32,7 +32,7 @@ class DefaultHandler implements FieldHandlerInterface
     private ProductAttributesProvider $productAttributes;
 
     public function __construct(
-        ProductAttributesProvider $productAttributes = null
+        ?ProductAttributesProvider $productAttributes = null
     ) {
         $this->productAttributes = $productAttributes ?: ObjectManager::getInstance()->get(ProductAttributesProvider::class);
     }

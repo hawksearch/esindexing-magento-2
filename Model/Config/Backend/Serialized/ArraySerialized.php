@@ -49,10 +49,10 @@ class ArraySerialized extends ArraySerializedParent
         ScopeConfigInterface $config,
         TypeListInterface $cacheTypeList,
         ValueProcessorInterface $processor,
-        AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
+        ?AbstractResource $resource = null,
+        ?AbstractDb $resourceCollection = null,
         array $data = [],
-        Json $serializer = null
+        ?Json $serializer = null
     ) {
         parent::__construct(
             $context,
