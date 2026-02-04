@@ -2,7 +2,7 @@
  * Product Price Component (Refactored)
  * Main component that orchestrates pricing display using hierarchical components
  * Uses PriceDataProcessor for business logic separation
- * 
+ *
  * @module HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price-refactored
  */
 define([
@@ -29,7 +29,7 @@ define([
     return {
         name: 'product-price-refactored',
         template: template,
-        
+
         components: {
             'price-amount-wrapper': PriceAmountWrapper,
             'price-tax-wrapper': PriceTaxWrapper,
@@ -37,7 +37,7 @@ define([
             'price-container': PriceContainer,
             'price-range-wrapper': PriceRangeWrapper
         },
-        
+
         props: {
             /**
              * Product document from search results
@@ -50,7 +50,7 @@ define([
                     return this.$parent?.result?.Document || {};
                 }
             },
-            
+
             /**
              * Pricing configuration from window.hawksearchConfig
              * @type {Object}
@@ -63,7 +63,7 @@ define([
                 }
             }
         },
-        
+
         data: function() {
             return {
                 priceProcessor: null,
@@ -71,7 +71,7 @@ define([
                 processingError: null
             };
         },
-        
+
         created: function() {
             // Initialize price processor with configuration
             var config = {
@@ -81,33 +81,56 @@ define([
                 decimalSeparator: this.pricingConfig.priceFormat?.decimalSeparator || '.',
                 thousandsSeparator: this.pricingConfig.priceFormat?.thousandsSeparator || ','
             };
-            
+
             this.priceProcessor = new PriceDataProcessor(config);
         },
-        
+
         computed: {
             /**
              * Extract raw product data from document
+             * Uses window.hawksearch SDK methods with fallback for field access
              * @returns {ProductTypeData|null}
              */
             rawProductData: function() {
                 var doc = this.document || {};
-                var sdk = window.hawksearch || window.HawkSearchVueSDK;
-                
-                if (!sdk || !doc) {
+
+                if (!doc || Object.keys(doc).length === 0) {
                     return null;
                 }
-                
+
+                // Helper function to safely get document field
+                var getField = function(field) {
+                    if (window.hawksearch && typeof window.hawksearch.getDocumentField === 'function') {
+                        return window.hawksearch.getDocumentField(doc, field);
+                    }
+                    // Fallback: handle both array and non-array field values
+                    var value = doc[field];
+                    if (Array.isArray(value) && value.length > 0) {
+                        return value[0];
+                    }
+                    return value !== undefined ? value : null;
+                };
+
+                // Extract ID using SDK method with fallback
+                var uid;
+                if (window.hawksearch && typeof window.hawksearch.extractId === 'function') {
+                    uid = window.hawksearch.extractId(doc);
+                }
+                // Fallback: try both uid and __uid fields
+                if (!uid) {
+                    uid = getField('uid') || getField('__uid') || '';
+                }
+
                 return {
-                    type_id: sdk.getDocumentField(doc, 'type_id') || '',
-                    __uid: sdk.extractId(doc),
-                    price_regular: sdk.getDocumentField(doc, 'price_regular'),
-                    price_final: sdk.getDocumentField(doc, 'price_final'),
-                    price_min: sdk.getDocumentField(doc, 'price_min'),
-                    price_max: sdk.getDocumentField(doc, 'price_max')
+                    type_id: getField('type_id') || '',
+                    __uid: uid,
+                    price_regular: getField('price_regular'),
+                    price_final: getField('price_final'),
+                    price_min: getField('price_min'),
+                    price_max: getField('price_max')
                 };
             },
-            
+
             /**
              * Tax configuration from pricing config
              * @returns {TaxConfiguration}
@@ -120,7 +143,7 @@ define([
                     decimalPlaces: this.pricingConfig.priceFormat?.decimalPlaces || 2
                 };
             },
-            
+
             /**
              * Process price data through PriceDataProcessor
              * @returns {PriceData|null}
@@ -129,7 +152,7 @@ define([
                 if (!this.rawProductData || !this.priceProcessor) {
                     return null;
                 }
-                
+
                 try {
                     return this.priceProcessor.process(this.rawProductData, this.taxConfig);
                 } catch (error) {
@@ -138,7 +161,7 @@ define([
                     return null;
                 }
             },
-            
+
             /**
              * Check if product type is supported
              * @returns {Boolean}
