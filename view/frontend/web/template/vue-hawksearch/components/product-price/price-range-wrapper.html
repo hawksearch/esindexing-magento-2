@@ -1,0 +1,14 @@
+<div v-if="!hasRange" class="price-box">
+    <slot></slot>
+</div>
+<template v-else>
+    <p v-if="rangeType === 'from'" class="minimal-price-link price-from">
+        <slot name="minimum"></slot>
+    </p>
+    <p v-if="rangeType === 'to'" class="minimal-price-link price-to">
+        <slot name="maximum"></slot>
+    </p>
+    <div v-if="rangeType === 'grouped'" class="price-box">
+        <slot></slot>
+    </div>
+</template>
