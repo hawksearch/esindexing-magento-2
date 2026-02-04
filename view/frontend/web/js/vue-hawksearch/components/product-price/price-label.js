@@ -2,7 +2,7 @@
  * Price Label Component
  * Displays price labels with configurable positioning (outer/inner)
  * Handles labels like "Special Price", "Regular Price", "As low as", etc.
- * 
+ *
  * @module HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price/price-label
  */
 define([
@@ -11,9 +11,10 @@ define([
 ], function(HawksearchVue, template) {
     'use strict';
 
-    return HawksearchVue.component('price-label', {
+    return {
+        name: 'price-label',
         template: template,
-        
+
         props: {
             /**
              * Label text to display
@@ -24,7 +25,7 @@ define([
                 type: String,
                 default: null
             },
-            
+
             /**
              * Whether label should be positioned outside (before) the price container
              * @type {Boolean}
@@ -34,7 +35,7 @@ define([
                 type: Boolean,
                 default: false
             },
-            
+
             /**
              * CSS class for the label
              * @type {String}
@@ -45,5 +46,5 @@ define([
                 default: 'price-label'
             }
         }
-    });
+    };
 });

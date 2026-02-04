@@ -2,7 +2,7 @@
  * Price Range Wrapper Component
  * Handles bundle price ranges (from/to) and grouped product containers
  * Provides different wrappers based on product type and range presence
- * 
+ *
  * @module HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price/price-range-wrapper
  */
 define([
@@ -11,9 +11,10 @@ define([
 ], function(HawksearchVue, template) {
     'use strict';
 
-    return HawksearchVue.component('price-range-wrapper', {
+    return {
+        name: 'price-range-wrapper',
         template: template,
-        
+
         props: {
             /**
              * Whether product has a price range
@@ -24,7 +25,7 @@ define([
                 type: Boolean,
                 default: false
             },
-            
+
             /**
              * Range display type
              * @type {String}
@@ -39,5 +40,5 @@ define([
                 }
             }
         }
-    });
+    };
 });

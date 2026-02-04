@@ -2,7 +2,7 @@
  * Price Tax Wrapper Component
  * Handles tax mode display logic (excluding/including/both)
  * This is a transparent wrapper with no HTML output - pure logic component
- * 
+ *
  * @module HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price/price-tax-wrapper
  */
 define([
@@ -11,9 +11,10 @@ define([
 ], function(HawksearchVue, template) {
     'use strict';
 
-    return HawksearchVue.component('price-tax-wrapper', {
+    return {
+        name: 'price-tax-wrapper',
         template: template,
-        
+
         props: {
             /**
              * Tax display mode
@@ -28,7 +29,7 @@ define([
                     return ['excluding_tax', 'including_tax', 'both_taxes'].indexOf(value) !== -1;
                 }
             },
-            
+
             /**
              * Whether this is for tax-inclusive price
              * @type {Boolean}
@@ -39,7 +40,7 @@ define([
                 default: false
             }
         },
-        
+
         computed: {
             /**
              * Determine if this wrapper should render its content
@@ -56,5 +57,5 @@ define([
                 return true;
             }
         }
-    });
+    };
 });
