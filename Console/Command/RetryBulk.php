@@ -53,7 +53,7 @@ class RetryBulk extends Command
         BulkStatusInterface $bulkStatus,
         BulkSummaryInterfaceFactory $bulkSummaryFactory,
         EntityManager $entityManager,
-        string $name = null
+        ?string $name = null
     ) {
         parent::__construct($name);
         $this->bulkManagement = $bulkManagement;

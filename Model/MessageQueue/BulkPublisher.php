@@ -68,7 +68,7 @@ class BulkPublisher extends AbstractSimpleObject implements BulkPublisherInterfa
         SaveMultipleOperationsInterface $saveMultipleOperations,
         QueueOperationDataInterfaceFactory $queueOperationDataFactory,
         MessageManagerInterface $messageManager,
-        string $bulkDescription = null,
+        ?string $bulkDescription = null,
         array $data = []
     ) {
         parent::__construct($data);

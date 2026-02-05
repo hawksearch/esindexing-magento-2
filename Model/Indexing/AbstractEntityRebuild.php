@@ -456,7 +456,7 @@ abstract class AbstractEntityRebuild implements EntityRebuildInterface
      *     values.
      * @see FieldNameProviderInterface
      */
-    protected function getIndexedAttributes(DataObject $item = null): array // @phpstan-ignore-line
+    protected function getIndexedAttributes(?DataObject $item = null): array // @phpstan-ignore-line
     {
         return [];
     }

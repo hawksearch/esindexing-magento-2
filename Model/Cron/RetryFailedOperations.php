@@ -265,15 +265,11 @@ class RetryFailedOperations
 
     /**
      * Change operation status to rejected
-     *
-     * @param OperationInterface $operation
-     * @param int|null $errorCode
-     * @param string|null $message
      */
     protected function rejectOperation(
         OperationInterface $operation,
-        int $errorCode = null,
-        string $message = null
+        ?int $errorCode = null,
+        ?string $message = null
     ): bool {
         $this->logger->critical(__('Message has been rejected: %1', $message));
 

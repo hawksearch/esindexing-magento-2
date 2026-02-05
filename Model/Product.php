@@ -50,8 +50,8 @@ class Product
         ProductFactory $productFactory,
         Type $productType,
         FulltextResource $fulltextResource, // @todo remove $fulltextResource argument
-        ProductResource $productResource = null,
-        MetadataPool $metadataPool = null
+        ?ProductResource $productResource = null,
+        ?MetadataPool $metadataPool = null
     ) {
         $this->productFactory = $productFactory;
         $this->productType = $productType;

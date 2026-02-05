@@ -23,8 +23,7 @@ class ConfigHelper extends AbstractConfigHelper
 
     public function __construct(
         IndexingConfig $indexingConfig,
-        /** @todo change type: int -> ?int */
-        int $batchSize = null
+        ?int $batchSize = null
     ) {
         parent::__construct($indexingConfig);
         $this->batchSize = $batchSize;
