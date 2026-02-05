@@ -177,11 +177,6 @@ product-price-refactored (root)
    - New handlers register without modifying existing code
    - Components reusable across product types
 
-5. **DRY (Don't Repeat Yourself)**
-   - Hierarchical components eliminate duplication
-   - ~432 lines of template → ~220 lines (49% reduction)
-   - Shared logic in base classes
-
 ## Migration Path
 
 The refactored component is created as `product-price-refactored` to allow:
@@ -293,7 +288,3 @@ Common issues:
 - Modern browsers (ES5+)
 - RequireJS compatible
 - Vue.js 2.x compatible
-
-## License
-
-Copyright (c) 2025 Hawksearch (www.hawksearch.com) - All Rights Reserved
