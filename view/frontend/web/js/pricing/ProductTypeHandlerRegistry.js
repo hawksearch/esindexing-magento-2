@@ -1,7 +1,19 @@
 /**
+ * Copyright (c) 2026 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ */
+
+/**
  * Product Type Handler Registry
  * Manages registration and retrieval of product type handlers
- * 
+ *
  * @module HawkSearch_EsIndexing/js/pricing/ProductTypeHandlerRegistry
  */
 define([
@@ -23,7 +35,7 @@ define([
 
     /**
      * Register a handler for a product type
-     * 
+     *
      * @param {string} productType - Product type identifier (e.g., 'simple', 'bundle')
      * @param {BaseProductTypeHandler} handler - Handler instance
      * @returns {ProductTypeHandlerRegistry} This instance for chaining
@@ -53,7 +65,7 @@ define([
 
     /**
      * Register a fallback handler for unknown product types
-     * 
+     *
      * @param {BaseProductTypeHandler} handler - Fallback handler instance
      * @returns {ProductTypeHandlerRegistry} This instance for chaining
      * @public
@@ -74,7 +86,7 @@ define([
 
     /**
      * Get handler for a product type
-     * 
+     *
      * @param {string} productType - Product type identifier
      * @returns {BaseProductTypeHandler|null} Handler instance or null if not found
      * @public
@@ -98,7 +110,7 @@ define([
 
     /**
      * Check if a handler is registered for a product type
-     * 
+     *
      * @param {string} productType - Product type identifier
      * @returns {boolean} True if handler is registered
      * @public
@@ -114,7 +126,7 @@ define([
 
     /**
      * Get all registered product types
-     * 
+     *
      * @returns {Array<string>} List of registered product types
      * @public
      */

@@ -1,7 +1,19 @@
 /**
+ * Copyright (c) 2026 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ */
+
+/**
  * Configurable Product Type Handler
  * Handles pricing for configurable products with price ranges
- * 
+ *
  * @module HawkSearch_EsIndexing/js/pricing/handlers/ConfigurableProductHandler
  */
 define([
@@ -25,7 +37,7 @@ define([
 
     /**
      * Check if this handler can process the given product type
-     * 
+     *
      * @param {string} productType - Product type identifier
      * @returns {boolean} True if this handler can process the type
      * @public
@@ -37,7 +49,7 @@ define([
 
     /**
      * Process configurable product data to extract pricing information
-     * 
+     *
      * @param {ProductTypeData} productData - Raw product data from external service
      * @param {TaxConfiguration} taxConfig - Tax configuration
      * @returns {ConfigurablePriceData} Processed price data
@@ -47,7 +59,7 @@ define([
         // Validate required fields
         var validation = this._validateFields(productData, ['type_id', '__uid', 'price_final']);
         if (!validation.valid) {
-            throw new Error('Invalid configurable product data: missing or invalid fields - ' + 
+            throw new Error('Invalid configurable product data: missing or invalid fields - ' +
                           validation.missingFields.concat(validation.invalidFields).join(', '));
         }
 
@@ -67,7 +79,7 @@ define([
 
             if (taxConfig && taxConfig.displayMode !== 'excluding_tax') {
                 var taxRate = taxConfig.taxRate || 0;
-                
+
                 if (taxConfig.priceIncludesTax) {
                     priceMinIncludingTax = priceMin;
                     priceMaxIncludingTax = priceMax;
@@ -105,7 +117,7 @@ define([
 
         // Extract single price data
         var finalPrice = Number(productData.price_final);
-        var regularPrice = productData.price_regular != null ? 
+        var regularPrice = productData.price_regular != null ?
             Number(productData.price_regular) : null;
 
         // Calculate discount
@@ -117,7 +129,7 @@ define([
 
         if (taxConfig && taxConfig.displayMode !== 'excluding_tax') {
             var taxRate = taxConfig.taxRate || 0;
-            
+
             if (taxConfig.priceIncludesTax) {
                 finalPriceIncludingTax = finalPrice;
                 regularPriceIncludingTax = regularPrice;
@@ -137,13 +149,13 @@ define([
             finalPrice: finalPrice,
             finalPriceFormatted: this.priceFormatter.format(finalPrice),
             finalPriceIncludingTax: finalPriceIncludingTax,
-            finalPriceIncludingTaxFormatted: finalPriceIncludingTax != null ? 
+            finalPriceIncludingTaxFormatted: finalPriceIncludingTax != null ?
                 this.priceFormatter.format(finalPriceIncludingTax) : null,
             regularPrice: regularPrice,
-            regularPriceFormatted: regularPrice != null ? 
+            regularPriceFormatted: regularPrice != null ?
                 this.priceFormatter.format(regularPrice) : null,
             regularPriceIncludingTax: regularPriceIncludingTax,
-            regularPriceIncludingTaxFormatted: regularPriceIncludingTax != null ? 
+            regularPriceIncludingTaxFormatted: regularPriceIncludingTax != null ?
                 this.priceFormatter.format(regularPriceIncludingTax) : null,
             taxMode: taxConfig ? taxConfig.displayMode : 'excluding_tax',
             priceRange: priceRange,

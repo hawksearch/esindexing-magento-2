@@ -1,7 +1,19 @@
 /**
+ * Copyright (c) 2026 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ */
+
+/**
  * Bundle Product Type Handler
  * Handles pricing for bundle products with price ranges
- * 
+ *
  * @module HawkSearch_EsIndexing/js/pricing/handlers/BundleProductHandler
  */
 define([
@@ -25,7 +37,7 @@ define([
 
     /**
      * Check if this handler can process the given product type
-     * 
+     *
      * @param {string} productType - Product type identifier
      * @returns {boolean} True if this handler can process the type
      * @public
@@ -37,7 +49,7 @@ define([
 
     /**
      * Process bundle product data to extract pricing information
-     * 
+     *
      * @param {ProductTypeData} productData - Raw product data from external service
      * @param {TaxConfiguration} taxConfig - Tax configuration
      * @returns {BundlePriceData} Processed price data
@@ -49,7 +61,7 @@ define([
             'type_id', '__uid', 'price_final', 'price_min', 'price_max'
         ]);
         if (!validation.valid) {
-            throw new Error('Invalid bundle product data: missing or invalid fields - ' + 
+            throw new Error('Invalid bundle product data: missing or invalid fields - ' +
                           validation.missingFields.concat(validation.invalidFields).join(', '));
         }
 
@@ -64,7 +76,7 @@ define([
 
         if (taxConfig && taxConfig.displayMode !== 'excluding_tax') {
             var taxRate = taxConfig.taxRate || 0;
-            
+
             if (taxConfig.priceIncludesTax) {
                 priceMinIncludingTax = priceMin;
                 priceMaxIncludingTax = priceMax;
@@ -108,7 +120,7 @@ define([
             finalPrice: priceMin, // Use minimum price as final price
             finalPriceFormatted: this.priceFormatter.format(priceMin),
             finalPriceIncludingTax: priceMinIncludingTax,
-            finalPriceIncludingTaxFormatted: priceMinIncludingTax != null ? 
+            finalPriceIncludingTaxFormatted: priceMinIncludingTax != null ?
                 this.priceFormatter.format(priceMinIncludingTax) : null,
             regularPrice: null,
             regularPriceFormatted: null,

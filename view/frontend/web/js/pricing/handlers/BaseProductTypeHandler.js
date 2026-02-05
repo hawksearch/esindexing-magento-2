@@ -1,7 +1,19 @@
 /**
+ * Copyright (c) 2026 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ */
+
+/**
  * Abstract base class for product type handlers
  * Provides common functionality and defines interface that all handlers must implement
- * 
+ *
  * @module HawkSearch_EsIndexing/js/pricing/handlers/BaseProductTypeHandler
  */
 define([
@@ -24,7 +36,7 @@ define([
     /**
      * Process product data to extract pricing information
      * Must be implemented by subclasses
-     * 
+     *
      * @param {ProductTypeData} productData - Raw product data from external service
      * @param {TaxConfiguration} taxConfig - Tax configuration
      * @returns {Object} Processed price data
@@ -37,7 +49,7 @@ define([
 
     /**
      * Check if this handler can process the given product type
-     * 
+     *
      * @param {string} productType - Product type identifier
      * @returns {boolean} True if this handler can process the type
      * @public
@@ -48,20 +60,20 @@ define([
 
     /**
      * Calculate discount information
-     * 
+     *
      * @param {number} regularPrice - Regular price
      * @param {number} finalPrice - Final price after discount
      * @returns {Object} Discount information
      * @protected
      */
     BaseProductTypeHandler.prototype._calculateDiscount = function(regularPrice, finalPrice) {
-        var hasDiscount = regularPrice != null && 
-                         finalPrice != null && 
+        var hasDiscount = regularPrice != null &&
+                         finalPrice != null &&
                          regularPrice > finalPrice;
-        
+
         var discountAmount = hasDiscount ? (regularPrice - finalPrice) : 0;
-        var discountPercent = hasDiscount ? 
-            ((regularPrice - finalPrice) / regularPrice * 100).toFixed(0) : 
+        var discountPercent = hasDiscount ?
+            ((regularPrice - finalPrice) / regularPrice * 100).toFixed(0) :
             0;
 
         return {
@@ -73,7 +85,7 @@ define([
 
     /**
      * Validate required fields in product data
-     * 
+     *
      * @param {Object} productData - Product data to validate
      * @param {Array<string>} requiredFields - List of required field names
      * @returns {Object} Validation result
@@ -101,7 +113,7 @@ define([
 
     /**
      * Set price formatter instance
-     * 
+     *
      * @param {PriceFormatter} formatter - Price formatter instance
      * @public
      */

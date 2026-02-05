@@ -1,7 +1,19 @@
 /**
+ * Copyright (c) 2026 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ */
+
+/**
  * Grouped Product Type Handler
  * Handles pricing for grouped products with starting price display
- * 
+ *
  * @module HawkSearch_EsIndexing/js/pricing/handlers/GroupedProductHandler
  */
 define([
@@ -25,7 +37,7 @@ define([
 
     /**
      * Check if this handler can process the given product type
-     * 
+     *
      * @param {string} productType - Product type identifier
      * @returns {boolean} True if this handler can process the type
      * @public
@@ -37,7 +49,7 @@ define([
 
     /**
      * Process grouped product data to extract pricing information
-     * 
+     *
      * @param {ProductTypeData} productData - Raw product data from external service
      * @param {TaxConfiguration} taxConfig - Tax configuration
      * @returns {GroupedPriceData} Processed price data
@@ -49,7 +61,7 @@ define([
             'type_id', '__uid', 'price_final'
         ]);
         if (!validation.valid) {
-            throw new Error('Invalid grouped product data: missing or invalid fields - ' + 
+            throw new Error('Invalid grouped product data: missing or invalid fields - ' +
                           validation.missingFields.concat(validation.invalidFields).join(', '));
         }
 
@@ -61,7 +73,7 @@ define([
 
         if (taxConfig && taxConfig.displayMode !== 'excluding_tax') {
             var taxRate = taxConfig.taxRate || 0;
-            
+
             if (taxConfig.priceIncludesTax) {
                 startingPriceIncludingTax = startingPrice;
             } else {
@@ -95,7 +107,7 @@ define([
             finalPrice: startingPrice,
             finalPriceFormatted: this.priceFormatter.format(startingPrice),
             finalPriceIncludingTax: startingPriceIncludingTax,
-            finalPriceIncludingTaxFormatted: startingPriceIncludingTax != null ? 
+            finalPriceIncludingTaxFormatted: startingPriceIncludingTax != null ?
                 this.priceFormatter.format(startingPriceIncludingTax) : null,
             regularPrice: null,
             regularPriceFormatted: null,

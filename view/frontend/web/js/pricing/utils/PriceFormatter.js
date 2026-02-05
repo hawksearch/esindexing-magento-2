@@ -1,7 +1,19 @@
 /**
+ * Copyright (c) 2026 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ */
+
+/**
  * Price formatting utility
  * Provides methods for formatting price values according to store configuration
- * 
+ *
  * @module HawkSearch_EsIndexing/js/pricing/utils/PriceFormatter
  */
 define([], function() {
@@ -29,7 +41,7 @@ define([], function() {
 
     /**
      * Format a price value as a currency string
-     * 
+     *
      * @param {number} price - The price value to format
      * @returns {string} Formatted price string
      * @public
@@ -45,13 +57,13 @@ define([], function() {
         if (this.currencyPosition === 'after') {
             return formattedNumber + this.currencySymbol;
         }
-        
+
         return this.currencySymbol + formattedNumber;
     };
 
     /**
      * Format a number with thousands separator and decimal places
-     * 
+     *
      * @param {number} number - The number to format
      * @returns {string} Formatted number string
      * @private
@@ -59,16 +71,16 @@ define([], function() {
     PriceFormatter.prototype._formatNumber = function(number) {
         var fixedNumber = number.toFixed(this.decimalPlaces);
         var parts = fixedNumber.split('.');
-        
+
         // Add thousands separator
         parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandsSeparator);
-        
+
         return parts.join(this.decimalSeparator);
     };
 
     /**
      * Parse a formatted price string to a numeric value
-     * 
+     *
      * @param {string} formattedPrice - The formatted price string
      * @returns {number} Numeric price value
      * @public
