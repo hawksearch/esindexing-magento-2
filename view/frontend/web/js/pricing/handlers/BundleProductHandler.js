@@ -66,70 +66,77 @@ define([
         }
 
         // Extract prices
+        var finalPrice = Number(productData.price_final);
+        var regularPrice = productData.price_regular != null ? Number(productData.price_regular) : null;
+        var finalPriceIncludingTax = this._calculateTaxInclusivePrices(finalPrice, taxConfig);
+        var regularPriceIncludingTax = regularPrice != null
+            ? this._calculateTaxInclusivePrices(regularPrice, taxConfig)
+            : null;
         var priceMin = Number(productData.price_min);
         var priceMax = Number(productData.price_max);
-        var hasRange = priceMin !== priceMax;
+        var priceMinIncludingTax = this._calculateTaxInclusivePrices(priceMin, taxConfig);
+        var priceMaxIncludingTax = this._calculateTaxInclusivePrices(priceMax, taxConfig);
+        var priceMinRegular = this._extractOriginalPriceFromDiscounted(priceMin, discount);
+        var priceMaxRegular = this._extractOriginalPriceFromDiscounted(priceMax, discount);
+        var priceMinRegularIncludingTax = this._calculateTaxInclusivePrices(priceMinRegular, taxConfig);
+        var priceMaxRegularIncludingTax = this._calculateTaxInclusivePrices(priceMaxRegular, taxConfig);
 
-        // Calculate tax prices if needed
-        var priceMinIncludingTax = null;
-        var priceMaxIncludingTax = null;
-
-        if (taxConfig && taxConfig.displayMode !== 'excluding_tax') {
-            var taxRate = taxConfig.taxRate || 0;
-
-            if (taxConfig.priceIncludesTax) {
-                priceMinIncludingTax = priceMin;
-                priceMaxIncludingTax = priceMax;
-            } else {
-                priceMinIncludingTax = this.taxCalculator.calculateInclusive(priceMin, taxRate);
-                priceMaxIncludingTax = this.taxCalculator.calculateInclusive(priceMax, taxRate);
-            }
-        }
+        // Calculate discount
+        var discount = this._initDiscountRate(regularPrice, finalPrice);
 
         // Build price range
-        var priceRange = {
-            minimum: {
-                amount: priceMin,
-                formatted: this.priceFormatter.format(priceMin),
-                type: 'minPrice'
+        var priceRange = [
+            {
+                amount: {
+                    amount: priceMin,
+                    formatted: this.priceFormatter.format(priceMin)
+                },
+                amountIncludingTax: priceMinIncludingTax != null ? {
+                    amount: priceMinIncludingTax,
+                    formatted: this.priceFormatter.format(priceMinIncludingTax)
+                } : null,
+                regularAmount: {
+                    amount: this._extractOriginalPriceFromDiscounted(priceMin, discount),
+                    formatted: this.priceFormatter.format(priceMin)
+                },
+                rangeItemType: 'from'
             },
-            maximum: {
-                amount: priceMax,
-                formatted: this.priceFormatter.format(priceMax),
-                type: 'maxPrice'
-            },
-            minimumIncludingTax: priceMinIncludingTax != null ? {
-                amount: priceMinIncludingTax,
-                formatted: this.priceFormatter.format(priceMinIncludingTax),
-                type: 'minPriceIncludingTax'
-            } : null,
-            maximumIncludingTax: priceMaxIncludingTax != null ? {
-                amount: priceMaxIncludingTax,
-                formatted: this.priceFormatter.format(priceMaxIncludingTax),
-                type: 'maxPriceIncludingTax'
-            } : null,
-            hasRange: hasRange,
-            rangeLabel: 'From'
-        };
+            {
+                amount: {
+                    amount: priceMax,
+                    formatted: this.priceFormatter.format(priceMax)
+                },
+                amountIncludingTax: priceMaxIncludingTax != null ? {
+                    amount: priceMaxIncludingTax,
+                    formatted: this.priceFormatter.format(priceMaxIncludingTax)
+                } : null,
+                rangeItemType: 'to'
+            }
+        ];
 
         // Format result
         var result = {
             type: 'bundle',
             uid: String(productData.__uid),
-            hasDiscount: false, // Bundles don't have traditional discounts
-            finalPrice: priceMin, // Use minimum price as final price
-            finalPriceFormatted: this.priceFormatter.format(priceMin),
-            finalPriceIncludingTax: priceMinIncludingTax,
-            finalPriceIncludingTaxFormatted: priceMinIncludingTax != null ?
-                this.priceFormatter.format(priceMinIncludingTax) : null,
-            regularPrice: null,
-            regularPriceFormatted: null,
-            regularPriceIncludingTax: null,
-            regularPriceIncludingTaxFormatted: null,
+            discount: discount,
+            finalPrice: {
+                amount: finalPrice,
+                formatted: this.priceFormatter.format(finalPrice)
+            },
+            finalPriceIncludingTax: finalPriceIncludingTax != null ? {
+                amount: finalPriceIncludingTax,
+                formatted: this.priceFormatter.format(finalPriceIncludingTax)
+            } : null,
+            regularPrice: regularPrice != null ? {
+                amount: regularPrice,
+                formatted: this.priceFormatter.format(regularPrice)
+            } : null,
+            regularPriceIncludingTax: regularPriceIncludingTax != null ? {
+                amount: regularPriceIncludingTax,
+                formatted: this.priceFormatter.format(regularPriceIncludingTax)
+            } : null,
             taxMode: taxConfig ? taxConfig.displayMode : 'excluding_tax',
-            priceRange: priceRange,
-            discountPercent: 0,
-            discountAmount: 0
+            priceRange: priceRange
         };
 
         return result;

@@ -65,58 +65,59 @@ define([
                           validation.missingFields.concat(validation.invalidFields).join(', '));
         }
 
-        // Grouped products show starting/minimum price
-        var startingPrice = Number(productData.price_final);
+        // Extract prices
+        var finalPrice = Number(productData.price_final);
+        var regularPrice = productData.price_regular != null ? Number(productData.price_regular) : null;
+        var finalPriceIncludingTax = this._calculateTaxInclusivePrices(finalPrice, taxConfig);
+        var regularPriceIncludingTax = regularPrice != null
+            ? this._calculateTaxInclusivePrices(regularPrice, taxConfig)
+            : null;
+        var priceMin = Number(productData.price_min);
+        var priceMax = Number(productData.price_max);
+        var priceMinIncludingTax = this._calculateTaxInclusivePrices(priceMin, taxConfig);
+        var priceMaxIncludingTax = this._calculateTaxInclusivePrices(priceMax, taxConfig);
 
-        // Calculate tax prices if needed
-        var startingPriceIncludingTax = null;
-
-        if (taxConfig && taxConfig.displayMode !== 'excluding_tax') {
-            var taxRate = taxConfig.taxRate || 0;
-
-            if (taxConfig.priceIncludesTax) {
-                startingPriceIncludingTax = startingPrice;
-            } else {
-                startingPriceIncludingTax = this.taxCalculator.calculateInclusive(startingPrice, taxRate);
-            }
-        }
+        // Grouped products typically don't have discounts
+        var discount = this._initDiscountRate(regularPrice, finalPrice);
 
         // Build price range (grouped products show "Starting at" with single price)
-        var priceRange = {
-            minimum: {
-                amount: startingPrice,
-                formatted: this.priceFormatter.format(startingPrice),
-                type: 'startingPrice'
-            },
-            maximum: null, // Grouped products don't show maximum
-            minimumIncludingTax: startingPriceIncludingTax != null ? {
-                amount: startingPriceIncludingTax,
-                formatted: this.priceFormatter.format(startingPriceIncludingTax),
-                type: 'startingPriceIncludingTax'
-            } : null,
-            maximumIncludingTax: null,
-            hasRange: false,
-            rangeLabel: 'Starting at'
-        };
+        var priceRange = [
+            {
+                amount: {
+                    amount: priceMin,
+                    formatted: this.priceFormatter.format(priceMin)
+                },
+                amountIncludingTax: priceMinIncludingTax != null ? {
+                    amount: priceMinIncludingTax,
+                    formatted: this.priceFormatter.format(priceMinIncludingTax)
+                } : null,
+                rangeItemType: 'from'
+            }
+        ];
 
         // Format result
         var result = {
             type: 'grouped',
             uid: String(productData.__uid),
-            hasDiscount: false,
-            finalPrice: startingPrice,
-            finalPriceFormatted: this.priceFormatter.format(startingPrice),
-            finalPriceIncludingTax: startingPriceIncludingTax,
-            finalPriceIncludingTaxFormatted: startingPriceIncludingTax != null ?
-                this.priceFormatter.format(startingPriceIncludingTax) : null,
-            regularPrice: null,
-            regularPriceFormatted: null,
-            regularPriceIncludingTax: null,
-            regularPriceIncludingTaxFormatted: null,
+            discount: discount,
+            finalPrice: {
+                amount: finalPrice,
+                formatted: this.priceFormatter.format(finalPrice)
+            },
+            finalPriceIncludingTax: finalPriceIncludingTax != null ? {
+                amount: finalPriceIncludingTax,
+                formatted: this.priceFormatter.format(finalPriceIncludingTax)
+            } : null,
+            regularPrice: regularPrice != null ? {
+                amount: regularPrice,
+                formatted: this.priceFormatter.format(regularPrice)
+            } : null,
+            regularPriceIncludingTax: regularPriceIncludingTax != null ? {
+                amount: regularPriceIncludingTax,
+                formatted: this.priceFormatter.format(regularPriceIncludingTax)
+            } : null,
             taxMode: taxConfig ? taxConfig.displayMode : 'excluding_tax',
-            priceRange: priceRange,
-            discountPercent: 0,
-            discountAmount: 0
+            priceRange: priceRange
         };
 
         return result;

@@ -63,81 +63,32 @@ define([
                           validation.missingFields.concat(validation.invalidFields).join(', '));
         }
 
-        // Check if product has price range
-        var hasMinMax = productData.price_min != null && productData.price_max != null;
-        var priceRange = null;
-
-        if (hasMinMax) {
-            // Product has price range
-            var priceMin = Number(productData.price_min);
-            var priceMax = Number(productData.price_max);
-            var hasRange = priceMin !== priceMax;
-
-            // Calculate tax prices if needed
-            var priceMinIncludingTax = null;
-            var priceMaxIncludingTax = null;
-
-            if (taxConfig && taxConfig.displayMode !== 'excluding_tax') {
-                var taxRate = taxConfig.taxRate || 0;
-
-                if (taxConfig.priceIncludesTax) {
-                    priceMinIncludingTax = priceMin;
-                    priceMaxIncludingTax = priceMax;
-                } else {
-                    priceMinIncludingTax = this.taxCalculator.calculateInclusive(priceMin, taxRate);
-                    priceMaxIncludingTax = this.taxCalculator.calculateInclusive(priceMax, taxRate);
-                }
-            }
-
-            priceRange = {
-                minimum: {
-                    amount: priceMin,
-                    formatted: this.priceFormatter.format(priceMin),
-                    type: 'minPrice'
-                },
-                maximum: {
-                    amount: priceMax,
-                    formatted: this.priceFormatter.format(priceMax),
-                    type: 'maxPrice'
-                },
-                minimumIncludingTax: priceMinIncludingTax != null ? {
-                    amount: priceMinIncludingTax,
-                    formatted: this.priceFormatter.format(priceMinIncludingTax),
-                    type: 'minPriceIncludingTax'
-                } : null,
-                maximumIncludingTax: priceMaxIncludingTax != null ? {
-                    amount: priceMaxIncludingTax,
-                    formatted: this.priceFormatter.format(priceMaxIncludingTax),
-                    type: 'maxPriceIncludingTax'
-                } : null,
-                hasRange: hasRange,
-                rangeLabel: 'As low as'
-            };
-        }
-
-        // Extract single price data
+        // Extract prices
         var finalPrice = Number(productData.price_final);
-        var regularPrice = productData.price_regular != null ?
-            Number(productData.price_regular) : null;
+        var regularPrice = productData.price_regular != null ? Number(productData.price_regular) : null;
+        var finalPriceIncludingTax = this._calculateTaxInclusivePrices(finalPrice, taxConfig);
+        var regularPriceIncludingTax = regularPrice != null
+            ? this._calculateTaxInclusivePrices(regularPrice, taxConfig)
+            : null;
+        var priceMin = Number(productData.price_min);
+        var priceMax = Number(productData.price_max);
+        var priceMinIncludingTax = this._calculateTaxInclusivePrices(priceMin, taxConfig);
+        var priceMaxIncludingTax = this._calculateTaxInclusivePrices(priceMax, taxConfig);
+        var priceMinRegular = this._extractOriginalPriceFromDiscounted(priceMin, discount);
+        var priceMaxRegular = this._extractOriginalPriceFromDiscounted(priceMax, discount);
+        var priceMinRegularIncludingTax = this._calculateTaxInclusivePrices(priceMinRegular, taxConfig);
+        var priceMaxRegularIncludingTax = this._calculateTaxInclusivePrices(priceMaxRegular, taxConfig);
 
         // Calculate discount
-        var discount = this._calculateDiscount(regularPrice, finalPrice);
+        var discount = this._initDiscountRate(regularPrice, finalPrice);
 
-        // Calculate tax prices if needed
-        var finalPriceIncludingTax = null;
-        var regularPriceIncludingTax = null;
-
-        if (taxConfig && taxConfig.displayMode !== 'excluding_tax') {
-            var taxRate = taxConfig.taxRate || 0;
-
-            if (taxConfig.priceIncludesTax) {
-                finalPriceIncludingTax = finalPrice;
-                regularPriceIncludingTax = regularPrice;
-            } else {
-                finalPriceIncludingTax = this.taxCalculator.calculateInclusive(finalPrice, taxRate);
-                if (regularPrice != null) {
-                    regularPriceIncludingTax = this.taxCalculator.calculateInclusive(regularPrice, taxRate);
-                }
+        var hasRange = !!taxConfig?.showConfigurableRange;
+        if (!hasRange) {
+            finalPrice = priceMin;
+            finalPriceIncludingTax = priceMinIncludingTax;
+            if (discount.hasDiscount) {
+                regularPrice = priceMinRegular;
+                regularPriceIncludingTax = priceMinRegularIncludingTax;
             }
         }
 
@@ -145,25 +96,88 @@ define([
         var result = {
             type: 'configurable',
             uid: String(productData.__uid),
-            hasDiscount: discount.hasDiscount,
-            finalPrice: finalPrice,
-            finalPriceFormatted: this.priceFormatter.format(finalPrice),
-            finalPriceIncludingTax: finalPriceIncludingTax,
-            finalPriceIncludingTaxFormatted: finalPriceIncludingTax != null ?
-                this.priceFormatter.format(finalPriceIncludingTax) : null,
-            regularPrice: regularPrice,
-            regularPriceFormatted: regularPrice != null ?
-                this.priceFormatter.format(regularPrice) : null,
-            regularPriceIncludingTax: regularPriceIncludingTax,
-            regularPriceIncludingTaxFormatted: regularPriceIncludingTax != null ?
-                this.priceFormatter.format(regularPriceIncludingTax) : null,
+            discount: discount,
+            finalPrice: {
+                amount: finalPrice,
+                formatted: this.priceFormatter.format(finalPrice)
+            },
+            finalPriceIncludingTax: finalPriceIncludingTax != null ? {
+                amount: finalPriceIncludingTax,
+                formatted: this.priceFormatter.format(finalPriceIncludingTax)
+            } : null,
+            regularPrice: regularPrice != null ? {
+                amount: regularPrice,
+                formatted: this.priceFormatter.format(regularPrice)
+            } : null,
+            regularPriceIncludingTax: regularPriceIncludingTax != null ? {
+                amount: regularPriceIncludingTax,
+                formatted: this.priceFormatter.format(regularPriceIncludingTax)
+            } : null,
             taxMode: taxConfig ? taxConfig.displayMode : 'excluding_tax',
-            priceRange: priceRange,
-            discountPercent: discount.discountPercent,
-            discountAmount: discount.discountAmount
+            priceRange: hasRange ? this._buildRange(productData, taxConfig) : [],
+            samePriceForAll: priceMin == priceMax
         };
 
         return result;
+    };
+
+
+    ConfigurableProductHandler.prototype._buildRange = function (
+      productData,
+      taxConfig,
+    ) {
+      // By default configurable doesn't have range
+      var hasRange = !!taxConfig?.showConfigurableRange;
+      var priceRange = [];
+
+      if (hasRange) {
+        // Product has price range
+        var priceMin = Number(productData.price_min);
+        var priceMax = Number(productData.price_max);
+
+        // Calculate tax-inclusive prices using base method
+        var priceMinIncludingTax = this._calculateTaxInclusivePrices(
+          priceMin,
+          taxConfig,
+        );
+        var priceMaxIncludingTax = this._calculateTaxInclusivePrices(
+          priceMax,
+          taxConfig,
+        );
+
+        priceRange = [
+          {
+            amount: {
+              amount: priceMin,
+              formatted: this.priceFormatter.format(priceMin),
+            },
+            amountIncludingTax:
+              priceMinIncludingTax != null
+                ? {
+                    amount: priceMinIncludingTax,
+                    formatted: this.priceFormatter.format(priceMinIncludingTax),
+                  }
+                : null,
+              rangeItemType: "from",
+          },
+          {
+            amount: {
+              amount: priceMax,
+              formatted: this.priceFormatter.format(priceMax),
+            },
+            amountIncludingTax:
+              priceMaxIncludingTax != null
+                ? {
+                    amount: priceMaxIncludingTax,
+                    formatted: this.priceFormatter.format(priceMaxIncludingTax),
+                  }
+                : null,
+              rangeItemType: "to",
+          },
+        ];
+      }
+
+      return priceRange;
     };
 
     return ConfigurableProductHandler;

@@ -63,40 +63,44 @@ define([
                           validation.missingFields.concat(validation.invalidFields).join(', '));
         }
 
-        // Gift cards typically don't have discounts
+        // Extract prices
         var finalPrice = Number(productData.price_final);
+        var regularPrice = productData.price_regular != null ? Number(productData.price_regular) : null;
+        var finalPriceIncludingTax = this._calculateTaxInclusivePrices(finalPrice, taxConfig);
+        var regularPriceIncludingTax = regularPrice != null
+            ? this._calculateTaxInclusivePrices(regularPrice, taxConfig)
+            : null;
+        var priceMin = Number(productData.price_min);
+        var priceMax = Number(productData.price_max);
+        var priceMinIncludingTax = this._calculateTaxInclusivePrices(priceMin, taxConfig);
+        var priceMaxIncludingTax = this._calculateTaxInclusivePrices(priceMax, taxConfig);
 
-        // Calculate tax prices if needed
-        var finalPriceIncludingTax = null;
-
-        if (taxConfig && taxConfig.displayMode !== 'excluding_tax') {
-            var taxRate = taxConfig.taxRate || 0;
-
-            if (taxConfig.priceIncludesTax) {
-                finalPriceIncludingTax = finalPrice;
-            } else {
-                finalPriceIncludingTax = this.taxCalculator.calculateInclusive(finalPrice, taxRate);
-            }
-        }
+        // Gift cards typically don't have discounts
+        var discount = this._initDiscountRate(regularPrice, finalPrice);
 
         // Format prices
         var result = {
             type: 'giftcard',
             uid: String(productData.__uid),
-            hasDiscount: false, // Gift cards typically don't have discounts
-            finalPrice: finalPrice,
-            finalPriceFormatted: this.priceFormatter.format(finalPrice),
-            finalPriceIncludingTax: finalPriceIncludingTax,
-            finalPriceIncludingTaxFormatted: finalPriceIncludingTax != null ?
-                this.priceFormatter.format(finalPriceIncludingTax) : null,
-            regularPrice: null,
-            regularPriceFormatted: null,
-            regularPriceIncludingTax: null,
-            regularPriceIncludingTaxFormatted: null,
+            discount: discount,
+            finalPrice: {
+                amount: finalPrice,
+                formatted: this.priceFormatter.format(finalPrice)
+            },
+            finalPriceIncludingTax: finalPriceIncludingTax != null ? {
+                amount: finalPriceIncludingTax,
+                formatted: this.priceFormatter.format(finalPriceIncludingTax)
+            } : null,
+            regularPrice: regularPrice != null ? {
+                amount: regularPrice,
+                formatted: this.priceFormatter.format(regularPrice)
+            } : null,
+            regularPriceIncludingTax: regularPriceIncludingTax != null ? {
+                amount: regularPriceIncludingTax,
+                formatted: this.priceFormatter.format(regularPriceIncludingTax)
+            } : null,
             taxMode: taxConfig ? taxConfig.displayMode : 'excluding_tax',
-            priceRange: null,
-            discountPercent: 0,
-            discountAmount: 0
+            priceRange: []
         };
 
         return result;
