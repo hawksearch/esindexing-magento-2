@@ -21,7 +21,6 @@ define([
     'hawksearchVueSDK',
     'HawkSearch_EsIndexing/js/pricing/PriceDataProcessor',
     'HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price/price-amount-wrapper',
-    'HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price/price-tax-wrapper',
     'HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price/price-label',
     'HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price/price-container',
     'HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price/price-range-wrapper',
@@ -30,7 +29,6 @@ define([
     HawksearchVue,
     PriceDataProcessor,
     PriceAmountWrapper,
-    PriceTaxWrapper,
     PriceLabel,
     PriceContainer,
     PriceRangeWrapper,
@@ -44,7 +42,6 @@ define([
 
         components: {
             'price-amount-wrapper': PriceAmountWrapper,
-            'price-tax-wrapper': PriceTaxWrapper,
             'price-label': PriceLabel,
             'price-container': PriceContainer,
             'price-range-wrapper': PriceRangeWrapper
@@ -74,14 +71,6 @@ define([
                     return window.hawksearchConfig?.pricing || {};
                 }
             }
-        },
-
-        data: function() {
-            return {
-                priceProcessor: null,
-                processedPriceData: null,
-                processingError: null
-            };
         },
 
         created: function() {
@@ -150,7 +139,7 @@ define([
             taxConfig: function() {
                 return {
                     displayMode: this.pricingConfig.taxDisplayMode || 'excluding_tax',
-                    taxRate: this.pricingConfig.mockTaxRate || 0.2,
+                    taxRate: this.pricingConfig.mockTaxRate || 0,
                     priceIncludesTax: this.pricingConfig.priceIncludesTax || false,
                     decimalPlaces: this.pricingConfig.priceFormat?.decimalPlaces || 2
                 };
@@ -181,6 +170,269 @@ define([
             isSupported: function() {
                 return this.priceData !== null && !this.processingError;
             }
+        },
+
+        /**
+         * Extract a render ready containers
+         * @param {PriceRangeItem|null} range - Range data or null for a root containers
+         * @return {Object[]}
+         */
+        methods: {
+            buildPriceRangeWrapperProps: function(range) {
+                var elementClass = 'price-box';
+                if (range.rangeItemType === 'from' && this.priceData.type === 'bundle') {
+                    elementClass = 'price-form';
+                } else if (range.rangeItemType === 'to' && this.priceData.type === 'bundle') {
+                    elementClass = 'price-to';
+                }
+                return {
+                    tag:  this.priceData.type === 'grouped' ? 'div' : 'p',
+                    class: elementClass
+                }
+            },
+
+            extractPriceContainers: function(range){
+                var containers = [this._buildFinalPriceContainer(range)];
+                if (this.priceData.discount.hasDiscount) {
+                    containers.push(this._buildRegularPriceContainer(range));
+                }
+
+                containers.forEach(function (container) {
+                    var priceWrapperIncludingTax = this._buildIncludingTaxPriceWrapper(range, container);
+                    var priceWrapperExcludingTax = this._buildExcludingTaxPriceWrapper(range, container);
+                    if (this.taxConfig.displayMode === 'both_taxes' || this.taxConfig.displayMode === 'including_tax') {
+                        container.priceWrappers.push(priceWrapperIncludingTax);
+                    }
+                    if (this.taxConfig.displayMode === 'both_taxes' || this.taxConfig.displayMode === 'excluding_tax') {
+                        container.priceWrappers.push(priceWrapperExcludingTax);
+                    }
+                }.bind(this));
+
+                return containers;
+            },
+
+            _buildFinalPriceContainer: function(range){
+                var label = '';
+                var props = {
+                    wrapperElementTag: '',
+                    labelPosition: 'inner',
+                }
+                if (this.priceData.discount.hasDiscount) {
+                    label = 'Special Price';
+                    if (this.priceData.type !== 'bundle') {
+                        props.wrapperElementTag = 'span';
+                        props.wrapperElementClass = 'special-price';
+                    }
+                }
+                if (this.priceData.type === 'configurable' && !this.priceData.samePriceForAll) {
+                    label = 'As low as';
+                }
+
+                if (range?.rangeItemType === 'from') {
+                    label = 'From';
+                    if (this.priceData.type === 'grouped') {
+                        label = 'Starting at';
+                        props.wrapperElementTag = 'p'
+                        props.wrapperElementClass = 'minimal-price';
+                        props.labelPosition = 'outer';
+                    }
+                } else if (range?.rangeItemType === 'to') {
+                    label = 'To';
+                }
+                return {
+                    type: 'final',
+                    props: props,
+                    label: label,
+                    priceWrappers: []
+                }
+            },
+
+            _buildRegularPriceContainer: function(range){
+                var label = 'Regular Price';
+                return {
+                    type: 'regular',
+                    props: {
+                        wrapperElementTag: 'span',
+                        wrapperElementClass: 'old-price',
+                        labelPosition: 'inner'
+                    },
+                    label: label,
+                    priceWrappers: []
+                }
+            },
+
+            /**
+             *
+             * @param {PriceRangeItem|null} range
+             * @return {{amount: string, priceType: string, elementId: string, labelText: (string), class: *[]}}
+             * @private
+             */
+            _buildIncludingTaxPriceWrapper: function(range, container){
+                var classes = [];
+                if (this.taxConfig.displayMode === 'both_taxes') {
+                    classes.push('price-including-tax');
+                }
+                var priceType = '';
+                var containerType = container.type; //final, regular
+                // , min_final, min_regular, max_final, max_regular
+                switch (containerType) {
+                    case 'final':
+                        priceType = 'finalPrice';
+                        break;
+                    default: // regular
+                        priceType = 'oldPrice';
+                        if (range) {
+                            priceType = '';
+                        }
+                        break;
+                }
+                if (range) {
+                    var findPattern = 'finalPrice',
+                        replacePattern = range.rangeItemType === 'from'
+                            ? 'minPrice'
+                            : range.rangeItemType === 'to'
+                                ? 'maxPrice'
+                                : '';
+                    if (replacePattern) {
+                        priceType.replace(findPattern, replacePattern);
+                    }
+                }
+
+                var elementIdPattern = this.taxConfig.displayMode === 'both_taxes' ? 'price-including-tax' : '';
+
+                var amount = null;
+                if (containerType === 'final') {
+                    amount = range ? range.amountIncludingTax : this.priceData.finalPriceIncludingTax;
+                }
+                if (containerType === 'regular') {
+                    amount = range ? range.regularAmountIncludingTax : this.priceData.regularPriceIncludingTax;
+                }
+
+                return {
+                    amount: amount,
+                    elementId: this._buildPriceWrapperElementId(range, container, elementIdPattern),
+                    priceType: priceType,
+                    labelText: this.taxConfig.displayMode === 'both_taxes' ? 'Incl. Tax' : '',
+                    class: classes
+                }
+            },
+
+            /**
+             *
+             * @param {PriceRangeItem|null} range
+             * @return {{amount: string, priceType: string, elementId: string, labelText: (string), class: *[]}}
+             * @private
+             */
+            _buildExcludingTaxPriceWrapper: function(range, container){
+                var classes = [];
+                if (this.taxConfig.displayMode === 'both_taxes') {
+                    classes.push('price-excluding-tax');
+                }
+                var priceType = '';
+                var containerType = container.type; //final, regular
+                switch (containerType) {
+                    case 'final':
+                        priceType = this.taxConfig.displayMode === 'both_taxes' ? 'basePrice' : 'finalPrice';
+                        break;
+                    case 'regular':
+                        priceType = this.taxConfig.displayMode === 'both_taxes' ? 'baseOldPrice' : 'oldPrice';
+                        if (range) {
+                            priceType = '';
+                        }
+                        break;
+                }
+                if (range) {
+                    var findPattern = 'basePrice',
+                        replacePattern = range.rangeItemType === 'from'
+                            ? 'baseMinPrice'
+                            : range.rangeItemType === 'to'
+                                ? 'baseMaxPrice'
+                                : '';
+                    if (replacePattern) {
+                        priceType.replace(findPattern, replacePattern);
+                    }
+                }
+
+                // [priceType]
+                /*
+                * --final_container--
+                * finalPrice: !both_taxes || (both_taxes && incl_tax)
+                * basePrice: both_taxes && excl_tax
+                * --regular_container--
+                * oldPrice: !both_taxes || (both_taxes && incl_tax)
+                * baseOldPrice: both_taxes && excl_tax
+                * */
+
+                // [priceType] - grouped
+                /*
+                * --final_container--
+                * <empty>
+                * --regular_container--
+                * <empty>
+                * */
+
+                // [priceType] - bundle
+                /*
+                * --minFinal_container--
+                * minPrice: !both_taxes || (both_taxes && incl_tax)
+                * baseMinPrice: both_taxes && excl_tax
+                * --maxFinal_container--
+                * maxPrice: !both_taxes || (both_taxes && incl_tax)
+                * baseMaxPrice: both_taxes && excl_tax
+                * --minRegular_container--
+                * <empty>
+                * --maxRegular_container--
+                * <empty>
+                * */
+
+                var elementIdPattern = this.taxConfig.displayMode === 'both_taxes' ? 'price-excluding-tax' : '';
+
+                var amount = null;
+                if (containerType === 'final') {
+                    amount = range ? range.amount : this.priceData.finalPrice;
+                }
+                if (containerType === 'regular') {
+                    amount = range ? range.regularAmount : this.priceData.regularPrice;
+                }
+
+                return {
+                    amount: amount,
+                    elementId: this._buildPriceWrapperElementId(range, container, elementIdPattern),
+                    priceType: priceType,
+                    labelText: this.taxConfig.displayMode === 'both_taxes' ? 'Excl. Tax': '',
+                    class: classes,
+                }
+            },
+
+            _buildPriceWrapperElementId: function(range, container, taxPattern){
+                var priceTypePatern = 'product-price';
+
+                if (range?.rangeItemType === 'from') {
+                    priceTypePatern = 'from';
+                }
+                if (range?.rangeItemType === 'to') {
+                    priceTypePatern = 'to';
+                }
+
+                if (container.type === 'regular') {
+                    priceTypePatern = 'old-price';
+                }
+
+                if (this.priceData.type === 'grouped') {
+                    priceTypePatern = '';
+                }
+
+                var patterns = [
+                    taxPattern,
+                    priceTypePatern,
+                    this.priceData.uid
+                ];
+                if (patterns.slice(0, -1).filter(Boolean).join('') === '') {
+                    patterns = [];
+                }
+
+                return patterns.filter(Boolean).join('-');
+            },
         }
     };
 });

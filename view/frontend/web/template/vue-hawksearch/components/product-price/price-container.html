@@ -1,3 +1,24 @@
-<span :class="containerClass">
-    <slot></slot>
-</span>
+<component :is="outerContainerTag" :class="outerContainerClass">
+    <!-- Outer label BEFORE inner container -->
+    <slot v-if="labelPosition === 'outer' && labelOrder === 'before'" name="label"></slot>
+
+    <template v-if="innerContainerTag">
+        <component :is="innerContainerTag" :class="innerContainerClass">
+            <!-- Inner label BEFORE price -->
+            <slot v-if="labelPosition === 'inner' && labelOrder === 'before'" name="label"></slot>
+            <slot></slot>
+            <!-- Inner label AFTER price -->
+            <slot v-if="labelPosition === 'inner' && labelOrder === 'after'" name="label"></slot>
+        </component>
+    </template>
+    <template v-else>
+        <!-- No inner container: label BEFORE price -->
+        <slot v-if="labelPosition === 'inner' && labelOrder === 'before'" name="label"></slot>
+        <slot></slot>
+        <!-- No inner container: label AFTER price -->
+        <slot v-if="labelPosition === 'inner' && labelOrder === 'after'" name="label"></slot>
+    </template>
+
+    <!-- Outer label AFTER inner container -->
+    <slot v-if="labelPosition === 'outer' && labelOrder === 'after'" name="label"></slot>
+</component>

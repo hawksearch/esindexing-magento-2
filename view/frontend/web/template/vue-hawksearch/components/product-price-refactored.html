@@ -1,209 +1,30 @@
 <div v-if="isSupported" class="price-box price-final_price" :data-product-id="priceData.uid">
-    
-    <!-- Simple/Virtual/Downloadable/Giftcard Products (No Range) -->
-    <price-range-wrapper v-if="!priceData.priceRange" :has-range="false">
-        
-        <!-- Discount Scenario -->
-        <template v-if="priceData.hasDiscount">
-            <!-- Special Price Container -->
-            <price-container container-type="special">
-                <price-label label-text="Special Price" :outer-label="true"></price-label>
-                
-                <!-- Excluding Tax Price -->
-                <price-tax-wrapper :tax-mode="priceData.taxMode" :including-tax="false">
-                    <price-amount-wrapper 
-                        :amount="priceData.finalPrice"
-                        :formatted-price="priceData.finalPriceFormatted"
-                        price-type="finalPrice">
-                    </price-amount-wrapper>
-                </price-tax-wrapper>
-                
-                <!-- Including Tax Price (if applicable) -->
-                <price-tax-wrapper v-if="priceData.finalPriceIncludingTax" 
-                                 :tax-mode="priceData.taxMode" 
-                                 :including-tax="true">
-                    <price-amount-wrapper 
-                        :amount="priceData.finalPriceIncludingTax"
-                        :formatted-price="priceData.finalPriceIncludingTaxFormatted"
-                        price-type="finalPriceIncludingTax">
-                    </price-amount-wrapper>
-                    <span class="price-label">Incl. Tax</span>
-                </price-tax-wrapper>
-            </price-container>
-            
-            <!-- Regular Price Container -->
-            <price-container container-type="regular">
-                <price-label label-text="Regular Price" :outer-label="true"></price-label>
-                
-                <!-- Excluding Tax Price -->
-                <price-tax-wrapper :tax-mode="priceData.taxMode" :including-tax="false">
-                    <price-amount-wrapper 
-                        :amount="priceData.regularPrice"
-                        :formatted-price="priceData.regularPriceFormatted"
-                        price-type="oldPrice">
-                    </price-amount-wrapper>
-                </price-tax-wrapper>
-                
-                <!-- Including Tax Price (if applicable) -->
-                <price-tax-wrapper v-if="priceData.regularPriceIncludingTax" 
-                                 :tax-mode="priceData.taxMode" 
-                                 :including-tax="true">
-                    <price-amount-wrapper 
-                        :amount="priceData.regularPriceIncludingTax"
-                        :formatted-price="priceData.regularPriceIncludingTaxFormatted"
-                        price-type="oldPriceIncludingTax">
-                    </price-amount-wrapper>
-                    <span class="price-label">Incl. Tax</span>
-                </price-tax-wrapper>
+    <template v-if="!priceData.priceRange.length">
+        <template v-for="priceContainer in extractPriceContainers(null)">
+            <price-container v-bind="priceContainer.props">
+                <template #label>
+                    <price-label :label-text="priceContainer.label"/>
+                </template>
+                <template v-for="priceWrapper in priceContainer.priceWrappers">
+                    <price-amount-wrapper v-bind="priceWrapper"/>
+                </template>
             </price-container>
         </template>
-        
-        <!-- No Discount Scenario -->
-        <template v-else>
-            <price-container container-type="normal">
-                <!-- Excluding Tax Price -->
-                <price-tax-wrapper :tax-mode="priceData.taxMode" :including-tax="false">
-                    <price-amount-wrapper 
-                        :amount="priceData.finalPrice"
-                        :formatted-price="priceData.finalPriceFormatted"
-                        price-type="finalPrice">
-                    </price-amount-wrapper>
-                </price-tax-wrapper>
-                
-                <!-- Including Tax Price (if applicable) -->
-                <price-tax-wrapper v-if="priceData.finalPriceIncludingTax" 
-                                 :tax-mode="priceData.taxMode" 
-                                 :including-tax="true">
-                    <price-amount-wrapper 
-                        :amount="priceData.finalPriceIncludingTax"
-                        :formatted-price="priceData.finalPriceIncludingTaxFormatted"
-                        price-type="finalPriceIncludingTax">
-                    </price-amount-wrapper>
-                    <span class="price-label">Incl. Tax</span>
-                </price-tax-wrapper>
-            </price-container>
-        </template>
-    </price-range-wrapper>
-    
-    <!-- Bundle Products (Price Range) -->
-    <template v-if="priceData.priceRange && priceData.type === 'bundle' && priceData.priceRange.hasRange">
-        <!-- Minimum Price (From) -->
-        <price-range-wrapper :has-range="true" range-type="from">
-            <template v-slot:minimum>
-                <price-label :label-text="priceData.priceRange.rangeLabel" :outer-label="false"></price-label>
-                <price-container container-type="normal">
-                    <!-- Excluding Tax -->
-                    <price-tax-wrapper :tax-mode="priceData.taxMode" :including-tax="false">
-                        <price-amount-wrapper 
-                            :amount="priceData.priceRange.minimum.amount"
-                            :formatted-price="priceData.priceRange.minimum.formatted"
-                            price-type="minPrice">
-                        </price-amount-wrapper>
-                    </price-tax-wrapper>
-                    
-                    <!-- Including Tax (if applicable) -->
-                    <price-tax-wrapper v-if="priceData.priceRange.minimumIncludingTax" 
-                                     :tax-mode="priceData.taxMode" 
-                                     :including-tax="true">
-                        <price-amount-wrapper 
-                            :amount="priceData.priceRange.minimumIncludingTax.amount"
-                            :formatted-price="priceData.priceRange.minimumIncludingTax.formatted"
-                            price-type="minPriceIncludingTax">
-                        </price-amount-wrapper>
-                        <span class="price-label">Incl. Tax</span>
-                    </price-tax-wrapper>
-                </price-container>
-            </template>
-        </price-range-wrapper>
-        
-        <!-- Maximum Price (To) -->
-        <price-range-wrapper :has-range="true" range-type="to">
-            <template v-slot:maximum>
-                <price-label label-text="To" :outer-label="false"></price-label>
-                <price-container container-type="normal">
-                    <!-- Excluding Tax -->
-                    <price-tax-wrapper :tax-mode="priceData.taxMode" :including-tax="false">
-                        <price-amount-wrapper 
-                            :amount="priceData.priceRange.maximum.amount"
-                            :formatted-price="priceData.priceRange.maximum.formatted"
-                            price-type="maxPrice">
-                        </price-amount-wrapper>
-                    </price-tax-wrapper>
-                    
-                    <!-- Including Tax (if applicable) -->
-                    <price-tax-wrapper v-if="priceData.priceRange.maximumIncludingTax" 
-                                     :tax-mode="priceData.taxMode" 
-                                     :including-tax="true">
-                        <price-amount-wrapper 
-                            :amount="priceData.priceRange.maximumIncludingTax.amount"
-                            :formatted-price="priceData.priceRange.maximumIncludingTax.formatted"
-                            price-type="maxPriceIncludingTax">
-                        </price-amount-wrapper>
-                        <span class="price-label">Incl. Tax</span>
-                    </price-tax-wrapper>
+    </template>
+    <template v-for="priceRangeItem in priceData.priceRange">
+        <price-range-wrapper v-bind="buildPriceRangeWrapperProps(priceRangeItem)">
+            <template v-for="priceContainer in extractPriceContainers(priceRangeItem)">
+                <price-container v-bind="priceContainer.props">
+                    <template #label>
+                        <price-label :label-text="priceContainer.label"/>
+                    </template>
+                    <template v-for="priceWrapper in priceContainer.priceWrappers">
+                        <price-amount-wrapper v-bind="priceWrapper"/>
+                    </template>
                 </price-container>
             </template>
         </price-range-wrapper>
     </template>
-    
-    <!-- Grouped Products (Starting At) -->
-    <price-range-wrapper v-if="priceData.priceRange && priceData.type === 'grouped'" 
-                        :has-range="false" 
-                        range-type="grouped">
-        <price-label :label-text="priceData.priceRange.rangeLabel" :outer-label="false"></price-label>
-        <price-container container-type="normal">
-            <!-- Excluding Tax -->
-            <price-tax-wrapper :tax-mode="priceData.taxMode" :including-tax="false">
-                <price-amount-wrapper 
-                    :amount="priceData.priceRange.minimum.amount"
-                    :formatted-price="priceData.priceRange.minimum.formatted"
-                    price-type="startingPrice">
-                </price-amount-wrapper>
-            </price-tax-wrapper>
-            
-            <!-- Including Tax (if applicable) -->
-            <price-tax-wrapper v-if="priceData.priceRange.minimumIncludingTax" 
-                             :tax-mode="priceData.taxMode" 
-                             :including-tax="true">
-                <price-amount-wrapper 
-                    :amount="priceData.priceRange.minimumIncludingTax.amount"
-                    :formatted-price="priceData.priceRange.minimumIncludingTax.formatted"
-                    price-type="startingPriceIncludingTax">
-                </price-amount-wrapper>
-                <span class="price-label">Incl. Tax</span>
-            </price-tax-wrapper>
-        </price-container>
-    </price-range-wrapper>
-    
-    <!-- Configurable Products with Range (As Low As) -->
-    <template v-if="priceData.priceRange && priceData.type === 'configurable' && priceData.priceRange.hasRange">
-        <price-range-wrapper :has-range="false">
-            <price-label :label-text="priceData.priceRange.rangeLabel" :outer-label="false"></price-label>
-            <price-container container-type="normal">
-                <!-- Excluding Tax -->
-                <price-tax-wrapper :tax-mode="priceData.taxMode" :including-tax="false">
-                    <price-amount-wrapper 
-                        :amount="priceData.priceRange.minimum.amount"
-                        :formatted-price="priceData.priceRange.minimum.formatted"
-                        price-type="minPrice">
-                    </price-amount-wrapper>
-                </price-tax-wrapper>
-                
-                <!-- Including Tax (if applicable) -->
-                <price-tax-wrapper v-if="priceData.priceRange.minimumIncludingTax" 
-                                 :tax-mode="priceData.taxMode" 
-                                 :including-tax="true">
-                    <price-amount-wrapper 
-                        :amount="priceData.priceRange.minimumIncludingTax.amount"
-                        :formatted-price="priceData.priceRange.minimumIncludingTax.formatted"
-                        price-type="minPriceIncludingTax">
-                    </price-amount-wrapper>
-                    <span class="price-label">Incl. Tax</span>
-                </price-tax-wrapper>
-            </price-container>
-        </price-range-wrapper>
-    </template>
-    
 </div>
 <div v-else-if="processingError">
     <!-- Error state -->

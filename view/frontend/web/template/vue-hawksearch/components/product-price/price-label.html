@@ -1,7 +1,3 @@
-<span v-if="outerLabel && labelText" :class="labelClass">
-    {{ labelText }}
-</span>
-<slot></slot>
-<span v-if="!outerLabel && labelText" class="price-label">
-    {{ labelText }}
+<span v-if="labelText" class="price-label">
+    <slot>{{ labelText }}</slot>
 </span>

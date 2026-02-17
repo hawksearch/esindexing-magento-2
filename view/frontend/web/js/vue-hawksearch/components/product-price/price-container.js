@@ -34,28 +34,74 @@ define([
              * @required
              * @values 'special'|'regular'|'normal'
              */
-            containerType: {
+            /*containerType: {
                 type: String,
                 required: true,
                 validator: function(value) {
                     return ['special', 'regular', 'normal'].indexOf(value) !== -1;
                 }
-            }
+            },*/
+            // Position of the label slot: 'outer', 'inner', or 'none'
+            labelPosition: {
+                type: String,
+                default: 'none',
+                validator: (value) => ['outer', 'inner', 'none'].includes(value)
+            },
+            // Order of label relative to price: 'before' or 'after'
+            labelOrder: {
+                type: String,
+                default: 'before',
+                validator: (value) => ['before', 'after'].includes(value)
+            },
+
+
+            priceContainerTag: {
+                type: String,
+                default: 'span'
+            },
+            priceContainerClass: {
+                type: [String, Array, Object],
+                default: 'price-container price-final_price tax weee'
+            },
+            wrapperElementTag: {
+                type: String,
+                default: null
+            },
+            wrapperElementClass: {
+                type: [String, Array, Object],
+                default: ''
+            },
         },
 
+
         computed: {
+            outerContainerTag: function() {
+                return this.wrapperElementTag ? this.wrapperElementTag : this.priceContainerTag;
+            },
+
+            outerContainerClass: function() {
+                return this.wrapperElementTag ? this.wrapperElementClass : this.priceContainerClass;
+            },
+
+            innerContainerTag: function() {
+                return !this.wrapperElementTag ? this.wrapperElementTag : this.priceContainerTag;
+            },
+
+            innerContainerClass: function() {
+                return !this.wrapperElementTag ? this.wrapperElementClass : this.priceContainerClass;
+            },
             /**
              * Compute CSS class based on container type
              * @returns {String}
              */
-            containerClass: function() {
+            /*containerClass: function() {
                 var classMap = {
                     'special': 'special-price',
                     'regular': 'old-price',
                     'normal': 'normal-price'
                 };
                 return classMap[this.containerType] || 'normal-price';
-            }
+            }*/
         }
     };
 });

@@ -28,29 +28,10 @@ define([
         template: template,
 
         props: {
-            /**
-             * Whether product has a price range
-             * @type {Boolean}
-             * @default false
-             */
-            hasRange: {
-                type: Boolean,
-                default: false
-            },
-
-            /**
-             * Range display type
-             * @type {String}
-             * @default null
-             * @values 'from'|'to'|'grouped'|null
-             */
-            rangeType: {
+            tag: {
                 type: String,
-                default: null,
-                validator: function(value) {
-                    return value === null || ['from', 'to', 'grouped'].indexOf(value) !== -1;
-                }
-            }
+                default: 'p'
+            },
         }
     };
 });

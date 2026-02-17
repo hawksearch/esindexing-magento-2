@@ -12,8 +12,7 @@
 
 /**
  * Price Amount Wrapper Component
- * Displays a single price amount with proper HTML structure and data attributes
- * This is a leaf component in the pricing hierarchy
+ * Displays a price amount wrapper element with proper HTML structure and data attributes
  *
  * @module HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price/price-amount-wrapper
  */
@@ -29,36 +28,51 @@ define([
 
         props: {
             /**
-             * Numeric price amount
-             * @type {Number}
+             * Price amount object
+             * @type {PriceAmount|null}
              * @required
              */
             amount: {
-                type: Number,
-                required: true,
-                validator: function(value) {
-                    return value >= 0;
-                }
+                type: Object
             },
 
             /**
-             * Formatted price string (e.g., "$32.00")
-             * @type {String}
-             * @required
+             * CSS class for inner amount element
+             * @type {String|Array|Object}
              */
-            formattedPrice: {
-                type: String,
-                required: true
+            amountElementClass: {
+                type: [String, Array, Object],
+                default: ''
             },
 
             /**
              * Price type identifier for data attribute
              * @type {String}
-             * @default 'final'
+             * @default null
              */
             priceType: {
                 type: String,
-                default: 'final'
+                default: null
+            },
+
+            /**
+             * Label text to display
+             * @type {String}
+             * @default null
+             */
+            labelText: {
+                type: String,
+                default: null
+            },
+
+            /**
+             * Root element id
+             * @type {String}
+             * @default null
+             */
+            elementId: {
+                type: String,
+                default: null
             }
         }
     };
