@@ -74,7 +74,7 @@ define([
             regularPrice != null && finalPrice != null && regularPrice > finalPrice;
 
         var discountRate = hasDiscount
-            ? (regularPrice - finalPrice) / regularPrice * 100
+            ? (regularPrice - finalPrice) / regularPrice
             : 0;
 
         return {

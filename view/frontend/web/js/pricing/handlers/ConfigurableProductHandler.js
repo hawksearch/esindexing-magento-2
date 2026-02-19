@@ -70,6 +70,11 @@ define([
         var regularPriceIncludingTax = regularPrice != null
             ? this._calculateTaxInclusivePrices(regularPrice, taxConfig)
             : null;
+
+        // Calculate discount
+        var discount = this._initDiscountRate(regularPrice, finalPrice);
+
+        // Extract rest prices
         var priceMin = Number(productData.price_min);
         var priceMax = Number(productData.price_max);
         var priceMinIncludingTax = this._calculateTaxInclusivePrices(priceMin, taxConfig);

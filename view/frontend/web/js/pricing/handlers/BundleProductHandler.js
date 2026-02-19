@@ -72,6 +72,11 @@ define([
         var regularPriceIncludingTax = regularPrice != null
             ? this._calculateTaxInclusivePrices(regularPrice, taxConfig)
             : null;
+
+        // Calculate discount
+        var discount = this._initDiscountRate(regularPrice, finalPrice);
+
+        // Extract rest prices
         var priceMin = Number(productData.price_min);
         var priceMax = Number(productData.price_max);
         var priceMinIncludingTax = this._calculateTaxInclusivePrices(priceMin, taxConfig);
@@ -80,9 +85,6 @@ define([
         var priceMaxRegular = this._extractOriginalPriceFromDiscounted(priceMax, discount);
         var priceMinRegularIncludingTax = this._calculateTaxInclusivePrices(priceMinRegular, taxConfig);
         var priceMaxRegularIncludingTax = this._calculateTaxInclusivePrices(priceMaxRegular, taxConfig);
-
-        // Calculate discount
-        var discount = this._initDiscountRate(regularPrice, finalPrice);
 
         // Build price range
         var priceRange = [
@@ -95,10 +97,14 @@ define([
                     amount: priceMinIncludingTax,
                     formatted: this.priceFormatter.format(priceMinIncludingTax)
                 } : null,
-                regularAmount: {
-                    amount: this._extractOriginalPriceFromDiscounted(priceMin, discount),
-                    formatted: this.priceFormatter.format(priceMin)
-                },
+                regularAmount: priceMinRegular != null ? {
+                    amount: priceMinRegular,
+                    formatted: this.priceFormatter.format(priceMinRegular)
+                } : null,
+                regularAmountIncludingTax: priceMinRegularIncludingTax != null ? {
+                    amount: priceMinRegularIncludingTax,
+                    formatted: this.priceFormatter.format(priceMinRegularIncludingTax)
+                } : null,
                 rangeItemType: 'from'
             },
             {
@@ -109,6 +115,14 @@ define([
                 amountIncludingTax: priceMaxIncludingTax != null ? {
                     amount: priceMaxIncludingTax,
                     formatted: this.priceFormatter.format(priceMaxIncludingTax)
+                } : null,
+                regularAmount: priceMaxRegular != null ? {
+                    amount: priceMaxRegular,
+                    formatted: this.priceFormatter.format(priceMaxRegular)
+                } : null,
+                regularAmountIncludingTax: priceMaxRegularIncludingTax != null ? {
+                    amount: priceMaxRegularIncludingTax,
+                    formatted: this.priceFormatter.format(priceMaxRegularIncludingTax)
                 } : null,
                 rangeItemType: 'to'
             }
