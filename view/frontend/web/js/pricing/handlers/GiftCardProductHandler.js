@@ -21,90 +21,69 @@ define([
 ], function(BaseProductTypeHandler) {
     'use strict';
 
-    /**
-     * Gift card product handler
-     * @class
-     * @extends BaseProductTypeHandler
-     * @constructor
-     */
-    function GiftCardProductHandler() {
-        BaseProductTypeHandler.call(this);
-    }
-
-    // Inherit from BaseProductTypeHandler
-    GiftCardProductHandler.prototype = Object.create(BaseProductTypeHandler.prototype);
-    GiftCardProductHandler.prototype.constructor = GiftCardProductHandler;
-
-    /**
-     * Check if this handler can process the given product type
-     *
-     * @param {string} productType - Product type identifier
-     * @returns {boolean} True if this handler can process the type
-     * @public
-     */
-    GiftCardProductHandler.prototype.canHandle = function(productType) {
-        var normalizedType = String(productType).toLowerCase();
-        return normalizedType === 'giftcard';
-    };
-
-    /**
-     * Process gift card product data to extract pricing information
-     *
-     * @param {ProductTypeData} productData - Raw product data from external service
-     * @param {TaxConfiguration} taxConfig - Tax configuration
-     * @returns {GiftCardPriceData} Processed price data
-     * @public
-     */
-    GiftCardProductHandler.prototype.process = function(productData, taxConfig) {
-        // Validate required fields
-        var validation = this._validateFields(productData, ['type_id', '__uid', 'price_final']);
-        if (!validation.valid) {
-            throw new Error('Invalid gift card data: missing or invalid fields - ' +
-                          validation.missingFields.concat(validation.invalidFields).join(', '));
-        }
-
-        // Extract prices
-        var finalPrice = Number(productData.price_final);
-        var regularPrice = productData.price_regular != null ? Number(productData.price_regular) : null;
-        var finalPriceIncludingTax = this._calculateTaxInclusivePrices(finalPrice, taxConfig);
-        var regularPriceIncludingTax = regularPrice != null
-            ? this._calculateTaxInclusivePrices(regularPrice, taxConfig)
-            : null;
-        var priceMin = Number(productData.price_min);
-        var priceMax = Number(productData.price_max);
-        var priceMinIncludingTax = this._calculateTaxInclusivePrices(priceMin, taxConfig);
-        var priceMaxIncludingTax = this._calculateTaxInclusivePrices(priceMax, taxConfig);
-
-        // Gift cards typically don't have discounts
-        var discount = this._initDiscountRate(regularPrice, finalPrice);
-
-        // Format prices
-        var result = {
+    return BaseProductTypeHandler.extend({
+        defaults: {
             type: 'giftcard',
-            uid: String(productData.__uid),
-            discount: discount,
-            finalPrice: {
-                amount: finalPrice,
-                formatted: this.priceFormatter.format(finalPrice)
-            },
-            finalPriceIncludingTax: finalPriceIncludingTax != null ? {
-                amount: finalPriceIncludingTax,
-                formatted: this.priceFormatter.format(finalPriceIncludingTax)
-            } : null,
-            regularPrice: regularPrice != null ? {
-                amount: regularPrice,
-                formatted: this.priceFormatter.format(regularPrice)
-            } : null,
-            regularPriceIncludingTax: regularPriceIncludingTax != null ? {
-                amount: regularPriceIncludingTax,
-                formatted: this.priceFormatter.format(regularPriceIncludingTax)
-            } : null,
-            taxMode: taxConfig ? taxConfig.displayMode : 'excluding_tax',
-            priceRange: []
-        };
+        },
 
-        return result;
-    };
+        /**
+         * Process gift card product data to extract pricing information
+         *
+         * @param {ProductTypeData} productData - Raw product data from external service
+         * @param {TaxConfiguration} taxConfig - Tax configuration
+         * @returns {GiftCardPriceData} Processed price data
+         * @public
+         */
+        process: function (productData, taxConfig) {
+            // Validate required fields
+            var validation = this._validateFields(productData, ['type_id', '__uid', 'price_final']);
+            if (!validation.valid) {
+                throw new Error('Invalid gift card data: missing or invalid fields - ' +
+                    validation.missingFields.concat(validation.invalidFields).join(', '));
+            }
 
-    return GiftCardProductHandler;
+            // Extract prices
+            var finalPrice = Number(productData.price_final);
+            var regularPrice = productData.price_regular != null ? Number(productData.price_regular) : null;
+            var finalPriceIncludingTax = this._calculateTaxInclusivePrices(finalPrice, taxConfig);
+            var regularPriceIncludingTax = regularPrice != null
+                ? this._calculateTaxInclusivePrices(regularPrice, taxConfig)
+                : null;
+            var priceMin = Number(productData.price_min);
+            var priceMax = Number(productData.price_max);
+            var priceMinIncludingTax = this._calculateTaxInclusivePrices(priceMin, taxConfig);
+            var priceMaxIncludingTax = this._calculateTaxInclusivePrices(priceMax, taxConfig);
+
+            // Gift cards typically don't have discounts
+            var discount = this._initDiscountRate(regularPrice, finalPrice);
+
+            // Format prices
+            var result = {
+                type: 'giftcard',
+                uid: String(productData.__uid),
+                discount: discount,
+                finalPrice: {
+                    amount: finalPrice,
+                    formatted: this.priceFormatter.format(finalPrice)
+                },
+                finalPriceIncludingTax: finalPriceIncludingTax != null ? {
+                    amount: finalPriceIncludingTax,
+                    formatted: this.priceFormatter.format(finalPriceIncludingTax)
+                } : null,
+                regularPrice: regularPrice != null ? {
+                    amount: regularPrice,
+                    formatted: this.priceFormatter.format(regularPrice)
+                } : null,
+                regularPriceIncludingTax: regularPriceIncludingTax != null ? {
+                    amount: regularPriceIncludingTax,
+                    formatted: this.priceFormatter.format(regularPriceIncludingTax)
+                } : null,
+                taxMode: taxConfig ? taxConfig.displayMode : 'excluding_tax',
+                priceRange: []
+            };
+
+            return result;
+        }
+    });
+
 });

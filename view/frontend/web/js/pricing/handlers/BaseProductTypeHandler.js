@@ -17,21 +17,18 @@
  * @module HawkSearch_EsIndexing/js/pricing/handlers/BaseProductTypeHandler
  */
 define([
+    'uiClass',
     'HawkSearch_EsIndexing/js/pricing/utils/TaxCalculator',
     'HawkSearch_EsIndexing/js/pricing/utils/PriceFormatter'
-], function(TaxCalculator, PriceFormatter) {
+], function(Class, TaxCalculator, PriceFormatter) {
     'use strict';
 
-    /**
-     * Base product type handler
-     * @class
-     * @constructor
-     * @abstract
-     */
-    function BaseProductTypeHandler() {
-        this.taxCalculator = new TaxCalculator();
-        this.priceFormatter = null; // Will be injected by registry
-    }
+    return Class.extend({
+        defaults: {
+            taxCalculator: new TaxCalculator(),
+            priceFormatter: null, // Will be injected by registry
+            type: null, // Will be set by concrete handler
+        },
 
     /**
      * Process product data to extract pricing information
@@ -43,9 +40,9 @@ define([
      * @abstract
      * @public
      */
-    BaseProductTypeHandler.prototype.process = function(productData, taxConfig) {
+        process: function (productData, taxConfig) {
         throw new Error('process() must be implemented by subclass');
-    };
+        },
 
     /**
      * Check if this handler can process the given product type
@@ -54,22 +51,18 @@ define([
      * @returns {boolean} True if this handler can process the type
      * @public
      */
-    BaseProductTypeHandler.prototype.canHandle = function(productType) {
-        throw new Error('canHandle() must be implemented by subclass');
-    };
+        canHandle: function (productType) {
+            var normalizedType = String(productType).toLowerCase();
+            return normalizedType === this.type;
+        },
 
     /**
-     * Calculate discount information
-     *
      * @param {number|null} regularPrice - Regular price
      * @param {number|null} finalPrice - Final price after discount
      * @returns {DiscountData} Discount information
      * @protected
      */
-    BaseProductTypeHandler.prototype._initDiscountRate = function(
-        regularPrice,
-        finalPrice
-    ) {
+        _initDiscountRate: function (regularPrice, finalPrice) {
         var hasDiscount =
             regularPrice != null && finalPrice != null && regularPrice > finalPrice;
 
@@ -81,22 +74,20 @@ define([
             hasDiscount: hasDiscount,
             discountRate: discountRate
         };
-    };
+        },
 
     /**
-     * Apply discount to a price using DiscountData
-     *
      * @param {number} price - The original price
      * @param {DiscountData} discountData - Discount information (rate as decimal)
      * @returns {number} Discounted price
      * @protected
      */
-    BaseProductTypeHandler.prototype._applyDiscountToPrice = function(price, discountData) {
+        _applyDiscountToPrice: function (price, discountData) {
         if (!discountData || !discountData.hasDiscount || !discountData.discountRate) {
             return price;
         }
         return price * (1 - discountData.discountRate);
-    };
+        },
 
     /**
      * Extract original price from discounted price and DiscountData
@@ -107,15 +98,12 @@ define([
      * @returns {number} Original price before discount
      * @protected
      */
-    BaseProductTypeHandler.prototype._extractOriginalPriceFromDiscounted = function(
-        discountedPrice,
-        discountData
-    ) {
+        _extractOriginalPriceFromDiscounted: function(discountedPrice, discountData) {
         if (!discountData || !discountData.hasDiscount || !discountData.discountRate) {
             return discountedPrice;
         }
         return discountedPrice / (1 - discountData.discountRate);
-    };
+        },
 
     /**
      * Validate required fields in product data
@@ -125,10 +113,7 @@ define([
      * @returns {Object} Validation result
      * @protected
      */
-    BaseProductTypeHandler.prototype._validateFields = function(
-        productData,
-        requiredFields
-    ) {
+        _validateFields: function (productData, requiredFields) {
         var missingFields = [];
         var invalidFields = [];
 
@@ -146,37 +131,29 @@ define([
             missingFields: missingFields,
             invalidFields: invalidFields
         };
-    };
+        },
 
     /**
-     * Calculate tax-inclusive price
-     *
      * @param {number} price - Price (excluding tax)
      * @param {TaxConfiguration} taxConfig - Tax configuration
      * @returns {number} Price including tax
      * @protected
      */
-    BaseProductTypeHandler.prototype._calculateTaxInclusivePrices = function(
-        price,
-        taxConfig
-    ) {
+        _calculateTaxInclusivePrices: function(price, taxConfig) {
         var taxRate = taxConfig.taxRate || 0;
         var priceIncludingTax = taxConfig.priceIncludesTax
             ? price
             : this.taxCalculator.calculateInclusive(price, taxRate);
 
         return priceIncludingTax;
-    };
+        },
 
     /**
-     * Set price formatter instance
-     *
      * @param {PriceFormatter} formatter - Price formatter instance
      * @public
      */
-    BaseProductTypeHandler.prototype.setPriceFormatter = function(formatter) {
+        setPriceFormatter: function (formatter) {
         this.priceFormatter = formatter;
-    };
-
-    return BaseProductTypeHandler;
+        }
+    });
 });

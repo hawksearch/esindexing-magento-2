@@ -21,31 +21,10 @@ define([
 ], function(BaseProductTypeHandler) {
     'use strict';
 
-    /**
-     * Bundle product handler
-     * @class
-     * @extends BaseProductTypeHandler
-     * @constructor
-     */
-    function BundleProductHandler() {
-        BaseProductTypeHandler.call(this);
-    }
-
-    // Inherit from BaseProductTypeHandler
-    BundleProductHandler.prototype = Object.create(BaseProductTypeHandler.prototype);
-    BundleProductHandler.prototype.constructor = BundleProductHandler;
-
-    /**
-     * Check if this handler can process the given product type
-     *
-     * @param {string} productType - Product type identifier
-     * @returns {boolean} True if this handler can process the type
-     * @public
-     */
-    BundleProductHandler.prototype.canHandle = function(productType) {
-        var normalizedType = String(productType).toLowerCase();
-        return normalizedType === 'bundle';
-    };
+    return BaseProductTypeHandler.extend({
+        defaults: {
+            type: 'bundle',
+        },
 
     /**
      * Process bundle product data to extract pricing information
@@ -55,7 +34,7 @@ define([
      * @returns {BundlePriceData} Processed price data
      * @public
      */
-    BundleProductHandler.prototype.process = function(productData, taxConfig) {
+        process: function (productData, taxConfig) {
         // Validate required fields
         var validation = this._validateFields(productData, [
             'type_id', '__uid', 'price_final', 'price_min', 'price_max'
@@ -154,7 +133,6 @@ define([
         };
 
         return result;
-    };
-
-    return BundleProductHandler;
+        }
+    });
 });

@@ -21,107 +21,85 @@ define([
 ], function(BaseProductTypeHandler) {
     'use strict';
 
-    /**
-     * Grouped product handler
-     * @class
-     * @extends BaseProductTypeHandler
-     * @constructor
-     */
-    function GroupedProductHandler() {
-        BaseProductTypeHandler.call(this);
-    }
-
-    // Inherit from BaseProductTypeHandler
-    GroupedProductHandler.prototype = Object.create(BaseProductTypeHandler.prototype);
-    GroupedProductHandler.prototype.constructor = GroupedProductHandler;
-
-    /**
-     * Check if this handler can process the given product type
-     *
-     * @param {string} productType - Product type identifier
-     * @returns {boolean} True if this handler can process the type
-     * @public
-     */
-    GroupedProductHandler.prototype.canHandle = function(productType) {
-        var normalizedType = String(productType).toLowerCase();
-        return normalizedType === 'grouped';
-    };
-
-    /**
-     * Process grouped product data to extract pricing information
-     *
-     * @param {ProductTypeData} productData - Raw product data from external service
-     * @param {TaxConfiguration} taxConfig - Tax configuration
-     * @returns {GroupedPriceData} Processed price data
-     * @public
-     */
-    GroupedProductHandler.prototype.process = function(productData, taxConfig) {
-        // Validate required fields
-        var validation = this._validateFields(productData, [
-            'type_id', '__uid', 'price_final'
-        ]);
-        if (!validation.valid) {
-            throw new Error('Invalid grouped product data: missing or invalid fields - ' +
-                          validation.missingFields.concat(validation.invalidFields).join(', '));
-        }
-
-        // Extract prices
-        var finalPrice = Number(productData.price_final);
-        var regularPrice = productData.price_regular != null ? Number(productData.price_regular) : null;
-        var finalPriceIncludingTax = this._calculateTaxInclusivePrices(finalPrice, taxConfig);
-        var regularPriceIncludingTax = regularPrice != null
-            ? this._calculateTaxInclusivePrices(regularPrice, taxConfig)
-            : null;
-        var priceMin = Number(productData.price_min);
-        var priceMax = Number(productData.price_max);
-        var priceMinIncludingTax = this._calculateTaxInclusivePrices(priceMin, taxConfig);
-        var priceMaxIncludingTax = this._calculateTaxInclusivePrices(priceMax, taxConfig);
-
-        // Grouped products typically don't have discounts
-        var discount = this._initDiscountRate(regularPrice, finalPrice);
-
-        // Build price range (grouped products show "Starting at" with single price)
-        var priceRange = [
-            {
-                amount: {
-                    amount: priceMin,
-                    formatted: this.priceFormatter.format(priceMin)
-                },
-                amountIncludingTax: priceMinIncludingTax != null ? {
-                    amount: priceMinIncludingTax,
-                    formatted: this.priceFormatter.format(priceMinIncludingTax)
-                } : null,
-                rangeItemType: 'from'
-            }
-        ];
-
-        // Format result
-        var result = {
+    return BaseProductTypeHandler.extend({
+        defaults: {
             type: 'grouped',
-            uid: String(productData.__uid),
-            discount: discount,
-            finalPrice: {
-                amount: finalPrice,
-                formatted: this.priceFormatter.format(finalPrice)
-            },
-            finalPriceIncludingTax: finalPriceIncludingTax != null ? {
-                amount: finalPriceIncludingTax,
-                formatted: this.priceFormatter.format(finalPriceIncludingTax)
-            } : null,
-            regularPrice: regularPrice != null ? {
-                amount: regularPrice,
-                formatted: this.priceFormatter.format(regularPrice)
-            } : null,
-            regularPriceIncludingTax: regularPriceIncludingTax != null ? {
-                amount: regularPriceIncludingTax,
-                formatted: this.priceFormatter.format(regularPriceIncludingTax)
-            } : null,
-            taxMode: taxConfig ? taxConfig.displayMode : 'excluding_tax',
-            priceRange: priceRange
-        };
+        },
 
-        return result;
-    };
+        /**
+         * Process grouped product data to extract pricing information
+         *
+         * @param {ProductTypeData} productData - Raw product data from external service
+         * @param {TaxConfiguration} taxConfig - Tax configuration
+         * @returns {GroupedPriceData} Processed price data
+         * @public
+         */
+        process: function (productData, taxConfig) {
+            // Validate required fields
+            var validation = this._validateFields(productData, [
+                'type_id', '__uid', 'price_final'
+            ]);
+            if (!validation.valid) {
+                throw new Error('Invalid grouped product data: missing or invalid fields - ' +
+                    validation.missingFields.concat(validation.invalidFields).join(', '));
+            }
 
-    return GroupedProductHandler;
+            // Extract prices
+            var finalPrice = Number(productData.price_final);
+            var regularPrice = productData.price_regular != null ? Number(productData.price_regular) : null;
+            var finalPriceIncludingTax = this._calculateTaxInclusivePrices(finalPrice, taxConfig);
+            var regularPriceIncludingTax = regularPrice != null
+                ? this._calculateTaxInclusivePrices(regularPrice, taxConfig)
+                : null;
+            var priceMin = Number(productData.price_min);
+            var priceMax = Number(productData.price_max);
+            var priceMinIncludingTax = this._calculateTaxInclusivePrices(priceMin, taxConfig);
+            var priceMaxIncludingTax = this._calculateTaxInclusivePrices(priceMax, taxConfig);
+
+            // Grouped products typically don't have discounts
+            var discount = this._initDiscountRate(regularPrice, finalPrice);
+
+            // Build price range (grouped products show "Starting at" with single price)
+            var priceRange = [
+                {
+                    amount: {
+                        amount: priceMin,
+                        formatted: this.priceFormatter.format(priceMin)
+                    },
+                    amountIncludingTax: priceMinIncludingTax != null ? {
+                        amount: priceMinIncludingTax,
+                        formatted: this.priceFormatter.format(priceMinIncludingTax)
+                    } : null,
+                    rangeItemType: 'from'
+                }
+            ];
+
+            // Format result
+            var result = {
+                type: 'grouped',
+                uid: String(productData.__uid),
+                discount: discount,
+                finalPrice: {
+                    amount: finalPrice,
+                    formatted: this.priceFormatter.format(finalPrice)
+                },
+                finalPriceIncludingTax: finalPriceIncludingTax != null ? {
+                    amount: finalPriceIncludingTax,
+                    formatted: this.priceFormatter.format(finalPriceIncludingTax)
+                } : null,
+                regularPrice: regularPrice != null ? {
+                    amount: regularPrice,
+                    formatted: this.priceFormatter.format(regularPrice)
+                } : null,
+                regularPriceIncludingTax: regularPriceIncludingTax != null ? {
+                    amount: regularPriceIncludingTax,
+                    formatted: this.priceFormatter.format(regularPriceIncludingTax)
+                } : null,
+                taxMode: taxConfig ? taxConfig.displayMode : 'excluding_tax',
+                priceRange: priceRange
+            };
+
+            return result;
+        }
+    });
 });

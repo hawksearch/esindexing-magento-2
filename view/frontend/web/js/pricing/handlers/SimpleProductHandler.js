@@ -21,92 +21,68 @@ define([
 ], function(BaseProductTypeHandler) {
     'use strict';
 
-    /**
-     * Simple product handler
-     * @class
-     * @extends BaseProductTypeHandler
-     * @constructor
-     */
-    function SimpleProductHandler() {
-        BaseProductTypeHandler.call(this);
-    }
-
-    // Inherit from BaseProductTypeHandler
-    SimpleProductHandler.prototype = Object.create(BaseProductTypeHandler.prototype);
-    SimpleProductHandler.prototype.constructor = SimpleProductHandler;
-
-    /**
-     * Check if this handler can process the given product type
-     *
-     * @param {string} productType - Product type identifier
-     * @returns {boolean} True if this handler can process the type
-     * @public
-     */
-    SimpleProductHandler.prototype.canHandle = function(productType) {
-        var normalizedType = String(productType).toLowerCase();
-        return normalizedType === 'simple' ||
-               normalizedType === 'virtual' ||
-               normalizedType === 'downloadable';
-    };
-
-    /**
-     * Process simple product data to extract pricing information
-     *
-     * @param {ProductTypeData} productData - Raw product data from external service
-     * @param {TaxConfiguration} taxConfig - Tax configuration
-     * @returns {SimpleProductPriceData} Processed price data
-     * @public
-     */
-    SimpleProductHandler.prototype.process = function(productData, taxConfig) {
-        // Validate required fields
-        var validation = this._validateFields(productData, ['type_id', '__uid', 'price_final']);
-        if (!validation.valid) {
-            throw new Error('Invalid product data: missing or invalid fields - ' +
-                          validation.missingFields.concat(validation.invalidFields).join(', '));
-        }
-
-        // Extract prices
-        var finalPrice = Number(productData.price_final);
-        var regularPrice = productData.price_regular != null ? Number(productData.price_regular) : null;
-        var finalPriceIncludingTax = this._calculateTaxInclusivePrices(finalPrice, taxConfig);
-        var regularPriceIncludingTax = regularPrice != null
-            ? this._calculateTaxInclusivePrices(regularPrice, taxConfig)
-            : null;
-        var priceMin = Number(productData.price_min);
-        var priceMax = Number(productData.price_max);
-        var priceMinIncludingTax = this._calculateTaxInclusivePrices(priceMin, taxConfig);
-        var priceMaxIncludingTax = this._calculateTaxInclusivePrices(priceMax, taxConfig);
-
-        // Calculate discount
-        var discount = this._initDiscountRate(regularPrice, finalPrice);
-
-        // Format prices
-        var result = {
+    return BaseProductTypeHandler.extend({
+        defaults: {
             type: 'simple',
-            uid: String(productData.__uid),
-            discount: discount,
-            finalPrice: {
-                amount: finalPrice,
-                formatted: this.priceFormatter.format(finalPrice)
-            },
-            finalPriceIncludingTax: finalPriceIncludingTax != null ? {
-                amount: finalPriceIncludingTax,
-                formatted: this.priceFormatter.format(finalPriceIncludingTax)
-            } : null,
-            regularPrice: regularPrice != null ? {
-                amount: regularPrice,
-                formatted: this.priceFormatter.format(regularPrice)
-            } : null,
-            regularPriceIncludingTax: regularPriceIncludingTax != null ? {
-                amount: regularPriceIncludingTax,
-                formatted: this.priceFormatter.format(regularPriceIncludingTax)
-            } : null,
-            taxMode: taxConfig ? taxConfig.displayMode : 'excluding_tax',
-            priceRange: []
-        };
+        },
 
-        return result;
-    };
+        /**
+         * Process simple product data to extract pricing information
+         *
+         * @param {ProductTypeData} productData - Raw product data from external service
+         * @param {TaxConfiguration} taxConfig - Tax configuration
+         * @returns {SimpleProductPriceData} Processed price data
+         * @public
+         */
+        process: function (productData, taxConfig) {
+            // Validate required fields
+            var validation = this._validateFields(productData, ['type_id', '__uid', 'price_final']);
+            if (!validation.valid) {
+                throw new Error('Invalid product data: missing or invalid fields - ' +
+                    validation.missingFields.concat(validation.invalidFields).join(', '));
+            }
 
-    return SimpleProductHandler;
+            // Extract prices
+            var finalPrice = Number(productData.price_final);
+            var regularPrice = productData.price_regular != null ? Number(productData.price_regular) : null;
+            var finalPriceIncludingTax = this._calculateTaxInclusivePrices(finalPrice, taxConfig);
+            var regularPriceIncludingTax = regularPrice != null
+                ? this._calculateTaxInclusivePrices(regularPrice, taxConfig)
+                : null;
+            var priceMin = Number(productData.price_min);
+            var priceMax = Number(productData.price_max);
+            var priceMinIncludingTax = this._calculateTaxInclusivePrices(priceMin, taxConfig);
+            var priceMaxIncludingTax = this._calculateTaxInclusivePrices(priceMax, taxConfig);
+
+            // Calculate discount
+            var discount = this._initDiscountRate(regularPrice, finalPrice);
+
+            // Format prices
+            var result = {
+                type: 'simple',
+                uid: String(productData.__uid),
+                discount: discount,
+                finalPrice: {
+                    amount: finalPrice,
+                    formatted: this.priceFormatter.format(finalPrice)
+                },
+                finalPriceIncludingTax: finalPriceIncludingTax != null ? {
+                    amount: finalPriceIncludingTax,
+                    formatted: this.priceFormatter.format(finalPriceIncludingTax)
+                } : null,
+                regularPrice: regularPrice != null ? {
+                    amount: regularPrice,
+                    formatted: this.priceFormatter.format(regularPrice)
+                } : null,
+                regularPriceIncludingTax: regularPriceIncludingTax != null ? {
+                    amount: regularPriceIncludingTax,
+                    formatted: this.priceFormatter.format(regularPriceIncludingTax)
+                } : null,
+                taxMode: taxConfig ? taxConfig.displayMode : 'excluding_tax',
+                priceRange: []
+            };
+
+            return result;
+        },
+    });
 });

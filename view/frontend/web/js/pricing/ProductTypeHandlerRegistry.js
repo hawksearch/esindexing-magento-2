@@ -17,21 +17,30 @@
  * @module HawkSearch_EsIndexing/js/pricing/ProductTypeHandlerRegistry
  */
 define([
-    'HawkSearch_EsIndexing/js/pricing/utils/PriceFormatter'
-], function(PriceFormatter) {
+    'uiClass',
+    'HawkSearch_EsIndexing/js/pricing/utils/PriceFormatter',
+], function(
+    Class,
+    PriceFormatter,
+) {
     'use strict';
 
+    return Class.extend({
+        defaults: {
+            handlers: {},
+            fallbackHandler: null,
+            priceFormatter: null
+        },
+
     /**
-     * Product type handler registry
-     * @class
-     * @constructor
-     * @param {Object} config - Configuration object
+         * @param {Object} config - Configuration object with price format and tax settings
      */
-    function ProductTypeHandlerRegistry(config) {
-        this.handlers = {};
-        this.fallbackHandler = null;
-        this.priceFormatter = new PriceFormatter(config?.priceFormat || {});
-    }
+        initialize: function (config) {
+            this._super();
+            this.priceFormatter = new PriceFormatter(config?.priceFormat || {})
+
+            return this;
+        },
 
     /**
      * Register a handler for a product type
@@ -41,17 +50,13 @@ define([
      * @returns {ProductTypeHandlerRegistry} This instance for chaining
      * @public
      */
-    ProductTypeHandlerRegistry.prototype.register = function(productType, handler) {
+        register: function (productType, handler) {
         if (!productType || typeof productType !== 'string') {
             throw new Error('Product type must be a non-empty string');
         }
 
         if (!handler || typeof handler.process !== 'function') {
             throw new Error('Handler must implement process() method');
-        }
-
-        if (!handler || typeof handler.canHandle !== 'function') {
-            throw new Error('Handler must implement canHandle() method');
         }
 
         // Inject price formatter into handler
@@ -61,7 +66,7 @@ define([
 
         this.handlers[productType] = handler;
         return this;
-    };
+        },
 
     /**
      * Register a fallback handler for unknown product types
@@ -70,7 +75,7 @@ define([
      * @returns {ProductTypeHandlerRegistry} This instance for chaining
      * @public
      */
-    ProductTypeHandlerRegistry.prototype.registerFallback = function(handler) {
+        registerFallback: function (handler) {
         if (!handler || typeof handler.process !== 'function') {
             throw new Error('Fallback handler must implement process() method');
         }
@@ -82,7 +87,7 @@ define([
 
         this.fallbackHandler = handler;
         return this;
-    };
+        },
 
     /**
      * Get handler for a product type
@@ -91,7 +96,7 @@ define([
      * @returns {BaseProductTypeHandler|null} Handler instance or null if not found
      * @public
      */
-    ProductTypeHandlerRegistry.prototype.getHandler = function(productType) {
+        getHandler: function (productType) {
         if (!productType) {
             return this.fallbackHandler;
         }
@@ -106,7 +111,7 @@ define([
 
         // Return fallback handler if available
         return this.fallbackHandler;
-    };
+        },
 
     /**
      * Check if a handler is registered for a product type
@@ -115,14 +120,14 @@ define([
      * @returns {boolean} True if handler is registered
      * @public
      */
-    ProductTypeHandlerRegistry.prototype.hasHandler = function(productType) {
+        hasHandler: function (productType) {
         if (!productType) {
             return false;
         }
 
         var normalizedType = String(productType).toLowerCase();
         return this.handlers.hasOwnProperty(normalizedType);
-    };
+        },
 
     /**
      * Get all registered product types
@@ -130,9 +135,8 @@ define([
      * @returns {Array<string>} List of registered product types
      * @public
      */
-    ProductTypeHandlerRegistry.prototype.getRegisteredTypes = function() {
+        getRegisteredTypes: function () {
         return Object.keys(this.handlers);
-    };
-
-    return ProductTypeHandlerRegistry;
+        }
+    });
 });
