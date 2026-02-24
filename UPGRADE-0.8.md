@@ -15,3 +15,4 @@
 - Usage of protected property `Model\Indexing\AbstractEntityRebuild::storeManager` is deprecated. Visibility will be changed to private in version 1.0. Set via constructor injection.
 - Usage of protected property `Model\Indexing\AbstractEntityRebuild::indexingContext` is deprecated. Visibility will be changed to private in version 1.0. Set via constructor injection.
 - Usage of protected property `Model\Indexing\FieldHandler\Composite::handlers` is deprecated. Visibility will be changed to private in version 1.0. Set via constructor injection.
+- Usage of Javascript configs `window.hawksearchConfig.patterns` and `window.hawksearchConfig.priceTemplates` is deprecated. Configs are removed.

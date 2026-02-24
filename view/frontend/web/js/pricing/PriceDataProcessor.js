@@ -37,7 +37,7 @@ define([
      * Price data processor
      * @class
      * @constructor
-     * @param {Object} config - Configuration object with currency and tax settings
+     * @param {Object} config - Configuration object with price format and tax settings
      */
     function PriceDataProcessor(config) {
         this.config = config || {};

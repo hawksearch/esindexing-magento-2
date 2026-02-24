@@ -74,16 +74,7 @@ define([
         },
 
         created: function() {
-            // Initialize price processor with configuration
-            var config = {
-                currencySymbol: this.pricingConfig.priceFormat?.currencySymbol || '$',
-                currencyPosition: this.pricingConfig.priceFormat?.currencyPosition || 'before',
-                decimalPlaces: this.pricingConfig.priceFormat?.decimalPlaces || 2,
-                decimalSeparator: this.pricingConfig.priceFormat?.decimalSeparator || '.',
-                thousandsSeparator: this.pricingConfig.priceFormat?.thousandsSeparator || ','
-            };
-
-            this.priceProcessor = new PriceDataProcessor(config);
+            this.priceProcessor = new PriceDataProcessor(this.pricingConfig);
         },
 
         computed: {

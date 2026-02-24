@@ -58,6 +58,98 @@ var groupedProduct = {
     price_max: null
 };
 
+// Configurable Products
+// **Example 1: Configurable Product with Price Range (with discount)**
+/*
+-   Given:
+    `price_regular = 70`,
+    `price_final = 60`,
+    `price_min = 60`,
+    `price_max = 70`
+
+-   **Calculation**:
+
+    ```
+    samePriceForAll = false (60 !== 70)
+    discount_multiplier = 60 / 70 = 0.857
+    price_min_regular = 60 / 0.857 = 70
+    ```
+**Expected Display**:
+    As low as  **60$**  (Regular: 70$)
+ */
+
+
+/*
+**Example 2: Configurable Product with Same Price for All Variations (with discount)**
+
+-   Given:
+    `price_regular = 80`,
+    `price_final = 70`,
+    `price_min = 70`,
+    `price_max = 70`
+
+-   **Calculation**:
+
+    ```
+    samePriceForAll = true (70 === 70)
+    discount_multiplier = 70 / 80 = 0.875
+    price_min_regular = 70 / 0.875 = 80
+    ```
+
+-   **Expected Display**:
+    **70$**  (Regular: 80$)
+ */
+
+/*
+**Example 3: Configurable Product with Price Range (no discount)**
+
+-   Given:
+    `price_regular = 60`,
+    `price_final = 60`,
+    `price_min = 60`,
+    `price_max = 70`
+
+-   **Calculation**:
+
+    -   Condition not met (`price_regular === price_final`), so we cannot calculate different regular prices
+    -   Use fallback display format
+-   **Expected Display**:
+    As low as  **60$**
+ */
+var configurableProductWithRangeNoDiscount = {
+    type_id: 'configurable',
+    __uid: '202',
+    price_regular: 0,
+    price_final: 0,
+    price_min: 40.00,
+    price_max: 52.00
+};
+/*
+**Example 4: Configurable Product with Same Price (no discount)**
+
+-   Given:
+    `price_regular = 0`,
+    `price_final = 0`,
+    `price_min = 70`,
+    `price_max = 70`
+
+-   **Calculation**:
+
+    -   `samePriceForAll = true`
+    -   Condition not met (`price_regular === price_final`), so no separate regular price needed
+    -   Use fallback display format
+-   **Expected Display**:
+    **70$**
+ */
+var configurableProductSamePriceNoDiscount = {
+    type_id: 'configurable',
+    __uid: '202',
+    price_regular: 0,
+    price_final: 0,
+    price_min: 63.00,
+    price_max: 63.00
+};
+
 // Example 5: Configurable Product with Range
 var configurableProductWithRange = {
     type_id: 'configurable',
@@ -145,51 +237,65 @@ var priceFormatterConfig = {
 // {
 //     type: 'simple',
 //     uid: '123',
-//     hasDiscount: true,
-//     finalPrice: 32.00,
-//     finalPriceFormatted: '$32.00',
-//     regularPrice: 45.00,
-//     regularPriceFormatted: '$45.00',
+//     discount: {hasDiscount: true, discountRate: 0.28888888888888886,
+//     finalPrice: {amount: 32, formatted: '$32'},
+//     finalPriceIncludingTax: {amount: 38.4, formatted: '$38.40'},
+//     regularPrice: {amount: 45, formatted: '$45.00'},
+//     regularPriceIncludingTax: {amount: 54, formatted: '$54.00'},
 //     taxMode: 'excluding_tax',
-//     priceRange: null,
-//     discountPercent: 29,
-//     discountAmount: 13.00
+//     priceRange: [],
 // }
 
 // Bundle Product (both_taxes):
 // {
 //     type: 'bundle',
 //     uid: '789',
-//     hasDiscount: false,
-//     finalPrice: 50.00,
-//     finalPriceFormatted: '$50.00',
-//     finalPriceIncludingTax: 60.00,
-//     finalPriceIncludingTaxFormatted: '$60.00',
+//     discount: {hasDiscount: false, discountRate: 0,
+//     finalPrice: {amount: 50, formatted: '$50.00'},
+//     finalPriceIncludingTax: {amount: 60, formatted: '$60.00'},
+//     regularPrice: null,
+//     regularPriceIncludingTax: null,
 //     taxMode: 'both_taxes',
-//     priceRange: {
-//         minimum: {
-//             amount: 50.00,
-//             formatted: '$50.00',
-//             type: 'minPrice'
-//         },
-//         maximum: {
-//             amount: 150.00,
-//             formatted: '$150.00',
-//             type: 'maxPrice'
-//         },
-//         minimumIncludingTax: {
-//             amount: 60.00,
-//             formatted: '$60.00',
-//             type: 'minPriceIncludingTax'
-//         },
-//         maximumIncludingTax: {
-//             amount: 180.00,
-//             formatted: '$180.00',
-//             type: 'maxPriceIncludingTax'
-//         },
-//         hasRange: true,
-//         rangeLabel: 'From'
-//     }
+//     priceRange: [
+//         {
+//             "amount": {
+//                 "amount": 50,
+//                 "formatted": "$50.00"
+//             },
+//             "amountIncludingTax": {
+//                 "amount": 60,
+//                 "formatted": "$60.00"
+//             },
+//             "regularAmount": {
+//                 "amount": 50,
+//                 "formatted": "$50.00"
+//             },
+//             "regularAmountIncludingTax": {
+//                 "amount": 60,
+//                 "formatted": "$60.00"
+//             },
+//             "rangeItemType": "from"
+//          },
+//         {
+//             "amount": {
+//                 "amount": 150,
+//                 "formatted": "$150.00"
+//             },
+//             "amountIncludingTax": {
+//                 "amount": 180,
+//                 "formatted": "$180.00"
+//             },
+//             "regularAmount": {
+//                 "amount": 150,
+//                 "formatted": "$150.00"
+//             },
+//             "regularAmountIncludingTax": {
+//                 "amount": 180,
+//                 "formatted": "$180.00"
+//             },
+//             "rangeItemType": "to"
+//         }
+//     ]
 // }
 
 // MANUAL TESTING CHECKLIST:
@@ -220,20 +326,3 @@ var priceFormatterConfig = {
 // 8. Test tax mode switching
 // 9. Compare with old component output
 // 10. Verify no JavaScript errors
-
-// Export for use in test files
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        simpleProductWithDiscount: simpleProductWithDiscount,
-        simpleProductNoDiscount: simpleProductNoDiscount,
-        bundleProduct: bundleProduct,
-        groupedProduct: groupedProduct,
-        configurableProductWithRange: configurableProductWithRange,
-        configurableProductDiscount: configurableProductDiscount,
-        giftCardProduct: giftCardProduct,
-        taxConfigExcluding: taxConfigExcluding,
-        taxConfigIncluding: taxConfigIncluding,
-        taxConfigBoth: taxConfigBoth,
-        priceFormatterConfig: priceFormatterConfig
-    };
-}

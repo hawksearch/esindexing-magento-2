@@ -30,7 +30,7 @@ define([
     function ProductTypeHandlerRegistry(config) {
         this.handlers = {};
         this.fallbackHandler = null;
-        this.priceFormatter = new PriceFormatter(config);
+        this.priceFormatter = new PriceFormatter(config?.priceFormat || {});
     }
 
     /**

@@ -16,7 +16,9 @@
  *
  * @module HawkSearch_EsIndexing/js/pricing/utils/PriceFormatter
  */
-define([], function() {
+define([
+    'priceUtils',
+], function(priceUtils) {
     'use strict';
 
     /**
@@ -47,58 +49,7 @@ define([], function() {
      * @public
      */
     PriceFormatter.prototype.format = function(price) {
-        if (price == null || isNaN(price)) {
-            return this.currencySymbol + '0' + this.decimalSeparator + '00';
-        }
-
-        var numericPrice = Number(price);
-        var formattedNumber = this._formatNumber(numericPrice);
-
-        if (this.currencyPosition === 'after') {
-            return formattedNumber + this.currencySymbol;
-        }
-
-        return this.currencySymbol + formattedNumber;
-    };
-
-    /**
-     * Format a number with thousands separator and decimal places
-     *
-     * @param {number} number - The number to format
-     * @returns {string} Formatted number string
-     * @private
-     */
-    PriceFormatter.prototype._formatNumber = function(number) {
-        var fixedNumber = number.toFixed(this.decimalPlaces);
-        var parts = fixedNumber.split('.');
-
-        // Add thousands separator
-        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandsSeparator);
-
-        return parts.join(this.decimalSeparator);
-    };
-
-    /**
-     * Parse a formatted price string to a numeric value
-     *
-     * @param {string} formattedPrice - The formatted price string
-     * @returns {number} Numeric price value
-     * @public
-     */
-    PriceFormatter.prototype.parse = function(formattedPrice) {
-        if (!formattedPrice || typeof formattedPrice !== 'string') {
-            return 0;
-        }
-
-        // Remove currency symbol and spaces
-        var cleaned = formattedPrice
-            .replace(this.currencySymbol, '')
-            .replace(/\s/g, '')
-            .replace(new RegExp('\\' + this.thousandsSeparator, 'g'), '')
-            .replace(new RegExp('\\' + this.decimalSeparator), '.');
-
-        var parsed = parseFloat(cleaned);
-        return isNaN(parsed) ? 0 : parsed;
+        return priceUtils.formatPriceLocale(price, this.config)
     };
 
     return PriceFormatter;
