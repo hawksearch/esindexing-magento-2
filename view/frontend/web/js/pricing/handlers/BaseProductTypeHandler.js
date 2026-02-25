@@ -30,130 +30,141 @@ define([
             type: null, // Will be set by concrete handler
         },
 
-    /**
-     * Process product data to extract pricing information
-     * Must be implemented by subclasses
-     *
-     * @param {ProductTypeData} productData - Raw product data from external service
-     * @param {TaxConfiguration} taxConfig - Tax configuration
-     * @returns {Object} Processed price data
-     * @abstract
-     * @public
-     */
+        /**
+         * Process product data to extract pricing information
+         * Must be implemented by subclasses
+         *
+         * @param {ProductTypeData} productData - Raw product data from external service
+         * @param {TaxConfiguration} taxConfig - Tax configuration
+         * @returns {Object} Processed price data
+         * @abstract
+         * @public
+         */
         process: function (productData, taxConfig) {
-        throw new Error('process() must be implemented by subclass');
+            throw new Error('process() must be implemented by subclass');
         },
 
-    /**
-     * Check if this handler can process the given product type
-     *
-     * @param {string} productType - Product type identifier
-     * @returns {boolean} True if this handler can process the type
-     * @public
-     */
+        /**
+         * Check if this handler can process the given product type
+         *
+         * @param {string} productType - Product type identifier
+         * @returns {boolean} True if this handler can process the type
+         * @public
+         */
         canHandle: function (productType) {
             var normalizedType = String(productType).toLowerCase();
             return normalizedType === this.type;
         },
 
-    /**
-     * @param {number|null} regularPrice - Regular price
-     * @param {number|null} finalPrice - Final price after discount
-     * @returns {DiscountData} Discount information
-     * @protected
-     */
+        /**
+         * @param {number|null} regularPrice - Regular price
+         * @param {number|null} finalPrice - Final price after discount
+         * @returns {DiscountData} Discount information
+         * @protected
+         */
         _initDiscountRate: function (regularPrice, finalPrice) {
-        var hasDiscount =
-            regularPrice != null && finalPrice != null && regularPrice > finalPrice;
+            var hasDiscount =
+                regularPrice != null && finalPrice != null && regularPrice > finalPrice;
 
-        var discountRate = hasDiscount
-            ? (regularPrice - finalPrice) / regularPrice
-            : 0;
+            var discountRate = hasDiscount
+                ? (regularPrice - finalPrice) / regularPrice
+                : 0;
 
-        return {
-            hasDiscount: hasDiscount,
-            discountRate: discountRate
-        };
+            return {
+                hasDiscount: hasDiscount,
+                discountRate: discountRate
+            };
         },
 
-    /**
-     * @param {number} price - The original price
-     * @param {DiscountData} discountData - Discount information (rate as decimal)
-     * @returns {number} Discounted price
-     * @protected
-     */
+        /**
+         * @param {number} price - The original price
+         * @param {DiscountData} discountData - Discount information (rate as decimal)
+         * @returns {number} Discounted price
+         * @protected
+         */
         _applyDiscountToPrice: function (price, discountData) {
-        if (!discountData || !discountData.hasDiscount || !discountData.discountRate) {
-            return price;
-        }
-        return price * (1 - discountData.discountRate);
-        },
-
-    /**
-     * Extract original price from discounted price and DiscountData
-     * (Inverse of _applyDiscountToPrice)
-     *
-     * @param {number} discountedPrice - The discounted price
-     * @param {DiscountData} discountData - Discount information (rate as decimal)
-     * @returns {number} Original price before discount
-     * @protected
-     */
-        _extractOriginalPriceFromDiscounted: function(discountedPrice, discountData) {
-        if (!discountData || !discountData.hasDiscount || !discountData.discountRate) {
-            return discountedPrice;
-        }
-        return discountedPrice / (1 - discountData.discountRate);
-        },
-
-    /**
-     * Validate required fields in product data
-     *
-     * @param {Object} productData - Product data to validate
-     * @param {Array<string>} requiredFields - List of required field names
-     * @returns {Object} Validation result
-     * @protected
-     */
-        _validateFields: function (productData, requiredFields) {
-        var missingFields = [];
-        var invalidFields = [];
-
-        for (var i = 0; i < requiredFields.length; i++) {
-            var field = requiredFields[i];
-            if (productData[field] == null) {
-                missingFields.push(field);
-            } else if (field.indexOf('price') >= 0 && isNaN(productData[field])) {
-                invalidFields.push(field);
+            if (!discountData || !discountData.hasDiscount || !discountData.discountRate) {
+                return price;
             }
-        }
-
-        return {
-            valid: missingFields.length === 0 && invalidFields.length === 0,
-            missingFields: missingFields,
-            invalidFields: invalidFields
-        };
+            return price * (1 - discountData.discountRate);
         },
 
-    /**
-     * @param {number} price - Price (excluding tax)
-     * @param {TaxConfiguration} taxConfig - Tax configuration
-     * @returns {number} Price including tax
-     * @protected
-     */
+        /**
+         * Extract original price from discounted price and DiscountData
+         * (Inverse of _applyDiscountToPrice)
+         *
+         * @param {number} discountedPrice - The discounted price
+         * @param {DiscountData} discountData - Discount information (rate as decimal)
+         * @returns {number} Original price before discount
+         * @protected
+         */
+        _extractOriginalPriceFromDiscounted: function(discountedPrice, discountData) {
+            if (!discountData || !discountData.hasDiscount || !discountData.discountRate) {
+                return discountedPrice;
+            }
+            return discountedPrice / (1 - discountData.discountRate);
+        },
+
+        /**
+         * Validate required fields in product data
+         *
+         * @param {Object} productData - Product data to validate
+         * @param {Array<string>} requiredFields - List of required field names
+         * @param {boolean} terminateOnError - weather return value or terminate with an exception on error
+         * @returns {Object} Validation result
+         * @throws {Error}
+         * @protected
+         */
+        _validateFields: function (productData, requiredFields, terminateOnError = false) {
+            var missingFields = [];
+            var invalidFields = [];
+
+            for (var i = 0; i < requiredFields.length; i++) {
+                var field = requiredFields[i];
+                if (productData[field] == null) {
+                    missingFields.push(field);
+                } else if (field.indexOf('price') >= 0 && isNaN(productData[field])) {
+                    invalidFields.push(field);
+                }
+            }
+
+            var result = {
+                valid: missingFields.length === 0 && invalidFields.length === 0,
+                missingFields: missingFields,
+                invalidFields: invalidFields
+            };
+
+            if (terminateOnError && !result.valid) {
+                throw new Error(
+                    'Invalid product data: missing or invalid fields - '
+                    + result.missingFields.concat(result.invalidFields).join(', ')
+                );
+            }
+
+            return result;
+        },
+
+        /**
+         * @param {number} price - Price (excluding tax)
+         * @param {TaxConfiguration} taxConfig - Tax configuration
+         * @returns {number} Price including tax
+         * @protected
+         */
         _calculateTaxInclusivePrices: function(price, taxConfig) {
-        var taxRate = taxConfig.taxRate || 0;
-        var priceIncludingTax = taxConfig.priceIncludesTax
-            ? price
-            : this.taxCalculator.calculateInclusive(price, taxRate);
+            var taxRate = taxConfig.taxRate || 0;
+            var priceIncludingTax = taxConfig.priceIncludesTax
+                ? price
+                : this.taxCalculator.calculateInclusive(price, taxRate);
 
-        return priceIncludingTax;
+            return priceIncludingTax;
         },
 
-    /**
-     * @param {PriceFormatter} formatter - Price formatter instance
-     * @public
-     */
+        /**
+         * @param {PriceFormatter} formatter - Price formatter instance
+         * @public
+         */
         setPriceFormatter: function (formatter) {
-        this.priceFormatter = formatter;
+            this.priceFormatter = formatter;
         }
     });
 });

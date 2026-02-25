@@ -36,11 +36,7 @@ define([
          */
         process: function (productData, taxConfig) {
             // Validate required fields
-            var validation = this._validateFields(productData, ['type_id', '__uid', 'price_final']);
-            if (!validation.valid) {
-                throw new Error('Invalid gift card data: missing or invalid fields - ' +
-                    validation.missingFields.concat(validation.invalidFields).join(', '));
-            }
+            this._validateFields(productData, ['type_id', '__uid', 'price_final'], true);
 
             // Extract prices
             var finalPrice = Number(productData.price_final);
@@ -59,7 +55,7 @@ define([
 
             // Format prices
             var result = {
-                type: 'giftcard',
+                type: this.type,
                 uid: String(productData.__uid),
                 discount: discount,
                 finalPrice: {

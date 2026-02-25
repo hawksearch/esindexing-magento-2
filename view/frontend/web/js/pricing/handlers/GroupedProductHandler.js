@@ -36,13 +36,7 @@ define([
          */
         process: function (productData, taxConfig) {
             // Validate required fields
-            var validation = this._validateFields(productData, [
-                'type_id', '__uid', 'price_final'
-            ]);
-            if (!validation.valid) {
-                throw new Error('Invalid grouped product data: missing or invalid fields - ' +
-                    validation.missingFields.concat(validation.invalidFields).join(', '));
-            }
+            this._validateFields(productData, ['type_id', '__uid', 'price_final'], true);
 
             // Extract prices
             var finalPrice = Number(productData.price_final);
@@ -76,7 +70,7 @@ define([
 
             // Format result
             var result = {
-                type: 'grouped',
+                type: this.type,
                 uid: String(productData.__uid),
                 discount: discount,
                 finalPrice: {
