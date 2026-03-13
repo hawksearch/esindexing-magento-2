@@ -24,7 +24,8 @@ define([
     'HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price/price-label',
     'HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price/price-container',
     'HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price/price-range-wrapper',
-    'text!HawkSearch_EsIndexing/template/vue-hawksearch/components/product-price-refactored.html'
+    'text!HawkSearch_EsIndexing/template/vue-hawksearch/components/product-price-refactored.html',
+    'mage/translate'
 ], function(
     HawksearchVue,
     PriceDataProcessor,
@@ -32,7 +33,8 @@ define([
     PriceLabel,
     PriceContainer,
     PriceRangeWrapper,
-    template
+    template,
+    $t
 ) {
     'use strict';
 
@@ -148,7 +150,7 @@ define([
                 try {
                     return this.priceProcessor.process(this.rawProductData, this.taxConfig);
                 } catch (error) {
-                    console.error('Error processing price data:', error);
+                    console.error($t('Error processing product data:'), error);
                     this.processingError = error;
                     return null;
                 }
@@ -160,6 +162,14 @@ define([
              */
             isSupported: function() {
                 return this.priceData !== null && !this.processingError;
+            }
+        },
+
+        data: function() {
+            return {
+                errors: {
+                    loadingPriceError: $t("Error loading price")
+                }
             }
         },
 
@@ -209,26 +219,26 @@ define([
                     labelPosition: 'inner',
                 }
                 if (this.priceData.discount.hasDiscount) {
-                    label = 'Special Price';
+                    label = $t('Special Price');
                     if (this.priceData.type !== 'bundle') {
                         props.wrapperElementTag = 'span';
                         props.wrapperElementClass = 'special-price';
                     }
                 }
                 if (this.priceData.type === 'configurable' && !this.priceData.samePriceForAll) {
-                    label = 'As low as';
+                    label = $t('As low as');
                 }
 
                 if (range?.rangeItemType === 'from') {
-                    label = 'From';
+                    label = $t('From');
                     if (this.priceData.type === 'grouped') {
-                        label = 'Starting at';
+                        label = $t('Starting at');
                         props.wrapperElementTag = 'p'
                         props.wrapperElementClass = 'minimal-price';
                         props.labelPosition = 'outer';
                     }
                 } else if (range?.rangeItemType === 'to') {
-                    label = 'To';
+                    label = $t('To');
                 }
                 return {
                     type: 'final',
@@ -239,7 +249,7 @@ define([
             },
 
             _buildRegularPriceContainer: function(range){
-                var label = 'Regular Price';
+                var label = $t('Regular Price');
                 return {
                     type: 'regular',
                     props: {
@@ -303,7 +313,7 @@ define([
                     amount: amount,
                     elementId: this._buildPriceWrapperElementId(range, container, elementIdPattern),
                     priceType: priceType,
-                    labelText: this.taxConfig.displayMode === 'both_taxes' ? 'Incl. Tax' : '',
+                    labelText: this.taxConfig.displayMode === 'both_taxes' ? $t('Incl. Tax') : '',
                     class: classes
                 }
             },
@@ -390,7 +400,7 @@ define([
                     amount: amount,
                     elementId: this._buildPriceWrapperElementId(range, container, elementIdPattern),
                     priceType: priceType,
-                    labelText: this.taxConfig.displayMode === 'both_taxes' ? 'Excl. Tax': '',
+                    labelText: this.taxConfig.displayMode === 'both_taxes' ? $t('Excl. Tax'): '',
                     class: classes,
                 }
             },

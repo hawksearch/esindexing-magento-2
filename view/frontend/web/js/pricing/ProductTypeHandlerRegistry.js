@@ -19,9 +19,11 @@
 define([
     'uiClass',
     'HawkSearch_EsIndexing/js/pricing/utils/PriceFormatter',
+    'mage/translate'
 ], function(
     Class,
     PriceFormatter,
+    $t
 ) {
     'use strict';
 
@@ -32,9 +34,9 @@ define([
             priceFormatter: null
         },
 
-    /**
+        /**
          * @param {Object} config - Configuration object with price format and tax settings
-     */
+         */
         initialize: function (config) {
             this._super();
             this.priceFormatter = new PriceFormatter(config?.priceFormat || {})
@@ -42,101 +44,101 @@ define([
             return this;
         },
 
-    /**
-     * Register a handler for a product type
-     *
-     * @param {string} productType - Product type identifier (e.g., 'simple', 'bundle')
-     * @param {BaseProductTypeHandler} handler - Handler instance
-     * @returns {ProductTypeHandlerRegistry} This instance for chaining
-     * @public
-     */
+        /**
+         * Register a handler for a product type
+         *
+         * @param {string} productType - Product type identifier (e.g., 'simple', 'bundle')
+         * @param {BaseProductTypeHandler} handler - Handler instance
+         * @returns {ProductTypeHandlerRegistry} This instance for chaining
+         * @public
+         */
         register: function (productType, handler) {
-        if (!productType || typeof productType !== 'string') {
-            throw new Error('Product type must be a non-empty string');
-        }
+            if (!productType || typeof productType !== 'string') {
+                throw new Error($t('Product type must be a non-empty string'));
+            }
 
-        if (!handler || typeof handler.process !== 'function') {
-            throw new Error('Handler must implement process() method');
-        }
+            if (!handler || typeof handler.process !== 'function') {
+                throw new Error($t('Handler must implement %1 method').replace('%1', 'process()'));
+            }
 
-        // Inject price formatter into handler
-        if (typeof handler.setPriceFormatter === 'function') {
-            handler.setPriceFormatter(this.priceFormatter);
-        }
+            // Inject price formatter into handler
+            if (typeof handler.setPriceFormatter === 'function') {
+                handler.setPriceFormatter(this.priceFormatter);
+            }
 
-        this.handlers[productType] = handler;
-        return this;
+            this.handlers[productType] = handler;
+            return this;
         },
 
-    /**
-     * Register a fallback handler for unknown product types
-     *
-     * @param {BaseProductTypeHandler} handler - Fallback handler instance
-     * @returns {ProductTypeHandlerRegistry} This instance for chaining
-     * @public
-     */
+        /**
+         * Register a fallback handler for unknown product types
+         *
+         * @param {BaseProductTypeHandler} handler - Fallback handler instance
+         * @returns {ProductTypeHandlerRegistry} This instance for chaining
+         * @public
+         */
         registerFallback: function (handler) {
-        if (!handler || typeof handler.process !== 'function') {
-            throw new Error('Fallback handler must implement process() method');
-        }
+            if (!handler || typeof handler.process !== 'function') {
+                throw new Error($t('Fallback handler must implement %1 method').replace('%1', 'process()'));
+            }
 
-        // Inject price formatter into handler
-        if (typeof handler.setPriceFormatter === 'function') {
-            handler.setPriceFormatter(this.priceFormatter);
-        }
+            // Inject price formatter into handler
+            if (typeof handler.setPriceFormatter === 'function') {
+                handler.setPriceFormatter(this.priceFormatter);
+            }
 
-        this.fallbackHandler = handler;
-        return this;
+            this.fallbackHandler = handler;
+            return this;
         },
 
-    /**
-     * Get handler for a product type
-     *
-     * @param {string} productType - Product type identifier
-     * @returns {BaseProductTypeHandler|null} Handler instance or null if not found
-     * @public
-     */
+        /**
+         * Get handler for a product type
+         *
+         * @param {string} productType - Product type identifier
+         * @returns {BaseProductTypeHandler|null} Handler instance or null if not found
+         * @public
+         */
         getHandler: function (productType) {
-        if (!productType) {
+            if (!productType) {
+                return this.fallbackHandler;
+            }
+
+            // Normalize product type
+            var normalizedType = String(productType).toLowerCase();
+
+            // Check if handler exists
+            if (this.handlers[normalizedType]) {
+                return this.handlers[normalizedType];
+            }
+
+            // Return fallback handler if available
             return this.fallbackHandler;
-        }
-
-        // Normalize product type
-        var normalizedType = String(productType).toLowerCase();
-
-        // Check if handler exists
-        if (this.handlers[normalizedType]) {
-            return this.handlers[normalizedType];
-        }
-
-        // Return fallback handler if available
-        return this.fallbackHandler;
         },
 
-    /**
-     * Check if a handler is registered for a product type
-     *
-     * @param {string} productType - Product type identifier
-     * @returns {boolean} True if handler is registered
-     * @public
-     */
+        /**
+         * Check if a handler is registered for a product type
+         *
+         * @param {string} productType - Product type identifier
+         * @returns {boolean} True if handler is registered
+         * @public
+         */
         hasHandler: function (productType) {
-        if (!productType) {
-            return false;
-        }
+            if (!productType) {
+                return false;
+            }
 
-        var normalizedType = String(productType).toLowerCase();
-        return this.handlers.hasOwnProperty(normalizedType);
+            var normalizedType = String(productType).toLowerCase();
+            return this.handlers.hasOwnProperty(normalizedType);
         },
 
-    /**
-     * Get all registered product types
-     *
-     * @returns {Array<string>} List of registered product types
-     * @public
-     */
+        /**
+         * Get all registered product types
+         *
+         * @returns {Array<string>} List of registered product types
+         * @public
+         */
         getRegisteredTypes: function () {
-        return Object.keys(this.handlers);
+            return Object.keys(this.handlers);
         }
     });
 });

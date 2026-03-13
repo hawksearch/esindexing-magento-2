@@ -19,8 +19,9 @@
 define([
     'uiClass',
     'HawkSearch_EsIndexing/js/pricing/utils/TaxCalculator',
-    'HawkSearch_EsIndexing/js/pricing/utils/PriceFormatter'
-], function(Class, TaxCalculator, PriceFormatter) {
+    'HawkSearch_EsIndexing/js/pricing/utils/PriceFormatter',
+    'mage/translate'
+], function(Class, TaxCalculator, PriceFormatter, $t) {
     'use strict';
 
     return Class.extend({
@@ -41,7 +42,7 @@ define([
          * @public
          */
         process: function (productData, taxConfig) {
-            throw new Error('process() must be implemented by subclass');
+            throw new Error($t('%1 must be implemented by subclass').replace('%1', 'process()'));
         },
 
         /**
@@ -135,9 +136,9 @@ define([
             };
 
             if (terminateOnError && !result.valid) {
-                throw new Error(
-                    'Invalid product data: missing or invalid fields - '
-                    + result.missingFields.concat(result.invalidFields).join(', ')
+                throw new Error($t('Invalid %1 product data: missing or invalid fields: %2')
+                    .replace('%1', this.type)
+                    .replace('%2', result.missingFields.concat(result.invalidFields).join(', '))
                 );
             }
 
