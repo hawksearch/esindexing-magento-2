@@ -16,7 +16,7 @@ define([
     'mage/utils/template',
     'priceUtils',
     'hawksearchVueEvents',
-    'HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price-refactored',
+    'HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price',
     'hawksearchVueSDK',
     'mage/adminhtml/tools'
 ], function ($, _, mageTemplate, priceUtils, Events, ProductPriceComponent) {
@@ -82,7 +82,7 @@ define([
          */
         formatItemPrice: function () {
             // Deprecated: do not use. All price rendering is handled by the Vue component.
-            return 'fff';
+            return '';
         },
 
         /**

@@ -1,4 +1,4 @@
-# Pricing Module - Refactored Architecture
+# Pricing Module
 
 ## Overview
 
@@ -35,7 +35,7 @@ This module implements a refactored pricing architecture that separates business
 #### 2. Presentation Layer
 
 **Vue Components** (`vue-hawksearch/components/product-price/`)
-- `product-price-refactored.js` - Main component (root)
+- `product-price.js` - Main component (root)
 - `price-range-wrapper.js` - Handles ranges and containers
 - `price-container.js` - CSS class wrappers
 - `price-label.js` - Label display with positioning
@@ -55,7 +55,7 @@ ProductTypeHandlerRegistry.getHandler()
     ↓
 Clean Business Data (PriceData)
     ↓
-Vue Component (product-price-refactored)
+Vue Component (product-price)
     ↓
 Hierarchical Sub-Components
     ↓
@@ -69,13 +69,13 @@ Rendered HTML
 ```javascript
 // In your Vue app or component
 define([
-    'HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price-refactored'
+    'HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price'
 ], function(ProductPriceComponent) {
-    // Component is automatically registered as 'product-price-refactored'
+    // Component is automatically registered as 'product-price'
     
     // Use in template:
-    // <product-price-refactored :document="productDoc" :pricing-config="config">
-    // </product-price-refactored>
+    // <product-price :document="productDoc" :pricing-config="config">
+    // </product-price>
 });
 ```
 
@@ -147,7 +147,7 @@ Processed output:
 ## Component Hierarchy
 
 ```
-product-price-refactored (root)
+product-price (root)
   └─ price-range-wrapper
       └─ price-container
           └─ price-label
@@ -155,7 +155,7 @@ product-price-refactored (root)
                   └─ price-amount-wrapper (leaf)
 ```
 
-## Benefits of Refactored Architecture
+## Architecture Benefits 
 
 1. **Separation of Concerns**
    - Business logic in handlers
@@ -177,22 +177,6 @@ product-price-refactored (root)
    - New handlers register without modifying existing code
    - Components reusable across product types
 
-## Migration Path
-
-The refactored component is created as `product-price-refactored` to allow:
-1. Parallel deployment with old component
-2. Gradual rollout and testing
-3. A/B testing capabilities
-4. Safe rollback if issues discovered
-
-To migrate:
-1. Test `product-price-refactored` in development
-2. Compare output with original component
-3. Enable for subset of users
-4. Monitor for issues
-5. Full cutover when validated
-6. Remove old component code
-
 ## File Structure
 
 ```
@@ -213,7 +197,7 @@ view/frontend/web/
 │   │       └── PriceFormatter.js
 │   └── vue-hawksearch/
 │       └── components/
-│           ├── product-price-refactored.js
+│           ├── product-price.js
 │           └── product-price/
 │               ├── price-amount-wrapper.js
 │               ├── price-tax-wrapper.js
@@ -223,7 +207,7 @@ view/frontend/web/
 └── template/
     └── vue-hawksearch/
         └── components/
-            ├── product-price-refactored.html
+            ├── product-price.html
             └── product-price/
                 ├── price-amount-wrapper.html
                 ├── price-tax-wrapper.html

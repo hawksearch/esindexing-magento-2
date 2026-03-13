@@ -184,22 +184,19 @@ var giftCardProduct = {
 var taxConfigExcluding = {
     displayMode: 'excluding_tax',
     taxRate: 0.2,
-    priceIncludesTax: false,
-    decimalPlaces: 2
+    priceIncludesTax: false
 };
 
 var taxConfigIncluding = {
     displayMode: 'including_tax',
     taxRate: 0.2,
-    priceIncludesTax: false,
-    decimalPlaces: 2
+    priceIncludesTax: false
 };
 
 var taxConfigBoth = {
     displayMode: 'both_taxes',
     taxRate: 0.2,
-    priceIncludesTax: false,
-    decimalPlaces: 2
+    priceIncludesTax: false
 };
 
 // Price Formatter Configuration
@@ -237,7 +234,7 @@ var priceFormatterConfig = {
 // {
 //     type: 'simple',
 //     uid: '123',
-//     discount: {hasDiscount: true, discountRate: 0.28888888888888886,
+//     discount: {hasDiscount: true, discountRate: 0.28888888888888886},
 //     finalPrice: {amount: 32, formatted: '$32'},
 //     finalPriceIncludingTax: {amount: 38.4, formatted: '$38.40'},
 //     regularPrice: {amount: 45, formatted: '$45.00'},

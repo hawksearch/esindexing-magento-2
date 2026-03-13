@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2025 Hawksearch (www.hawksearch.com) - All Rights Reserved
+ * Copyright (c) 2026 Hawksearch (www.hawksearch.com) - All Rights Reserved
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -10,382 +10,450 @@
  * IN THE SOFTWARE.
  */
 
+/**
+ * Product Price Component
+ * Main component that orchestrates pricing display using hierarchical components
+ * Uses PriceDataProcessor for business logic separation
+ *
+ * @module HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price
+ */
 define([
     'hawksearchVueSDK',
-    'text!HawkSearch_EsIndexing/template/vue-hawksearch/components/product-price.html'
-], function (HawksearchVue, template) {
+    'HawkSearch_EsIndexing/js/pricing/PriceDataProcessor',
+    'HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price/price-amount-wrapper',
+    'HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price/price-label',
+    'HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price/price-container',
+    'HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price/price-range-wrapper',
+    'text!HawkSearch_EsIndexing/template/vue-hawksearch/components/product-price.html',
+    'mage/translate'
+], function(
+    HawksearchVue,
+    PriceDataProcessor,
+    PriceAmountWrapper,
+    PriceLabel,
+    PriceContainer,
+    PriceRangeWrapper,
+    template,
+    $t
+) {
     'use strict';
-
-    // Mock tax calculation logic
-    function calculateTaxInclusive(price, taxRate) {
-        if (price == null || isNaN(price)) {
-            return null;
-        }
-
-        return Number(price) * (1 + taxRate);
-    }
-
-    function formatPrice(value, priceFormat) {
-        if (value == null || isNaN(value)) {
-            return '';
-        }
-
-        return new Intl.NumberFormat(priceFormat?.locale || 'en-US', {
-            style: 'currency',
-            currency: priceFormat?.currency || 'USD',
-            minimumFractionDigits: 2
-        }).format(Number(value));
-    }
 
     return {
         name: 'product-price',
         template: template,
+
+        components: {
+            'price-amount-wrapper': PriceAmountWrapper,
+            'price-label': PriceLabel,
+            'price-container': PriceContainer,
+            'price-range-wrapper': PriceRangeWrapper
+        },
+
         props: {
+            /**
+             * Product document from search results
+             * @type {Object}
+             */
             document: {
                 type: Object,
                 required: false,
-                default: function() { return this.$parent?.result?.Document || {}; }
+                default: function() {
+                    return this.$parent?.result?.Document || {};
+                }
             },
+
+            /**
+             * Pricing configuration from window.hawksearchConfig
+             * @type {Object}
+             */
             pricingConfig: {
                 type: Object,
                 required: false,
-                default: function() { return window.hawksearchConfig?.pricing || {}; }
+                default: function() {
+                    return window.hawksearchConfig?.pricing || {};
+                }
             }
         },
+
+        created: function() {
+            this.priceProcessor = new PriceDataProcessor(this.pricingConfig);
+        },
+
         computed: {
-            priceData() {
-                // Extract fields from document
-                const doc = this.document || {};
-                const typeId = window.hawksearch.getDocumentField(doc, 'type_id') || '';
-                const price_regular = window.hawksearch.getDocumentField(doc, 'price_regular');
-                const price_final = window.hawksearch.getDocumentField(doc, 'price_final');
-                const price_min = window.hawksearch.getDocumentField(doc, 'price_min');
-                const price_max = window.hawksearch.getDocumentField(doc, 'price_max');
-                const priceFormat = this.pricingConfig.priceFormat || { currency: 'USD', locale: 'en-US' };
-                const taxDisplayMode = this.pricingConfig.taxDisplayMode || 'excluding_tax';
-                const uid = window.hawksearch.extractId(doc);
-                // Configurable mock tax rate (can be replaced with real service)
-                const mockTaxRate = this.pricingConfig.mockTaxRate ?? 0.2; // 20% default
-                // Helper for formatted price
-                const fmt = v => formatPrice(v, priceFormat);
-                const fmtTax = v => formatPrice(calculateTaxInclusive(v, mockTaxRate), priceFormat);
-                // Helper for both prices
-                function bothPrices(excl, incl, labelExcl, labelIncl) {
-                    return {
-                        price_excl: excl,
-                        price_excl_formatted: fmt(excl),
-                        price_incl: calculateTaxInclusive(excl, mockTaxRate),
-                        price_incl_formatted: fmtTax(excl),
-                        label_excl: labelExcl,
-                        label_incl: labelIncl
-                    };
+            /**
+             * Extract raw product data from document
+             * Uses window.hawksearch SDK methods with fallback for field access
+             * @returns {ProductTypeData|null}
+             */
+            rawProductData: function() {
+                var doc = this.document || {};
+
+                if (!doc || Object.keys(doc).length === 0) {
+                    return null;
                 }
 
-                // Simple/Virtual/Downloadable
-                if (["simple", "virtual", "downloadable"].includes(typeId)) {
-                    if (price_regular && price_final && price_regular !== price_final) {
-                        // Discounted
-                        if (taxDisplayMode === 'including_tax') {
-                            return {
-                                type: typeId,
-                                template: 'discount_incl',
-                                uid,
-                                price_final,
-                                price_final_formatted: fmtTax(price_final),
-                                price_regular,
-                                price_regular_formatted: fmtTax(price_regular)
-                            };
-                        } else if (taxDisplayMode === 'both_taxes') {
-                            return {
-                                type: typeId,
-                                template: 'discount_both',
-                                uid,
-                                ...bothPrices(price_final, null, 'Excl. Tax', 'Incl. Tax'),
-                                price_regular,
-                                price_regular_formatted: fmt(price_regular),
-                                price_regular_incl_formatted: fmtTax(price_regular)
-                            };
-                        } else {
-                            // Excluding tax
-                            return {
-                                type: typeId,
-                                template: 'discount',
-                                uid,
-                                price_final,
-                                price_final_formatted: fmt(price_final),
-                                price_regular,
-                                price_regular_formatted: fmt(price_regular)
-                            };
-                        }
-                    } else {
-                        // No discount
-                        if (taxDisplayMode === 'including_tax') {
-                            return {
-                                type: typeId,
-                                template: 'regular_incl',
-                                uid,
-                                price_final,
-                                price_final_formatted: fmtTax(price_final)
-                            };
-                        } else if (taxDisplayMode === 'both_taxes') {
-                            return {
-                                type: typeId,
-                                template: 'regular_both',
-                                uid,
-                                ...bothPrices(price_final, null, 'Excl. Tax', 'Incl. Tax')
-                            };
-                        } else {
-                            return {
-                                type: typeId,
-                                template: 'regular',
-                                uid,
-                                price_final,
-                                price_final_formatted: fmt(price_final)
-                            };
-                        }
+                // Helper function to safely get document field
+                var getField = function(field) {
+                    if (window.hawksearch && typeof window.hawksearch.getDocumentField === 'function') {
+                        return window.hawksearch.getDocumentField(doc, field);
                     }
+                    // Fallback: handle both array and non-array field values
+                    var value = doc[field];
+                    if (Array.isArray(value) && value.length > 0) {
+                        return value[0];
+                    }
+                    return value !== undefined ? value : null;
+                };
+
+                // Extract ID using SDK method with fallback
+                var uid;
+                if (window.hawksearch && typeof window.hawksearch.extractId === 'function') {
+                    uid = window.hawksearch.extractId(doc);
+                }
+                // Fallback: try both uid and __uid fields
+                if (!uid) {
+                    uid = getField('uid') || getField('__uid') || '';
                 }
 
-                // Giftcard
-                if (typeId === 'giftcard') {
-                    if (price_final !== null && price_min !== null && price_max == null) {
-                        if (taxDisplayMode === 'including_tax') {
-                            return {
-                                type: typeId,
-                                template: 'giftcard_incl',
-                                uid,
-                                price_min,
-                                price_min_formatted: fmtTax(price_min)
-                            };
-                        } else if (taxDisplayMode === 'both_taxes') {
-                            return {
-                                type: typeId,
-                                template: 'giftcard_both',
-                                uid,
-                                ...bothPrices(price_min, null, 'Excl. Tax', 'Incl. Tax')
-                            };
-                        } else {
-                            return {
-                                type: typeId,
-                                template: 'giftcard',
-                                uid,
-                                price_min,
-                                price_min_formatted: fmt(price_min)
-                            };
-                        }
-                    }
+                return {
+                    type_id: getField('type_id') || '',
+                    __uid: uid,
+                    price_regular: getField('price_regular'),
+                    price_final: getField('price_final'),
+                    price_min: getField('price_min'),
+                    price_max: getField('price_max')
+                };
+            },
+
+            /**
+             * Tax configuration from pricing config
+             * @returns {TaxConfiguration}
+             */
+            taxConfig: function() {
+                return {
+                    displayMode: this.pricingConfig.taxDisplayMode || 'excluding_tax',
+                    taxRate: this.pricingConfig.taxRate || 0,
+                    priceIncludesTax: this.pricingConfig.priceIncludesTax || false
+                };
+            },
+
+            /**
+             * Process price data through PriceDataProcessor
+             * @returns {PriceData|null}
+             */
+            priceData: function() {
+                if (!this.rawProductData || !this.priceProcessor) {
+                    return null;
                 }
 
-                // Bundle
-                if (typeId === 'bundle') {
-                    if (price_regular > 0 && price_final > 0 && price_regular !== price_final && price_min > 0 && price_max > 0) {
-                        const discount_multiplier = price_final / price_regular;
-                        const price_min_regular = (price_min / discount_multiplier).toFixed(2);
-                        const price_max_regular = (price_max / discount_multiplier).toFixed(2);
-                        if (taxDisplayMode === 'including_tax') {
-                            return {
-                                type: typeId,
-                                template: 'bundle_discount_incl',
-                                uid,
-                                price_min,
-                                price_max,
-                                price_min_formatted: fmtTax(price_min),
-                                price_max_formatted: fmtTax(price_max),
-                                price_min_regular,
-                                price_max_regular,
-                                price_min_regular_formatted: fmtTax(price_min_regular),
-                                price_max_regular_formatted: fmtTax(price_max_regular)
-                            };
-                        } else if (taxDisplayMode === 'both_taxes') {
-                            return {
-                                type: typeId,
-                                template: 'bundle_discount_both',
-                                uid,
-                                price_min,
-                                price_max,
-                                ...bothPrices(price_min, null, 'Excl. Tax', 'Incl. Tax'),
-                                price_max_both: bothPrices(price_max, null, 'Excl. Tax', 'Incl. Tax'),
-                                price_min_regular,
-                                price_max_regular,
-                                price_min_regular_formatted: fmt(price_min_regular),
-                                price_max_regular_formatted: fmt(price_max_regular),
-                                price_min_regular_incl_formatted: fmtTax(price_min_regular),
-                                price_max_regular_incl_formatted: fmtTax(price_max_regular)
-                            };
-                        } else {
-                            return {
-                                type: typeId,
-                                template: 'bundle_discount',
-                                uid,
-                                price_min,
-                                price_max,
-                                price_min_formatted: fmt(price_min),
-                                price_max_formatted: fmt(price_max),
-                                price_min_regular,
-                                price_max_regular,
-                                price_min_regular_formatted: fmt(price_min_regular),
-                                price_max_regular_formatted: fmt(price_max_regular)
-                            };
-                        }
-                    } else if (price_min > 0 && price_max > 0) {
-                        if (taxDisplayMode === 'including_tax') {
-                            return {
-                                type: typeId,
-                                template: 'bundle_incl',
-                                uid,
-                                price_min,
-                                price_max,
-                                price_min_formatted: fmtTax(price_min),
-                                price_max_formatted: fmtTax(price_max)
-                            };
-                        } else if (taxDisplayMode === 'both_taxes') {
-                            return {
-                                type: typeId,
-                                template: 'bundle_both',
-                                uid,
-                                price_min,
-                                price_max,
-                                ...bothPrices(price_min, null, 'Excl. Tax', 'Incl. Tax'),
-                                price_max_both: bothPrices(price_max, null, 'Excl. Tax', 'Incl. Tax')
-                            };
-                        } else {
-                            return {
-                                type: typeId,
-                                template: 'bundle',
-                                uid,
-                                price_min,
-                                price_max,
-                                price_min_formatted: fmt(price_min),
-                                price_max_formatted: fmt(price_max)
-                            };
-                        }
-                    }
+                try {
+                    return this.priceProcessor.process(this.rawProductData, this.taxConfig);
+                } catch (error) {
+                    console.error($t('Error processing product data:'), error);
+                    this.processingError = error;
+                    return null;
                 }
+            },
 
-                // Grouped
-                if (typeId === 'grouped') {
-                    if (price_min > 0) {
-                        if (taxDisplayMode === 'including_tax') {
-                            return {
-                                type: typeId,
-                                template: 'grouped_incl',
-                                uid,
-                                price_min,
-                                price_min_formatted: fmtTax(price_min)
-                            };
-                        } else if (taxDisplayMode === 'both_taxes') {
-                            return {
-                                type: typeId,
-                                template: 'grouped_both',
-                                uid,
-                                ...bothPrices(price_min, null, 'Excl. Tax', 'Incl. Tax')
-                            };
-                        } else {
-                            return {
-                                type: typeId,
-                                template: 'grouped',
-                                uid,
-                                price_min,
-                                price_min_formatted: fmt(price_min)
-                            };
-                        }
-                    }
-                }
-
-                // Configurable
-                if (typeId === 'configurable') {
-                    const samePriceForAll = price_min === price_max;
-                    if (price_regular > 0 && price_final > 0 && price_regular !== price_final && price_min > 0) {
-                        const discount_multiplier = price_final / price_regular;
-                        const price_min_regular = (price_min / discount_multiplier).toFixed(2);
-                        if (taxDisplayMode === 'including_tax') {
-                            return {
-                                type: typeId,
-                                template: samePriceForAll ? 'configurable_same_discount_incl' : 'configurable_range_discount_incl',
-                                uid,
-                                price_min,
-                                price_min_formatted: fmtTax(price_min),
-                                price_min_regular,
-                                price_min_regular_formatted: fmtTax(price_min_regular)
-                            };
-                        } else if (taxDisplayMode === 'both_taxes') {
-                            return {
-                                type: typeId,
-                                template: samePriceForAll ? 'configurable_same_discount_both' : 'configurable_range_discount_both',
-                                uid,
-                                ...bothPrices(price_min, null, 'Excl. Tax', 'Incl. Tax'),
-                                price_min_regular,
-                                price_min_regular_formatted: fmt(price_min_regular),
-                                price_min_regular_incl_formatted: fmtTax(price_min_regular)
-                            };
-                        } else {
-                            return {
-                                type: typeId,
-                                template: samePriceForAll ? 'configurable_same_discount' : 'configurable_range_discount',
-                                uid,
-                                price_min,
-                                price_min_formatted: fmt(price_min),
-                                price_min_regular,
-                                price_min_regular_formatted: fmt(price_min_regular)
-                            };
-                        }
-                    } else if (price_min > 0) {
-                        if (taxDisplayMode === 'including_tax') {
-                            return {
-                                type: typeId,
-                                template: samePriceForAll ? 'configurable_same_incl' : 'configurable_range_incl',
-                                uid,
-                                price_min,
-                                price_min_formatted: fmtTax(price_min)
-                            };
-                        } else if (taxDisplayMode === 'both_taxes') {
-                            return {
-                                type: typeId,
-                                template: samePriceForAll ? 'configurable_same_both' : 'configurable_range_both',
-                                uid,
-                                ...bothPrices(price_min, null, 'Excl. Tax', 'Incl. Tax')
-                            };
-                        } else {
-                            return {
-                                type: typeId,
-                                template: samePriceForAll ? 'configurable_same' : 'configurable_range',
-                                uid,
-                                price_min,
-                                price_min_formatted: fmt(price_min)
-                            };
-                        }
-                    }
-                }
-
-                // Fallback: just show price_final
-                if (price_final) {
-                    if (taxDisplayMode === 'including_tax') {
-                        return {
-                            type: typeId,
-                            template: 'fallback_incl',
-                            uid,
-                            price_final,
-                            price_final_formatted: fmtTax(price_final)
-                        };
-                    } else if (taxDisplayMode === 'both_taxes') {
-                        return {
-                            type: typeId,
-                            template: 'fallback_both',
-                            uid,
-                            ...bothPrices(price_final, null, 'Excl. Tax', 'Incl. Tax')
-                        };
-                    } else {
-                        return {
-                            type: typeId,
-                            template: 'fallback',
-                            uid,
-                            price_final,
-                            price_final_formatted: fmt(price_final)
-                        };
-                    }
-                }
-                return null;
+            /**
+             * Check if product type is supported
+             * @returns {Boolean}
+             */
+            isSupported: function() {
+                return this.priceData !== null && !this.processingError;
             }
+        },
+
+        data: function() {
+            return {
+                errors: {
+                    loadingPriceError: $t("Error loading price")
+                }
+            }
+        },
+
+        methods: {
+
+            /**
+             * Build props for price-range-wrapper component
+             * @param {PriceRangeItem|null} range - Range data or null for a root containers
+             * @return {{tag: (string), class: string}}
+             */
+            buildPriceRangeWrapperProps: function(range) {
+                var elementClass = 'price-box';
+                if (range.rangeItemType === 'from' && this.priceData.type === 'bundle') {
+                    elementClass = 'price-form';
+                } else if (range.rangeItemType === 'to' && this.priceData.type === 'bundle') {
+                    elementClass = 'price-to';
+                }
+                return {
+                    tag:  this.priceData.type === 'grouped' ? 'div' : 'p',
+                    class: elementClass
+                }
+            },
+
+            /**
+             * Extract a render ready containers
+             * @param {PriceRangeItem|null} range - Range data or null for a root containers
+             * @return {Object[]}
+             */
+            extractPriceContainers: function(range){
+                var containers = [this._buildFinalPriceContainer(range)];
+                if (this.priceData.discount.hasDiscount) {
+                    containers.push(this._buildRegularPriceContainer(range));
+                }
+
+                containers.forEach(function (container) {
+                    var priceWrapperIncludingTax = this._buildIncludingTaxPriceWrapper(range, container);
+                    var priceWrapperExcludingTax = this._buildExcludingTaxPriceWrapper(range, container);
+                    if (this.taxConfig.displayMode === 'both_taxes' || this.taxConfig.displayMode === 'including_tax') {
+                        container.priceWrappers.push(priceWrapperIncludingTax);
+                    }
+                    if (this.taxConfig.displayMode === 'both_taxes' || this.taxConfig.displayMode === 'excluding_tax') {
+                        container.priceWrappers.push(priceWrapperExcludingTax);
+                    }
+                }.bind(this));
+
+                return containers;
+            },
+
+            /**
+             * @param {PriceRangeItem|null} range - Range data or null for a root containers
+             * @return {{type: string, props: {wrapperElementTag: string, labelPosition: string}, label: string, priceWrappers: *[]}}
+             * @private
+             */
+            _buildFinalPriceContainer: function(range){
+                var label = '';
+                var props = {
+                    wrapperElementTag: '',
+                    labelPosition: 'inner',
+                }
+                if (this.priceData.discount.hasDiscount) {
+                    label = $t('Special Price');
+                    if (this.priceData.type !== 'bundle') {
+                        props.wrapperElementTag = 'span';
+                        props.wrapperElementClass = 'special-price';
+                    }
+                }
+                if (this.priceData.type === 'configurable' && !this.priceData.samePriceForAll) {
+                    label = $t('As low as');
+                }
+
+                if (range?.rangeItemType === 'from') {
+                    label = $t('From');
+                    if (this.priceData.type === 'grouped') {
+                        label = $t('Starting at');
+                        props.wrapperElementTag = 'p'
+                        props.wrapperElementClass = 'minimal-price';
+                        props.labelPosition = 'outer';
+                    }
+                } else if (range?.rangeItemType === 'to') {
+                    label = $t('To');
+                }
+                return {
+                    type: 'final',
+                    props: props,
+                    label: label,
+                    priceWrappers: []
+                }
+            },
+
+            /**
+             * @param {PriceRangeItem|null} range - Range data or null for a root containers
+             * @return {{type: string, props: {wrapperElementTag: string, wrapperElementClass: string, labelPosition: string}, label: string, priceWrappers: *[]}}
+             * @private
+             */
+            _buildRegularPriceContainer: function(range){
+                var label = $t('Regular Price');
+                return {
+                    type: 'regular',
+                    props: {
+                        wrapperElementTag: 'span',
+                        wrapperElementClass: 'old-price',
+                        labelPosition: 'inner'
+                    },
+                    label: label,
+                    priceWrappers: []
+                }
+            },
+
+            /**
+             * @param {PriceRangeItem|null} range - Range data or null for a root containers
+             * @return {{amount: string, priceType: string, elementId: string, labelText: (string), class: *[]}}
+             * @private
+             */
+            _buildIncludingTaxPriceWrapper: function(range, container){
+                var classes = [];
+                if (this.taxConfig.displayMode === 'both_taxes') {
+                    classes.push('price-including-tax');
+                }
+                var priceType = '';
+                var containerType = container.type; //final, regular
+                // , min_final, min_regular, max_final, max_regular
+                switch (containerType) {
+                    case 'final':
+                        priceType = 'finalPrice';
+                        break;
+                    default: // regular
+                        priceType = 'oldPrice';
+                        if (range) {
+                            priceType = '';
+                        }
+                        break;
+                }
+                if (range) {
+                    var findPattern = 'finalPrice',
+                        replacePattern = range.rangeItemType === 'from'
+                            ? 'minPrice'
+                            : range.rangeItemType === 'to'
+                                ? 'maxPrice'
+                                : '';
+                    if (replacePattern) {
+                        priceType.replace(findPattern, replacePattern);
+                    }
+                }
+
+                var elementIdPattern = this.taxConfig.displayMode === 'both_taxes' ? 'price-including-tax' : '';
+
+                var amount = null;
+                if (containerType === 'final') {
+                    amount = range ? range.amountIncludingTax : this.priceData.finalPriceIncludingTax;
+                }
+                if (containerType === 'regular') {
+                    amount = range ? range.regularAmountIncludingTax : this.priceData.regularPriceIncludingTax;
+                }
+
+                return {
+                    amount: amount,
+                    elementId: this._buildPriceWrapperElementId(range, container, elementIdPattern),
+                    priceType: priceType,
+                    labelText: this.taxConfig.displayMode === 'both_taxes' ? $t('Incl. Tax') : '',
+                    class: classes
+                }
+            },
+
+            /**
+             * @param {PriceRangeItem|null} range - Range data or null for a root containers
+             * @return {{amount: string, priceType: string, elementId: string, labelText: (string), class: *[]}}
+             * @private
+             */
+            _buildExcludingTaxPriceWrapper: function(range, container){
+                var classes = [];
+                if (this.taxConfig.displayMode === 'both_taxes') {
+                    classes.push('price-excluding-tax');
+                }
+                var priceType = '';
+                var containerType = container.type; //final, regular
+                switch (containerType) {
+                    case 'final':
+                        priceType = this.taxConfig.displayMode === 'both_taxes' ? 'basePrice' : 'finalPrice';
+                        break;
+                    case 'regular':
+                        priceType = this.taxConfig.displayMode === 'both_taxes' ? 'baseOldPrice' : 'oldPrice';
+                        if (range) {
+                            priceType = '';
+                        }
+                        break;
+                }
+                if (range) {
+                    var findPattern = 'basePrice',
+                        replacePattern = range.rangeItemType === 'from'
+                            ? 'baseMinPrice'
+                            : range.rangeItemType === 'to'
+                                ? 'baseMaxPrice'
+                                : '';
+                    if (replacePattern) {
+                        priceType.replace(findPattern, replacePattern);
+                    }
+                }
+
+                // [priceType]
+                /*
+                * --final_container--
+                * finalPrice: !both_taxes || (both_taxes && incl_tax)
+                * basePrice: both_taxes && excl_tax
+                * --regular_container--
+                * oldPrice: !both_taxes || (both_taxes && incl_tax)
+                * baseOldPrice: both_taxes && excl_tax
+                * */
+
+                // [priceType] - grouped
+                /*
+                * --final_container--
+                * <empty>
+                * --regular_container--
+                * <empty>
+                * */
+
+                // [priceType] - bundle
+                /*
+                * --minFinal_container--
+                * minPrice: !both_taxes || (both_taxes && incl_tax)
+                * baseMinPrice: both_taxes && excl_tax
+                * --maxFinal_container--
+                * maxPrice: !both_taxes || (both_taxes && incl_tax)
+                * baseMaxPrice: both_taxes && excl_tax
+                * --minRegular_container--
+                * <empty>
+                * --maxRegular_container--
+                * <empty>
+                * */
+
+                var elementIdPattern = this.taxConfig.displayMode === 'both_taxes' ? 'price-excluding-tax' : '';
+
+                var amount = null;
+                if (containerType === 'final') {
+                    amount = range ? range.amount : this.priceData.finalPrice;
+                }
+                if (containerType === 'regular') {
+                    amount = range ? range.regularAmount : this.priceData.regularPrice;
+                }
+
+                return {
+                    amount: amount,
+                    elementId: this._buildPriceWrapperElementId(range, container, elementIdPattern),
+                    priceType: priceType,
+                    labelText: this.taxConfig.displayMode === 'both_taxes' ? $t('Excl. Tax'): '',
+                    class: classes,
+                }
+            },
+
+            /**
+             * @param {PriceRangeItem|null} range - Range data or null for a root containers
+             * @param container
+             * @param {string} taxPattern
+             * @return {string}
+             * @private
+             */
+            _buildPriceWrapperElementId: function(range, container, taxPattern){
+                var priceTypePatern = 'product-price';
+
+                if (range?.rangeItemType === 'from') {
+                    priceTypePatern = 'from';
+                }
+                if (range?.rangeItemType === 'to') {
+                    priceTypePatern = 'to';
+                }
+
+                if (container.type === 'regular') {
+                    priceTypePatern = 'old-price';
+                }
+
+                if (this.priceData.type === 'grouped') {
+                    priceTypePatern = '';
+                }
+
+                var patterns = [
+                    taxPattern,
+                    priceTypePatern,
+                    this.priceData.uid
+                ];
+                if (patterns.slice(0, -1).filter(Boolean).join('') === '') {
+                    patterns = [];
+                }
+
+                return patterns.filter(Boolean).join('-');
+            },
         }
-    }
+    };
 });
