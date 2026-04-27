@@ -18,7 +18,6 @@
  * @module HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price
  */
 define([
-    'hawksearchVueSDK',
     'HawkSearch_EsIndexing/js/pricing/PriceDataProcessor',
     'HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price/price-amount-wrapper',
     'HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price/price-label',
@@ -27,7 +26,6 @@ define([
     'text!HawkSearch_EsIndexing/template/vue-hawksearch/components/product-price.html',
     'mage/translate'
 ], function(
-    HawksearchVue,
     PriceDataProcessor,
     PriceAmountWrapper,
     PriceLabel,

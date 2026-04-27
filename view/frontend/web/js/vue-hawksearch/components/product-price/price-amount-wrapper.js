@@ -17,9 +17,8 @@
  * @module HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price/price-amount-wrapper
  */
 define([
-    'hawksearchVueSDK',
     'text!HawkSearch_EsIndexing/template/vue-hawksearch/components/product-price/price-amount-wrapper.html'
-], function(HawksearchVue, template) {
+], function(template) {
     'use strict';
 
     return {

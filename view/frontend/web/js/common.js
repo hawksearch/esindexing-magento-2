@@ -15,11 +15,11 @@ define([
     'underscore',
     'mage/utils/template',
     'priceUtils',
+    'hawksearchVueSDK', // should be always loaded before using any global `hawksearchVue` variable
     'hawksearchVueEvents',
     'HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price',
-    'hawksearchVueSDK',
     'mage/adminhtml/tools'
-], function ($, _, mageTemplate, priceUtils, Events, ProductPriceComponent) {
+], function ($, _, mageTemplate, priceUtils, ignored, Events, ProductPriceComponent) {
     window.hawksearch = {
         /**
          * Find Vue app widget in registered widget instances

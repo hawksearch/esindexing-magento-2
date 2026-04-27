@@ -18,9 +18,8 @@
  * @module HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price/price-container
  */
 define([
-    'hawksearchVueSDK',
     'text!HawkSearch_EsIndexing/template/vue-hawksearch/components/product-price/price-container.html'
-], function(HawksearchVue, template) {
+], function(template) {
     'use strict';
 
     return {

@@ -16,9 +16,8 @@
  * @module HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price/price-label
  */
 define([
-    'hawksearchVueSDK',
     'text!HawkSearch_EsIndexing/template/vue-hawksearch/components/product-price/price-label.html'
-], function(HawksearchVue, template) {
+], function(template) {
     'use strict';
 
     return {
