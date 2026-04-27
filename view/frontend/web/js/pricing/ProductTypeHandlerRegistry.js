@@ -66,7 +66,7 @@ define([
                 handler.setPriceFormatter(this.priceFormatter);
             }
 
-            this.handlers[productType] = handler;
+            this.handlers[this._normalizeProductType(productType)] = handler;
             return this;
         },
 
@@ -104,7 +104,7 @@ define([
             }
 
             // Normalize product type
-            var normalizedType = String(productType).toLowerCase();
+            var normalizedType = this._normalizeProductType(productType);
 
             // Check if handler exists
             if (this.handlers[normalizedType]) {
@@ -127,8 +127,7 @@ define([
                 return false;
             }
 
-            var normalizedType = String(productType).toLowerCase();
-            return this.handlers.hasOwnProperty(normalizedType);
+            return this.handlers.hasOwnProperty(this._normalizeProductType(productType));
         },
 
         /**
@@ -139,6 +138,15 @@ define([
          */
         getRegisteredTypes: function () {
             return Object.keys(this.handlers);
+        },
+
+        /**
+         * @param productType
+         * @returns {string} normalized type
+         * @private
+         */
+        _normalizeProductType: function (productType) {
+            return String(productType).toLowerCase();
         }
     });
 });
