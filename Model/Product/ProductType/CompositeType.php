@@ -92,17 +92,4 @@ abstract class CompositeType extends DefaultType
 
         return $priceData;
     }
-
-    protected function getPriceRegular(ProductInterface $product): float
-    {
-        $basePrice = parent::getPriceRegular($product);
-        return $basePrice ?: max($this->getPriceMin($product), 0);
-    }
-
-    protected function getPriceFinal(ProductInterface $product): float
-    {
-        $basePrice = parent::getPriceFinal($product);
-        return $basePrice ?: $this->getPriceRegular($product);
-    }
-
 }

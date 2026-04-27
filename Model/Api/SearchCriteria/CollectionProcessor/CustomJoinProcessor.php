@@ -31,11 +31,6 @@ class CustomJoinProcessor implements CollectionProcessorInterface
     private array $joins;
 
     /**
-     * @var array<string, true>
-     */
-    private array $appliedJoins = [];
-
-    /**
      * @param array<string, CustomJoinInterface> $customJoins
      */
     public function __construct(
@@ -52,20 +47,11 @@ class CustomJoinProcessor implements CollectionProcessorInterface
     public function process(SearchCriteriaInterface $searchCriteria, AbstractDb $collection)
     {
         foreach ($this->joins as $joinName => $joinType) {
-            if (isset($this->appliedJoins[$joinName])) {
-                continue;
+            $customJoin = $this->getCustomJoin((string)$joinName);
+
+            if ($customJoin) {
+                $customJoin->apply($collection);
             }
-            $this->applyCustomJoin((string)$joinName, $collection);
-        }
-    }
-
-    private function applyCustomJoin(string $joinName, AbstractDb $collection): void
-    {
-        $customJoin = $this->getCustomJoin($joinName);
-
-        if ($customJoin) {
-            $customJoin->apply($collection);
-            $this->appliedJoins[$joinName] = true;
         }
     }
 

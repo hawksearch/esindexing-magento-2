@@ -10,11 +10,13 @@
  * IN THE SOFTWARE.
  */
 var config = {
-    "map": {
+    map: {
         "*": {
-            "hawksearchVueSDK": "HawkSearch_EsIndexing/js/vue-hawksearch-app",
             "hawksearchCommon": "HawkSearch_EsIndexing/js/common",
             "hawksearchVueEvents": "HawkSearch_EsIndexing/js/vue-hawksearch/events"
         }
+    },
+    paths: {
+        "hawksearchVueSDK": "HawkSearch_EsIndexing/js/vue-hawksearch-app",
     }
 };

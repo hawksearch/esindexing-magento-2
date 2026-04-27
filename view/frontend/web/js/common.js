@@ -15,10 +15,11 @@ define([
     'underscore',
     'mage/utils/template',
     'priceUtils',
+    'hawksearchVueSDK', // should be always loaded before using any global `hawksearchVue` variable
     'hawksearchVueEvents',
-    'hawksearchVueSDK',
+    'HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price',
     'mage/adminhtml/tools'
-], function ($, _, mageTemplate, priceUtils, Events) {
+], function ($, _, mageTemplate, priceUtils, ignored, Events, ProductPriceComponent) {
     window.hawksearch = {
         /**
          * Find Vue app widget in registered widget instances
@@ -76,55 +77,12 @@ define([
         },
 
         /**
-         * Apply pricing template
-         *
-         * @param document results Document
-         * @returns {*}
+         * @deprecated Legacy price rendering logic is deprecated. All price display is now handled by the Vue product-price component.
+         * This method is retained as a no-op for backward compatibility and will be removed in a future release.
          */
-        formatItemPrice: function (document) {
-            const templateType = (
-                _.indexOf(
-                    _.keys(hawksearchConfig.pricing.priceTemplates),
-                    this.getDocumentField(document, "type_id")
-                ) !== -1
-            ) ?
-                this.getDocumentField(document, "type_id") :
-                'default';
-            /**
-             * We use regular price template for now
-             * @todo select price template regular or special depending on price
-             */
-            const priceTemplate = hawksearchConfig.pricing.priceTemplates[templateType]['regular'];
-
-            return mageTemplate.template(
-                priceTemplate,
-                {
-                    uid: this.extractId(document),
-                    price_regular: this.getDocumentField(document, "price_regular"),
-                    price_regular_include_tax: this.getDocumentField(document, "price_regular_include_tax"),
-                    price_final: this.getDocumentField(document, "price_final"),
-                    price_final_include_tax: this.getDocumentField(document, "price_final_include_tax"),
-
-                    //priceUtils.formatPrice(item.price, currencyFormat)
-                    price_regular_formatted: priceUtils.formatPriceLocale(
-                        this.getDocumentField(document, "price_regular"),
-                        hawksearchConfig.pricing.priceFormat
-                    ),
-                    price_regular_include_tax_formatted: priceUtils.formatPriceLocale(
-                        this.getDocumentField(document, "price_regular_include_tax"),
-                        hawksearchConfig.pricing.priceFormat
-                    ),
-                    price_final_formatted: priceUtils.formatPriceLocale(
-                        this.getDocumentField(document, "price_final"),
-                        hawksearchConfig.pricing.priceFormat
-                    ),
-                    price_final_include_tax_formatted: priceUtils.formatPriceLocale(
-                        this.getDocumentField(document, "price_final_include_tax"),
-                        hawksearchConfig.pricing.priceFormat
-                    ),
-                    //currency_code: hawksearchConfig.pricing.currencyCode
-                }
-            )
+        formatItemPrice: function () {
+            // Deprecated: do not use. All price rendering is handled by the Vue component.
+            return '';
         },
 
         /**
@@ -233,21 +191,38 @@ define([
      * Initialize Vue widgets based on configs placed in DOM components
      */
     function initVueWidget() {
-        const components = $('[data-vue-hawksearch-component]');
+        const widgetElements = $('[data-vue-hawksearch-component]');
 
-        $.each(components, function (index, component) {
+        // Create custom components object
+        const customComponents = {
+            ProductPrice: ProductPriceComponent,
+        };
+
+        // Globally register all custom components
+        if (window.Vue && customComponents) {
+            Object.keys(customComponents).forEach(function(name) {
+                window.Vue.component(name, customComponents[name]);
+            });
+        }
+
+        $.each(widgetElements, function (index, widgetElement) {
             try {
-                const configId = $(component).data('vueHawksearchConfig');
-                const config = JSON.parse($('#' + configId).html());
+              const configId = $(widgetElement).data("vueHawksearchConfig");
+              const config = JSON.parse($("#" + configId).html());
 
-                Events.trigger('createWidget:before', {
-                    component: component,
-                    config: config
-                });
-                widget = HawksearchVue.createWidget(component, {config, dataLayer: configId});
-                Events.trigger('createWidget:after', {
-                    vueWidget: widget
-                });
+              Events.trigger("createWidget:before", {
+                component: widgetElement,
+                config: config,
+              });
+              widget = HawksearchVue.createWidget(widgetElement, {
+                config,
+                dataLayer: configId,
+                components: customComponents
+              });
+
+              Events.trigger("createWidget:after", {
+                vueWidget: widget,
+              });
             } catch (e) {
                 console.error(e);
             }

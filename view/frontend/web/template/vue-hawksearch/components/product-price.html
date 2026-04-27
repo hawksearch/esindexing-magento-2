@@ -1,0 +1,34 @@
+<div v-if="isSupported" class="price-box price-final_price" :data-product-id="priceData.uid">
+    <template v-if="!priceData.priceRange.length">
+        <template v-for="priceContainer in extractPriceContainers(null)">
+            <price-container v-bind="priceContainer.props">
+                <template #label>
+                    <price-label :label-text="priceContainer.label"/>
+                </template>
+                <template v-for="priceWrapper in priceContainer.priceWrappers">
+                    <price-amount-wrapper v-bind="priceWrapper"/>
+                </template>
+            </price-container>
+        </template>
+    </template>
+    <template v-for="priceRangeItem in priceData.priceRange">
+        <price-range-wrapper v-bind="buildPriceRangeWrapperProps(priceRangeItem)">
+            <template v-for="priceContainer in extractPriceContainers(priceRangeItem)">
+                <price-container v-bind="priceContainer.props">
+                    <template #label>
+                        <price-label :label-text="priceContainer.label"/>
+                    </template>
+                    <template v-for="priceWrapper in priceContainer.priceWrappers">
+                        <price-amount-wrapper v-bind="priceWrapper"/>
+                    </template>
+                </price-container>
+            </template>
+        </price-range-wrapper>
+    </template>
+</div>
+<div v-else-if="processingError">
+    <!-- Error state -->
+    <div class="price-box price-error">
+        <span class="price"> {{ errors.loadingPriceError }}</span>
+    </div>
+</div>

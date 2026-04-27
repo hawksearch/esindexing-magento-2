@@ -1,0 +1,10 @@
+<span v-if="amount" class="price-wrapper"
+      :data-price-amount="amount.amount"
+      :data-price-type="priceType"
+      :data-label="labelText"
+      :id="elementId"
+>
+    <span class="price" :class="amountElementClass">
+        <slot>{{ amount.formatted }}</slot>
+    </span>
+</span>
