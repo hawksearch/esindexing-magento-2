@@ -7,106 +7,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 See tasks currently in development on [Unreleased] changes page.
 
-## [Unreleased]
+## [0.8.0] - 2026-04-28
 
-### API CHANGES
-#### Interfaces
-The following interfaces in `\HawkSearch\EsIndexing` namespace are defined as `@api`:
-- Api\Data\BoostQueryInterface
-- Api\Data\ClientDataInterface
-- Api\Data\CoordinateInterface
-- Api\Data\EsIndexInterface
-- Api\Data\FacetBoostBuryInterface
-- Api\Data\FacetInterface
-- Api\Data\FacetRangeModelInterface
-- Api\Data\FacetValueOrderInfoInterface
-- Api\Data\FieldInterface
-- Api\Data\HierarchyInterface
-- Api\Data\IndexListInterface
-- Api\Data\LandingPageInterface
-- Api\Data\QueueOperationDataInterface
-- Api\Data\SearchRequestInterface
-- Api\Data\SmartBarInterface
-- Api\Data\VariantOptionsInterface
-- Api\FacetManagementInterface
-- Api\FieldManagementInterface
-- Api\HierarchyManagementInterface
-- Api\IndexManagementInterface
-- Api\LandingPageManagementInterface
-- Model\Indexer\Entities\SchedulerInterface
-- Model\Indexing\ContextInterface
-- Model\Indexing\FieldHandlerInterface
-- Model\Indexing\EntityRebuildInterface
-- Model\Indexing\EntityTypeInterface
-- Model\Indexing\Field\NameProviderInterface
-- Model\Indexing\ItemsDataProviderInterface
-- Model\Indexing\ItemsIndexerInterface
-- Model\Layout\LayoutConfigProcessorInterface
-- Model\MessageQueue\Validator\OperationValidatorInterface
-- Model\MessageQueue\BulkPublisherInterface
-- Model\MessageQueue\MessageManagerInterface
-- Model\MessageQueue\MessageTopicResolverInterface
-- Model\Product\Attribute\ExcludeNotVisibleProductsFlagInterface
-- Model\Product\PriceManagementInterface
-- Model\Product\ProductTypeInterface
-- Model\Product\ProductTypePoolInterface
-- Service\DataStorageInterface
-- 
+### FEATURES
+* **feat: add SearchRequest interface** ([#83](https://github.com/hawksearch/esindexing-magento-2/pull/83))
+* **feat: declare public API contracts** ([#85](https://github.com/hawksearch/esindexing-magento-2/pull/85))  
+  Ref: HC-1658
+* **feat: add type hints to method arguments** ([#86](https://github.com/hawksearch/esindexing-magento-2/pull/86))  
+  Ref: HC-1702
+* **feat: adjust types in IndexItemsContextInterface** ([#88](https://github.com/hawksearch/esindexing-magento-2/pull/88))
+* **feat: add types to private/final/internal/not API properties** ([#93](https://github.com/hawksearch/esindexing-magento-2/pull/93))  
+  Ref: HC-1706
+* **feat: add type hints to method arguments** ([#94](https://github.com/hawksearch/esindexing-magento-2/pull/94))
+* **feat(plugin): remove argument default value in constructor** ([#97](https://github.com/hawksearch/esindexing-magento-2/pull/97))
+* **feat(plugin): add types to protected properties** ([#98](https://github.com/hawksearch/esindexing-magento-2/pull/98))
+* **feat: deprecate protected properties** ([#99](https://github.com/hawksearch/esindexing-magento-2/pull/99))
+* **feat: add argument types to private methods** ([#102](https://github.com/hawksearch/esindexing-magento-2/pull/102))
+* **feat(CustomAttributes): deprecate protected methods** ([#103](https://github.com/hawksearch/esindexing-magento-2/pull/103))
+* **feat: drop min required version to PHP 8.1, Magento 2.4.4** ([#104](https://github.com/hawksearch/esindexing-magento-2/pull/104))
+* **feat: add return types on internal/final/private methods** ([#109](https://github.com/hawksearch/esindexing-magento-2/pull/109))
+* **feat: enable price indexing by config** ([#123](https://github.com/hawksearch/esindexing-magento-2/pull/123))
+* **feat(indexing): cleanup stale indices request data** ([#130](https://github.com/hawksearch/esindexing-magento-2/pull/130))
+* **feat: enable price indexing by config** ([#131](https://github.com/hawksearch/esindexing-magento-2/pull/131))
+* **feat: display prices for complex products** ([#137](https://github.com/hawksearch/esindexing-magento-2/pull/137))
 
-The following interfaces in `\HawkSearch\EsIndexing` namespace are defined as `@internal` (including experimental features):
-- Api\Data\IndexItemInterface
-- Api\Data\IndexItemsContextInterface
-- Model\Config\Backend\Serialized\Processor\ValueProcessorInterface
-- Model\Field\FieldExtendedInterface
+### FIXES
+* **fix: improper use of function return value** ([#87](https://github.com/hawksearch/esindexing-magento-2/pull/87))
+* **fix: cast to array in getters** ([#89](https://github.com/hawksearch/esindexing-magento-2/pull/89))
+* **fix: custom join processor not applying the same join twice** ([#90](https://github.com/hawksearch/esindexing-magento-2/pull/90))
+* **fix: replace Phrase class with string type in input argument** ([#91](https://github.com/hawksearch/esindexing-magento-2/pull/91))
+* **fix: replace StoreInterface with store id type in input argument** ([#92](https://github.com/hawksearch/esindexing-magento-2/pull/92))
+* **fix: change private method param type to strict type** ([#96](https://github.com/hawksearch/esindexing-magento-2/pull/96))
+* **fix(Config): unsafe access to private constant using static** ([#105](https://github.com/hawksearch/esindexing-magento-2/pull/105))
+* **fix: deprecations of properties and parameters** ([#106](https://github.com/hawksearch/esindexing-magento-2/pull/106))
+* **fix: return type mismatch** ([#110](https://github.com/hawksearch/esindexing-magento-2/pull/110))
+* **fix: group prices not returned by default** ([#112](https://github.com/hawksearch/esindexing-magento-2/pull/112))
+* **fix: exception: each method must have a doc block** ([#115](https://github.com/hawksearch/esindexing-magento-2/pull/115))
+* **fix: use FQN in @return for Api\Data interfaces** ([#116](https://github.com/hawksearch/esindexing-magento-2/pull/116))
+* **fix: invalid return type in non API method** ([#117](https://github.com/hawksearch/esindexing-magento-2/pull/117))
+* **fix: default object values when initialising DTO classes** ([#118](https://github.com/hawksearch/esindexing-magento-2/pull/118))
+* **fix: indexes not switched after full reindex is complete** ([#120](https://github.com/hawksearch/esindexing-magento-2/pull/120))
+* **fix: update request db field to mediumtext type** ([#124](https://github.com/hawksearch/esindexing-magento-2/pull/124))
+* **fix(indexing): current index is not switched after completing** ([#126](https://github.com/hawksearch/esindexing-magento-2/pull/126))
+* **fix(indexing): failed consumer when data item doesn't exists** ([#128](https://github.com/hawksearch/esindexing-magento-2/pull/128))
+* **fix(indexing): make index data in DB consistent with indexes in API** ([#129](https://github.com/hawksearch/esindexing-magento-2/pull/129))
 
-#### Classes
-The following classes in `\HawkSearch\EsIndexing` namespace are defined as `@api`:
-- Block\Adminhtml\Bulk\Details\BackButton
-- Block\Adminhtml\Bulk\Details\RetryButton
-- Block\Adminhtml\Form\GenericButton
-- Block\Tracking
-- Registry\CurrentCategory
-- Service\DataStorage
-- Model\BulkOperation\BulkOperationManagement
-- Model\Indexer\Entities\ActionAbstract
-- Model\Indexer\Entities\SchedulerAbstract
-- Model\Indexer\Entities\SchedulerComposite
-- Model\Indexing\AbstractConfigHelper
-- Model\Indexing\AbstractEntityRebuild
-- Model\Indexing\Field\DefaultNameProvider
-- Model\Indexing\FieldHandler\Composite
-- Model\Indexing\FieldHandler\DataObjectHandler
-- Model\Layout\CompositeConfigProcessor
-- Model\MessageQueue\Consumer
-- Model\MessageQueue\Exception\InvalidBulkOperationException
-- Model\MessageQueue\MessageTopicByObjectResolver
-- Model\MessageQueue\QueueOperationData
-- Model\FacetManagement
-- Model\FieldManagement
-- Model\HierarchyManagement
-- Model\IndexManagement
-- Model\LandingPageManagement
-- Model\Product
-- Model\Product\Attributes
-- Model\Product\PriceManagement
-- Model\Product\ProductType\CompositeType
-- Model\Product\ProductType\DefaultType
-- Model\Product\ProductTypePool
-
-### DEPRECATIONS
-
-- Deprecate usage of protected property `Block\Adminhtml\System\Config\Product\CustomAttributes::columnRendererCache`. Visibility changed to private.
-- Deprecate usage of protected property `Model\Indexer\Entities\ActionAbstract::eventManager`. Visibility changed to private. Set via constructor injection.
-- Deprecate usage of protected property `Model\Indexer\Entities\ActionAbstract::messageManager`. Visibility changed to private. Set via constructor injection.
-- Deprecate usage of protected property `Model\Indexer\Entities\ActionAbstract::publisher`. Visibility changed to private. Set via constructor injection.
-- Deprecate usage of protected property `Model\Indexer\Entities\ActionAbstract::entityScheduler`. Visibility changed to private. Set via constructor injection.
-- Deprecate usage of protected property `Model\Indexer\Entities\SchedulerComposite::schedulers`. Visibility changed to private. Set via constructor injection.
-- Deprecate usage of protected property `Model\Indexing\AbstractEntityRebuild::entityTypePool`. Visibility changed to private. Set via constructor injection.
-- Deprecate usage of protected property `Model\Indexing\AbstractEntityRebuild::eventManager`. Visibility changed to private. Set via constructor injection.
-- Deprecate usage of protected property `Model\Indexing\AbstractEntityRebuild::hawkLogger`. Visibility changed to private. Set via `$loggerFactory` constructor injection.
-- Deprecate usage of protected property `Model\Indexing\AbstractEntityRebuild::storeManager`. Visibility changed to private. Set via constructor injection.
-- Deprecate usage of protected property `Model\Indexing\AbstractEntityRebuild::indexingContext`. Visibility changed to private. Set via constructor injection.
-- Deprecate usage of protected property `Model\Indexing\FieldHandler\Composite::handlers`. Visibility changed to private. Set via constructor injection.
+### PERFORMANCE
+* **perf: push catalog items to HawkSearch API through middleware table** ([#119](https://github.com/hawksearch/esindexing-magento-2/pull/119))
+* **perf: add caching for config fields mapping, unserialize once** ([#121](https://github.com/hawksearch/esindexing-magento-2/pull/121))
+* **perf: add caching for attribute source** ([#122](https://github.com/hawksearch/esindexing-magento-2/pull/122))
+* **perf: use prices from Magento price index** ([#132](https://github.com/hawksearch/esindexing-magento-2/pull/132))
 
 ## [0.7.5] - 2026-01-15
 ### FIXES
@@ -594,7 +544,8 @@ __fix: minimal compatible version of connector package is 2.8.0__ ([#45](https:/
 ## 0.1.0
 Initial stable release
 
-[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.7.5...HEAD
+[Unreleased]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.7.5...v0.8.0
 [0.7.5]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.7.4...v0.7.5
 [0.7.4]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.7.3...v0.7.4
 [0.7.3]: https://github.com/hawksearch/esindexing-magento-2/compare/v0.7.2...v0.7.3
