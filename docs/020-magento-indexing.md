@@ -18,6 +18,19 @@ Regardless of the indexing mode selected, the final indexing operation processin
 
 The **Maximum number of items indexed per iteration** setting represents the API limit which has a maximum value of 125 items. Please contact [<<hawksearchSupportContactName>>][^11] if you have any questions or need to extend the limit.
 
+### Price Indexing Configuration
+
+> 📘 New in version 0.8.0
+
+Starting from version 0.8.0, you can control price indexing behavior through configuration:
+
+- **Enable Price Indexing** - Controls whether product prices are indexed to Hawksearch. When disabled, no price data is sent to the index.
+- **Enable Customer Group Prices** - Controls whether customer group-specific prices are indexed. When disabled, only default prices are indexed.
+
+These settings can be found in **Stores > Configuration > Hawksearch > Products** tab.
+
+**Performance Note:** Version 0.8.0 introduces significant performance improvements by utilizing Magento's native price index (`catalog_product_index_price` table) instead of calculating prices during indexing.
+
 
 ## Magento indexers
 
@@ -108,6 +121,15 @@ The following fields below are pushed to HawkSearch index regardless of what is 
 | `visibility_search`                          | Boolean Value | Visibility in the search                                                    |
 | `visibility_catalog`                         | Boolean Value | Visibility in the catalog                                                   |
 | `category`                                   | Text Value    | Hierarchical field                                                          |
+
+##### Pricing Fields (Version 0.7.x)
+
+> ⚠️ The fields below are relevant for version 0.7.x and earlier
+>
+> In version 0.8.0, the pricing architecture was significantly changed. Tax calculations and price formatting were moved to the frontend (Vue component). See the updated pricing fields for version 0.8.0 below.
+
+| Field Name                                   | Save As       | Description                                                                 |
+|:---------------------------------------------|:--------------|:----------------------------------------------------------------------------|
 | **Pricing Fields**                           |               |                                                                             |
 | price_regular                                | Numeric Value | Regular Product Price                                                       |
 | price_final                                  | Numeric Value | Discounted Product Price                                                    |
@@ -123,6 +145,29 @@ The following fields below are pushed to HawkSearch index regardless of what is 
 | price_group_<group_id>_include_tax_formatted | Text Value    | Discounted Product Price per Customer Group including tax and currency sign |
 | price_min                                    | Numeric Value | Minimal price for configurable, bundle and grouped products                 |
 | price_max                                    | Numeric Value | Maximal price for configurable, bundle and grouped products                 |
+
+##### Pricing Fields (Version 0.8.0+)
+
+> 📘 New in version 0.8.0
+>
+> Starting from version 0.8.0, prices are retrieved from Magento's native price index (`catalog_product_index_price` table) for improved performance. Tax calculations and price formatting are handled in the frontend by the Vue `product-price` component based on the customer's shipping address.
+
+**Important Changes:**
+- Tax-included prices (`price_*_include_tax`, `price_*_include_tax_formatted`) are no longer indexed (deprecated)
+- Formatted prices (`price_*_formatted`) are no longer indexed (deprecated)
+- Tax calculation is now performed on the frontend based on shipping address
+- Price formatting is now handled by the Vue component based on locale
+
+| Field Name                     | Save As       | Description                                                                 |
+|:-------------------------------|:--------------|:----------------------------------------------------------------------------|
+| **Pricing Fields**             |               |                                                                             |
+| price_filtered                 | Numeric Value | Final customer-facing price used for filtering and sorting (added in 0.8.0) |
+| price_regular                  | Numeric Value | Regular Product Price (excluding tax)                                       |
+| price_final                    | Numeric Value | Discounted Product Price (excluding tax)                                    |
+| price_group_<group_id>         | Numeric Value | Discounted Product Price per Customer Group (excluding tax)                 |
+| price_min                      | Numeric Value | Minimal price for configurable, bundle and grouped products                 |
+| price_max                      | Numeric Value | Maximal price for configurable, bundle and grouped products                 |
+
 
 > 📘 
 > `category` field should be set as **Is Hierarchical Field?**
