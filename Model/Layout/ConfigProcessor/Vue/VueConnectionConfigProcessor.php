@@ -14,17 +14,21 @@ declare(strict_types=1);
 
 namespace HawkSearch\EsIndexing\Model\Layout\ConfigProcessor\Vue;
 
+use HawkSearch\Connector\Model\RemoteAddressResolverInterface;
 use HawkSearch\EsIndexing\Model\Config\ApiSettings;
 use HawkSearch\EsIndexing\Model\Layout\LayoutConfigProcessorInterface;
 
 class VueConnectionConfigProcessor implements LayoutConfigProcessorInterface
 {
     private ApiSettings $apiSettings;
+    private RemoteAddressResolverInterface $remoteAddressResolver;
 
     public function __construct(
-        ApiSettings $apiSettings
+        ApiSettings $apiSettings,
+        RemoteAddressResolverInterface $remoteAddressResolver
     ) {
         $this->apiSettings = $apiSettings;
+        $this->remoteAddressResolver = $remoteAddressResolver;
     }
 
 
@@ -38,6 +42,7 @@ class VueConnectionConfigProcessor implements LayoutConfigProcessorInterface
             'dashboardUrl' => $this->apiSettings->getHawksearchWorkbenchUrl(),
             'clientGuid' => $this->apiSettings->getClientGuid(),
             'trackEventUrl' => $this->apiSettings->getTrackingUrl() . 'api/trackevent/',
+            'clientRemoteAddress' => $this->remoteAddressResolver->resolve(),
         ];
         return array_merge_recursive($jsConfig, $connectionConfig);
     }
