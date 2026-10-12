@@ -55,9 +55,7 @@ define([
             document: {
                 type: Object,
                 required: false,
-                default: function() {
-                    return this.$parent?.result?.Document || {};
-                }
+                default: null
             },
 
             /**
@@ -84,9 +82,9 @@ define([
              * @returns {ProductTypeData|null}
              */
             rawProductData: function() {
-                var doc = this.document || {};
+                var doc = this.document;
 
-                if (!doc || Object.keys(doc).length === 0) {
+                if (!doc) {
                     return null;
                 }
 
