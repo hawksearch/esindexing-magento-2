@@ -17,6 +17,21 @@ var config = {
         }
     },
     paths: {
-        "hawksearchVueSDK": "HawkSearch_EsIndexing/js/vue-hawksearch-app",
+        "hawksearchVueSDK": "HawkSearch_EsIndexing/js/vue-hawksearch.umd",
+        // vue-hawksearch >=1.0 externalizes Vue/Vuex instead of bundling them,
+        // so both libraries must be provided separately for the UMD build's AMD branch.
+        "vue": "HawkSearch_EsIndexing/js/lib/vue.global.prod",
+        "vuex": "HawkSearch_EsIndexing/js/lib/vuex.global.prod"
+    },
+    shim: {
+        // vue.global.js / vuex.global.js are IIFE-only builds (no define.amd branch),
+        // so RequireJS needs an explicit shim to expose them as named modules.
+        "vue": {
+            exports: "Vue"
+        },
+        "vuex": {
+            deps: ["vue"],
+            exports: "Vuex"
+        }
     }
 };
