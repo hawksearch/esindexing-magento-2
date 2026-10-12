@@ -20,6 +20,8 @@ define([
     'HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price',
     'mage/adminhtml/tools'
 ], function ($, _, mageTemplate, priceUtils, ignored, Events, ProductPriceComponent) {
+    const vueWidgetInstances = [];
+
     window.hawksearch = {
         /**
          * Find Vue app widget in registered widget instances
@@ -28,13 +30,11 @@ define([
          * @returns {*|{}}
          */
         getVueWidget: function(component) {
-            let searchCriteria = function (item) {
-                let byName = component === undefined || item.$el.dataset.vueHawksearchComponent === component
-                return !_.isUndefined(item._isVue)
-                    && item._isVue
-                    && byName;
-            }
-            return _.find(HawksearchVue.widgetInstances, searchCriteria) || {};
+            const instance = _.find(vueWidgetInstances, function (item) {
+                return component === undefined || item.component === component;
+            });
+
+            return instance ? instance.widget : {};
         },
 
         /**
@@ -198,12 +198,10 @@ define([
             ProductPrice: ProductPriceComponent,
         };
 
-        // Globally register all custom components
-        if (window.Vue && customComponents) {
-            Object.keys(customComponents).forEach(function(name) {
-                window.Vue.component(name, customComponents[name]);
-            });
-        }
+        // NOTE: custom components are registered per-app via the `components` option
+        // passed to HawksearchVue.createWidget() below. `window.Vue` (Vue 3) no longer
+        // exposes the Vue 2-style global `Vue.component()` API, so global registration
+        // is intentionally not done here.
 
         $.each(widgetElements, function (index, widgetElement) {
             try {
@@ -214,11 +212,19 @@ define([
                 component: widgetElement,
                 config: config,
               });
-              widget = HawksearchVue.createWidget(widgetElement, {
+              const widget = HawksearchVue.createWidget(widgetElement, {
                 config,
                 dataLayer: configId,
                 components: customComponents
               });
+
+              if (widget) {
+                vueWidgetInstances.push({
+                  component: widgetElement.dataset.vueHawksearchComponent,
+                  element: widgetElement,
+                  widget: widget
+                });
+              }
 
               Events.trigger("createWidget:after", {
                 vueWidget: widget,
@@ -229,8 +235,6 @@ define([
         });
     }
 
-    let isFetchResultsDispatched = false;
-
     /**
      * Attach event handlers to HawkSearch Vue SDK events.
      *
@@ -240,41 +244,34 @@ define([
      *      <action-position> could be 'before' or 'after'
      *  Example of an action: action:fetchResults:after
      *
-     * To subscribe to custom Vue events triggered by $emit() method put all of your
-     * custom event handlers inside the event 'createWidget:after', i.e.
-     * Events.on('createWidget:after', function(args) {
-     *      args.vueWidget.$on('<vueCustomEventName>', () => {
-     *          // custom event handler logic
-     *      }
-     * }
-     *
+     * NOTE: Vue 3 removed the instance `$on`/`$off`/`$once` API, and vue-hawksearch's
+     * internal event bus (used for events such as `urlUpdated`/`resultsupdate`) is not
+     * exposed publicly. Custom event handling is therefore driven entirely through the
+     * Vuex action subscription above instead of `args.vueWidget.$on(...)`.
      */
     function bindEvents() {
         Events.on('action:fetchResults:after', function(args) {
-            $(args.vueWidget.$el).trigger('contentUpdated');
-            isFetchResultsDispatched = true;
+            const instance = _.find(vueWidgetInstances, function (item) {
+                return item.widget === args.vueWidget;
+            });
 
+            if (instance) {
+                $(instance.element).trigger('contentUpdated');
+            }
 
-        });
+            if (args.state && args.state.searchOutput) {
+                hawksearch.updateSearchOutput(args.state.searchOutput);
+            }
 
-        Events.on('createWidget:after', function(args) {
-            args.vueWidget.$on('urlUpdated', () => {
-                if (!isFetchResultsDispatched) {
-                    return;
-                }
-
+            // Defer to a macrotask so this runs after the SDK finishes syncing
+            // window.location with the latest search state (formerly done via
+            // the "urlUpdated" event, which is no longer reachable from outside).
+            setTimeout(function () {
                 const cartForms = $('[data-role="tocart-form"]');
                 $.each(cartForms, (key, form) => {
                     form.elements[hawksearchConfig.request.urlEncodedParam].value = hawksearch.getRedirectUrlEncoded();
                 });
-                isFetchResultsDispatched = false;
-            });
-
-            args.vueWidget.$on('resultsupdate', (searchOutput) => {
-                if (searchOutput) {
-                    hawksearch.updateSearchOutput(searchOutput);
-                }
-            });
+            }, 0);
         });
     }
 
