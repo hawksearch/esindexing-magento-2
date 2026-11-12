@@ -46,3 +46,57 @@ Coming soon
 
 ## Customization
 Coming soon
+
+## Visitor address in Vue widgets
+
+The storefront loads the visitor's current remote address from the
+`hawksearch-private-vue-config` customer-data section before creating Vue widgets.
+The address is passed to the SDK as `clientRemoteAddress`; it is not embedded in
+the full-page-cached HTML. Pages with widgets make one private section request.
+The section's `config` object is merged into each widget's configuration;
+private properties take precedence at the top level, including replacing nested
+objects. Magento section metadata is not passed to the SDK.
+If that request fails, an error is logged and widgets initialize without the
+private address. The SDK sends this address in the `X-Forwarded-For` header, so
+cross-origin Hawksearch endpoints must allow that header in their CORS policy.
+
+## Customizing Vue widgets
+
+Widget initialization waits for the private section request, so DOM ready or a
+RequireJS dependency on `hawksearchCommon` does not mean a widget is ready.
+Use `hawksearch.whenVueWidgetsReady()` and obtain the widget in its `done`
+callback. It returns a jQuery promise and also works for scripts loaded after
+initialization:
+
+```js
+define(['jquery', 'underscore', 'hawksearchCommon'], function ($, _) {
+    'use strict';
+
+    hawksearch.whenVueWidgetsReady().done(function () {
+        const widget = hawksearch.getVueWidget('searchbox');
+        if (_.isEmpty(widget)) {
+            return; // This page has no successfully initialized searchbox.
+        }
+
+        HawksearchVue.getWidgetStore(widget).subscribeAction({
+            after: function (action, state) {
+                if (action.type === 'fetchSuggestions') {
+                    $(widget.$el).trigger('contentUpdated');
+                    // Customize state.suggestions here.
+                }
+            }
+        });
+    }).fail(function (error) {
+        console.error('Unable to initialize the Hawksearch customization.', error);
+    });
+});
+```
+
+The promise resolves after widget creation attempts and the connector's action
+subscriptions, including when there are no widgets or the private request fails
+and initialization falls back to public configuration. Check for the specific
+widget: a creation error is logged and other widgets can still initialize.
+The promise rejects if global configuration is missing or initialization cannot
+finish. It does not replay actions dispatched during widget creation; register
+`createWidget:before` through `hawksearchVueEvents` before initialization when
+you need to modify a widget's configuration before it is mounted.

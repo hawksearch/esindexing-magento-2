@@ -18,11 +18,22 @@ define([
     'hawksearchVueSDK', // should be always loaded before using any global `hawksearchVue` variable
     'hawksearchVueEvents',
     'HawkSearch_EsIndexing/js/vue-hawksearch/components/product-price',
+    'mage/url',
     'mage/adminhtml/tools'
-], function ($, _, mageTemplate, priceUtils, ignored, Events, ProductPriceComponent) {
+], function($, _, mageTemplate, priceUtils, ignored, Events, ProductPriceComponent, urlBuilder) {
     const vueWidgetInstances = [];
+    const vueWidgetsReady = $.Deferred();
 
     window.hawksearch = {
+        /**
+         * Resolve after all widget initialization attempts and action subscriptions finish.
+         *
+         * @returns {jQuery.Promise}
+         */
+        whenVueWidgetsReady: function () {
+            return vueWidgetsReady.promise();
+        },
+
         /**
          * Find Vue app widget in registered widget instances
          *
@@ -77,8 +88,9 @@ define([
         },
 
         /**
-         * @deprecated Legacy price rendering logic is deprecated. All price display is now handled by the Vue product-price component.
-         * This method is retained as a no-op for backward compatibility and will be removed in a future release.
+         * @deprecated Legacy price rendering logic is deprecated. All price display is now handled by the Vue
+         *     product-price component. This method is retained as a no-op for backward compatibility and will be
+         *     removed in a future release.
          */
         formatItemPrice: function () {
             // Deprecated: do not use. All price rendering is handled by the Vue component.
@@ -190,7 +202,7 @@ define([
     /**
      * Initialize Vue widgets based on configs placed in DOM components
      */
-    function initVueWidget() {
+    function initVueWidget(privateConfig) {
         const widgetElements = $('[data-vue-hawksearch-component]');
 
         // Create custom components object
@@ -205,30 +217,33 @@ define([
 
         $.each(widgetElements, function (index, widgetElement) {
             try {
-              const configId = $(widgetElement).data("vueHawksearchConfig");
-              const config = JSON.parse($("#" + configId).html());
+                const configId = $(widgetElement).data("vueHawksearchConfig");
+                const config = {
+                    ...JSON.parse($("#" + configId).html()),
+                    ...(privateConfig ? JSON.parse(JSON.stringify(privateConfig)) : {})
+                };
 
-              Events.trigger("createWidget:before", {
-                component: widgetElement,
-                config: config,
-              });
-              const widget = HawksearchVue.createWidget(widgetElement, {
-                config,
-                dataLayer: configId,
-                components: customComponents
-              });
-
-              if (widget) {
-                vueWidgetInstances.push({
-                  component: widgetElement.dataset.vueHawksearchComponent,
-                  element: widgetElement,
-                  widget: widget
+                Events.trigger('createWidget:before', {
+                    component: widgetElement,
+                    config: config
                 });
-              }
+                const widget = HawksearchVue.createWidget(widgetElement, {
+                    config,
+                    dataLayer: configId,
+                    components: customComponents
+                });
 
-              Events.trigger("createWidget:after", {
-                vueWidget: widget,
-              });
+                if (widget) {
+                    vueWidgetInstances.push({
+                        component: widgetElement.dataset.vueHawksearchComponent,
+                        element: widgetElement,
+                        widget: widget
+                    });
+                }
+
+                Events.trigger('createWidget:after', {
+                    vueWidget: widget
+                });
             } catch (e) {
                 console.error(e);
             }
@@ -275,21 +290,14 @@ define([
         });
     }
 
-    $(function ($) {
-        if (typeof hawksearchConfig === 'undefined') {
-            console.warn("'hawksearchConfig' is not defined. HawkSearch Vue SDK initialization is terminated.");
-            return;
-        }
-
-        bindEvents();
-        initVueWidget();
-
+    function bindWidgetActions() {
         let vueWidget = hawksearch.getVueWidget(hawksearchConfig.vueComponent);
         if (!_.isEmpty(vueWidget) && vueWidget.config.searchConfig.initialSearch) {
 
             /**
              *
-             * @param {String} actionHandler defines whether the subscribe handler is called before or after an action dispatch
+             * @param {String} actionHandler defines whether the subscribe handler is called before or after an action
+             *     dispatch
              * @param {Object} action Store action descriptor
              * @param {Object} state Store state
              */
@@ -311,5 +319,51 @@ define([
                 }
             });
         }
+    }
+
+    function finishWidgetInitialization(privateConfig) {
+        try {
+            initVueWidget(privateConfig);
+            bindWidgetActions();
+        } catch (error) {
+            console.error('Hawksearch Vue widget initialization failed.', error);
+            vueWidgetsReady.reject(error);
+            return;
+        }
+        vueWidgetsReady.resolve();
+    }
+
+    $(function ($) {
+        if (typeof hawksearchConfig === 'undefined') {
+            console.warn("'hawksearchConfig' is not defined. HawkSearch Vue SDK initialization is terminated.");
+            vueWidgetsReady.reject(new Error('Hawksearch configuration is not defined.'));
+            return;
+        }
+
+        bindEvents();
+
+        if (!$('[data-vue-hawksearch-component]').length) {
+            vueWidgetsReady.resolve();
+            return;
+        }
+
+        urlBuilder.setBaseUrl(window.BASE_URL);
+        // Fetch fresh data without customerData.reload(), whose failure handler throws before ours can run.
+        $.getJSON(urlBuilder.build('customer/section/load'), {
+            sections: 'hawksearch-private-vue-config'
+        }).done(function (sections) {
+            const section = sections && sections['hawksearch-private-vue-config'];
+            const privateConfig = section && section.config;
+
+            if (!privateConfig || typeof privateConfig !== 'object' || Array.isArray(privateConfig)) {
+                console.error('Hawksearch private Vue config is missing or invalid in the customer data response.');
+                finishWidgetInitialization();
+            } else {
+                finishWidgetInitialization(privateConfig);
+            }
+        }).fail(function (error) {
+            console.error('Failed to load Hawksearch private Vue config.', error);
+            finishWidgetInitialization();
+        });
     });
 });
