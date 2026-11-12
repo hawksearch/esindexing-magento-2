@@ -120,12 +120,42 @@ define([
             disallowTrackingEvents(trackingEvent, options.excludeEvents);
             sendOrderData(trackingEvent, options.orderData);
             return trackingEvent;
-        } else {
-            return {
-                track: function () {
-                    console.log('EventTracking is not initialized!');
+        }
+
+        var pendingEvents = [];
+        var unavailable = false;
+        hawksearch.whenVueWidgetsReady().done(function () {
+            trackingEvent = getTrackingFromVueWidget();
+            if (!trackingEvent) {
+                unavailable = true;
+                console.warn('Hawksearch event tracking is unavailable: no initialized widget has tracking.');
+                pendingEvents = [];
+                return;
+            }
+
+            disallowTrackingEvents(trackingEvent, options.excludeEvents);
+            sendOrderData(trackingEvent, options.orderData);
+            pendingEvents.forEach(function (args) {
+                trackingEvent.track.apply(trackingEvent, args);
+            });
+            pendingEvents = [];
+        }).fail(function (error) {
+            unavailable = true;
+            pendingEvents = [];
+            console.error('Hawksearch event tracking could not initialize.', error);
+        });
+
+        return {
+            track: function () {
+                if (trackingEvent) {
+                    return trackingEvent.track.apply(trackingEvent, arguments);
+                }
+                if (!unavailable) {
+                    pendingEvents.push(Array.prototype.slice.call(arguments));
+                } else {
+                    console.warn('Hawksearch event tracking is unavailable; event was not sent.');
                 }
             }
-        }
+        };
     };
 });
